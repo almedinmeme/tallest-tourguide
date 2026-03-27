@@ -5,7 +5,7 @@
 // Each section will eventually become its own component,
 // but we'll write everything here first so you can see it working
 // before we break it apart.
-import TourCard from '../components/Tourcard'
+import TourCard from '../components/TourCard'
 import tours from '../data/tours'
 
 function Home() {
