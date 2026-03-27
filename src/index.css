@@ -1,0 +1,79 @@
+/* ============================================
+   TALLEST TOURGUIDE — GLOBAL DESIGN SYSTEM
+   This file is the single source of truth for
+   all colors, fonts, and sizing in the project.
+   ============================================ */
+
+/* Import your fonts from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&family=Inter:wght@400;500&display=swap');
+
+/* CSS variables live on :root which means
+   every single component in the app can access them */
+:root {
+
+  /* --- PRIMARY COLORS --- */
+  --color-forest-green: #2E7D5E;
+  --color-mid-green: #4AA880;
+
+  /* --- ACCENT COLORS --- */
+  --color-amber: #F4A130;
+  --color-amber-light: #FDE9C3;
+
+  /* --- NEUTRAL SCALE --- */
+  --color-n900: #1A1A2E;   /* Headings */
+  --color-n600: #4A5568;   /* Body text */
+  --color-n300: #CBD5E0;   /* Borders */
+  --color-n100: #F7F9FC;   /* Page background */
+  --color-n000: #FFFFFF;   /* Card background */
+
+  /* --- SEMANTIC COLORS --- */
+  --color-success: #38A169;
+  --color-warning: #DD6B20;
+  --color-error: #E53E3E;
+  --color-info: #3182CE;
+
+  /* --- TYPOGRAPHY --- */
+  --font-display: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  /* --- TYPE SCALE --- */
+  --text-display: 48px;
+  --text-h1: 36px;
+  --text-h2: 28px;
+  --text-h3: 22px;
+  --text-body-l: 18px;
+  --text-body: 16px;
+  --text-small: 14px;
+  --text-tiny: 12px;
+
+  /* --- LINE HEIGHTS --- */
+  --leading-display: 1.2;
+  --leading-h1: 1.25;
+  --leading-body: 1.6;
+
+  /* --- SPACING & SHAPE --- */
+  --radius: 8px;          /* Border radius used on all buttons and inputs */
+  --touch-target: 44px;   /* Minimum height for all interactive elements */
+}
+
+/* --- GLOBAL RESETS ---
+   These remove browser default styles that
+   would fight against your design system */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  color: var(--color-n600);
+  background-color: var(--color-n100);
+  line-height: var(--leading-body);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  color: var(--color-n900);
+}
