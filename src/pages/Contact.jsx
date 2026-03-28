@@ -14,6 +14,7 @@
 import { useState } from 'react'
 import emailjs from '@emailjs/browser'
 import useWindowWidth from '../hooks/useWindowWidth'
+import { MapPin, Mail, Clock, MessageCircle } from 'lucide-react'
 
 function Contact() {
   const width = useWindowWidth()
@@ -121,47 +122,38 @@ const isMobile = width <= 768
             <div style={styles.contactDetails}>
 
               <div style={styles.detailItem}>
-                <span style={styles.detailIcon}>📍</span>
-                <div>
-                  <span style={styles.detailLabel}>Location</span>
-                  <span style={styles.detailValue}>
-                    Sarajevo, Bosnia & Herzegovina
-                  </span>
-                </div>
-              </div>
+  <MapPin size={20} color="var(--color-forest-green)" />
+  <div>
+    <span style={styles.detailLabel}>Location</span>
+    <span style={styles.detailValue}>Sarajevo, Bosnia & Herzegovina</span>
+  </div>
+</div>
 
-              <div style={styles.detailItem}>
-                <span style={styles.detailIcon}>✉️</span>
-                <div>
-                  <span style={styles.detailLabel}>Email</span>
-                  
-                    <a href="mailto:hello@tallesttourguide.com"
-                    style={styles.detailLink}
-                  >
-                    hello@tallesttourguide.com
-                  </a>
-                </div>
-              </div>
+<div style={styles.detailItem}>
+  <Mail size={20} color="var(--color-forest-green)" />
+  <div>
+    <span style={styles.detailLabel}>Email</span>
+    <a href="mailto:hello@tallesttourguide.com" style={styles.detailLink}>
+      hello@tallesttourguide.com
+    </a>
+  </div>
+</div>
 
-              <div style={styles.detailItem}>
-                <span style={styles.detailIcon}>⏱</span>
-                <div>
-                  <span style={styles.detailLabel}>Response Time</span>
-                  <span style={styles.detailValue}>
-                    Within 24 hours
-                  </span>
-                </div>
-              </div>
+<div style={styles.detailItem}>
+  <Clock size={20} color="var(--color-forest-green)" />
+  <div>
+    <span style={styles.detailLabel}>Response Time</span>
+    <span style={styles.detailValue}>Within 24 hours</span>
+  </div>
+</div>
 
-              <div style={styles.detailItem}>
-                <span style={styles.detailIcon}>🗣️</span>
-                <div>
-                  <span style={styles.detailLabel}>Languages</span>
-                  <span style={styles.detailValue}>
-                    English, Bosnian
-                  </span>
-                </div>
-              </div>
+<div style={styles.detailItem}>
+  <MessageCircle size={20} color="var(--color-forest-green)" />
+  <div>
+    <span style={styles.detailLabel}>Languages</span>
+    <span style={styles.detailValue}>English, Bosnian</span>
+  </div>
+</div>
 
             </div>
 

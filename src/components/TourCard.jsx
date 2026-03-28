@@ -9,6 +9,7 @@
 // One design, infinite tours.
 
 import { Link } from 'react-router-dom'
+import { Star, Clock, Users } from 'lucide-react'
 
 function TourCard({ id, title, price, rating, reviews, duration, groupSize, badge, hero}) {
   return (
@@ -41,21 +42,27 @@ function TourCard({ id, title, price, rating, reviews, duration, groupSize, badg
           Everything below the photo lives here. */}
       <div style={styles.body}>
 
-        {/* Star rating row */}
-        <div style={styles.ratingRow}>
-          <span style={styles.star}>★</span>
-          <span style={styles.ratingNumber}>{rating}</span>
-          <span style={styles.reviews}>({reviews} reviews)</span>
-        </div>
+       {/* Rating row */}
+<div style={styles.ratingRow}>
+  <Star size={14} color="var(--color-amber)" fill="var(--color-amber)" />
+  <span style={styles.ratingNumber}>{rating}</span>
+  <span style={styles.reviews}>({reviews} reviews)</span>
+</div>
 
         {/* Tour title */}
         <h3 style={styles.title}>{title}</h3>
 
-        {/* Tour meta — duration and group size */}
-        <div style={styles.metaRow}>
-          <span style={styles.meta}>⏱ {duration}</span>
-          <span style={styles.meta}>👥 Max {groupSize}</span>
-        </div>
+        {/* Meta row */}
+<div style={styles.metaRow}>
+  <div style={styles.metaItem}>
+    <Clock size={14} color="var(--color-n600)" />
+    <span style={styles.meta}>{duration}</span>
+  </div>
+  <div style={styles.metaItem}>
+    <Users size={14} color="var(--color-n600)" />
+    <span style={styles.meta}>Max {groupSize}</span>
+  </div>
+</div>
 
         {/* Divider line */}
         <div style={styles.divider} />
@@ -173,6 +180,12 @@ const styles = {
     fontFamily: 'var(--font-body)',
     fontSize: 'var(--text-small)',
     color: 'var(--color-n600)',
+  },
+  
+  metaItem: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '5px',
   },
 
   divider: {

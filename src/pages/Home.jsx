@@ -8,6 +8,7 @@
 import TourCard from '../components/TourCard'
 import tours from '../data/tours'
 import useWindowWidth from '../hooks/useWindowWidth'
+import { Star, Users, UserCheck, ShieldCheck } from 'lucide-react'
 
 function Home() {
   const width = useWindowWidth()
@@ -54,6 +55,49 @@ const isMobile = width <= 768
           <div style={styles.ctaRow}>
             <a href="/tours" style={styles.btnPrimary}>Book Now</a>
             <a href="/tours" style={styles.btnSecondary}>Explore Tours</a>
+          </div>
+
+        </div>
+      </section>
+      {/* ═══════════════════════════════
+          TRUST BAR
+          Sits immediately below the hero.
+          Four scannable credibility signals
+          that collapse the "is this legitimate?"
+          objection before the visitor has
+          consciously asked it.
+          ═══════════════════════════════ */}
+      <section style={styles.trustBar}>
+        <div style={{
+          ...styles.trustBarInner,
+          flexDirection: isMobile ? 'column' : 'row',
+          gap: isMobile ? '16px' : '0',
+        }}>
+
+          <div style={styles.trustItem}>
+            <Star size={18} color="var(--color-amber)" fill="var(--color-amber)" />
+            <span style={styles.trustText}>4.9 on TripAdvisor</span>
+          </div>
+
+          {!isMobile && <div style={styles.trustDivider} />}
+
+          <div style={styles.trustItem}>
+            <Users size={18} color="var(--color-forest-green)" />
+            <span style={styles.trustText}>500+ Guests Guided</span>
+          </div>
+
+          {!isMobile && <div style={styles.trustDivider} />}
+
+          <div style={styles.trustItem}>
+            <UserCheck size={18} color="var(--color-forest-green)" />
+            <span style={styles.trustText}>Small Groups — Max 8 People</span>
+          </div>
+
+          {!isMobile && <div style={styles.trustDivider} />}
+
+          <div style={styles.trustItem}>
+            <ShieldCheck size={18} color="var(--color-forest-green)" />
+            <span style={styles.trustText}>Free Cancellation Available</span>
           </div>
 
         </div>
@@ -254,6 +298,48 @@ toursSection: {
     gap: '28px',
     maxWidth: '1100px',
     margin: '0 auto',
+  },
+  trustBar: {
+    backgroundColor: 'var(--color-n000)',
+    borderBottom: '1px solid var(--color-n300)',
+    padding: '20px 40px',
+  },
+
+  trustBarInner: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    maxWidth: '900px',
+    margin: '0 auto',
+  },
+
+  trustItem: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px',
+    padding: '0 40px',
+    flex: 1,
+    justifyContent: 'center',
+  },
+
+  trustIcon: {
+    fontSize: '18px',
+    color: 'var(--color-amber)',
+  },
+
+  trustText: {
+    fontFamily: 'var(--font-body)',
+    fontWeight: '600',
+    fontSize: 'var(--text-small)',
+    color: 'var(--color-n900)',
+    whiteSpace: 'nowrap',
+  },
+
+  trustDivider: {
+    width: '1px',
+    height: '32px',
+    backgroundColor: 'var(--color-n300)',
+    flexShrink: 0,
   },
 }
 

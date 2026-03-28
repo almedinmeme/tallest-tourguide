@@ -8,6 +8,8 @@ import { useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import emailjs from '@emailjs/browser'
 import useWindowWidth from '../hooks/useWindowWidth'
+import { Star, Clock, Users, MapPin, CheckCircle } from 'lucide-react'
+import { ShieldCheck } from 'lucide-react'
 
 // useParams is a React Router hook — a hook is a special function
 // that gives your component access to something it couldn't otherwise reach.
@@ -151,27 +153,29 @@ const isMobile = width <= 768
             <h1 style={styles.tourTitle}>{tour.title}</h1>
 
             <div style={styles.ratingRow}>
-              <span style={styles.star}>★</span>
-              <span style={styles.ratingNumber}>{tour.rating}</span>
-              <span style={styles.ratingCount}>({tour.reviews} reviews)</span>
-              <span style={styles.dot}>·</span>
-              <span style={styles.meta}>⏱ {tour.duration}</span>
-              <span style={styles.dot}>·</span>
-              <span style={styles.meta}>👥 Max {tour.groupSize} people</span>
-            </div>
+          <Star size={16} color="var(--color-amber)" fill="var(--color-amber)" />
+          <span style={styles.ratingNumber}>{tour.rating}</span>
+          <span style={styles.ratingCount}>({tour.reviews} reviews)</span>
+          <span style={styles.dot}>·</span>
+          <Clock size={15} color="var(--color-n600)" />
+          <span style={styles.meta}>{tour.duration}</span>
+          <span style={styles.dot}>·</span>
+          <Users size={15} color="var(--color-n600)" />
+          <span style={styles.meta}>Max {tour.groupSize} people</span>
+</div>
+
+            
 
             <p style={styles.description}>{tour.description}</p>
 
             <div style={styles.section}>
               <h2 style={styles.sectionTitle}>What's Included</h2>
-              <div style={styles.includesList}>
-                {tour.includes.map((item, index) => (
-                  <div key={index} style={styles.includeItem}>
-                    <span style={styles.checkmark}>✓</span>
-                    <span>{item}</span>
-                  </div>
-                ))}
-              </div>
+              {tour.includes.map((item, index) => (
+              <div key={index} style={styles.includeItem}>
+              <CheckCircle size={16} color="var(--color-success)" />
+              <span>{item}</span>
+            </div>
+          ))}
             </div>
 
             <div style={styles.section}>
@@ -185,7 +189,10 @@ const isMobile = width <= 768
 
             <div style={styles.section}>
               <h2 style={styles.sectionTitle}>Meeting Point</h2>
-              <p style={styles.meetingPoint}>📍 {tour.meetingPoint}</p>
+              <div style={styles.meetingPointRow}>
+  <MapPin size={16} color="var(--color-forest-green)" />
+  <span style={styles.meetingPoint}>{tour.meetingPoint}</span>
+</div>
             </div>
           </div>
 
@@ -313,9 +320,10 @@ const isMobile = width <= 768
                     </p>
                   )}
 
-                  <p style={styles.freeCancellation}>
-                    ✓ Free cancellation available
-                  </p>
+                  <div style={styles.cancellationRow}>
+  <ShieldCheck size={14} color="var(--color-success)" />
+  <p style={styles.freeCancellation}>Free cancellation available</p>
+</div>
                 </>
 
               )}
@@ -799,6 +807,12 @@ successMessage: {
     padding: '16px 0',
   },
 
+  meetingPointRow: {
+    display: 'flex',
+    alignItems: 'flex-start',
+    gap: '8px',
+  },
+
   successIcon: {
     display: 'block',
     fontSize: '40px',
@@ -819,6 +833,13 @@ successMessage: {
     fontSize: 'var(--text-body)',
     color: 'var(--color-n600)',
     lineHeight: 'var(--leading-body)',
+  },
+
+  cancellationRow: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '6px',
   },
 
   errorMessage: {
