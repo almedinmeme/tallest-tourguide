@@ -7,6 +7,7 @@
 
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import useWindowWidth from '../hooks/useWindowWidth'
 
 // Each package is an object with everything needed to render
 // its card and its expanded detail view.
@@ -92,6 +93,8 @@ const packages = [
 ]
 
 function Packages() {
+  const width = useWindowWidth()
+const isMobile = width <= 768
 
   // selectedPackage tracks which package card the visitor has
   // clicked to expand. null means no package is expanded yet.
@@ -237,7 +240,10 @@ function Packages() {
 
                     <div style={styles.detailDivider} />
 
-                    <div style={styles.detailGrid}>
+                  <div style={{
+  ...styles.detailGrid,
+  gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
+}}>
 
                       {/* Left side — description and tours included */}
                       <div>

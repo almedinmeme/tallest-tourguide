@@ -77,3 +77,41 @@ h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-display);
   color: var(--color-n900);
 }
+
+/* ============================================
+   RESPONSIVE STYLES — MOBILE BREAKPOINT
+   Everything below applies only when the screen
+   is 768px wide or narrower — phones and small tablets.
+   
+   The max-width: 768px means: "only apply these rules
+   on screens UP TO 768px wide." Above that, all your
+   existing desktop styles take over automatically.
+   ============================================ */
+
+@media (max-width: 768px) {
+
+  /* ── GLOBAL SPACING ───────────────────────────
+     Your desktop sections use 40px horizontal padding.
+     On a 390px phone screen that leaves only 310px
+     for content — workable but tight. We reduce it
+     to 20px to give content more breathing room
+     without making the page feel edge-to-edge. */
+  section {
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+  }
+
+  /* ── HERO SECTION ─────────────────────────────
+     The display font size of 48px is too large for
+     a phone — it forces line breaks in awkward places
+     and overwhelms the screen. 32px reads comfortably
+     on mobile while still feeling like a hero headline. */
+  h1 {
+    font-size: 28px !important;
+    line-height: 1.3 !important;
+  }
+
+  h2 {
+    font-size: 24px !important;
+  }
+}

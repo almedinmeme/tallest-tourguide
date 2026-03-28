@@ -7,6 +7,7 @@
 import { useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import emailjs from '@emailjs/browser'
+import useWindowWidth from '../hooks/useWindowWidth'
 
 // useParams is a React Router hook — a hook is a special function
 // that gives your component access to something it couldn't otherwise reach.
@@ -21,6 +22,8 @@ import emailjs from '@emailjs/browser'
 import tours from '../data/tours'
 
 function TourDetail() {
+  const width = useWindowWidth()
+const isMobile = width <= 768
   const { id } = useParams()
   const tour = tours.find((t) => t.id === Number(id))
 
@@ -352,7 +355,10 @@ function TourDetail() {
           because it keeps the booking action always visible
           while the visitor reads the details. */}
       <div style={styles.contentWrapper}>
-        <div style={styles.contentGrid}>
+        <div style={{
+  ...styles.contentGrid,
+  gridTemplateColumns: isMobile ? '1fr' : '1fr 380px',
+}}>
 
           {/* ── LEFT COLUMN — Tour Details ─────────────── */}
           <div style={styles.leftColumn}>
@@ -411,7 +417,11 @@ function TourDetail() {
           </div>
 
           {/* ── RIGHT COLUMN — Booking Widget ──────────── */}
-          <div style={styles.rightColumn}>
+          <div style={{
+  ...styles.rightColumn,
+  position: isMobile ? 'static' : 'sticky',
+  top: isMobile ? 'auto' : '88px',
+}}>
             <div style={styles.bookingCard}>
 
               {/* Price display */}

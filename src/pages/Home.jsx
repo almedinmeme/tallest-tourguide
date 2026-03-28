@@ -7,8 +7,11 @@
 // before we break it apart.
 import TourCard from '../components/TourCard'
 import tours from '../data/tours'
+import useWindowWidth from '../hooks/useWindowWidth'
 
 function Home() {
+  const width = useWindowWidth()
+const isMobile = width <= 768
   return (
     // The outer div is your page wrapper.
     // As we add more sections below the hero, they'll stack here.
@@ -75,7 +78,10 @@ function Home() {
         {/* Card grid — three cards side by side on desktop.
             Each TourCard receives its specific data via props.
             Notice we're not repeating the card design — just the data. */}
-<div style={styles.cardGrid}>
+<div style={{
+  ...styles.cardGrid,
+  gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)',
+}}>
   {tours.slice(0, 3).map((tour) => (
     <TourCard
       key={tour.id}

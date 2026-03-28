@@ -5,8 +5,11 @@
 // this keeps navigation within React without triggering a full page reload.
 
 import { Link } from 'react-router-dom'
+import useWindowWidth from '../hooks/useWindowWidth'
 
 function Navbar() {
+  const width = useWindowWidth()
+const isMobile = width <= 768
   return (
     <nav style={styles.nav}>
 
@@ -16,13 +19,14 @@ function Navbar() {
       </Link>
 
       {/* Navigation links in the center */}
-      <div style={styles.links}>
-        <Link to="/" style={styles.link}>Home</Link>
-        <Link to="/tours" style={styles.link}>Tours</Link>
-        <Link to="/packages" style={styles.link}>Packages</Link>
-        <Link to="/contact" style={styles.link}>Contact</Link>
-      </div>
-
+  {!isMobile && (
+  <div style={styles.links}>
+    <Link to="/" style={styles.link}>Home</Link>
+    <Link to="/tours" style={styles.link}>Tours</Link>
+    <Link to="/packages" style={styles.link}>Packages</Link>
+    <Link to="/contact" style={styles.link}>Contact</Link>
+  </div>
+)}
       {/* Primary CTA button on the right — this is your Warm Amber "Book Now" */}
       <Link to="/tours" style={styles.cta}>
         Book Now

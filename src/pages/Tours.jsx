@@ -5,6 +5,7 @@
 // Notice we're not rewriting any card design here, just providing data.
 
 import TourCard from '../components/TourCard'
+import useWindowWidth from '../hooks/useWindowWidth'
 
 // This array is your tour data — think of it as a mini database living
 // inside your code for now. Each object represents one tour with all
@@ -14,6 +15,8 @@ import TourCard from '../components/TourCard'
 import tours from '../data/tours'
 
 function Tours() {
+  const width = useWindowWidth()
+const isMobile = width <= 768
   return (
     <div>
 
@@ -36,7 +39,10 @@ function Tours() {
           Same TourCard component as the homepage —
           just with more tours and slightly different layout. */}
       <section style={styles.toursSection}>
-        <div style={styles.cardGrid}>
+       <div style={{
+  ...styles.cardGrid,
+  gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)',
+}}>
 
           {/* This is one of React's most powerful patterns — .map()
               loops over your tours array and returns a TourCard for each one.
