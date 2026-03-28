@@ -28,7 +28,7 @@ const photos = [
   { src: guide1, caption: 'Baščaršija — the heart of Sarajevo' },
   { src: guide2, caption: 'Bosnian coffee ceremony' },
   { src: guide3, caption: 'Rafting the Neretva' },
-  { src: guide4, caption: 'Albania day trip' },
+  { src: guide4, caption: 'Trip to Albania' },
   { src: guide5, caption: 'Stari Most, Mostar' },
 ]
 
