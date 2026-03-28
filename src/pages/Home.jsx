@@ -10,6 +10,8 @@ import tours from '../data/tours'
 import useWindowWidth from '../hooks/useWindowWidth'
 import { Star, Users, UserCheck, ShieldCheck } from 'lucide-react'
 import GuideSection from '../components/GuideSection'
+import HowItWorks from '../components/HowItWorks'
+import Reviews from '../components/Reviews'
 
 function Home() {
   const width = useWindowWidth()
@@ -147,6 +149,8 @@ const isMobile = width <= 768
 
 
       </section>
+      <HowItWorks />
+      <Reviews />
     </div>
   )
 }
