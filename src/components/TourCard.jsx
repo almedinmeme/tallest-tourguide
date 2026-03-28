@@ -20,23 +20,25 @@ function TourCard({ id, title, price, rating, reviews, duration, groupSize, badg
           add your tour photos to the assets folder.
           For now it shows a green placeholder so the layout
           is visible and testable without images. */}
-      <div style={styles.photoContainer}>
-  {badge && (
-    <span style={styles.badge}>{badge}</span>
-  )}
-  {hero ? (
-    // Real photo — shown when a hero image has been provided
-    <img
-      src={hero}
-      alt={title}
-      style={styles.photo}
-    />
-  ) : (
-    // Fallback placeholder — shown if no photo exists yet
-    // This means adding a new tour without a photo won't break the layout
-    <div style={styles.photoPlaceholder} />
-  )}
-</div>
+     <div style={styles.photoContainer}>
+      {hero ? (
+        <img
+          src={hero}
+          alt={title}
+          style={styles.photo}
+        />
+      ) : (
+        <div style={styles.photoPlaceholder} />
+      )}
+
+      {/* Badge positioned absolutely INSIDE the photo container
+          so it overlays the image rather than pushing it down.
+          This is the correct pattern — the badge floats over
+          the photo in the top-left corner at all times. */}
+      {badge && (
+        <span style={styles.badge}>{badge}</span>
+      )}
+    </div>
 
       {/* ── CARD BODY ──────────────────────────────────────
           Everything below the photo lives here. */}
@@ -121,15 +123,26 @@ const styles = {
   // Badge in the top-left corner of the photo.
   // Uses your Forest Green as background for contrast against the mid-green placeholder.
   badge: {
+    position: 'absolute',
+    top: '12px',
+    left: '12px',
     backgroundColor: 'var(--color-forest-green)',
     color: 'var(--color-n000)',
     fontFamily: 'var(--font-body)',
     fontWeight: '700',
-    fontSize: '11px',
-    letterSpacing: '1px',
+    fontSize: '10px',
+    letterSpacing: '1.5px',
     textTransform: 'uppercase',
     padding: '4px 10px',
     borderRadius: '4px',
+    zIndex: 1,
+  },
+
+  photoContainer: {
+    width: '100%',
+    aspectRatio: '4/3',
+    position: 'relative',
+    overflow: 'hidden',
   },
 
   body: {
