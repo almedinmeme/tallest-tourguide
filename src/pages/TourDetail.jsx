@@ -22,9 +22,9 @@ import useWindowWidth from '../hooks/useWindowWidth'
 import tours from '../data/tours'
 
 function TourDetail() {
+  const { id } = useParams()
   const width = useWindowWidth()
 const isMobile = width <= 768
-  const { id } = useParams()
   const tour = tours.find((t) => t.id === Number(id))
 
   // ── REACT STATE ──────────────────────────────────────────────────
@@ -124,14 +124,23 @@ const isMobile = width <= 768
   return (
     <div>
 
-      <div style={styles.photoBanner}>
+      <div style={{...styles.photoBanner,
+      height: isMobile ? '240px' : '420px',
+}}>
         {tour.badge && (
           <span style={styles.badge}>{tour.badge}</span>
         )}
       </div>
 
-      <div style={styles.contentWrapper}>
-        <div style={styles.contentGrid}>
+      <div style={{
+  ...styles.contentWrapper,
+  padding: isMobile ? '32px 20px 60px 20px' : '48px 40px 80px 40px',
+}}>
+        <div style={{
+  ...styles.contentGrid,
+  gridTemplateColumns: isMobile ? '1fr' : '1fr 380px',
+  gap: isMobile ? '32px' : '48px',
+}}>
 
           {/* ── LEFT COLUMN — unchanged from before ────── */}
           <div style={styles.leftColumn}>
@@ -181,7 +190,11 @@ const isMobile = width <= 768
           </div>
 
           {/* ── RIGHT COLUMN — Booking Card ────────────── */}
-          <div style={styles.rightColumn}>
+          <div style={{
+  ...styles.rightColumn,
+  position: isMobile ? 'static' : 'sticky',
+  top: isMobile ? 'auto' : '88px',
+}}>
             <div style={styles.bookingCard}>
 
               {/* If the booking was sent successfully, replace the
@@ -692,11 +705,11 @@ photoBanner: {
   },
 
   price: {
-    fontFamily: 'var(--font-display)',
-    fontWeight: '700',
-    fontSize: 'var(--text-display)',
-    color: 'var(--color-forest-green)',
-  },
+  fontFamily: 'var(--font-display)',
+  fontWeight: '700',
+  fontSize: 'clamp(32px, 8vw, 48px)', // clamp() sets a min, preferred, and max size
+  color: 'var(--color-forest-green)',
+},
 
   perPerson: {
     fontFamily: 'var(--font-body)',
