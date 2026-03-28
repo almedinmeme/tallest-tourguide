@@ -9,6 +9,7 @@ import TourCard from '../components/TourCard'
 import tours from '../data/tours'
 import useWindowWidth from '../hooks/useWindowWidth'
 import { Star, Users, UserCheck, ShieldCheck } from 'lucide-react'
+import GuideSection from '../components/GuideSection'
 
 function Home() {
   const width = useWindowWidth()
@@ -102,6 +103,8 @@ const isMobile = width <= 768
 
         </div>
       </section>
+      
+      <GuideSection />
 {/* ═══════════════════════════════
           FEATURED TOURS SECTION
           Three of your best tours shown immediately
