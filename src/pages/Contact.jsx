@@ -13,8 +13,11 @@
 
 import { useState } from 'react'
 import emailjs from '@emailjs/browser'
+import useWindowWidth from '../hooks/useWindowWidth'
 
 function Contact() {
+  const width = useWindowWidth()
+const isMobile = width <= 768
 
   // Each piece of form data gets its own state variable.
   // This is the same pattern you used in TourDetail —
@@ -96,7 +99,10 @@ function Contact() {
           details first before they see the form. This reduces
           the feeling that they're submitting into a void. */}
       <section style={styles.contentSection}>
-        <div style={styles.contentGrid}>
+        <div style={{
+  ...styles.contentGrid,
+  gridTemplateColumns: isMobile ? '1fr' : '1fr 1.4fr',
+}}>
 
           {/* ── LEFT COLUMN — Contact Info ─────────────── */}
           <div style={styles.infoColumn}>
@@ -186,7 +192,10 @@ function Contact() {
                   {/* Two inputs side by side on the same row —
                       name and email. The formRow div uses flexbox
                       to place them next to each other with a gap. */}
-                  <div style={styles.formRow}>
+                  <div style={{
+  ...styles.formRow,
+  flexDirection: isMobile ? 'column' : 'row',
+}}>
 
                     <div style={styles.formGroup}>
                       <label style={styles.label}>Your Name</label>
