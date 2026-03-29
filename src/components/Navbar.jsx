@@ -10,7 +10,7 @@
 // the right tool.
 
 import { useState } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import useWindowWidth from '../hooks/useWindowWidth'
 
 function Navbar() {
@@ -26,6 +26,22 @@ function Navbar() {
   // they're on. This is called an "active state" and it's a small
   // but meaningful trust signal in navigation design.
   const location = useLocation()
+
+  const navigate = useNavigate()
+
+  // When clicking the logo or Home link while already on the
+  // homepage, React Router won't trigger a navigation event
+  // because the route hasn't changed — so ScrollToTop won't fire.
+  // This handler detects that case and scrolls manually.
+  const handleHomeClick = (e) => {
+    if (location.pathname === '/') {
+      e.preventDefault()
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    }
+    // If on another page, let the Link navigate normally —
+    // ScrollToTop will handle the scroll reset automatically.
+    setIsMenuOpen(false)
+  }
 
   // This function is called when any mobile nav link is clicked.
   // It closes the menu immediately so the visitor doesn't have to
@@ -68,15 +84,15 @@ function Navbar() {
           On mobile it shows brand + hamburger icon. */}
       <div style={styles.bar}>
 
-        {/* Brand name — always visible, always links home */}
-        <Link to="/" style={styles.brand} onClick={handleLinkClick}>
-          Tallest Tourguide
-        </Link>
+        {/* Brand name */}
+<Link to="/" style={styles.brand} onClick={handleHomeClick}>
+  Tallest Tourguide
+</Link>
 
         {/* Desktop navigation — hidden on mobile */}
         {!isMobile && (
           <div style={styles.links}>
-            <Link to="/" style={getLinkStyle('/')}>Home</Link>
+            <Link to="/" style={getLinkStyle('/')} onClick={handleHomeClick}>Home</Link>
             <Link to="/tours" style={getLinkStyle('/tours')}>Tours</Link>
             <Link to="/packages" style={getLinkStyle('/packages')}>Packages</Link>
             <Link to="/contact" style={getLinkStyle('/contact')}>Contact</Link>

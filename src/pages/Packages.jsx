@@ -1,92 +1,93 @@
-// Packages.jsx
-// This page presents curated multi-tour bundles aimed at specific
-// visitor profiles. Unlike the Tours page which lists individual
-// experiences, this page sells complete itineraries — removing
-// the planning burden from the visitor and increasing your
-// average booking value in the process.
-
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import {
+  Clock, Users, Map, ChevronRight,
+  CheckCircle, XCircle, ArrowRight
+} from 'lucide-react'
 import useWindowWidth from '../hooks/useWindowWidth'
 
-// Each package is an object with everything needed to render
-// its card and its expanded detail view.
-// The "tours" array inside each package lists which individual
-// tours are included — this creates a natural link back to your
-// Tours page and reinforces the value of the bundle.
 const packages = [
   {
     id: 1,
     name: 'Sarajevo Essential',
-    tagline: 'The perfect two-day introduction to Bosnia\'s capital.',
-    duration: '2 days',
-    price: 75,
-    originalPrice: 95,
+    tagline: 'Stories, Survival & Soul',
+    duration: '2 Days',
+    price: 199,
+    originalPrice: 275,
     groupSize: 8,
     badge: 'Most Popular',
     badgeColor: 'var(--color-amber)',
+    badgeTextColor: 'var(--color-n900)',
     targetTraveller: 'Perfect for visitors with 2–3 days in Sarajevo who want to understand the city deeply without planning anything themselves.',
     tours: [
-      'Sarajevo War & Peace Tour',
-      'Tunnel of Hope Tour',
-      'Yellow Fortress Sunset Walk',
+      'Sarajevo Sunset Walking Tour',
+      'Between Empires: Sarajevo Walking Tour',
+      'Siege of Sarajevo: Survival & Resistance',
+      'Bosnian Coffee Ceremony',
+      'Home-hosted welcome meal',
     ],
     includes: [
-      'All three tours with the same local guide',
+      'Private transfer on arrival and departure',
+      'Welcome meal with a local family',
       'Small group — maximum 8 people',
-      'Flexible scheduling across two days',
       'Free cancellation up to 48 hours before',
     ],
-    description: 'Three tours that tell the complete story of Sarajevo — from its Ottoman origins to the siege that defined a generation. This is the sequence your guide recommends for every first-time visitor because each tour builds on the last, turning three separate experiences into one coherent narrative about a city that survived the impossible.',
+    description: 'Two days that tell the complete story of Sarajevo — from its Ottoman origins to the siege that defined a generation. This is the sequence your guide recommends for every first-time visitor because each experience builds on the last, turning separate moments into one coherent understanding of a city that survived the impossible.',
   },
   {
     id: 2,
     name: 'Bosnia Deep Dive',
-    tagline: 'Four days. Two cities. The full picture.',
-    duration: '4 days',
-    price: 145,
-    originalPrice: 180,
-    groupSize: 6,
+    tagline: 'Real Bosnia, Deeply Experienced',
+    duration: '5 Days',
+    price: 349,
+    originalPrice: 550,
+    groupSize: 8,
     badge: 'Best Value',
     badgeColor: 'var(--color-forest-green)',
-    targetTraveller: 'Designed for travellers with a genuine curiosity about Bosnia — its history, its food, its people, and the places most visitors never find.',
+    badgeTextColor: 'var(--color-n000)',
+    targetTraveller: 'Designed for travellers with genuine curiosity about Bosnia — its history, its food, its people, and the places most visitors never find.',
     tours: [
-      'Sarajevo War & Peace Tour',
-      'Jewish Heritage of Sarajevo',
-      'Sarajevo Food Tour',
-      'Mostar & Old Bridge Day Trip',
+      'Sarajevo Sunset Walking Tour',
+      'Between Empires: Sarajevo Walking Tour',
+      'Siege of Sarajevo: Survival & Resistance',
+      'True Herzegovina Day Tour',
+      'Kravice Waterfalls & Swimming',
+      'Herzegovina Wine Cellar Tasting',
+      'Tito\'s Nuclear Bunker',
+      'White Water Rafting on the Neretva',
     ],
     includes: [
-      'All four tours across four days',
-      'Transport to Mostar included',
-      'Food tastings on the Food Tour included',
-      'Small group — maximum 6 people',
+      'Private transport throughout',
+      'Welcome and farewell meals included',
+      'All tour entries and activities',
+      'Small group — maximum 8 people',
       'Free cancellation up to 72 hours before',
     ],
-    description: 'Bosnia is one of the most misunderstood countries in Europe. Most visitors leave knowing only the war. This four-day sequence is designed to show you everything else — the Jewish community that survived here against the odds, the food culture that has never been written about properly, and the town of Mostar that proves beauty and tragedy can occupy the same geography.',
+    description: 'Five days through three distinct worlds — the Ottoman and Austro-Hungarian complexity of Sarajevo, the raw natural beauty of Herzegovina, and the surreal Yugoslav legacy of a dictator\'s nuclear bunker. You will swim in a waterfall, raft a river, taste wine in a medieval cellar, and leave with the kind of understanding that no guidebook can give you.',
   },
   {
     id: 3,
     name: 'Private Group Experience',
     tagline: 'Your group. Your pace. Your itinerary.',
     duration: 'Flexible',
-    price: null,   // null because price is quoted per group
+    price: null,
     originalPrice: null,
     groupSize: null,
     badge: 'Private',
     badgeColor: 'var(--color-n900)',
+    badgeTextColor: 'var(--color-n000)',
     targetTraveller: 'Families, friend groups, corporate teams, or anyone who wants an exclusive experience built entirely around their interests.',
     tours: [
-      'Any combination of our six tours',
+      'Any combination of our tours',
       'Custom routes on request',
       'Private transport available',
+      'Multilingual options available',
     ],
     includes: [
       'Exclusive private guide — no shared groups',
       'Fully customisable itinerary',
       'Flexible dates and duration',
-      'Corporate and team building options available',
-      'Multilingual options on request',
+      'Corporate and team building options',
     ],
     description: 'Every private experience starts with a conversation. You tell us who\'s coming, how long you have, and what you\'re curious about. We build the rest. Private groups get undivided attention, flexible pacing, and the freedom to stop wherever the conversation takes you — which is usually somewhere that never makes it onto any map.',
   },
@@ -94,29 +95,12 @@ const packages = [
 
 function Packages() {
   const width = useWindowWidth()
-const isMobile = width <= 768
-
-  // selectedPackage tracks which package card the visitor has
-  // clicked to expand. null means no package is expanded yet.
-  // When a visitor clicks a package, we set this to that package's id.
-  // When they click again, we set it back to null — toggling the detail view.
-  // This is a common UI pattern called an "accordion" or "expand/collapse."
-  const [selectedPackage, setSelectedPackage] = useState(null)
-
-  const handlePackageClick = (packageId) => {
-    // If the visitor clicks the already-open package, close it.
-    // Otherwise open the clicked one.
-    // This is a ternary operator used as a toggle —
-    // condition ? value_if_true : value_if_false
-    setSelectedPackage(selectedPackage === packageId ? null : packageId)
-  }
+  const isMobile = width <= 768
 
   return (
     <div>
 
-      {/* ── PAGE HEADER ───────────────────────────────────
-          Same green header pattern as Tours and Contact —
-          consistent visual language across all pages. */}
+      {/* Page header */}
       <section style={styles.pageHeader}>
         <div style={styles.headerInner}>
           <span style={styles.eyebrow}>Curated Experiences</span>
@@ -129,203 +113,158 @@ const isMobile = width <= 768
         </div>
       </section>
 
-      {/* ── PACKAGES LIST ─────────────────────────────────
-          Unlike the Tours page which uses a grid of equal cards,
-          the Packages page uses a vertical stack of larger cards.
-          This gives each package more room to breathe and signals
-          to the visitor that these are more substantial offerings
-          worth reading carefully rather than scanning quickly. */}
+      {/* Packages list */}
       <section style={styles.packagesSection}>
-        <div style={styles.packagesList}>
+        <div style={{
+          ...styles.packagesList,
+          maxWidth: isMobile ? '100%' : '900px',
+        }}>
 
-          {packages.map((pkg) => {
+          {packages.map((pkg) => (
+            <div key={pkg.id} style={styles.packageCard}>
 
-            // isOpen tells us whether this specific package
-            // is currently expanded. We use it to conditionally
-            // render the detail section and to change the
-            // button label between "See Details" and "Hide Details."
-            const isOpen = selectedPackage === pkg.id
-
-            return (
-              <div key={pkg.id} style={{
-                ...styles.packageCard,
-                // When a package is open, we add a green left border
-                // as a visual indicator that it's the active one.
-                // The spread operator (...) merges the base card styles
-                // with this conditional override — a clean way to apply
-                // dynamic styles without duplicating the entire style object.
-                borderLeft: isOpen
-                  ? '4px solid var(--color-forest-green)'
-                  : '4px solid transparent',
+              {/* Card header */}
+              <div style={{
+                ...styles.cardHeader,
+                flexDirection: isMobile ? 'column' : 'row',
+                gap: isMobile ? '20px' : '32px',
               }}>
 
-                {/* ── CARD HEADER ─────────────────────────
-                    Always visible regardless of open/closed state.
-                    Contains the badge, name, price, and CTA button. */}
-                <div style={styles.cardHeader}>
+                <div style={styles.cardHeaderLeft}>
 
-                  <div style={styles.cardHeaderLeft}>
+                  {/* Badge */}
+                  <span style={{
+                    ...styles.badge,
+                    backgroundColor: pkg.badgeColor,
+                    color: pkg.badgeTextColor,
+                  }}>
+                    {pkg.badge}
+                  </span>
 
-                    <span style={{
-                      ...styles.badge,
-                      backgroundColor: pkg.badgeColor,
-                      // Private badge needs white text,
-                      // others need dark text for contrast on amber/green.
-                      color: pkg.id === 3
-                        ? 'var(--color-n000)'
-                        : pkg.id === 2
-                          ? 'var(--color-n000)'
-                          : 'var(--color-n900)',
-                    }}>
-                      {pkg.badge}
-                    </span>
+                  <h2 style={styles.packageName}>{pkg.name}</h2>
+                  <p style={styles.packageTagline}>{pkg.tagline}</p>
 
-                    <h2 style={styles.packageName}>{pkg.name}</h2>
-                    <p style={styles.packageTagline}>{pkg.tagline}</p>
+                  {/* Meta row — Lucide icons, no emojis */}
+                  <div style={styles.metaRow}>
 
-                    {/* Meta row — duration and group size */}
-                    <div style={styles.metaRow}>
-                      <span style={styles.meta}>📅 {pkg.duration}</span>
-                      {pkg.groupSize && (
-                        <span style={styles.meta}>👥 Max {pkg.groupSize} people</span>
-                      )}
-                      {/* Tour count — derived from the tours array length */}
+                    <div style={styles.metaItem}>
+                      <Clock
+                        size={14}
+                        color="var(--color-forest-green)"
+                      />
+                      <span style={styles.meta}>{pkg.duration}</span>
+                    </div>
+
+                    {pkg.groupSize && (
+                      <div style={styles.metaItem}>
+                        <Users
+                          size={14}
+                          color="var(--color-forest-green)"
+                        />
+                        <span style={styles.meta}>
+                          Max {pkg.groupSize} people
+                        </span>
+                      </div>
+                    )}
+
+                    <div style={styles.metaItem}>
+                      <Map
+                        size={14}
+                        color="var(--color-forest-green)"
+                      />
                       <span style={styles.meta}>
-                        🗺 {pkg.tours.length} {pkg.tours.length === 1 ? 'tour' : 'tours'} included
+                        {pkg.tours.length} experiences
                       </span>
                     </div>
 
                   </div>
 
-                  {/* Price and CTA on the right side of the header */}
-                  <div style={styles.cardHeaderRight}>
+                  {/* Target traveller */}
+                  <p style={styles.targetTraveller}>
+                    {pkg.targetTraveller}
+                  </p>
 
-                    {/* Conditional price display —
-                        if price is null (Private package), show "Custom Quote"
-                        otherwise show the price with the original crossed out */}
-                    {pkg.price ? (
-                      <div style={styles.priceBlock}>
-                        <span style={styles.originalPrice}>€{pkg.originalPrice}</span>
-                        <span style={styles.price}>€{pkg.price}</span>
-                        <span style={styles.perPerson}>per person</span>
-                        <span style={styles.saving}>
-                          Save €{pkg.originalPrice - pkg.price}
-                        </span>
-                      </div>
-                    ) : (
-                      <div style={styles.priceBlock}>
-                        <span style={styles.customQuote}>Custom Quote</span>
-                        <span style={styles.perPerson}>based on group size</span>
-                      </div>
-                    )}
-
-                    <button
-                      style={styles.detailsBtn}
-                      onClick={() => handlePackageClick(pkg.id)}
-                    >
-                      {isOpen ? 'Hide Details' : 'See Details'}
-                    </button>
-
+                  {/* Tours included — as a clean tag list */}
+                  <div style={styles.tourTags}>
+                    {pkg.tours.map((tour, index) => (
+                      <span key={index} style={styles.tourTag}>
+                        {tour}
+                      </span>
+                    ))}
                   </div>
 
                 </div>
 
-                {/* ── EXPANDED DETAIL SECTION ─────────────
-                    Only renders when isOpen is true.
-                    The && operator means: "only show this if isOpen is true."
-                    When isOpen becomes false, this entire block
-                    disappears from the DOM instantly. */}
-                {isOpen && (
-                  <div style={styles.cardDetail}>
+                {/* Right side — price and CTA */}
+                <div style={{
+                  ...styles.cardHeaderRight,
+                  alignItems: isMobile ? 'flex-start' : 'flex-end',
+                }}>
 
-                    <div style={styles.detailDivider} />
-
-                  <div style={{
-  ...styles.detailGrid,
-  gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
-}}>
-
-                      {/* Left side — description and tours included */}
-                      <div>
-
-                        <p style={styles.targetTraveller}>
-                          {pkg.targetTraveller}
-                        </p>
-
-                        <p style={styles.description}>
-                          {pkg.description}
-                        </p>
-
-                        <h3 style={styles.detailSectionTitle}>
-                          Tours Included
-                        </h3>
-                        <ul style={styles.toursList}>
-                          {pkg.tours.map((tour, index) => (
-                            <li key={index} style={styles.tourItem}>
-                              <span style={styles.tourBullet}>→</span>
-                              {tour}
-                            </li>
-                          ))}
-                        </ul>
-
-                      </div>
-
-                      {/* Right side — what's included and CTA */}
-                      <div>
-
-                        <h3 style={styles.detailSectionTitle}>
-                          What's Included
-                        </h3>
-                        <div style={styles.includesList}>
-                          {pkg.includes.map((item, index) => (
-                            <div key={index} style={styles.includeItem}>
-                              <span style={styles.checkmark}>✓</span>
-                              <span>{item}</span>
-                            </div>
-                          ))}
-                        </div>
-
-                        {/* CTA — links to contact page for private,
-                            links to tours page for standard packages.
-                            This is a small but important UX decision:
-                            private groups need a conversation before booking,
-                            not a booking form. Sending them to Contact
-                            sets the right expectation immediately. */}
-                        {pkg.id === 3 ? (
-                          <Link to="/contact" style={styles.ctaBtn}>
-                            Request a Custom Quote
-                          </Link>
-                        ) : (
-                          <Link to="/contact" style={styles.ctaBtn}>
-                            Book This Package
-                          </Link>
-                        )}
-
-                        <p style={styles.ctaNote}>
-                          We'll confirm availability and send a payment
-                          link within 24 hours.
-                        </p>
-
-                      </div>
-
+                  {pkg.price ? (
+                    <div style={styles.priceBlock}>
+                      <span style={styles.originalPrice}>
+                        €{pkg.originalPrice}
+                      </span>
+                      <span style={styles.price}>€{pkg.price}</span>
+                      <span style={styles.perPerson}>per person</span>
+                      <span style={styles.saving}>
+                        Save €{pkg.originalPrice - pkg.price}
+                      </span>
                     </div>
+                  ) : (
+                    <div style={styles.priceBlock}>
+                      <span style={styles.customQuote}>
+                        Custom Quote
+                      </span>
+                      <span style={styles.perPerson}>
+                        based on group size
+                      </span>
+                    </div>
+                  )}
 
-                  </div>
-                )}
+                  {/* See Details — links to individual page */}
+                  <Link
+                    to={pkg.id === 3 ? '/contact' : `/packages/${pkg.id}`}
+                    style={styles.detailsBtn}
+                  >
+                    <span>
+                      {pkg.id === 3 ? 'Request a Quote' : 'See Details'}
+                    </span>
+                    <ArrowRight size={14} color="var(--color-forest-green)" />
+                  </Link>
+
+                </div>
 
               </div>
-            )
-          })}
+
+              {/* Divider */}
+              <div style={styles.cardDivider} />
+
+              {/* Bottom row — inclusions preview */}
+              <div style={{
+                ...styles.cardBottom,
+                flexDirection: isMobile ? 'column' : 'row',
+                gap: isMobile ? '12px' : '24px',
+              }}>
+                {pkg.includes.map((item, index) => (
+                  <div key={index} style={styles.includeItem}>
+                    <CheckCircle
+                      size={13}
+                      color="var(--color-success)"
+                    />
+                    <span style={styles.includeText}>{item}</span>
+                  </div>
+                ))}
+              </div>
+
+            </div>
+          ))}
 
         </div>
       </section>
 
-      {/* ── BOTTOM CTA BANNER ─────────────────────────────
-          A final conversion opportunity for visitors who
-          scrolled through everything but haven't clicked yet.
-          The question format ("Not sure which package?") is
-          intentional — it speaks directly to the hesitant visitor
-          and reduces the barrier to making contact. */}
+      {/* Bottom CTA */}
       <section style={styles.ctaBanner}>
         <div style={styles.ctaBannerInner}>
           <h2 style={styles.ctaBannerTitle}>
@@ -334,10 +273,10 @@ const isMobile = width <= 768
           <p style={styles.ctaBannerText}>
             Send a message and we'll recommend the best option
             based on your travel dates, group size, and interests.
-            No obligation, no pressure.
           </p>
           <Link to="/contact" style={styles.ctaBannerBtn}>
             Get a Recommendation
+            <ArrowRight size={16} color="var(--color-n900)" />
           </Link>
         </div>
       </section>
@@ -385,48 +324,47 @@ const styles = {
   },
 
   packagesSection: {
-    padding: '72px 40px 80px 40px',
+    padding: '64px 40px 80px 40px',
     backgroundColor: 'var(--color-n100)',
   },
 
   packagesList: {
-    maxWidth: '900px',
     margin: '0 auto',
     display: 'flex',
     flexDirection: 'column',
-    gap: '24px',
+    gap: '20px',
   },
 
   packageCard: {
     backgroundColor: 'var(--color-n000)',
     borderRadius: '16px',
     padding: '32px',
-    boxShadow: '0 2px 16px rgba(0,0,0,0.07)',
+    boxShadow: '0 2px 16px rgba(0,0,0,0.06)',
     border: '1px solid var(--color-n300)',
-    transition: 'border-left 0.2s ease',
   },
 
   cardHeader: {
     display: 'flex',
-    justifyContent: 'space-between',
     alignItems: 'flex-start',
-    gap: '32px',
   },
 
   cardHeaderLeft: {
     flex: 1,
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '10px',
   },
 
   badge: {
     display: 'inline-block',
     fontFamily: 'var(--font-body)',
     fontWeight: '700',
-    fontSize: '11px',
-    letterSpacing: '1px',
+    fontSize: '10px',
+    letterSpacing: '1.5px',
     textTransform: 'uppercase',
     padding: '4px 10px',
     borderRadius: '4px',
-    marginBottom: '12px',
+    width: 'fit-content',
   },
 
   packageName: {
@@ -434,15 +372,14 @@ const styles = {
     fontWeight: '700',
     fontSize: 'var(--text-h2)',
     color: 'var(--color-n900)',
-    marginBottom: '8px',
+    margin: 0,
   },
 
   packageTagline: {
     fontFamily: 'var(--font-body)',
-    fontSize: 'var(--text-body-l)',
+    fontSize: 'var(--text-body)',
     color: 'var(--color-n600)',
-    marginBottom: '16px',
-    lineHeight: 'var(--leading-body)',
+    margin: 0,
   },
 
   metaRow: {
@@ -451,17 +388,51 @@ const styles = {
     flexWrap: 'wrap',
   },
 
+  metaItem: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '5px',
+  },
+
   meta: {
     fontFamily: 'var(--font-body)',
     fontSize: 'var(--text-small)',
     color: 'var(--color-n600)',
   },
 
+  targetTraveller: {
+    fontFamily: 'var(--font-body)',
+    fontSize: 'var(--text-small)',
+    color: 'var(--color-forest-green)',
+    fontStyle: 'italic',
+    lineHeight: '1.6',
+    margin: 0,
+  },
+
+  // Tour tags — small pill-shaped labels showing
+  // each included experience. Cleaner than a bullet list,
+  // more informative than a simple count.
+  tourTags: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: '6px',
+  },
+
+  tourTag: {
+    fontFamily: 'var(--font-body)',
+    fontWeight: '500',
+    fontSize: '11px',
+    color: 'var(--color-n600)',
+    backgroundColor: 'var(--color-n100)',
+    border: '1px solid var(--color-n300)',
+    borderRadius: '100px',
+    padding: '3px 10px',
+  },
+
   cardHeaderRight: {
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'flex-end',
-    gap: '16px',
+    gap: '12px',
     minWidth: '160px',
   },
 
@@ -507,8 +478,11 @@ const styles = {
   },
 
   detailsBtn: {
-    height: 'var(--touch-target)',
-    padding: '0 20px',
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: '6px',
+    height: '40px',
+    padding: '0 16px',
     backgroundColor: 'transparent',
     color: 'var(--color-forest-green)',
     fontFamily: 'var(--font-body)',
@@ -516,117 +490,32 @@ const styles = {
     fontSize: 'var(--text-small)',
     borderRadius: 'var(--radius)',
     border: '1.5px solid var(--color-forest-green)',
-    cursor: 'pointer',
+    textDecoration: 'none',
     whiteSpace: 'nowrap',
   },
 
-  cardDetail: {
-    marginTop: '24px',
-  },
-
-  detailDivider: {
+  cardDivider: {
     height: '1px',
     backgroundColor: 'var(--color-n300)',
-    marginBottom: '28px',
+    margin: '24px 0',
   },
 
-  detailGrid: {
-    display: 'grid',
-    gridTemplateColumns: '1fr 1fr',
-    gap: '48px',
-  },
-
-  targetTraveller: {
-    fontFamily: 'var(--font-body)',
-    fontWeight: '500',
-    fontSize: 'var(--text-body)',
-    color: 'var(--color-forest-green)',
-    lineHeight: 'var(--leading-body)',
-    marginBottom: '16px',
-    fontStyle: 'italic',
-  },
-
-  description: {
-    fontFamily: 'var(--font-body)',
-    fontSize: 'var(--text-body)',
-    color: 'var(--color-n600)',
-    lineHeight: 'var(--leading-body)',
-    marginBottom: '28px',
-  },
-
-  detailSectionTitle: {
-    fontFamily: 'var(--font-display)',
-    fontWeight: '700',
-    fontSize: 'var(--text-h3)',
-    color: 'var(--color-n900)',
-    marginBottom: '16px',
-  },
-
-  toursList: {
-    listStyle: 'none',
-    padding: 0,
+  cardBottom: {
     display: 'flex',
-    flexDirection: 'column',
-    gap: '10px',
-  },
-
-  tourItem: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '10px',
-    fontFamily: 'var(--font-body)',
-    fontSize: 'var(--text-body)',
-    color: 'var(--color-n600)',
-  },
-
-  tourBullet: {
-    color: 'var(--color-forest-green)',
-    fontWeight: '700',
-  },
-
-  includesList: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '10px',
-    marginBottom: '28px',
+    flexWrap: 'wrap',
+    gap: '16px',
   },
 
   includeItem: {
     display: 'flex',
-    alignItems: 'flex-start',
-    gap: '10px',
-    fontFamily: 'var(--font-body)',
-    fontSize: 'var(--text-body)',
-    color: 'var(--color-n600)',
-  },
-
-  checkmark: {
-    color: 'var(--color-success)',
-    fontWeight: '700',
-    flexShrink: 0,
-    marginTop: '2px',
-  },
-
-  ctaBtn: {
-    display: 'inline-flex',
     alignItems: 'center',
-    height: 'var(--touch-target)',
-    padding: '0 24px',
-    backgroundColor: 'var(--color-amber)',
-    color: 'var(--color-n900)',
-    fontFamily: 'var(--font-body)',
-    fontWeight: '700',
-    fontSize: 'var(--text-small)',
-    borderRadius: 'var(--radius)',
-    textDecoration: 'none',
-    marginBottom: '12px',
+    gap: '6px',
   },
 
-  ctaNote: {
+  includeText: {
     fontFamily: 'var(--font-body)',
     fontSize: 'var(--text-small)',
     color: 'var(--color-n600)',
-    lineHeight: 'var(--leading-body)',
   },
 
   ctaBanner: {
@@ -635,7 +524,7 @@ const styles = {
   },
 
   ctaBannerInner: {
-    maxWidth: '600px',
+    maxWidth: '560px',
     margin: '0 auto',
     textAlign: 'center',
   },
@@ -659,7 +548,8 @@ const styles = {
   ctaBannerBtn: {
     display: 'inline-flex',
     alignItems: 'center',
-    height: 'var(--touch-target)',
+    gap: '8px',
+    height: '52px',
     padding: '0 28px',
     backgroundColor: 'var(--color-amber)',
     color: 'var(--color-n900)',

@@ -1,104 +1,120 @@
 // TourCard.jsx
-// This is a reusable card component that displays a single tour.
-// It receives "props" — short for properties — which are the specific
-// details for each tour: its name, price, rating, duration, and badge.
-//
-// Think of props exactly like parameters in a function.
-// The card design is the function — it always looks the same.
-// The props are the arguments — they change per tour.
-// One design, infinite tours.
+// The entire card is now clickable — wrapping everything
+// in a React Router Link makes the full card a touch target.
+// "Book Now" replaced with "View Tour →" — a lower pressure
+// invitation that matches the card's role as a discovery surface.
+// The booking action lives on the detail page where the visitor
+// has full information to make a confident decision.
 
 import { Link } from 'react-router-dom'
-import { Star, Clock, Users } from 'lucide-react'
+import { Star, Clock, Users, ArrowRight } from 'lucide-react'
 
-function TourCard({ id, title, price, rating, reviews, duration, groupSize, badge, hero}) {
+function TourCard({ id, title, price, rating, reviews, duration, groupSize, badge, hero }) {
   return (
-    <div style={styles.card}>
+    // The entire card is wrapped in a Link component.
+    // style={{ display: 'block' }} is required because Link
+    // renders as an inline element by default — block makes
+    // it fill the full grid cell correctly.
+    // textDecoration: none removes the default blue underline
+    // that browsers apply to all anchor elements.
+    <Link to={`/tours/${id}`} style={styles.cardLink}>
+      <div style={styles.card}>
 
-      {/* ── PHOTO PLACEHOLDER ──────────────────────────────
-          We'll replace this with a real <img> tag once you
-          add your tour photos to the assets folder.
-          For now it shows a green placeholder so the layout
-          is visible and testable without images. */}
-     <div style={styles.photoContainer}>
-      {hero ? (
-        <img
-          src={hero}
-          alt={title}
-          style={styles.photo}
-        />
-      ) : (
-        <div style={styles.photoPlaceholder} />
-      )}
+        {/* ── PHOTO ───────────────────────────────────── */}
+        <div style={styles.photoContainer}>
+          {hero ? (
+            <img
+              src={hero}
+              alt={title}
+              style={styles.photo}
+            />
+          ) : (
+            <div style={styles.photoPlaceholder} />
+          )}
 
-      {/* Badge positioned absolutely INSIDE the photo container
-          so it overlays the image rather than pushing it down.
-          This is the correct pattern — the badge floats over
-          the photo in the top-left corner at all times. */}
-      {badge && (
-        <span style={styles.badge}>{badge}</span>
-      )}
-    </div>
+          {badge && (
+            <span style={styles.badge}>{badge}</span>
+          )}
 
-      {/* ── CARD BODY ──────────────────────────────────────
-          Everything below the photo lives here. */}
-      <div style={styles.body}>
-
-       {/* Rating row */}
-<div style={styles.ratingRow}>
-  <Star size={14} color="var(--color-amber)" fill="var(--color-amber)" />
-  <span style={styles.ratingNumber}>{rating}</span>
-  <span style={styles.reviews}>({reviews} reviews)</span>
-</div>
-
-        {/* Tour title */}
-        <h3 style={styles.title}>{title}</h3>
-
-        {/* Meta row */}
-<div style={styles.metaRow}>
-  <div style={styles.metaItem}>
-    <Clock size={14} color="var(--color-n600)" />
-    <span style={styles.meta}>{duration}</span>
-  </div>
-  <div style={styles.metaItem}>
-    <Users size={14} color="var(--color-n600)" />
-    <span style={styles.meta}>Max {groupSize}</span>
-  </div>
-</div>
-
-        {/* Divider line */}
-        <div style={styles.divider} />
-
-        {/* Price and CTA row */}
-        <div style={styles.footer}>
-          <div>
-            <span style={styles.price}>€{price}</span>
-            <span style={styles.perPerson}> / person</span>
+          {/* Price pill overlaid on the bottom right of the photo.
+              Moving the price here frees up space in the card body
+              and creates a cleaner, more modern card layout.
+              Visitors see the price immediately without scrolling
+              through the card details first. */}
+          <div style={styles.pricePill}>
+            <span style={styles.priceAmount}>€{price}</span>
+            <span style={styles.pricePer}>/person</span>
           </div>
-          <Link to={`/tours/${id}`} style={styles.bookBtn}>Book Now →</Link>
+
         </div>
 
+        {/* ── CARD BODY ───────────────────────────────── */}
+        <div style={styles.body}>
+
+          {/* Rating row */}
+          <div style={styles.ratingRow}>
+            <Star size={13} color="var(--color-amber)" fill="var(--color-amber)" />
+            <span style={styles.ratingNumber}>{rating}</span>
+            <span style={styles.reviews}>({reviews} reviews)</span>
+          </div>
+
+          {/* Tour title */}
+          <h3 style={styles.title}>{title}</h3>
+
+          {/* Meta row — duration and group size */}
+          <div style={styles.metaRow}>
+            <div style={styles.metaItem}>
+              <Clock size={13} color="var(--color-n600)" />
+              <span style={styles.meta}>{duration}</span>
+            </div>
+            <div style={styles.metaItem}>
+              <Users size={13} color="var(--color-n600)" />
+              <span style={styles.meta}>Max {groupSize}</span>
+            </div>
+          </div>
+
+          {/* Divider */}
+          <div style={styles.divider} />
+
+          {/* Footer row — View Tour link replacing Book Now button.
+              ArrowRight icon reinforces the directional action —
+              this is an invitation to explore, not a demand to commit. */}
+          {/* Footer — View Tour CTA */}
+          <div style={styles.footer}>
+            <div style={styles.viewTourBtn}>
+              <span style={styles.viewTour}>View Tour</span>
+              <ArrowRight size={14} color="var(--color-forest-green)" />
+            </div>
+          </div>
+
+        </div>
       </div>
-    </div>
+    </Link>
   )
 }
 
 const styles = {
-  // The card itself is a white rounded box with a subtle shadow.
-  // The shadow lifts it off the page background visually —
-  // this is called "elevation" in design systems.
+  // cardLink wraps the entire card in a Link.
+  // display block fills the grid cell fully.
+  // All hover effect is applied here so the entire
+  // card lifts on hover — not just the button.
+cardLink: {
+    display: 'block',
+    textDecoration: 'none',
+    borderRadius: '12px',
+    transition: 'transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+  },
+
   card: {
     backgroundColor: 'var(--color-n000)',
     borderRadius: '12px',
-    overflow: 'hidden',         // Keeps the photo corners rounded
+    overflow: 'hidden',
     boxShadow: '0 2px 16px rgba(0,0,0,0.08)',
-    transition: 'transform 0.2s ease, box-shadow 0.2s ease',
-    cursor: 'pointer',
+    border: '1px solid var(--color-n300)',
+    height: '100%',
   },
 
-  // Green placeholder until real photos are added.
-  // aspect-ratio 4/3 gives it a landscape photo proportion.
- photoContainer: {
+  photoContainer: {
     width: '100%',
     aspectRatio: '4/3',
     position: 'relative',
@@ -108,10 +124,12 @@ const styles = {
   photo: {
     width: '100%',
     height: '100%',
-    objectFit: 'cover',   // Fills the container without stretching —
-                          // same as "fill" in Figma or Procreate's
-                          // image fill mode. Crops rather than distorts.
+    objectFit: 'cover',
     display: 'block',
+    // Subtle zoom on hover — the card link transition
+    // handles the lift, this handles the photo zoom.
+    // Both together create a premium interactive feel.
+    transition: 'transform 0.4s ease',
   },
 
   photoPlaceholder: {
@@ -120,8 +138,8 @@ const styles = {
     backgroundColor: 'var(--color-mid-green)',
   },
 
-  // Badge in the top-left corner of the photo.
-  // Uses your Forest Green as background for contrast against the mid-green placeholder.
+  // Badge — absolute position inside photo container.
+  // Never affects layout, always overlays the photo.
   badge: {
     position: 'absolute',
     top: '12px',
@@ -138,15 +156,38 @@ const styles = {
     zIndex: 1,
   },
 
-  photoContainer: {
-    width: '100%',
-    aspectRatio: '4/3',
-    position: 'relative',
-    overflow: 'hidden',
+  // Price pill — bottom right of photo.
+  // Dark semi-transparent background ensures readability
+  // against any photo colour — light or dark.
+  pricePill: {
+    position: 'absolute',
+    bottom: '12px',
+    right: '12px',
+    backgroundColor: 'rgba(0,0,0,0.65)',
+    backdropFilter: 'blur(4px)',
+    borderRadius: '6px',
+    padding: '5px 10px',
+    display: 'flex',
+    alignItems: 'baseline',
+    gap: '3px',
+    zIndex: 1,
+  },
+
+  priceAmount: {
+    fontFamily: 'var(--font-display)',
+    fontWeight: '700',
+    fontSize: '16px',
+    color: 'var(--color-n000)',
+  },
+
+  pricePer: {
+    fontFamily: 'var(--font-body)',
+    fontSize: '11px',
+    color: 'rgba(255,255,255,0.7)',
   },
 
   body: {
-    padding: '20px',
+    padding: '16px 20px 20px 20px',
   },
 
   ratingRow: {
@@ -156,21 +197,16 @@ const styles = {
     marginBottom: '8px',
   },
 
-  star: {
-    color: 'var(--color-amber)',
-    fontSize: '14px',
-  },
-
   ratingNumber: {
     fontFamily: 'var(--font-body)',
     fontWeight: '700',
-    fontSize: 'var(--text-small)',
+    fontSize: '13px',
     color: 'var(--color-n900)',
   },
 
   reviews: {
     fontFamily: 'var(--font-body)',
-    fontSize: 'var(--text-small)',
+    fontSize: '13px',
     color: 'var(--color-n600)',
   },
 
@@ -179,66 +215,58 @@ const styles = {
     fontWeight: '700',
     fontSize: 'var(--text-h3)',
     color: 'var(--color-n900)',
-    marginBottom: '12px',
+    marginBottom: '10px',
     lineHeight: '1.3',
   },
 
   metaRow: {
     display: 'flex',
     gap: '16px',
-    marginBottom: '16px',
+    marginBottom: '14px',
   },
 
-  meta: {
-    fontFamily: 'var(--font-body)',
-    fontSize: 'var(--text-small)',
-    color: 'var(--color-n600)',
-  },
-  
   metaItem: {
     display: 'flex',
     alignItems: 'center',
     gap: '5px',
   },
 
-  divider: {
-    height: '1px',
-    backgroundColor: 'var(--color-n300)',
-    marginBottom: '16px',
-  },
-
-  footer: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-
-  price: {
-    fontFamily: 'var(--font-display)',
-    fontWeight: '700',
-    fontSize: 'var(--text-h3)',
-    color: 'var(--color-forest-green)',
-  },
-
-  perPerson: {
+  meta: {
     fontFamily: 'var(--font-body)',
-    fontSize: 'var(--text-small)',
+    fontSize: '13px',
     color: 'var(--color-n600)',
   },
 
-  // Small inline Book Now button on the card.
-  bookBtn: {
+  divider: {
+    height: '1px',
+    backgroundColor: 'var(--color-n300)',
+    marginBottom: '14px',
+  },
+
+ footer: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+  },
+
+  viewTourBtn: {
     display: 'inline-flex',
     alignItems: 'center',
-    height: '36px',
-    padding: '0 16px',
-    backgroundColor: 'var(--color-amber)',
-    color: 'var(--color-n900)',
+    gap: '6px',
+    height: '34px',
+    padding: '0 14px',
+    border: '1.5px solid var(--color-forest-green)',
+    borderRadius: '100px',   // Full pill shape
+    backgroundColor: 'transparent',
+    transition: 'background-color 0.2s ease',
+  },
+
+  viewTour: {
     fontFamily: 'var(--font-body)',
     fontWeight: '700',
-    fontSize: 'var(--text-small)',
-    borderRadius: 'var(--radius)',
-    textDecoration: 'none',
+    fontSize: '12px',
+    color: 'var(--color-forest-green)',
+    letterSpacing: '0.3px',
   },
 }
 
