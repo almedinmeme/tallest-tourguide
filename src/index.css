@@ -129,12 +129,14 @@ h1, h2, h3, h4, h5, h6 {
    This mimics how physical objects move when lifted —
    effort at the start, settling at the top.
    The longer duration (0.35s vs 0.2s) gives it weight. */
-a[href^="/tours/"]:hover > div {
+/* Tour card hover — only applies to cards in the main content,
+   not navbar dropdown links */
+.tour-card-link:hover > div {
   transform: translateY(-6px);
   box-shadow: 0 12px 40px rgba(0,0,0,0.16);
   transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94),
               box-shadow 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
+}s
 
 /* View Tour pill fills with Forest Green on card hover —
    the entire card hover state triggers the button fill,
@@ -157,4 +159,39 @@ a[href^="/tours/"]:hover .view-tour-pill {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* Navbar dropdown trigger — animated underline on hover/open.
+   The underline grows from left to right on hover,
+   creating a modern, subtle interaction signal. */
+.nav-trigger {
+  position: relative;
+}
+
+.nav-trigger::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 10px;
+  right: 10px;
+  height: 2px;
+  background-color: var(--color-forest-green);
+  border-radius: 1px;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.nav-trigger:hover::after,
+.nav-trigger.active::after {
+  transform: scaleX(1);
+}
+
+/* Dropdown item hover — subtle background shift, no animation */
+.dropdown-item:hover {
+  background-color: var(--color-n100);
+}
+
+.dropdown-special-item:hover {
+  background-color: rgba(244,161,48,0.10);
 }

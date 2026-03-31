@@ -8,7 +8,8 @@
 // Clicking a thumbnail or an arrow updates that index,
 // React rerenders the main photo instantly.
 // No libraries needed — pure useState logic you already know.
-
+import { Link } from 'react-router-dom'
+import { ArrowRight } from 'lucide-react'
 import { useState } from 'react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import useWindowWidth from '../hooks/useWindowWidth'
@@ -113,6 +114,10 @@ function GuideSection() {
             "I want every traveller who comes here to feel free,
             to feel connected, and to feel like Bosnia was made for them."
           </blockquote>
+          <Link to="/about" style={styles.aboutBtn}>
+  <span>Read My Full Story</span>
+  <ArrowRight size={15} color="var(--color-forest-green)" />
+</Link>
 
         </div>
 
@@ -307,6 +312,24 @@ const styles = {
     fontStyle: 'italic',
     lineHeight: '1.5',
     margin: '0',
+  },
+
+  aboutBtn: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: '8px',
+    height: '44px',
+    padding: '0 20px',
+    backgroundColor: 'transparent',
+    color: 'var(--color-forest-green)',
+    fontFamily: 'var(--font-body)',
+    fontWeight: '700',
+    fontSize: 'var(--text-small)',
+    borderRadius: 'var(--radius)',
+    textDecoration: 'none',
+    border: '1.5px solid var(--color-forest-green)',
+    width: 'fit-content',
+    marginTop: '8px',
   },
 
   photoColumn: {

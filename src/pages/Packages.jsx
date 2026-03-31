@@ -1,30 +1,33 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import {
-  Clock, Users, Map, ChevronRight,
-  CheckCircle, XCircle, ArrowRight
+  Clock, Users, Map, ArrowRight,
+  CheckCircle, Star, Sparkles,
 } from 'lucide-react'
 import useWindowWidth from '../hooks/useWindowWidth'
+import package1Hero from '../assets/package-1-hero.webp'
+import package2Hero from '../assets/package-2-hero.webp'
 
-const packages = [
+const standardPackages = [
   {
     id: 1,
     name: 'Sarajevo Essential',
-    tagline: 'Stories, Survival & Soul',
+    subtitle: 'Stories, Survival & Soul',
     duration: '2 Days',
+    groupSize: 8,
     price: 199,
     originalPrice: 275,
-    groupSize: 8,
+    rating: 4.9,
+    reviews: 47,
     badge: 'Most Popular',
     badgeColor: 'var(--color-amber)',
     badgeTextColor: 'var(--color-n900)',
-    targetTraveller: 'Perfect for visitors with 2–3 days in Sarajevo who want to understand the city deeply without planning anything themselves.',
-    tours: [
-      'Sarajevo Sunset Walking Tour',
-      'Between Empires: Sarajevo Walking Tour',
-      'Siege of Sarajevo: Survival & Resistance',
-      'Bosnian Coffee Ceremony',
+    hero: package1Hero,
+    description: 'Two days that tell the complete story of Sarajevo. A home-hosted meal, the golden hour walking tour, and the siege explained by someone who lived through it.',
+    highlights: [
       'Home-hosted welcome meal',
+      'Sarajevo Sunset Walking Tour',
+      'Siege of Sarajevo Tour',
     ],
     includes: [
       'Private transfer on arrival and departure',
@@ -32,64 +35,33 @@ const packages = [
       'Small group — maximum 8 people',
       'Free cancellation up to 48 hours before',
     ],
-    description: 'Two days that tell the complete story of Sarajevo — from its Ottoman origins to the siege that defined a generation. This is the sequence your guide recommends for every first-time visitor because each experience builds on the last, turning separate moments into one coherent understanding of a city that survived the impossible.',
   },
   {
     id: 2,
     name: 'Bosnia Deep Dive',
-    tagline: 'Real Bosnia, Deeply Experienced',
+    subtitle: 'Real Bosnia, Deeply Experienced',
     duration: '5 Days',
+    groupSize: 8,
     price: 349,
     originalPrice: 550,
-    groupSize: 8,
+    rating: 4.9,
+    reviews: 31,
     badge: 'Best Value',
     badgeColor: 'var(--color-forest-green)',
     badgeTextColor: 'var(--color-n000)',
-    targetTraveller: 'Designed for travellers with genuine curiosity about Bosnia — its history, its food, its people, and the places most visitors never find.',
-    tours: [
-      'Sarajevo Sunset Walking Tour',
-      'Between Empires: Sarajevo Walking Tour',
-      'Siege of Sarajevo: Survival & Resistance',
-      'True Herzegovina Day Tour',
+    hero: package2Hero,
+    description: 'Five days through Sarajevo, Herzegovina, and Yugoslavia\'s strangest legacy. Waterfalls, wine cellars, a nuclear bunker, and white water rafting.',
+    highlights: [
       'Kravice Waterfalls & Swimming',
-      'Herzegovina Wine Cellar Tasting',
       'Tito\'s Nuclear Bunker',
-      'White Water Rafting on the Neretva',
+      'White Water Rafting',
     ],
     includes: [
       'Private transport throughout',
       'Welcome and farewell meals included',
       'All tour entries and activities',
-      'Small group — maximum 8 people',
       'Free cancellation up to 72 hours before',
     ],
-    description: 'Five days through three distinct worlds — the Ottoman and Austro-Hungarian complexity of Sarajevo, the raw natural beauty of Herzegovina, and the surreal Yugoslav legacy of a dictator\'s nuclear bunker. You will swim in a waterfall, raft a river, taste wine in a medieval cellar, and leave with the kind of understanding that no guidebook can give you.',
-  },
-  {
-    id: 3,
-    name: 'Private Group Experience',
-    tagline: 'Your group. Your pace. Your itinerary.',
-    duration: 'Flexible',
-    price: null,
-    originalPrice: null,
-    groupSize: null,
-    badge: 'Private',
-    badgeColor: 'var(--color-n900)',
-    badgeTextColor: 'var(--color-n000)',
-    targetTraveller: 'Families, friend groups, corporate teams, or anyone who wants an exclusive experience built entirely around their interests.',
-    tours: [
-      'Any combination of our tours',
-      'Custom routes on request',
-      'Private transport available',
-      'Multilingual options available',
-    ],
-    includes: [
-      'Exclusive private guide — no shared groups',
-      'Fully customisable itinerary',
-      'Flexible dates and duration',
-      'Corporate and team building options',
-    ],
-    description: 'Every private experience starts with a conversation. You tell us who\'s coming, how long you have, and what you\'re curious about. We build the rest. Private groups get undivided attention, flexible pacing, and the freedom to stop wherever the conversation takes you — which is usually somewhere that never makes it onto any map.',
   },
 ]
 
@@ -100,168 +72,221 @@ function Packages() {
   return (
     <div>
 
+      
+
       {/* Page header */}
       <section style={styles.pageHeader}>
         <div style={styles.headerInner}>
           <span style={styles.eyebrow}>Curated Experiences</span>
           <h1 style={styles.headline}>Tour Packages</h1>
           <p style={styles.subheading}>
-            Not sure where to start? We've done the planning for you.
-            Each package combines our best tours into a complete
-            experience built around a specific type of traveller.
+            From two focused days in Sarajevo to a five-day journey
+            across the country — or a fully personalised itinerary
+            built entirely around you.
           </p>
         </div>
       </section>
 
-      {/* Packages list */}
-      <section style={styles.packagesSection}>
+      {/* Personalised Tour Package — standalone feature card */}
         <div style={{
-          ...styles.packagesList,
-          maxWidth: isMobile ? '100%' : '900px',
+  ...styles.sectionLabel,
+  marginTop: '40px',           // Already handled by section padding
+  marginBottom: '20px',
+  margin: isMobile ? '40px 20px 20px 20px' : '0 auto 60px auto',
+}}>
+          <span style={styles.sectionLabelText}>
+            Want Something Unique?
+          </span>
+        </div>
+
+        <div style={{
+          ...styles.personalisedCard,
+          flexDirection: isMobile ? 'column' : 'row',
+          margin: isMobile ? '0 20px 0px 20px' : '0 auto 20px auto',
         }}>
 
-          {packages.map((pkg) => (
-            <div key={pkg.id} style={styles.packageCard}>
-
-              {/* Card header */}
-              <div style={{
-                ...styles.cardHeader,
-                flexDirection: isMobile ? 'column' : 'row',
-                gap: isMobile ? '20px' : '32px',
-              }}>
-
-                <div style={styles.cardHeaderLeft}>
-
-                  {/* Badge */}
-                  <span style={{
-                    ...styles.badge,
-                    backgroundColor: pkg.badgeColor,
-                    color: pkg.badgeTextColor,
-                  }}>
-                    {pkg.badge}
-                  </span>
-
-                  <h2 style={styles.packageName}>{pkg.name}</h2>
-                  <p style={styles.packageTagline}>{pkg.tagline}</p>
-
-                  {/* Meta row — Lucide icons, no emojis */}
-                  <div style={styles.metaRow}>
-
-                    <div style={styles.metaItem}>
-                      <Clock
-                        size={14}
-                        color="var(--color-forest-green)"
-                      />
-                      <span style={styles.meta}>{pkg.duration}</span>
-                    </div>
-
-                    {pkg.groupSize && (
-                      <div style={styles.metaItem}>
-                        <Users
-                          size={14}
-                          color="var(--color-forest-green)"
-                        />
-                        <span style={styles.meta}>
-                          Max {pkg.groupSize} people
-                        </span>
-                      </div>
-                    )}
-
-                    <div style={styles.metaItem}>
-                      <Map
-                        size={14}
-                        color="var(--color-forest-green)"
-                      />
-                      <span style={styles.meta}>
-                        {pkg.tours.length} experiences
-                      </span>
-                    </div>
-
-                  </div>
-
-                  {/* Target traveller */}
-                  <p style={styles.targetTraveller}>
-                    {pkg.targetTraveller}
-                  </p>
-
-                  {/* Tours included — as a clean tag list */}
-                  <div style={styles.tourTags}>
-                    {pkg.tours.map((tour, index) => (
-                      <span key={index} style={styles.tourTag}>
-                        {tour}
-                      </span>
-                    ))}
-                  </div>
-
-                </div>
-
-                {/* Right side — price and CTA */}
-                <div style={{
-                  ...styles.cardHeaderRight,
-                  alignItems: isMobile ? 'flex-start' : 'flex-end',
-                }}>
-
-                  {pkg.price ? (
-                    <div style={styles.priceBlock}>
-                      <span style={styles.originalPrice}>
-                        €{pkg.originalPrice}
-                      </span>
-                      <span style={styles.price}>€{pkg.price}</span>
-                      <span style={styles.perPerson}>per person</span>
-                      <span style={styles.saving}>
-                        Save €{pkg.originalPrice - pkg.price}
-                      </span>
-                    </div>
-                  ) : (
-                    <div style={styles.priceBlock}>
-                      <span style={styles.customQuote}>
-                        Custom Quote
-                      </span>
-                      <span style={styles.perPerson}>
-                        based on group size
-                      </span>
-                    </div>
-                  )}
-
-                  {/* See Details — links to individual page */}
-                  <Link
-                    to={pkg.id === 3 ? '/contact' : `/packages/${pkg.id}`}
-                    style={styles.detailsBtn}
-                  >
-                    <span>
-                      {pkg.id === 3 ? 'Request a Quote' : 'See Details'}
-                    </span>
-                    <ArrowRight size={14} color="var(--color-forest-green)" />
-                  </Link>
-
-                </div>
-
-              </div>
-
-              {/* Divider */}
-              <div style={styles.cardDivider} />
-
-              {/* Bottom row — inclusions preview */}
-              <div style={{
-                ...styles.cardBottom,
-                flexDirection: isMobile ? 'column' : 'row',
-                gap: isMobile ? '12px' : '24px',
-              }}>
-                {pkg.includes.map((item, index) => (
-                  <div key={index} style={styles.includeItem}>
-                    <CheckCircle
-                      size={13}
-                      color="var(--color-success)"
-                    />
-                    <span style={styles.includeText}>{item}</span>
-                  </div>
-                ))}
-              </div>
-
+          {/* Left — dark background with headline */}
+          <div style={styles.personalisedLeft}>
+            <div style={styles.personalisedIconWrapper}>
+              <Sparkles
+                size={28}
+                color="var(--color-amber)"
+                strokeWidth={1.5}
+              />
             </div>
-          ))}
+            <h2 style={styles.personalisedTitle}>
+              Personalised Tour Package
+            </h2>
+            <p style={styles.personalisedTagline}>
+              Your interests. Your pace. Your Bosnia.
+            </p>
+            <p style={styles.personalisedDesc}>
+              Not every traveller fits a template. If you have
+              specific interests, a custom group, or a vision
+              for what Bosnia should feel like for you — we
+              build it from scratch. Fill in our short
+              questionnaire and we'll come back to you
+              within 24 hours with a proposal.
+            </p>
+          </div>
+
+          {/* Right — what you get + CTA */}
+          <div style={styles.personalisedRight}>
+
+            <span style={styles.personalisedLabel}>
+              What you get
+            </span>
+
+            <div style={styles.personalisedFeatures}>
+              {[
+                'Itinerary built entirely around your interests',
+                'Private guide — no shared groups',
+                'Flexible dates and duration',
+                'Accommodation arranged on request',
+                'Response within 24 hours',
+              ].map((feature, i) => (
+                <div key={i} style={styles.personalisedFeature}>
+                  <CheckCircle
+                    size={15}
+                    color="var(--color-amber)"
+                  />
+                  <span style={styles.personalisedFeatureText}>
+                    {feature}
+                  </span>
+                </div>
+              ))}
+            </div>
+
+            <Link
+              to="/personalised"
+              style={styles.personalisedBtn}
+            >
+              <span>Start Your Questionnaire</span>
+              <ArrowRight size={16} color="var(--color-n900)" />
+            </Link>
+
+            <p style={styles.personalisedNote}>
+              No commitment — just a conversation starter.
+            </p>
+
+          </div>
 
         </div>
+
+      {/* Standard packages — horizontal cards */}
+      <section style={styles.packagesSection}>
+
+        <div style={styles.sectionLabel}>
+          <span style={styles.sectionLabelText}>
+            Our Curated Packages
+          </span>
+        </div>
+
+        
+
+        <div style={styles.cardsList}>
+          {standardPackages.map((pkg, index) => (
+            <div
+              key={pkg.id}
+              style={{
+                ...styles.card,
+                flexDirection: isMobile
+                  ? 'column'
+                  : index % 2 === 0
+                    ? 'row'
+                    : 'row-reverse',
+              }}
+            >
+
+              {/* Photo side */}
+              <div style={styles.photoSide}>
+                <img
+                  src={pkg.hero}
+                  alt={pkg.name}
+                  style={styles.photo}
+                />
+                <span style={{
+                  ...styles.badge,
+                  backgroundColor: pkg.badgeColor,
+                  color: pkg.badgeTextColor,
+                }}>
+                  {pkg.badge}
+                </span>
+              </div>
+
+              {/* Content side */}
+              <div style={styles.contentSide}>
+
+                <div style={styles.ratingRow}>
+                  <Star
+                    size={13}
+                    color="var(--color-amber)"
+                    fill="var(--color-amber)"
+                  />
+                  <span style={styles.rating}>{pkg.rating}</span>
+                  <span style={styles.reviews}>
+                    ({pkg.reviews} reviews)
+                  </span>
+                </div>
+
+                <h3 style={styles.packageName}>{pkg.name}</h3>
+                <p style={styles.packageSubtitle}>{pkg.subtitle}</p>
+
+                <div style={styles.metaRow}>
+                  <div style={styles.metaItem}>
+                    <Clock
+                      size={13}
+                      color="var(--color-forest-green)"
+                    />
+                    <span style={styles.meta}>{pkg.duration}</span>
+                  </div>
+                  <div style={styles.metaItem}>
+                    <Users
+                      size={13}
+                      color="var(--color-forest-green)"
+                    />
+                    <span style={styles.meta}>
+                      Max {pkg.groupSize}
+                    </span>
+                  </div>
+                </div>
+
+                <p style={styles.description}>{pkg.description}</p>
+
+                <div style={styles.highlightsList}>
+                  {pkg.highlights.map((h, i) => (
+                    <div key={i} style={styles.highlightItem}>
+                      <div style={styles.highlightDot} />
+                      <span style={styles.highlightText}>{h}</span>
+                    </div>
+                  ))}
+                </div>
+
+                <div style={styles.cardFooter}>
+                  <div style={styles.priceBlock}>
+                    <span style={styles.originalPrice}>
+                      €{pkg.originalPrice}
+                    </span>
+                    <span style={styles.price}>€{pkg.price}</span>
+                    <span style={styles.perPerson}>per person</span>
+                  </div>
+                  <Link
+                    to={`/packages/${pkg.id}`}
+                    style={styles.ctaBtn}
+                  >
+                    <span>See Package</span>
+                    <ArrowRight
+                      size={15}
+                      color="var(--color-n000)"
+                    />
+                  </Link>
+                </div>
+
+              </div>
+            </div>
+          ))}
+        </div>
+
       </section>
 
       {/* Bottom CTA */}
@@ -286,9 +311,9 @@ function Packages() {
 }
 
 const styles = {
-  pageHeader: {
+   pageHeader: {
     backgroundColor: 'var(--color-forest-green)',
-    padding: '72px 40px',
+    padding: '72px 40px 80px 90px',  // 80px bottom — was likely less
   },
 
   headerInner: {
@@ -324,39 +349,58 @@ const styles = {
   },
 
   packagesSection: {
-    padding: '64px 40px 80px 40px',
+    padding: '80px 40px 80px 40px',
     backgroundColor: 'var(--color-n100)',
   },
 
-  packagesList: {
-    margin: '0 auto',
+  sectionLabel: {
+    maxWidth: '1000px',
+    margin: '0 auto 20px auto',
+  },
+
+  sectionLabelText: {
+    fontFamily: 'var(--font-display)',
+    fontWeight: '700',
+    fontSize: 'var(--text-h3)',
+    color: 'var(--color-n900)',
+  },
+
+  cardsList: {
     display: 'flex',
     flexDirection: 'column',
     gap: '20px',
+    maxWidth: '1000px',
+    margin: '0 auto 56px auto',
   },
 
-  packageCard: {
+  card: {
+    display: 'flex',
     backgroundColor: 'var(--color-n000)',
     borderRadius: '16px',
-    padding: '32px',
-    boxShadow: '0 2px 16px rgba(0,0,0,0.06)',
+    overflow: 'hidden',
+    boxShadow: '0 4px 24px rgba(0,0,0,0.07)',
     border: '1px solid var(--color-n300)',
+    minHeight: '300px',
   },
 
-  cardHeader: {
-    display: 'flex',
-    alignItems: 'flex-start',
+  photoSide: {
+    flex: '0 0 42%',
+    position: 'relative',
+    overflow: 'hidden',
+    minHeight: '240px',
   },
 
-  cardHeaderLeft: {
-    flex: 1,
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '10px',
+  photo: {
+    width: '100%',
+    height: '100%',
+    objectFit: 'cover',
+    display: 'block',
   },
 
   badge: {
-    display: 'inline-block',
+    position: 'absolute',
+    top: '14px',
+    left: '14px',
     fontFamily: 'var(--font-body)',
     fontWeight: '700',
     fontSize: '10px',
@@ -364,7 +408,33 @@ const styles = {
     textTransform: 'uppercase',
     padding: '4px 10px',
     borderRadius: '4px',
-    width: 'fit-content',
+  },
+
+  contentSide: {
+    flex: 1,
+    padding: '24px 28px',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '8px',
+  },
+
+  ratingRow: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '4px',
+  },
+
+  rating: {
+    fontFamily: 'var(--font-body)',
+    fontWeight: '700',
+    fontSize: '13px',
+    color: 'var(--color-n900)',
+  },
+
+  reviews: {
+    fontFamily: 'var(--font-body)',
+    fontSize: '13px',
+    color: 'var(--color-n600)',
   },
 
   packageName: {
@@ -375,7 +445,7 @@ const styles = {
     margin: 0,
   },
 
-  packageTagline: {
+  packageSubtitle: {
     fontFamily: 'var(--font-body)',
     fontSize: 'var(--text-body)',
     color: 'var(--color-n600)',
@@ -384,8 +454,7 @@ const styles = {
 
   metaRow: {
     display: 'flex',
-    gap: '20px',
-    flexWrap: 'wrap',
+    gap: '16px',
   },
 
   metaItem: {
@@ -400,47 +469,71 @@ const styles = {
     color: 'var(--color-n600)',
   },
 
-  targetTraveller: {
+  description: {
     fontFamily: 'var(--font-body)',
-    fontSize: 'var(--text-small)',
-    color: 'var(--color-forest-green)',
-    fontStyle: 'italic',
-    lineHeight: '1.6',
+    fontSize: 'var(--text-body)',
+    color: 'var(--color-n600)',
+    lineHeight: 'var(--leading-body)',
     margin: 0,
   },
 
-  // Tour tags — small pill-shaped labels showing
-  // each included experience. Cleaner than a bullet list,
-  // more informative than a simple count.
-  tourTags: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    gap: '6px',
-  },
-
-  tourTag: {
-    fontFamily: 'var(--font-body)',
-    fontWeight: '500',
-    fontSize: '11px',
-    color: 'var(--color-n600)',
-    backgroundColor: 'var(--color-n100)',
-    border: '1px solid var(--color-n300)',
-    borderRadius: '100px',
-    padding: '3px 10px',
-  },
-
-  cardHeaderRight: {
+  highlightsList: {
     display: 'flex',
     flexDirection: 'column',
-    gap: '12px',
-    minWidth: '160px',
+    gap: '5px',
+  },
+
+  highlightItem: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px',
+  },
+
+  highlightDot: {
+    width: '5px',
+    height: '5px',
+    borderRadius: '50%',
+    backgroundColor: 'var(--color-forest-green)',
+    flexShrink: 0,
+  },
+
+  highlightText: {
+    fontFamily: 'var(--font-body)',
+    fontSize: 'var(--text-small)',
+    color: 'var(--color-n600)',
+  },
+
+  includesList: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '5px',
+  },
+
+  includeItem: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '7px',
+  },
+
+  includeText: {
+    fontFamily: 'var(--font-body)',
+    fontSize: '13px',
+    color: 'var(--color-n600)',
+  },
+
+  cardFooter: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginTop: 'auto',
+    paddingTop: '14px',
+    borderTop: '1px solid var(--color-n300)',
   },
 
   priceBlock: {
     display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'flex-end',
-    gap: '2px',
+    alignItems: 'baseline',
+    gap: '6px',
   },
 
   originalPrice: {
@@ -453,7 +546,7 @@ const styles = {
   price: {
     fontFamily: 'var(--font-display)',
     fontWeight: '700',
-    fontSize: 'var(--text-h1)',
+    fontSize: 'var(--text-h2)',
     color: 'var(--color-forest-green)',
   },
 
@@ -463,59 +556,141 @@ const styles = {
     color: 'var(--color-n600)',
   },
 
-  saving: {
-    fontFamily: 'var(--font-body)',
-    fontWeight: '600',
-    fontSize: 'var(--text-small)',
-    color: 'var(--color-success)',
-  },
-
-  customQuote: {
-    fontFamily: 'var(--font-display)',
-    fontWeight: '700',
-    fontSize: 'var(--text-h2)',
-    color: 'var(--color-forest-green)',
-  },
-
-  detailsBtn: {
+  ctaBtn: {
     display: 'inline-flex',
     alignItems: 'center',
     gap: '6px',
     height: '40px',
-    padding: '0 16px',
-    backgroundColor: 'transparent',
-    color: 'var(--color-forest-green)',
+    padding: '0 18px',
+    backgroundColor: 'var(--color-forest-green)',
+    color: 'var(--color-n000)',
     fontFamily: 'var(--font-body)',
     fontWeight: '700',
     fontSize: 'var(--text-small)',
     borderRadius: 'var(--radius)',
-    border: '1.5px solid var(--color-forest-green)',
     textDecoration: 'none',
-    whiteSpace: 'nowrap',
   },
 
-  cardDivider: {
-    height: '1px',
-    backgroundColor: 'var(--color-n300)',
-    margin: '24px 0',
-  },
-
-  cardBottom: {
+  // Personalised card — dark background, two column layout.
+  // Visually distinct from the standard package cards above —
+  // signals this is a different category of offering.
+  personalisedCard: {
     display: 'flex',
-    flexWrap: 'wrap',
-    gap: '16px',
+    borderRadius: '16px',
+    overflow: 'hidden',
+    maxWidth: '1000px',
+    margin: '0 auto 0 auto',
+    boxShadow: '0 8px 32px rgba(0,0,0,0.10)',
   },
 
-  includeItem: {
+  personalisedLeft: {
+    flex: 1,
+    backgroundColor: '#1A3D2B',  // Deep forest green — premium but not oppressive
+    padding: '40px',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '12px',
+  },
+
+  personalisedIconWrapper: {
+    width: '52px',
+    height: '52px',
+    borderRadius: '14px',
+    backgroundColor: 'rgba(244,161,48,0.12)',
     display: 'flex',
     alignItems: 'center',
-    gap: '6px',
+    justifyContent: 'center',
+    marginBottom: '4px',
   },
 
-  includeText: {
+  personalisedTitle: {
+    fontFamily: 'var(--font-display)',
+    fontWeight: '700',
+    fontSize: 'var(--text-h2)',
+    color: 'var(--color-n000)',
+    margin: 0,
+    lineHeight: '1.2',
+  },
+
+ personalisedTagline: {
+    fontFamily: 'var(--font-body)',
+    fontSize: 'var(--text-body)',
+    color: 'var(--color-amber)',
+    margin: 0,
+    fontWeight: '500',
+  },
+
+
+  personalisedDesc: {
+    fontFamily: 'var(--font-body)',
+    fontSize: 'var(--text-body)',
+    color: 'rgba(255,255,255,0.6)',
+    lineHeight: 'var(--leading-body)',
+    margin: 0,
+  },
+
+ personalisedRight: {
+    flex: '0 0 42%',
+    backgroundColor: '#143222',  // Slightly darker — creates subtle depth
+    borderLeft: '1px solid rgba(255,255,255,0.08)',
+    padding: '40px',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '12px',
+  },
+
+  personalisedLabel: {
+    fontFamily: 'var(--font-body)',
+    fontWeight: '700',
+    fontSize: '11px',
+    color: 'rgba(255,255,255,0.4)',
+    textTransform: 'uppercase',
+    letterSpacing: '1.5px',
+  },
+
+  personalisedFeatures: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '10px',
+    flex: 1,
+  },
+
+  personalisedFeature: {
+    display: 'flex',
+    alignItems: 'flex-start',
+    gap: '10px',
+  },
+
+  personalisedFeatureText: {
+    fontFamily: 'var(--font-body)',
+    fontSize: 'var(--text-body)',
+    color: 'rgba(255,255,255,0.9)',  // Near white — clear contrast on dark green
+    lineHeight: '1.4',
+  },
+
+  personalisedBtn: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '8px',
+    height: '48px',
+    padding: '0 24px',
+    backgroundColor: 'var(--color-amber)',
+    color: 'var(--color-n900)',
+    fontFamily: 'var(--font-body)',
+    fontWeight: '700',
+    fontSize: 'var(--text-body)',
+    borderRadius: 'var(--radius)',
+    textDecoration: 'none',
+    marginTop: 'auto',
+  },
+
+   personalisedNote: {
     fontFamily: 'var(--font-body)',
     fontSize: 'var(--text-small)',
-    color: 'var(--color-n600)',
+    color: 'rgba(255,255,255,0.45)',
+    textAlign: 'center',
+    margin: 0,
   },
 
   ctaBanner: {

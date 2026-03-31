@@ -15,6 +15,7 @@ import GuideSection from '../components/GuideSection'
 import HowItWorks from '../components/HowItWorks'
 import Reviews from '../components/Reviews'
 import CTABanner from '../components/CTABanner'
+import PackagesPreview from '../components/PackagesPreview'
 
 
 function Home() {
@@ -296,7 +297,10 @@ const isMobile = width <= 768
 
 
       </section>
+       {/* Packages Preview — surfaces multi-day packages
+          to visitors who've just browsed individual tours */}
       <HowItWorks />
+      <PackagesPreview />
       <Reviews />
       <CTABanner />
     </div>

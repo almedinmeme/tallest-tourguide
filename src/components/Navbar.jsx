@@ -1,56 +1,101 @@
-// Navbar.jsx
-// Handles both desktop and mobile navigation.
-// On desktop: horizontal bar with links and CTA button.
-// On mobile: brand + hamburger icon, with a dropdown menu
-// that opens and closes via a boolean state variable.
-//
-// Key concept: the hamburger menu state (isMenuOpen) is local
-// to this component — it doesn't need to be shared with anything
-// else in the app, so useState inside this component is exactly
-// the right tool.
-
-import { useState } from 'react'
-import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { useState, useRef, useEffect } from 'react'
+import { Link, useLocation } from 'react-router-dom'
+import { ChevronDown, Sparkles } from 'lucide-react'
 import useWindowWidth from '../hooks/useWindowWidth'
+
+const tourLinks = [
+  { id: 1, label: 'Sarajevo War & Peace Tour', price: '€29' },
+  { id: 2, label: 'Mostar & Old Bridge Day Trip', price: '€49' },
+  { id: 3, label: 'Sarajevo Walking Tour', price: '€22' },
+  { id: 4, label: 'Jewish Heritage of Sarajevo', price: '€25' },
+  { id: 5, label: 'Sarajevo Food Tour', price: '€35' },
+  { id: 6, label: 'Yellow Fortress Sunset Walk', price: '€18' },
+]
+
+const packageLinks = [
+  {
+    id: 'personalised',
+    label: 'Personalised Tour Package',
+    description: 'Built entirely around you',
+    href: '/personalised',
+    isSpecial: true,
+  },
+  {
+    id: 1,
+    label: 'Sarajevo Essential',
+    description: '2 days · From €199',
+    href: '/packages/1',
+    isSpecial: false,
+  },
+  {
+    id: 2,
+    label: 'Bosnia Deep Dive',
+    description: '5 days · From €349',
+    href: '/packages/2',
+    isSpecial: false,
+  },
+]
 
 function Navbar() {
   const width = useWindowWidth()
   const isMobile = width <= 768
-
-  // isMenuOpen tracks whether the mobile menu is currently visible.
-  // false = closed (default), true = open.
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
-
-  // useLocation gives us the current URL path — we use this to
-  // highlight the active link so visitors always know which page
-  // they're on. This is called an "active state" and it's a small
-  // but meaningful trust signal in navigation design.
   const location = useLocation()
 
-  const navigate = useNavigate()
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [toursDropdownOpen, setToursDropdownOpen] = useState(false)
+  const [packagesDropdownOpen, setPackagesDropdownOpen] = useState(false)
 
-  // When clicking the logo or Home link while already on the
-  // homepage, React Router won't trigger a navigation event
-  // because the route hasn't changed — so ScrollToTop won't fire.
-  // This handler detects that case and scrolls manually.
+  const toursTimer = useRef(null)
+  const packagesTimer = useRef(null)
+  const toursRef = useRef(null)
+  const packagesRef = useRef(null)
+
+  // Close on route change
+  useEffect(() => {
+    setIsMenuOpen(false)
+    setToursDropdownOpen(false)
+    setPackagesDropdownOpen(false)
+  }, [location.pathname])
+
+  // Hover handlers with small delay to prevent accidental close
+  const openTours = () => {
+    clearTimeout(toursTimer.current)
+    setToursDropdownOpen(true)
+    setPackagesDropdownOpen(false)
+  }
+
+  const closeTours = () => {
+    toursTimer.current = setTimeout(
+      () => setToursDropdownOpen(false), 150
+    )
+  }
+
+  const openPackages = () => {
+    clearTimeout(packagesTimer.current)
+    setPackagesDropdownOpen(true)
+    setToursDropdownOpen(false)
+  }
+
+  const closePackages = () => {
+    packagesTimer.current = setTimeout(
+      () => setPackagesDropdownOpen(false), 150
+    )
+  }
+
+  const handleLinkClick = () => {
+    setIsMenuOpen(false)
+    setToursDropdownOpen(false)
+    setPackagesDropdownOpen(false)
+  }
+
   const handleHomeClick = (e) => {
     if (location.pathname === '/') {
       e.preventDefault()
       window.scrollTo({ top: 0, behavior: 'smooth' })
     }
-    // If on another page, let the Link navigate normally —
-    // ScrollToTop will handle the scroll reset automatically.
-    setIsMenuOpen(false)
+    handleLinkClick()
   }
 
-  // This function is called when any mobile nav link is clicked.
-  // It closes the menu immediately so the visitor doesn't have to
-  // manually dismiss it after navigating. Small detail, big impact.
-  const handleLinkClick = () => setIsMenuOpen(false)
-
-  // This helper function returns the correct style for each nav link —
-  // the active page gets the Forest Green colour to indicate "you are here",
-  // while inactive links stay in the neutral body text colour.
   const getLinkStyle = (path) => ({
     ...styles.link,
     color: location.pathname === path
@@ -59,8 +104,6 @@ function Navbar() {
     fontWeight: location.pathname === path ? '700' : '500',
   })
 
-  // Same active style logic but for mobile links —
-  // slightly larger and full-width for easy tapping.
   const getMobileLinkStyle = (path) => ({
     ...styles.mobileLink,
     color: location.pathname === path
@@ -73,114 +116,331 @@ function Navbar() {
   })
 
   return (
-    // The outer nav wrapper uses position:relative so that the
-    // mobile dropdown menu can be positioned absolutely below it
-    // without pushing any page content downward.
     <nav style={styles.nav}>
 
-      {/* ── NAVBAR BAR ──────────────────────────────────
-          This is always visible on both desktop and mobile.
-          On desktop it shows brand + links + CTA.
-          On mobile it shows brand + hamburger icon. */}
       <div style={styles.bar}>
 
-        {/* Brand name */}
-<Link to="/" style={styles.brand} onClick={handleHomeClick}>
-  Tallest Tourguide
-</Link>
+        {/* Brand */}
+        <Link to="/" style={styles.brand} onClick={handleHomeClick}>
+          Tallest Tourguide
+        </Link>
 
-        {/* Desktop navigation — hidden on mobile */}
+        {/* Desktop links */}
         {!isMobile && (
           <div style={styles.links}>
-            <Link to="/" style={getLinkStyle('/')} onClick={handleHomeClick}>Home</Link>
-            <Link to="/tours" style={getLinkStyle('/tours')}>Tours</Link>
-            <Link to="/packages" style={getLinkStyle('/packages')}>Packages</Link>
-            <Link to="/contact" style={getLinkStyle('/contact')}>Contact</Link>
+
+            <Link
+              to="/"
+              style={getLinkStyle('/')}
+              onClick={handleLinkClick}
+            >
+              Home
+            </Link>
+
+            {/* Tours dropdown */}
+            <div
+              ref={toursRef}
+              style={styles.dropdownWrapper}
+              onMouseEnter={openTours}
+              onMouseLeave={closeTours}
+            >
+              <button
+                className={`nav-trigger${location.pathname.startsWith('/tours') ? ' active' : ''}`}
+                style={{
+                  ...styles.dropdownTrigger,
+                  color: location.pathname.startsWith('/tours')
+                    ? 'var(--color-forest-green)'
+                    : 'var(--color-n600)',
+                  fontWeight: location.pathname.startsWith('/tours')
+                    ? '700' : '500',
+                }}
+              >
+                
+                Tours
+                <ChevronDown
+                  size={14}
+                  style={{
+                    transform: toursDropdownOpen
+                      ? 'rotate(180deg)' : 'rotate(0)',
+                    transition: 'transform 0.2s ease',
+                  }}
+                />
+              </button>
+
+              {toursDropdownOpen && (
+                <div
+                  style={styles.dropdown}
+                  onMouseEnter={() =>
+                    clearTimeout(toursTimer.current)
+                  }
+                  onMouseLeave={closeTours}
+                >
+                  <div style={styles.dropdownHeader}>
+                    <span style={styles.dropdownHeaderTitle}>
+                      Our Tours
+                    </span>
+                    <Link
+                      to="/tours"
+                      style={styles.dropdownViewAll}
+                      onClick={handleLinkClick}
+                    >
+                      View all →
+                    </Link>
+                  </div>
+
+                  <div style={styles.dropdownDivider} />
+
+                  <div style={styles.dropdownItems}>
+                    {tourLinks.map((tour, index) => (
+                      <div key={tour.id}>
+                        <Link
+  to={`/tours/${tour.id}`}
+  style={styles.dropdownItem}
+  className="dropdown-item"
+  onClick={handleLinkClick}
+>
+                          <div style={styles.dropdownItemLeft}>
+                            <div style={styles.dropdownItemDot} />
+                            <span style={styles.dropdownItemLabel}>
+                              {tour.label}
+                            </span>
+                          </div>
+                          <span style={styles.dropdownItemPrice}>
+                            {tour.price}
+                          </span>
+                        </Link>
+                        {index < tourLinks.length - 1 && (
+                          <div style={styles.dropdownItemDivider} />
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Packages dropdown */}
+            <div
+              ref={packagesRef}
+              style={styles.dropdownWrapper}
+              onMouseEnter={openPackages}
+              onMouseLeave={closePackages}
+            >
+              <button
+                className={`nav-trigger${
+                  location.pathname.startsWith('/packages') ||
+                  location.pathname === '/personalised'
+                    ? ' active' : ''
+                }`}
+                style={{
+                  ...styles.dropdownTrigger,
+                  color:
+                    location.pathname.startsWith('/packages') ||
+                    location.pathname === '/personalised'
+                      ? 'var(--color-forest-green)'
+                      : 'var(--color-n600)',
+                  fontWeight:
+                    location.pathname.startsWith('/packages') ||
+                    location.pathname === '/personalised'
+                      ? '700' : '500',
+                }}
+              >
+                Packages
+                <ChevronDown
+                  size={14}
+                  style={{
+                    transform: packagesDropdownOpen
+                      ? 'rotate(180deg)' : 'rotate(0)',
+                    transition: 'transform 0.2s ease',
+                  }}
+                />
+              </button>
+
+              {packagesDropdownOpen && (
+                <div
+                  style={styles.dropdown}
+                  onMouseEnter={() =>
+                    clearTimeout(packagesTimer.current)
+                  }
+                  onMouseLeave={closePackages}
+                >
+                  <div style={styles.dropdownHeader}>
+                    <span style={styles.dropdownHeaderTitle}>
+                      Packages
+                    </span>
+                    <Link
+                      to="/packages"
+                      style={styles.dropdownViewAll}
+                      onClick={handleLinkClick}
+                    >
+                      View all →
+                    </Link>
+                  </div>
+
+                  <div style={styles.dropdownDivider} />
+
+                  {/* Personalised — special highlighted item */}
+                  <Link
+  to="/personalised"
+  style={styles.dropdownSpecialItem}
+  className="dropdown-special-item"
+  onClick={handleLinkClick}
+>
+                    <div style={styles.dropdownSpecialItemLeft}>
+                      <Sparkles
+                        size={14}
+                        color="var(--color-amber)"
+                      />
+                      <div style={styles.dropdownItemContent}>
+                        <span style={styles.dropdownSpecialItemLabel}>
+                          Personalised Tour Package
+                        </span>
+                        <span style={styles.dropdownItemDescription}>
+                          Built entirely around you
+                        </span>
+                      </div>
+                    </div>
+                  </Link>
+
+                  <div style={styles.dropdownDivider} />
+
+                  <div style={styles.dropdownItems}>
+                    {packageLinks
+                      .filter((p) => !p.isSpecial)
+                      .map((pkg, index, arr) => (
+                        <div key={pkg.id}>
+                          <Link
+  to={pkg.href}
+  style={styles.dropdownItem}
+  className="dropdown-item"
+  onClick={handleLinkClick}
+>
+                            <div style={styles.dropdownItemLeft}>
+                              <div style={styles.dropdownItemDot} />
+                              <div style={styles.dropdownItemContent}>
+                                <span style={styles.dropdownItemLabel}>
+                                  {pkg.label}
+                                </span>
+                                <span style={styles.dropdownItemDescription}>
+                                  {pkg.description}
+                                </span>
+                              </div>
+                            </div>
+                          </Link>
+                          {index < arr.length - 1 && (
+                            <div style={styles.dropdownItemDivider} />
+                          )}
+                        </div>
+                      ))
+                    }
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <Link
+              to="/about"
+              style={getLinkStyle('/about')}
+              onClick={handleLinkClick}
+            >
+              About
+            </Link>
+
+            <Link to="/contact" style={styles.contactBtn}>
+              Contact
+            </Link>
+
           </div>
         )}
 
-        {/* Right side — CTA button on desktop, hamburger on mobile */}
-        {isMobile ? (
-
-          // Hamburger button — three lines that transform into an X when open.
-          // The transformation gives the visitor visual confirmation that
-          // clicking again will close the menu — a small but important affordance.
+        {/* Mobile hamburger */}
+        {isMobile && (
           <button
             style={styles.hamburger}
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            aria-label="Toggle navigation menu"
+            aria-label="Toggle navigation"
           >
-            {/* We render either the hamburger (☰) or close (✕) icon
-                depending on menu state. The aria-label on the button
-                ensures screen readers announce it correctly regardless
-                of which icon is showing — accessibility matters for SEO too. */}
             {isMenuOpen ? '✕' : '☰'}
           </button>
-
-        ) : (
-
-          <Link to="/tours" style={styles.cta}>
-            Book Now
-          </Link>
-
         )}
 
       </div>
 
-      {/* ── MOBILE DROPDOWN MENU ────────────────────────
-          Only rendered when isMenuOpen is true AND we're on mobile.
-          The && operator means: both conditions must be true.
-          On desktop this entire block never appears regardless of state.
-          
-          Position absolute means it floats over the page content below
-          rather than pushing it down — this is the standard behaviour
-          visitors expect from mobile navigation menus. */}
+      {/* Mobile menu */}
       {isMobile && isMenuOpen && (
         <div style={styles.mobileMenu}>
 
           <Link
             to="/"
             style={getMobileLinkStyle('/')}
-            onClick={handleLinkClick}
+            onClick={handleHomeClick}
           >
             Home
           </Link>
 
+          <div style={styles.mobileSectionLabel}>Tours</div>
           <Link
             to="/tours"
-            style={getMobileLinkStyle('/tours')}
+            style={styles.mobileSubLink}
             onClick={handleLinkClick}
           >
-            Tours
+            All Tours
           </Link>
+          {tourLinks.map((tour) => (
+            <Link
+              key={tour.id}
+              to={`/tours/${tour.id}`}
+              style={styles.mobileSubLink}
+              onClick={handleLinkClick}
+            >
+              <span>{tour.label}</span>
+              <span style={styles.mobileSubLinkMeta}>
+                {tour.price}
+              </span>
+            </Link>
+          ))}
 
+          <div style={styles.mobileSectionLabel}>Packages</div>
           <Link
             to="/packages"
-            style={getMobileLinkStyle('/packages')}
+            style={styles.mobileSubLink}
             onClick={handleLinkClick}
           >
-            Packages
+            All Packages
+          </Link>
+          {packageLinks.map((pkg) => (
+            <Link
+              key={pkg.id}
+              to={pkg.href}
+              style={{
+                ...styles.mobileSubLink,
+                backgroundColor: pkg.isSpecial
+                  ? 'rgba(244,161,48,0.08)'
+                  : 'transparent',
+              }}
+              onClick={handleLinkClick}
+            >
+              <span>{pkg.label}</span>
+              {pkg.isSpecial && (
+                <Sparkles size={13} color="var(--color-amber)" />
+              )}
+            </Link>
+          ))}
+
+          <Link
+            to="/about"
+            style={getMobileLinkStyle('/about')}
+            onClick={handleLinkClick}
+          >
+            About
           </Link>
 
           <Link
             to="/contact"
-            style={getMobileLinkStyle('/contact')}
+            style={styles.mobileContactBtn}
             onClick={handleLinkClick}
           >
             Contact
-          </Link>
-
-          {/* Book Now CTA inside the mobile menu —
-              large, full-width, and Amber so it stands out
-              from the regular navigation links clearly.
-              This is the most important action on the page
-              and it should be impossible to miss. */}
-          <Link
-            to="/tours"
-            style={styles.mobileCtaBtn}
-            onClick={handleLinkClick}
-          >
-            Book Now
           </Link>
 
         </div>
@@ -191,9 +451,6 @@ function Navbar() {
 }
 
 const styles = {
-  // position: relative on the nav is critical —
-  // it creates the positioning context for the absolute
-  // dropdown menu so it appears directly below the navbar.
   nav: {
     position: 'sticky',
     top: 0,
@@ -202,9 +459,6 @@ const styles = {
     borderBottom: '1px solid var(--color-n300)',
   },
 
-  // The bar is the always-visible horizontal strip.
-  // flexbox with space-between pushes brand to the left
-  // and the CTA/hamburger to the right automatically.
   bar: {
     display: 'flex',
     alignItems: 'center',
@@ -223,93 +477,270 @@ const styles = {
 
   links: {
     display: 'flex',
-    gap: '32px',
+    alignItems: 'center',
+    gap: '4px',
   },
 
   link: {
     fontFamily: 'var(--font-body)',
     fontSize: 'var(--text-small)',
-    color: 'var(--color-n600)',
     textDecoration: 'none',
+    padding: '6px 10px',
+    borderRadius: '6px',
     transition: 'color 0.15s ease',
   },
 
-  cta: {
-    backgroundColor: 'var(--color-amber)',
+  dropdownWrapper: {
+    position: 'relative',
+  },
+
+  dropdownTrigger: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: '4px',
+    fontFamily: 'var(--font-body)',
+    fontSize: 'var(--text-small)',
+    background: 'none',
+    border: 'none',
+    cursor: 'pointer',
+    padding: '6px 10px',
+    borderRadius: '6px',
+    position: 'relative',
+  },
+
+  dropdown: {
+    position: 'absolute',
+    top: 'calc(100% + 12px)',
+    left: '50%',
+    transform: 'translateX(-50%)',
+    backgroundColor: 'var(--color-n000)',
+    borderRadius: '14px',
+    border: '1px solid var(--color-n300)',
+    boxShadow: '0 12px 40px rgba(0,0,0,0.12)',
+    minWidth: '260px',
+    padding: '12px',
+    zIndex: 200,
+  },
+
+  dropdownHeader: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: '4px 4px 8px 4px',
+  },
+
+  dropdownHeaderTitle: {
+    fontFamily: 'var(--font-display)',
+    fontWeight: '700',
+    fontSize: '11px',
+    color: 'var(--color-n600)',
+    textTransform: 'uppercase',
+    letterSpacing: '1px',
+  },
+
+  dropdownViewAll: {
+    fontFamily: 'var(--font-body)',
+    fontWeight: '700',
+    fontSize: '12px',
+    color: 'var(--color-forest-green)',
+    textDecoration: 'none',
+  },
+
+  dropdownDivider: {
+    height: '1px',
+    backgroundColor: 'var(--color-n300)',
+    margin: '4px 0',
+  },
+
+  dropdownItems: {
+    display: 'flex',
+    flexDirection: 'column',
+  },
+
+   dropdownItem: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    textDecoration: 'none',
+    padding: '10px 8px',
+    borderRadius: '8px',
+    // No transition — background change is instant
+  },
+
+  dropdownItemLeft: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '10px',
+    flex: 1,
+  },
+
+  dropdownItemDot: {
+    width: '5px',
+    height: '5px',
+    borderRadius: '50%',
+    backgroundColor: 'var(--color-forest-green)',
+    flexShrink: 0,
+  },
+
+  dropdownItemContent: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '1px',
+  },
+
+  dropdownItemLabel: {
+    fontFamily: 'var(--font-body)',
+    fontWeight: '500',
+    fontSize: 'var(--text-small)',
     color: 'var(--color-n900)',
+    lineHeight: '1.3',
+  },
+
+  dropdownItemDescription: {
+    fontFamily: 'var(--font-body)',
+    fontSize: '11px',
+    color: 'var(--color-n600)',
+  },
+
+  dropdownItemPrice: {
+    fontFamily: 'var(--font-display)',
+    fontWeight: '700',
+    fontSize: '13px',
+    color: 'var(--color-forest-green)',
+    whiteSpace: 'nowrap',
+    marginLeft: '8px',
+  },
+
+  dropdownItemDivider: {
+    height: '1px',
+    backgroundColor: 'var(--color-n300)',
+    margin: '0 8px',
+    opacity: 0.5,
+  },
+
+  dropdownSpecialItem: {
+    display: 'flex',
+    alignItems: 'center',
+    textDecoration: 'none',
+    padding: '10px 8px',
+    borderRadius: '8px',
+    backgroundColor: 'rgba(244,161,48,0.06)',
+    margin: '4px 0',
+  },
+
+  dropdownSpecialItemLeft: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '10px',
+  },
+
+  dropdownSpecialItemLabel: {
     fontFamily: 'var(--font-body)',
     fontWeight: '700',
     fontSize: 'var(--text-small)',
-    padding: '0 20px',
-    height: 'var(--touch-target)',
-    borderRadius: 'var(--radius)',
-    textDecoration: 'none',
-    display: 'flex',
-    alignItems: 'center',
+    color: 'var(--color-n900)',
   },
 
-  // The hamburger button needs no background or border —
-  // just the icon itself, large enough to tap comfortably.
-  // 44px minimum touch target size from your design system.
+  contactBtn: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    height: '36px',
+    padding: '0 16px',
+    backgroundColor: 'transparent',
+    color: 'var(--color-amber)',
+    fontFamily: 'var(--font-body)',
+    fontWeight: '700',
+    fontSize: 'var(--text-small)',
+    borderRadius: 'var(--radius)',
+    textDecoration: 'none',
+    border: '1.5px solid var(--color-amber)',
+    marginLeft: '4px',
+  },
+
   hamburger: {
     background: 'none',
     border: 'none',
-    fontSize: '24px',
+    fontSize: '22px',
     color: 'var(--color-n900)',
     cursor: 'pointer',
-    width: 'var(--touch-target)',
-    height: 'var(--touch-target)',
+    width: '44px',
+    height: '44px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 'var(--radius)',
   },
 
-  // The mobile dropdown menu sits absolutely below the navbar.
-  // Full viewport width, white background, clear visual separation
-  // from the page content with a shadow.
   mobileMenu: {
     position: 'absolute',
-    top: '68px',        // Exactly the height of the navbar bar
+    top: '68px',
     left: 0,
     right: 0,
     backgroundColor: 'var(--color-n000)',
     borderBottom: '1px solid var(--color-n300)',
-    boxShadow: '0 8px 24px rgba(0,0,0,0.12)',
+    boxShadow: '0 8px 24px rgba(0,0,0,0.10)',
     display: 'flex',
     flexDirection: 'column',
     padding: '8px 0 16px 0',
     zIndex: 99,
+    maxHeight: '80vh',
+    overflowY: 'auto',
   },
 
-  // Mobile links are full-width with generous padding —
-  // easy to tap with a thumb, even in the corner of the screen.
   mobileLink: {
     fontFamily: 'var(--font-body)',
     fontSize: 'var(--text-body)',
-    color: 'var(--color-n600)',
     textDecoration: 'none',
-    padding: '14px 24px',
+    padding: '12px 20px',
     display: 'block',
     borderRadius: '8px',
     margin: '2px 8px',
-    transition: 'background-color 0.15s ease',
   },
 
-  // The mobile Book Now button is full-width inside the menu,
-  // clearly differentiated from the nav links by its Amber colour.
-  mobileCtaBtn: {
-    backgroundColor: 'var(--color-amber)',
-    color: 'var(--color-n900)',
+  mobileSectionLabel: {
+    fontFamily: 'var(--font-body)',
+    fontWeight: '700',
+    fontSize: '10px',
+    color: 'var(--color-n600)',
+    textTransform: 'uppercase',
+    letterSpacing: '1.5px',
+    padding: '12px 20px 4px 20px',
+    marginTop: '4px',
+  },
+
+  mobileSubLink: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    fontFamily: 'var(--font-body)',
+    fontSize: 'var(--text-small)',
+    color: 'var(--color-n600)',
+    textDecoration: 'none',
+    padding: '10px 20px 10px 28px',
+    borderRadius: '8px',
+    margin: '1px 8px',
+  },
+
+  mobileSubLinkMeta: {
+    fontFamily: 'var(--font-body)',
+    fontSize: '12px',
+    color: 'var(--color-n600)',
+    fontWeight: '600',
+  },
+
+  mobileContactBtn: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
     fontFamily: 'var(--font-body)',
     fontWeight: '700',
     fontSize: 'var(--text-body)',
+    color: 'var(--color-amber)',
     textDecoration: 'none',
-    padding: '14px 24px',
+    padding: '12px 20px',
     margin: '8px 8px 0 8px',
     borderRadius: 'var(--radius)',
-    display: 'block',
-    textAlign: 'center',
+    border: '1.5px solid var(--color-amber)',
   },
 }
 

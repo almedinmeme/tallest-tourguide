@@ -17,7 +17,11 @@ function TourCard({ id, title, price, rating, reviews, duration, groupSize, badg
     // it fill the full grid cell correctly.
     // textDecoration: none removes the default blue underline
     // that browsers apply to all anchor elements.
-    <Link to={`/tours/${id}`} style={styles.cardLink}>
+    <Link
+  to={`/tours/${id}`}
+  style={styles.cardLink}
+  className="tour-card-link"
+>
       <div style={styles.card}>
 
         {/* ── PHOTO ───────────────────────────────────── */}

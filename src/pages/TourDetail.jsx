@@ -1,501 +1,662 @@
 // TourDetail.jsx
-// This single page handles ALL of your individual tour pages.
-// It reads the tour ID from the URL, finds the matching tour
-// in the data array, and renders that tour's full details.
-// One page component — six different tours.
+// Fully redesigned individual tour page.
+// Structure:
+// - Full photo hero with overlap content card (same as PackageDetail)
+// - Two column layout: details left, booking card right
+// - Desktop: sticky booking card on right
+// - Mobile: fixed bottom bar with drawer booking form
 
 import { useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
+import {
+  Star, Clock, Users, MapPin, CheckCircle,
+  XCircle, ShieldCheck, ChevronDown, ChevronUp,
+  X, Calendar, Phone, Mail, ArrowRight
+} from 'lucide-react'
 import emailjs from '@emailjs/browser'
 import useWindowWidth from '../hooks/useWindowWidth'
-import { Star, Clock, Users, MapPin, CheckCircle } from 'lucide-react'
-import { ShieldCheck } from 'lucide-react'
-
-// useParams is a React Router hook — a hook is a special function
-// that gives your component access to something it couldn't otherwise reach.
-// useParams specifically reaches into the current URL and pulls out
-// the named parameters — in our case, the "id" from /tours/:id.
-// Think of it like asking React Router: "hey, what's in that URL slot?"
-
-// This is the same tour data from Tours.jsx.
-// In a later step we'll move this to a shared file so you
-// don't maintain it in two places — a principle called DRY:
-// Don't Repeat Yourself. For now, keeping it here gets us moving.
 import tours from '../data/tours'
 
 function TourDetail() {
   const { id } = useParams()
-  const width = useWindowWidth()
-const isMobile = width <= 768
   const tour = tours.find((t) => t.id === Number(id))
+  const width = useWindowWidth()
+  const isMobile = width <= 768
 
-  // ── REACT STATE ──────────────────────────────────────────────────
-  // Each useState call declares one piece of information React should
-  // remember and watch. The first value is the current state, the second
-  // is the function you call to update it.
-  //
-  // Think of it like this:
-  // [currentValue, functionToChangeTheValue] = useState(startingValue)
-  //
-  // The moment you call the update function with a new value,
-  // React redraws every part of the UI that uses that value.
-  // That's how the total price updates instantly when you change
-  // the number of people — no page reload, no manual DOM manipulation.
-
+  // Booking form state
   const [selectedDate, setSelectedDate] = useState('')
   const [numPeople, setNumPeople] = useState(1)
   const [guestName, setGuestName] = useState('')
   const [guestEmail, setGuestEmail] = useState('')
   const [guestPhone, setGuestPhone] = useState('')
-
-  // These three states manage the submission process itself —
-  // giving the visitor feedback while their request is being sent.
+  const [tourType, setTourType] = useState('shared')
   const [isSending, setIsSending] = useState(false)
   const [isSuccess, setIsSuccess] = useState(false)
   const [isError, setIsError] = useState(false)
 
-  // This derived value recalculates automatically every time
-  // numPeople changes — no extra code needed, it just works
-  // because React rerenders the component when state changes.
-  const totalPrice = tour ? tour.price * numPeople : 0
+  // Mobile drawer state
+  const [drawerOpen, setDrawerOpen] = useState(false)
+
+  // FAQ accordion state
+  const [openFaq, setOpenFaq] = useState(null)
+
+  const totalPrice = tour
+    ? tourType === 'private'
+      ? 0
+      : tour.price * numPeople
+    : 0
 
   if (!tour) {
     return (
       <div style={styles.notFound}>
         <h2>Tour not found</h2>
-        <Link to="/tours" style={styles.backLink}>← Back to all tours</Link>
+        <Link to="/tours" style={styles.backLinkDark}>
+          ← Back to all tours
+        </Link>
       </div>
     )
   }
 
-  // ── EMAIL HANDLER ─────────────────────────────────────────────────
-  // This function runs when the visitor clicks Book Now.
-  // It validates that the required fields are filled,
-  // then sends the booking data to EmailJS which forwards
-  // a formatted email to your inbox.
   const handleBooking = () => {
-
-    // Basic validation — make sure the essential fields are filled
-    // before attempting to send. In a production app you'd give
-    // more specific feedback per field, but this is clean and clear
-    // for a pre-launch operation.
     if (!selectedDate || !guestName || !guestEmail) {
       alert('Please fill in your name, email, and select a date.')
       return
     }
-
-    // Tell React we're in the sending state so the button
-    // can show a loading message and disable itself.
     setIsSending(true)
     setIsError(false)
 
-    // This object maps your booking data to the placeholder names
-    // you set up in your EmailJS template.
-    // {{tour_name}} in the template becomes tour.title here.
-    // The names must match exactly — EmailJS is case-sensitive.
     const templateParams = {
       tour_name: tour.title,
       tour_date: selectedDate,
       num_people: numPeople,
-      total_price: totalPrice,
+      total_price: tourType === 'private'
+        ? 'Private tour — quote requested'
+        : `€${totalPrice}`,
       guest_name: guestName,
       guest_email: guestEmail,
       guest_phone: guestPhone || 'Not provided',
+      tour_type: tourType === 'private'
+        ? 'Private Tour'
+        : 'Shared Tour',
     }
 
-    // Replace these three strings with your actual IDs from EmailJS.
-    // We'll do this together once you have your EmailJS account set up.
-   emailjs.send(
-  import.meta.env.VITE_EMAILJS_SERVICE_ID,
-  import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
-  templateParams,
-  import.meta.env.VITE_EMAILJS_PUBLIC_KEY
-)
-    .then(() => {
-      // Success — show the confirmation message
-      setIsSending(false)
-      setIsSuccess(true)
-    })
-    .catch(() => {
-      // Something went wrong — show the error message
-      setIsSending(false)
-      setIsError(true)
-    })
+    emailjs.send(
+      import.meta.env.VITE_EMAILJS_SERVICE_ID,
+      import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
+      templateParams,
+      import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+    )
+    .then(() => { setIsSending(false); setIsSuccess(true) })
+    .catch(() => { setIsSending(false); setIsError(true) })
   }
 
-  return (
-    <div>
-
-      <div style={{...styles.photoBanner,
-      height: isMobile ? '240px' : '420px',
-}}>
-        {tour.badge && (
-          <span style={styles.badge}>{tour.badge}</span>
-        )}
-      </div>
-
-      <div style={{
-  ...styles.contentWrapper,
-  padding: isMobile ? '32px 20px 60px 20px' : '48px 40px 80px 40px',
-}}>
-        <div style={{
-  ...styles.contentGrid,
-  gridTemplateColumns: isMobile ? '1fr' : '1fr 380px',
-  gap: isMobile ? '32px' : '48px',
-}}>
-
-          {/* ── LEFT COLUMN — unchanged from before ────── */}
-          <div style={styles.leftColumn}>
-            <div style={styles.breadcrumb}>
-              <Link to="/tours" style={styles.breadcrumbLink}>← All Tours</Link>
-            </div>
-
-            <h1 style={styles.tourTitle}>{tour.title}</h1>
-
-            <div style={styles.ratingRow}>
-          <Star size={16} color="var(--color-amber)" fill="var(--color-amber)" />
-          <span style={styles.ratingNumber}>{tour.rating}</span>
-          <span style={styles.ratingCount}>({tour.reviews} reviews)</span>
-          <span style={styles.dot}>·</span>
-          <Clock size={15} color="var(--color-n600)" />
-          <span style={styles.meta}>{tour.duration}</span>
-          <span style={styles.dot}>·</span>
-          <Users size={15} color="var(--color-n600)" />
-          <span style={styles.meta}>Max {tour.groupSize} people</span>
-</div>
-
-            
-
-            <p style={styles.description}>{tour.description}</p>
-
-            <div style={styles.section}>
-              <h2 style={styles.sectionTitle}>What's Included</h2>
-              {tour.includes.map((item, index) => (
-              <div key={index} style={styles.includeItem}>
-              <CheckCircle size={16} color="var(--color-success)" />
-              <span>{item}</span>
-            </div>
-          ))}
-            </div>
-
-            <div style={styles.section}>
-              <h2 style={styles.sectionTitle}>Tour Highlights</h2>
-              <ul style={styles.highlightsList}>
-                {tour.highlights.map((highlight, index) => (
-                  <li key={index} style={styles.highlightItem}>{highlight}</li>
-                ))}
-              </ul>
-            </div>
-
-            <div style={styles.section}>
-              <h2 style={styles.sectionTitle}>Meeting Point</h2>
-              <div style={styles.meetingPointRow}>
-  <MapPin size={16} color="var(--color-forest-green)" />
-  <span style={styles.meetingPoint}>{tour.meetingPoint}</span>
-</div>
-            </div>
-          </div>
-
-          {/* ── RIGHT COLUMN — Booking Card ────────────── */}
-          <div style={{
-  ...styles.rightColumn,
-  position: isMobile ? 'static' : 'sticky',
-  top: isMobile ? 'auto' : '88px',
-}}>
-            <div style={styles.bookingCard}>
-
-              {/* If the booking was sent successfully, replace the
-                  entire form with a confirmation message.
-                  This pattern — conditionally rendering different UI
-                  based on state — is one of the most common patterns
-                  in React. The ternary operator works like:
-                  condition ? "show this if true" : "show this if false" */}
-              {isSuccess ? (
-
-                <div style={styles.successMessage}>
-                  <span style={styles.successIcon}>✓</span>
-                  <h3 style={styles.successTitle}>Request Received!</h3>
-                  <p style={styles.successText}>
-                    Thanks {guestName}. Your booking request for the{' '}
-                    <strong>{tour.title}</strong> on {selectedDate} for{' '}
-                    {numPeople} {numPeople === 1 ? 'person' : 'people'} has
-                    been received. You'll hear back within 24 hours.
-                  </p>
-                </div>
-
-              ) : (
-
-                <>
-                  <div style={styles.priceRow}>
-                    <span style={styles.price}>€{tour.price}</span>
-                    <span style={styles.perPerson}>per person</span>
-                  </div>
-
-                  <div style={styles.divider} />
-
-                  {/* Guest details — new fields we're adding */}
-                  <div style={styles.formGroup}>
-                    <label style={styles.label}>Your Name</label>
-                    <input
-                      type="text"
-                      placeholder="Ana Kovačević"
-                      style={styles.input}
-                      value={guestName}
-                      onChange={(e) => setGuestName(e.target.value)}
-                    />
-                  </div>
-
-                  <div style={styles.formGroup}>
-                    <label style={styles.label}>Email Address</label>
-                    <input
-                      type="email"
-                      placeholder="ana@example.com"
-                      style={styles.input}
-                      value={guestEmail}
-                      onChange={(e) => setGuestEmail(e.target.value)}
-                    />
-                  </div>
-
-                  <div style={styles.formGroup}>
-                    <label style={styles.label}>Phone (optional)</label>
-                    <input
-                      type="tel"
-                      placeholder="+387 61 000 000"
-                      style={styles.input}
-                      value={guestPhone}
-                      onChange={(e) => setGuestPhone(e.target.value)}
-                    />
-                  </div>
-
-                  <div style={styles.formGroup}>
-                    <label style={styles.label}>Select Date</label>
-                    <input
-                      type="date"
-                      style={styles.input}
-                      value={selectedDate}
-                      onChange={(e) => setSelectedDate(e.target.value)}
-                    />
-                  </div>
-
-                  <div style={styles.formGroup}>
-                    <label style={styles.label}>Number of People</label>
-                    <select
-                      style={styles.input}
-                      value={numPeople}
-                      onChange={(e) => setNumPeople(Number(e.target.value))}
-                    >
-                      {Array.from({ length: tour.groupSize }, (_, i) => i + 1).map((num) => (
-                        <option key={num} value={num}>
-                          {num} {num === 1 ? 'person' : 'people'}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  {/* Total price — this updates live as numPeople changes
-                      because totalPrice is derived from state.
-                      React rerenders this number automatically. */}
-                  <div style={styles.totalRow}>
-                    <span style={styles.totalLabel}>Total</span>
-                    <span style={styles.totalPrice}>€{totalPrice}</span>
-                  </div>
-
-                  <button
-                    style={{
-                      ...styles.bookBtn,
-                      // Visually dim the button while sending
-                      opacity: isSending ? 0.7 : 1,
-                      cursor: isSending ? 'not-allowed' : 'pointer',
-                    }}
-                    onClick={handleBooking}
-                    disabled={isSending}
-                  >
-                    {isSending ? 'Sending Request...' : `Request to Book — €${totalPrice}`}
-                  </button>
-
-                  {/* Error state — only shown if EmailJS call failed */}
-                  {isError && (
-                    <p style={styles.errorMessage}>
-                      Something went wrong. Please try again or email us directly.
-                    </p>
-                  )}
-
-                  <div style={styles.cancellationRow}>
-  <ShieldCheck size={14} color="var(--color-success)" />
-  <p style={styles.freeCancellation}>Free cancellation available</p>
-</div>
-                </>
-
-              )}
-
-            </div>
-          </div>
-
+  // The booking form JSX is extracted into a variable
+  // so it can be rendered in both the desktop right column
+  // AND the mobile drawer without duplicating code.
+  // This is the DRY principle applied to JSX.
+  const bookingForm = (
+    <div style={styles.bookingCard}>
+      {isSuccess ? (
+        <div style={styles.successMessage}>
+          <span style={styles.successIcon}>✓</span>
+          <h3 style={styles.successTitle}>Request Received!</h3>
+          <p style={styles.successText}>
+            Thanks {guestName}. Your{' '}
+            {tourType === 'private' ? 'private tour' : ''} booking
+            request for <strong>{tour.title}</strong> on {selectedDate}
+            {tourType === 'shared'
+              ? ` for ${numPeople} ${numPeople === 1 ? 'person' : 'people'}`
+              : ''
+            } has been received. You'll hear back within 24 hours.
+          </p>
         </div>
-      </div>
+      ) : (
+        <>
+          {/* Tour type toggle — shared vs private.
+              Private tour sends a quote request rather than
+              a fixed price booking — correct behaviour since
+              private pricing depends on group size and specifics. */}
+          <div style={styles.tourTypeSection}>
+            <span style={styles.toggleLabel}>Tour Type</span>
+            <div style={styles.tourTypeGrid}>
 
+              <button
+                style={{
+                  ...styles.typeOption,
+                  borderColor: tourType === 'shared'
+                    ? 'var(--color-forest-green)'
+                    : 'var(--color-n300)',
+                  backgroundColor: tourType === 'shared'
+                    ? 'rgba(46,125,94,0.06)'
+                    : 'var(--color-n000)',
+                }}
+                onClick={() => setTourType('shared')}
+              >
+                <span style={{
+                  ...styles.typeOptionTitle,
+                  color: tourType === 'shared'
+                    ? 'var(--color-forest-green)'
+                    : 'var(--color-n900)',
+                }}>
+                  Shared Tour
+                </span>
+                <span style={styles.typeOptionPrice}>
+                  €{tour.price}
+                  <span style={styles.typePerPerson}>/person</span>
+                </span>
+              </button>
+
+              <button
+                style={{
+                  ...styles.typeOption,
+                  borderColor: tourType === 'private'
+                    ? 'var(--color-forest-green)'
+                    : 'var(--color-n300)',
+                  backgroundColor: tourType === 'private'
+                    ? 'rgba(46,125,94,0.06)'
+                    : 'var(--color-n000)',
+                }}
+                onClick={() => setTourType('private')}
+              >
+                <span style={{
+                  ...styles.typeOptionTitle,
+                  color: tourType === 'private'
+                    ? 'var(--color-forest-green)'
+                    : 'var(--color-n900)',
+                }}>
+                  Private Tour
+                </span>
+                <span style={styles.typeOptionPrice}>
+                  Quote
+                  <span style={styles.typePerPerson}>/group</span>
+                </span>
+              </button>
+
+            </div>
+
+            {tourType === 'private' && (
+              <p style={styles.privateNote}>
+                We'll send you a custom quote within 24 hours
+                based on your group size and dates.
+              </p>
+            )}
+          </div>
+
+          <div style={styles.formDivider} />
+
+          <div style={styles.formGroup}>
+            <label style={styles.label}>Your Name</label>
+            <input
+              type="text"
+              placeholder="Ana Kovačević"
+              style={styles.input}
+              value={guestName}
+              onChange={(e) => setGuestName(e.target.value)}
+            />
+          </div>
+
+          <div style={styles.formGroup}>
+            <label style={styles.label}>Email Address</label>
+            <input
+              type="email"
+              placeholder="ana@example.com"
+              style={styles.input}
+              value={guestEmail}
+              onChange={(e) => setGuestEmail(e.target.value)}
+            />
+          </div>
+
+          <div style={styles.formGroup}>
+            <label style={styles.label}>Phone (optional)</label>
+            <input
+              type="tel"
+              placeholder="+387 61 000 000"
+              style={styles.input}
+              value={guestPhone}
+              onChange={(e) => setGuestPhone(e.target.value)}
+            />
+          </div>
+
+          <div style={styles.formGroup}>
+            <label style={styles.label}>Select Date</label>
+            <input
+              type="date"
+              style={styles.input}
+              value={selectedDate}
+              onChange={(e) => setSelectedDate(e.target.value)}
+            />
+          </div>
+
+          {tourType === 'shared' && (
+            <div style={styles.formGroup}>
+              <label style={styles.label}>Number of People</label>
+              <select
+                style={styles.input}
+                value={numPeople}
+                onChange={(e) => setNumPeople(Number(e.target.value))}
+              >
+                {Array.from(
+                  { length: tour.groupSize },
+                  (_, i) => i + 1
+                ).map((num) => (
+                  <option key={num} value={num}>
+                    {num} {num === 1 ? 'person' : 'people'}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+
+          {tourType === 'shared' && (
+            <div style={styles.totalRow}>
+              <span style={styles.totalLabel}>Total</span>
+              <span style={styles.totalPrice}>€{totalPrice}</span>
+            </div>
+          )}
+
+          <button
+            style={{
+              ...styles.bookBtn,
+              opacity: isSending ? 0.7 : 1,
+              cursor: isSending ? 'not-allowed' : 'pointer',
+            }}
+            onClick={handleBooking}
+            disabled={isSending}
+          >
+            {isSending
+              ? 'Sending...'
+              : tourType === 'private'
+                ? 'Request Private Tour Quote'
+                : `Book Now — €${totalPrice}`
+            }
+          </button>
+
+          {isError && (
+            <p style={styles.errorMessage}>
+              Something went wrong. Please try again or
+              email us directly.
+            </p>
+          )}
+
+          <div style={styles.cancellationRow}>
+            <ShieldCheck size={14} color="var(--color-success)" />
+            <p style={styles.freeCancellation}>
+              Free cancellation available
+            </p>
+          </div>
+        </>
+      )}
     </div>
   )
 
-  if (!tour) {
-    return (
-      <div style={styles.notFound}>
-        <h2>Tour not found</h2>
-        <Link to="/tours" style={styles.backLink}>← Back to all tours</Link>
-      </div>
-    )
-  }
-
   return (
     <div>
 
-      {/* ── PHOTO PLACEHOLDER ─────────────────────────────
-          This green banner represents your hero photo area.
-          We'll replace it with a real image in a later step.
-          The height gives it the visual weight a hero photo needs. */}
-<div style={styles.photoBanner}>
-  {tour.hero ? (
-    <img
-      src={tour.hero}
-      alt={tour.title}
-      style={styles.heroPho}
-    />
-  ) : (
-    <div style={styles.photoFallback} />
-  )}
-  {tour.badge && (
-    <span style={styles.badge}>{tour.badge}</span>
-  )}
-</div>
+      {/* ── HERO PHOTO ──────────────────────────────────── */}
+      <div style={styles.heroWrapper}>
+        {tour.detailHero ? (
+          <img
+            src={tour.detailHero}
+            alt={tour.title}
+            style={styles.heroPhoto}
+          />
+        ) : (
+          <div style={styles.heroPlaceholder} />
+        )}
+        <div style={styles.heroGradient} />
+        <div style={styles.heroGradientTop} />
+        <div style={styles.heroBackLink}>
+          <Link to="/tours" style={styles.backLink}>
+            ← All Tours
+          </Link>
+        </div>
+      </div>
 
-      {/* ── MAIN CONTENT ──────────────────────────────────
-          Two-column layout: tour details on the left,
-          booking widget on the right.
-          This is the standard layout for every major booking site —
-          GetYourGuide, Airbnb Experiences, Viator all use this pattern
-          because it keeps the booking action always visible
-          while the visitor reads the details. */}
-      <div style={styles.contentWrapper}>
+      {/* ── CONTENT CARD ────────────────────────────────── */}
+      <div style={{
+        ...styles.contentCard,
+        padding: isMobile
+          ? '28px 20px 100px 20px'
+          : '48px 40px 80px 40px',
+      }}>
+
+        {/* Title block */}
+        <div style={styles.titleBlock}>
+          <div style={styles.titleLeft}>
+            <span style={styles.eyebrow}>
+              {tour.duration} · Max {tour.groupSize} people
+            </span>
+            <h1 style={{
+              ...styles.tourTitle,
+              fontSize: isMobile ? '28px' : '44px',
+            }}>
+              {tour.title}
+            </h1>
+            <div style={styles.ratingRow}>
+              <Star
+                size={15}
+                color="var(--color-amber)"
+                fill="var(--color-amber)"
+              />
+              <span style={styles.ratingNumber}>{tour.rating}</span>
+              <span style={styles.ratingCount}>
+                ({tour.reviews} reviews)
+              </span>
+              <span style={styles.ratingDot}>·</span>
+              <Clock size={14} color="var(--color-n600)" />
+              <span style={styles.ratingMeta}>{tour.duration}</span>
+              <span style={styles.ratingDot}>·</span>
+              <Users size={14} color="var(--color-n600)" />
+              <span style={styles.ratingMeta}>
+                Max {tour.groupSize}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Two column layout */}
         <div style={{
-  ...styles.contentGrid,
-  gridTemplateColumns: isMobile ? '1fr' : '1fr 380px',
-}}>
+          ...styles.contentGrid,
+          gridTemplateColumns: isMobile ? '1fr' : '1fr 360px',
+          gap: isMobile ? '32px' : '48px',
+          marginTop: '32px',
+        }}>
 
-          {/* ── LEFT COLUMN — Tour Details ─────────────── */}
+          {/* ── LEFT COLUMN ──────────────────────────────── */}
           <div style={styles.leftColumn}>
 
-            {/* Breadcrumb navigation — tells visitors where they are
-                and gives them a one-click path back to the tours list */}
-            <div style={styles.breadcrumb}>
-              <Link to="/tours" style={styles.breadcrumbLink}>← All Tours</Link>
-            </div>
-
-            {/* Tour title and rating */}
-            <h1 style={styles.tourTitle}>{tour.title}</h1>
-
-            <div style={styles.ratingRow}>
-              <span style={styles.star}>★</span>
-              <span style={styles.ratingNumber}>{tour.rating}</span>
-              <span style={styles.ratingCount}>({tour.reviews} reviews)</span>
-              <span style={styles.dot}>·</span>
-              <span style={styles.meta}>⏱ {tour.duration}</span>
-              <span style={styles.dot}>·</span>
-              <span style={styles.meta}>👥 Max {tour.groupSize} people</span>
-            </div>
-
             {/* Tour description */}
-            <p style={styles.description}>{tour.description}</p>
-
-            {/* What's included */}
             <div style={styles.section}>
-              <h2 style={styles.sectionTitle}>What's Included</h2>
-              <div style={styles.includesList}>
-                {tour.includes.map((item, index) => (
-                  <div key={index} style={styles.includeItem}>
-                    <span style={styles.checkmark}>✓</span>
-                    <span>{item}</span>
+              <p style={styles.bodyText}>{tour.description}</p>
+            </div>
+
+            {/* Tour Highlights — styled numbered steps */}
+            <div style={styles.section}>
+              <h2 style={styles.sectionTitle}>Tour Highlights</h2>
+              <div style={styles.highlightsList}>
+                {tour.highlights.map((highlight, index) => (
+                  <div key={index} style={styles.highlightItem}>
+
+                    {/* Step circle with number */}
+                    <div style={styles.highlightNumber}>
+                      <span style={styles.highlightNumberText}>
+                        {index + 1}
+                      </span>
+                    </div>
+
+                    {/* Highlight content — title and subtext.
+                        We split on ' — ' to separate the location
+                        name from its description, giving each
+                        highlight a title and a subtext line.
+                        If no ' — ' exists, the whole string
+                        is the title with no subtext. */}
+                    <div style={styles.highlightContent}>
+                      {highlight.includes(' — ') ? (
+                        <>
+                          <span style={styles.highlightTitle}>
+                            {highlight.split(' — ')[0]}
+                          </span>
+                          <span style={styles.highlightSubtext}>
+                            {highlight.split(' — ')[1]}
+                          </span>
+                        </>
+                      ) : (
+                        <span style={styles.highlightTitle}>
+                          {highlight}
+                        </span>
+                      )}
+                    </div>
+
                   </div>
                 ))}
               </div>
             </div>
 
-            {/* Tour highlights */}
+            {/* Inclusions & Exclusions — side by side */}
             <div style={styles.section}>
-              <h2 style={styles.sectionTitle}>Tour Highlights</h2>
-              <ul style={styles.highlightsList}>
-                {tour.highlights.map((highlight, index) => (
-                  <li key={index} style={styles.highlightItem}>{highlight}</li>
-                ))}
-              </ul>
+              <h2 style={styles.sectionTitle}>What's Included</h2>
+              <div style={{
+                ...styles.inclusionsGrid,
+                gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
+              }}>
+
+                <div>
+                  <h3 style={styles.inclusionSubtitle}>Included</h3>
+                  <div style={styles.inclusionsList}>
+                    {tour.includes.map((item, i) => (
+                      <div key={i} style={styles.inclusionItem}>
+                        <CheckCircle
+                          size={15}
+                          color="var(--color-success)"
+                        />
+                        <span style={styles.inclusionText}>
+                          {item}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Exclusions — if your tour data has them,
+                    otherwise we show a sensible default set */}
+                <div>
+                  <h3 style={styles.exclusionSubtitle}>
+                    Not Included
+                  </h3>
+                  <div style={styles.inclusionsList}>
+                    {(tour.excludes || [
+                      'Food and drinks',
+                      'Entrance fees to museums',
+                      'Gratuities',
+                      'Personal expenses',
+                    ]).map((item, i) => (
+                      <div key={i} style={styles.inclusionItem}>
+                        <XCircle
+                          size={15}
+                          color="var(--color-n300)"
+                        />
+                        <span style={{
+                          ...styles.inclusionText,
+                          color: 'var(--color-n600)',
+                        }}>
+                          {item}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+              </div>
             </div>
 
-            {/* Meeting point */}
+            {/* FAQ section — only renders if tour has faqs */}
+            {tour.faqs && tour.faqs.length > 0 && (
+              <div style={styles.section}>
+                <h2 style={styles.sectionTitle}>
+                  Frequently Asked Questions
+                </h2>
+                <div style={styles.faqList}>
+                  {tour.faqs.map((faq, index) => {
+                    const isOpen = openFaq === index
+                    return (
+                      <div
+                        key={index}
+                        style={{
+                          ...styles.faqItem,
+                          borderLeft: isOpen
+                            ? '3px solid var(--color-forest-green)'
+                            : '3px solid transparent',
+                        }}
+                      >
+                        <button
+                          style={styles.faqHeader}
+                          onClick={() =>
+                            setOpenFaq(isOpen ? null : index)
+                          }
+                        >
+                          <span style={styles.faqQuestion}>
+                            {faq.question}
+                          </span>
+                          {isOpen
+                            ? <ChevronUp
+                                size={16}
+                                color="var(--color-forest-green)"
+                              />
+                            : <ChevronDown
+                                size={16}
+                                color="var(--color-n600)"
+                              />
+                          }
+                        </button>
+                        {isOpen && (
+                          <div style={styles.faqBody}>
+                            <p style={styles.faqAnswer}>{faq.answer}</p>
+                          </div>
+                        )}
+                      </div>
+                    )
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* Important Info — meeting point, what to wear,
+                cancellation. Always last in the left column. */}
             <div style={styles.section}>
-              <h2 style={styles.sectionTitle}>Meeting Point</h2>
-              <p style={styles.meetingPoint}>📍 {tour.meetingPoint}</p>
+              <h2 style={styles.sectionTitle}>
+                Good to Know
+              </h2>
+              <div style={styles.infoGrid}>
+
+                <div style={styles.infoItem}>
+                  <div style={styles.infoIconWrapper}>
+                    <MapPin
+                      size={16}
+                      color="var(--color-forest-green)"
+                    />
+                  </div>
+                  <div>
+                    <span style={styles.infoLabel}>
+                      Meeting Point
+                    </span>
+                    <span style={styles.infoValue}>
+                      {tour.meetingPoint}
+                    </span>
+                  </div>
+                </div>
+
+                <div style={styles.infoItem}>
+                  <div style={styles.infoIconWrapper}>
+                    <ShieldCheck
+                      size={16}
+                      color="var(--color-forest-green)"
+                    />
+                  </div>
+                  <div>
+                    <span style={styles.infoLabel}>
+                      Cancellation
+                    </span>
+                    <span style={styles.infoValue}>
+                      Free cancellation up to 24 hours before
+                    </span>
+                  </div>
+                </div>
+
+              </div>
             </div>
 
           </div>
 
-          {/* ── RIGHT COLUMN — Booking Widget ──────────── */}
-          <div style={{
-  ...styles.rightColumn,
-  position: isMobile ? 'static' : 'sticky',
-  top: isMobile ? 'auto' : '88px',
-}}>
-            <div style={styles.bookingCard}>
-
-              {/* Price display */}
-              <div style={styles.priceRow}>
-                <span style={styles.price}>€{tour.price}</span>
-                <span style={styles.perPerson}>per person</span>
+          {/* ── RIGHT COLUMN — Desktop Booking Card ──────── */}
+          {!isMobile && (
+            <div style={{
+              position: 'sticky',
+              top: '88px',
+              alignSelf: 'start',
+            }}>
+              {/* Price display above the card */}
+              <div style={styles.desktopPriceRow}>
+                <span style={styles.desktopPrice}>
+                  €{tour.price}
+                </span>
+                <span style={styles.desktopPerPerson}>
+                  per person
+                </span>
               </div>
-
-              <div style={styles.divider} />
-
-              {/* Booking form — date picker and group size.
-                  This is a placeholder UI for now.
-                  In the next step we'll replace the date input
-                  with a proper booking calendar integration. */}
-              <div style={styles.formGroup}>
-                <label style={styles.label}>Select Date</label>
-                <input
-                  type="date"
-                  style={styles.input}
-                />
-              </div>
-
-              <div style={styles.formGroup}>
-                <label style={styles.label}>Number of People</label>
-                <select style={styles.input}>
-                  {/* Generates options 1 through groupSize dynamically */}
-                  {Array.from({ length: tour.groupSize }, (_, i) => i + 1).map((num) => (
-                    <option key={num} value={num}>{num} {num === 1 ? 'person' : 'people'}</option>
-                  ))}
-                </select>
-              </div>
-
-              {/* Total price calculation — updates based on group size.
-                  We'll make this dynamic with React state in the next step. */}
-              <div style={styles.totalRow}>
-                <span style={styles.totalLabel}>Total</span>
-                <span style={styles.totalPrice}>€{tour.price}</span>
-              </div>
-
-              {/* Primary CTA — the most important button on the page */}
-              <button style={styles.bookBtn}>
-                Book Now — €{tour.price}
-              </button>
-
-              <p style={styles.freeCancellation}>
-                ✓ Free cancellation available
-              </p>
-
+              {bookingForm}
             </div>
-          </div>
+          )}
 
         </div>
       </div>
+
+      {/* ── MOBILE BOTTOM BAR ────────────────────────────
+          Fixed bar at the bottom of the screen on mobile.
+          Shows price and a "Choose a Date" button.
+          Tapping opens the booking drawer from below.
+          The 100px bottom padding on contentCard ensures
+          the last content section isn't hidden behind this bar. */}
+      {isMobile && (
+        <div style={styles.mobileBottomBar}>
+          <div style={styles.mobileBottomBarLeft}>
+            <span style={styles.mobilePrice}>€{tour.price}</span>
+            <span style={styles.mobilePricePer}>per person</span>
+          </div>
+          <button
+            style={styles.mobileBookBtn}
+            onClick={() => setDrawerOpen(true)}
+          >
+            Choose a Date
+          </button>
+        </div>
+      )}
+
+      {/* ── MOBILE BOOKING DRAWER ────────────────────────
+          Slides up from the bottom when the visitor taps
+          "Choose a Date". A dark overlay covers the page
+          behind it — tapping the overlay closes the drawer.
+          The drawer itself slides up via CSS transform
+          controlled by the drawerOpen state. */}
+      {isMobile && (
+        <>
+          {/* Overlay — dark background behind the drawer */}
+          <div
+            style={{
+              ...styles.drawerOverlay,
+              opacity: drawerOpen ? 1 : 0,
+              pointerEvents: drawerOpen ? 'all' : 'none',
+            }}
+            onClick={() => setDrawerOpen(false)}
+          />
+
+          {/* Drawer — slides up from bottom */}
+          <div style={{
+            ...styles.drawer,
+            transform: drawerOpen
+              ? 'translateY(0)'
+              : 'translateY(100%)',
+          }}>
+
+            {/* Drawer handle and close button */}
+            <div style={styles.drawerHeader}>
+              <div style={styles.drawerHandle} />
+              <button
+                style={styles.drawerClose}
+                onClick={() => setDrawerOpen(false)}
+                aria-label="Close booking form"
+              >
+                <X size={20} color="var(--color-n600)" />
+              </button>
+            </div>
+
+            {/* Scrollable drawer content */}
+            <div style={styles.drawerContent}>
+              {bookingForm}
+            </div>
+
+          </div>
+        </>
+      )}
 
     </div>
   )
@@ -507,100 +668,115 @@ const styles = {
     textAlign: 'center',
   },
 
-  backLink: {
+  backLinkDark: {
+    fontFamily: 'var(--font-body)',
+    fontSize: 'var(--text-small)',
     color: 'var(--color-forest-green)',
     textDecoration: 'none',
-    fontFamily: 'var(--font-body)',
   },
 
-photoBanner: {
-    width: '100%',
-    height: '420px',
+  heroWrapper: {
     position: 'relative',
+    height: '65vh',
+    minHeight: '380px',
+    maxHeight: '620px',
     overflow: 'hidden',
   },
 
-  heroPho: {
+  heroPhoto: {
     width: '100%',
     height: '100%',
     objectFit: 'cover',
+    objectPosition: 'center',
+    display: 'block',
   },
 
-  photoFallback: {
+  heroPlaceholder: {
     width: '100%',
     height: '100%',
     backgroundColor: 'var(--color-mid-green)',
   },
 
-  badge: {
+  heroGradient: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: '50%',
+    background: 'linear-gradient(to top, var(--color-n100) 0%, transparent 100%)',
+  },
+
+  heroGradientTop: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    height: '30%',
+    background: 'linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, transparent 100%)',
+  },
+
+  heroBackLink: {
     position: 'absolute',
     top: '24px',
     left: '40px',
-    backgroundColor: 'var(--color-forest-green)',
-    color: 'var(--color-n000)',
+    zIndex: 2,
+  },
+
+  backLink: {
     fontFamily: 'var(--font-body)',
-    fontWeight: '700',
-    fontSize: '11px',
-    letterSpacing: '1px',
-    textTransform: 'uppercase',
-    padding: '6px 12px',
-    borderRadius: '4px',
+    fontWeight: '600',
+    fontSize: 'var(--text-small)',
+    color: 'var(--color-n000)',
+    textDecoration: 'none',
+    backgroundColor: 'rgba(0,0,0,0.3)',
+    backdropFilter: 'blur(4px)',
+    padding: '6px 14px',
+    borderRadius: '100px',
+    border: '1px solid rgba(255,255,255,0.2)',
   },
 
-  contentWrapper: {
+  contentCard: {
     backgroundColor: 'var(--color-n100)',
-    padding: '48px 40px 80px 40px',
+    marginTop: '-60px',
+    borderRadius: '20px 20px 0 0',
+    position: 'relative',
+    zIndex: 1,
+    minHeight: '100vh',
   },
 
-  // Two-column grid: left column takes up more space for content,
-  // right column is fixed-width for the booking card.
-  // 1fr means "take up one fraction of available space."
-  // 380px is a fixed width chosen to fit the booking card comfortably.
-  contentGrid: {
-    display: 'grid',
-    gridTemplateColumns: '1fr 380px',
-    gap: '48px',
+  titleBlock: {
     maxWidth: '1100px',
     margin: '0 auto',
-    alignItems: 'start',  // Keeps both columns aligned to the top
   },
 
-  leftColumn: {
-    minWidth: 0,  // Prevents text from overflowing the grid column
+  titleLeft: {
+    maxWidth: '680px',
   },
 
-  breadcrumb: {
-    marginBottom: '20px',
-  },
-
-  breadcrumbLink: {
+  eyebrow: {
+    display: 'block',
     fontFamily: 'var(--font-body)',
-    fontSize: 'var(--text-small)',
-    color: 'var(--color-forest-green)',
-    textDecoration: 'none',
     fontWeight: '500',
+    fontSize: '11px',
+    color: 'var(--color-forest-green)',
+    letterSpacing: '2px',
+    textTransform: 'uppercase',
+    marginBottom: '10px',
   },
 
   tourTitle: {
     fontFamily: 'var(--font-display)',
     fontWeight: '700',
-    fontSize: 'var(--text-h1)',
     color: 'var(--color-n900)',
-    marginBottom: '16px',
-    lineHeight: 'var(--leading-h1)',
+    lineHeight: '1.15',
+    marginBottom: '12px',
   },
 
   ratingRow: {
     display: 'flex',
     alignItems: 'center',
-    gap: '8px',
-    marginBottom: '28px',
+    gap: '6px',
     flexWrap: 'wrap',
-  },
-
-  star: {
-    color: 'var(--color-amber)',
-    fontSize: '16px',
   },
 
   ratingNumber: {
@@ -616,26 +792,33 @@ photoBanner: {
     color: 'var(--color-n600)',
   },
 
-  dot: {
+  ratingDot: {
     color: 'var(--color-n300)',
   },
 
-  meta: {
+  ratingMeta: {
     fontFamily: 'var(--font-body)',
     fontSize: 'var(--text-body)',
     color: 'var(--color-n600)',
   },
 
-  description: {
-    fontFamily: 'var(--font-body)',
-    fontSize: 'var(--text-body-l)',
-    color: 'var(--color-n600)',
-    lineHeight: 'var(--leading-body)',
-    marginBottom: '40px',
+  contentGrid: {
+    display: 'grid',
+    maxWidth: '1100px',
+    margin: '0 auto',
+    alignItems: 'start',
+  },
+
+  leftColumn: {
+    minWidth: 0,
   },
 
   section: {
-    marginBottom: '40px',
+    backgroundColor: 'var(--color-n000)',
+    borderRadius: '12px',
+    padding: '24px',
+    marginBottom: '16px',
+    border: '1px solid var(--color-n300)',
   },
 
   sectionTitle: {
@@ -643,99 +826,324 @@ photoBanner: {
     fontWeight: '700',
     fontSize: 'var(--text-h3)',
     color: 'var(--color-n900)',
-    marginBottom: '16px',
+    marginBottom: '20px',
   },
 
-  includesList: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '10px',
-  },
-
-  includeItem: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '10px',
+  bodyText: {
     fontFamily: 'var(--font-body)',
     fontSize: 'var(--text-body)',
     color: 'var(--color-n600)',
+    lineHeight: 'var(--leading-body)',
+    margin: 0,
   },
 
-  checkmark: {
-    color: 'var(--color-success)',
-    fontWeight: '700',
-    fontSize: '16px',
-  },
-
+  // Highlights — styled numbered steps
   highlightsList: {
-    paddingLeft: '20px',
     display: 'flex',
     flexDirection: 'column',
-    gap: '10px',
+    gap: '16px',
   },
 
   highlightItem: {
+    display: 'flex',
+    alignItems: 'flex-start',
+    gap: '16px',
+  },
+
+  // Numbered circle — Forest Green filled circle
+  // with white number inside. Consistent with the
+  // How It Works section design language.
+  highlightNumber: {
+    width: '32px',
+    height: '32px',
+    borderRadius: '50%',
+    backgroundColor: 'var(--color-forest-green)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexShrink: 0,
+    marginTop: '2px',
+  },
+
+  highlightNumberText: {
+    fontFamily: 'var(--font-display)',
+    fontWeight: '700',
+    fontSize: '13px',
+    color: 'var(--color-n000)',
+  },
+
+  highlightContent: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '3px',
+    flex: 1,
+  },
+
+  // Highlight title — the location or landmark name
+  highlightTitle: {
+    fontFamily: 'var(--font-display)',
+    fontWeight: '700',
+    fontSize: 'var(--text-body)',
+    color: 'var(--color-n900)',
+    lineHeight: '1.3',
+  },
+
+  // Highlight subtext — the description after the dash
+  highlightSubtext: {
+    fontFamily: 'var(--font-body)',
+    fontSize: 'var(--text-small)',
+    color: 'var(--color-n600)',
+    lineHeight: '1.5',
+  },
+
+  // Inclusions
+  inclusionsGrid: {
+    display: 'grid',
+    gap: '24px',
+    marginTop: '8px',
+  },
+
+  inclusionSubtitle: {
+    fontFamily: 'var(--font-display)',
+    fontWeight: '700',
+    fontSize: '11px',
+    color: 'var(--color-success)',
+    letterSpacing: '1px',
+    textTransform: 'uppercase',
+    marginBottom: '12px',
+  },
+
+  exclusionSubtitle: {
+    fontFamily: 'var(--font-display)',
+    fontWeight: '700',
+    fontSize: '11px',
+    color: 'var(--color-n600)',
+    letterSpacing: '1px',
+    textTransform: 'uppercase',
+    marginBottom: '12px',
+  },
+
+  inclusionsList: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '10px',
+  },
+
+  inclusionItem: {
+    display: 'flex',
+    alignItems: 'flex-start',
+    gap: '10px',
+  },
+
+  inclusionText: {
+    fontFamily: 'var(--font-body)',
+    fontSize: 'var(--text-body)',
+    color: 'var(--color-n900)',
+    lineHeight: '1.5',
+  },
+
+  // FAQ
+  faqList: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '8px',
+  },
+
+  faqItem: {
+    backgroundColor: 'var(--color-n100)',
+    borderRadius: '8px',
+    overflow: 'hidden',
+    transition: 'border-left 0.2s ease',
+  },
+
+  faqHeader: {
+    width: '100%',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: '14px 16px',
+    background: 'none',
+    border: 'none',
+    cursor: 'pointer',
+    textAlign: 'left',
+    gap: '12px',
+  },
+
+  faqQuestion: {
+    fontFamily: 'var(--font-display)',
+    fontWeight: '700',
+    fontSize: 'var(--text-body)',
+    color: 'var(--color-n900)',
+    flex: 1,
+  },
+
+  faqBody: {
+    padding: '0 16px 16px 16px',
+  },
+
+  faqAnswer: {
     fontFamily: 'var(--font-body)',
     fontSize: 'var(--text-body)',
     color: 'var(--color-n600)',
     lineHeight: 'var(--leading-body)',
+    margin: 0,
   },
 
-  meetingPoint: {
+  // Good to Know
+  infoGrid: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '16px',
+  },
+
+  infoItem: {
+    display: 'flex',
+    alignItems: 'flex-start',
+    gap: '12px',
+  },
+
+  infoIconWrapper: {
+    width: '36px',
+    height: '36px',
+    borderRadius: '10px',
+    backgroundColor: 'rgba(46,125,94,0.1)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexShrink: 0,
+  },
+
+  infoLabel: {
+    display: 'block',
+    fontFamily: 'var(--font-body)',
+    fontWeight: '600',
+    fontSize: '11px',
+    color: 'var(--color-n600)',
+    textTransform: 'uppercase',
+    letterSpacing: '0.5px',
+    marginBottom: '4px',
+  },
+
+  infoValue: {
+    display: 'block',
     fontFamily: 'var(--font-body)',
     fontSize: 'var(--text-body)',
-    color: 'var(--color-n600)',
-    lineHeight: 'var(--leading-body)',
+    color: 'var(--color-n900)',
+    lineHeight: '1.5',
   },
 
-  // The booking card is sticky — it stays visible on screen
-  // as the visitor scrolls through the tour details on the left.
-  // This is critical for conversion: the Book Now button should
-  // always be one click away, never requiring a scroll back up.
-  rightColumn: {
-    position: 'sticky',
-    top: '88px',    // Clears the navbar height so it doesn't overlap
+  // Desktop booking card
+  desktopPriceRow: {
+    display: 'flex',
+    alignItems: 'baseline',
+    gap: '6px',
+    marginBottom: '12px',
+    paddingLeft: '4px',
+  },
+
+  desktopPrice: {
+    fontFamily: 'var(--font-display)',
+    fontWeight: '700',
+    fontSize: '36px',
+    color: 'var(--color-forest-green)',
+  },
+
+  desktopPerPerson: {
+    fontFamily: 'var(--font-body)',
+    fontSize: 'var(--text-small)',
+    color: 'var(--color-n600)',
   },
 
   bookingCard: {
     backgroundColor: 'var(--color-n000)',
     borderRadius: '16px',
-    padding: '28px',
-    boxShadow: '0 4px 24px rgba(0,0,0,0.10)',
+    padding: '24px',
+    boxShadow: '0 4px 24px rgba(0,0,0,0.08)',
     border: '1px solid var(--color-n300)',
   },
 
-  priceRow: {
-    display: 'flex',
-    alignItems: 'baseline',
-    gap: '8px',
-    marginBottom: '20px',
+  // Tour type toggle
+  tourTypeSection: {
+    marginBottom: '4px',
   },
 
-  price: {
-  fontFamily: 'var(--font-display)',
-  fontWeight: '700',
-  fontSize: 'clamp(32px, 8vw, 48px)', // clamp() sets a min, preferred, and max size
-  color: 'var(--color-forest-green)',
-},
-
-  perPerson: {
+  toggleLabel: {
+    display: 'block',
     fontFamily: 'var(--font-body)',
-    fontSize: 'var(--text-body)',
-    color: 'var(--color-n600)',
+    fontWeight: '600',
+    fontSize: '11px',
+    color: 'var(--color-n900)',
+    textTransform: 'uppercase',
+    letterSpacing: '0.5px',
+    marginBottom: '10px',
   },
 
-  divider: {
+  tourTypeGrid: {
+    display: 'grid',
+    gridTemplateColumns: '1fr 1fr',
+    gap: '8px',
+    marginBottom: '8px',
+  },
+
+  typeOption: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    gap: '4px',
+    padding: '12px',
+    borderRadius: '10px',
+    border: '1.5px solid',
+    background: 'none',
+    cursor: 'pointer',
+    textAlign: 'left',
+    transition: 'all 0.15s ease',
+  },
+
+  typeOptionTitle: {
+    fontFamily: 'var(--font-body)',
+    fontWeight: '600',
+    fontSize: '11px',
+    lineHeight: '1.3',
+    transition: 'color 0.15s ease',
+  },
+
+  typeOptionPrice: {
+    fontFamily: 'var(--font-display)',
+    fontWeight: '700',
+    fontSize: '18px',
+    color: 'var(--color-n900)',
+  },
+
+  typePerPerson: {
+    fontFamily: 'var(--font-body)',
+    fontWeight: '400',
+    fontSize: '11px',
+    color: 'var(--color-n600)',
+    marginLeft: '2px',
+  },
+
+  privateNote: {
+    fontFamily: 'var(--font-body)',
+    fontSize: '12px',
+    color: 'var(--color-forest-green)',
+    backgroundColor: 'rgba(46,125,94,0.06)',
+    borderRadius: '6px',
+    padding: '8px 10px',
+    margin: '0 0 8px 0',
+    lineHeight: '1.5',
+  },
+
+  formDivider: {
     height: '1px',
     backgroundColor: 'var(--color-n300)',
-    marginBottom: '20px',
+    margin: '12px 0 16px 0',
   },
 
   formGroup: {
     display: 'flex',
     flexDirection: 'column',
-    gap: '8px',
-    marginBottom: '16px',
+    gap: '6px',
+    marginBottom: '12px',
   },
 
   label: {
@@ -745,8 +1153,6 @@ photoBanner: {
     color: 'var(--color-n900)',
   },
 
-  // Input styling matches your design system exactly:
-  // 44px height, 8px border radius, 1.5px border.
   input: {
     height: 'var(--touch-target)',
     borderRadius: 'var(--radius)',
@@ -757,14 +1163,15 @@ photoBanner: {
     color: 'var(--color-n900)',
     backgroundColor: 'var(--color-n000)',
     width: '100%',
+    boxSizing: 'border-box',
   },
 
   totalRow: {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: '16px 0',
-    marginBottom: '16px',
+    padding: '10px 0',
+    marginBottom: '10px',
   },
 
   totalLabel: {
@@ -781,7 +1188,6 @@ photoBanner: {
     color: 'var(--color-forest-green)',
   },
 
-  // Full-width Amber booking button — your highest-priority CTA.
   bookBtn: {
     width: '100%',
     height: 'var(--touch-target)',
@@ -792,25 +1198,35 @@ photoBanner: {
     fontSize: 'var(--text-body)',
     borderRadius: 'var(--radius)',
     border: 'none',
-    cursor: 'pointer',
-    marginBottom: '12px',
+    marginBottom: '10px',
+    boxSizing: 'border-box',
+  },
+
+  cancellationRow: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '6px',
   },
 
   freeCancellation: {
     fontFamily: 'var(--font-body)',
     fontSize: 'var(--text-small)',
     color: 'var(--color-success)',
-    textAlign: 'center',
-  },
-successMessage: {
-    textAlign: 'center',
-    padding: '16px 0',
+    margin: 0,
   },
 
-  meetingPointRow: {
-    display: 'flex',
-    alignItems: 'flex-start',
-    gap: '8px',
+  errorMessage: {
+    fontFamily: 'var(--font-body)',
+    fontSize: 'var(--text-small)',
+    color: 'var(--color-error)',
+    textAlign: 'center',
+    marginTop: '8px',
+  },
+
+  successMessage: {
+    textAlign: 'center',
+    padding: '16px 0',
   },
 
   successIcon: {
@@ -835,19 +1251,116 @@ successMessage: {
     lineHeight: 'var(--leading-body)',
   },
 
-  cancellationRow: {
+  // Mobile bottom bar
+  mobileBottomBar: {
+    position: 'fixed',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    zIndex: 150,
+    backgroundColor: 'var(--color-n000)',
+    borderTop: '1px solid var(--color-n300)',
+    padding: '12px 20px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    boxShadow: '0 -4px 20px rgba(0,0,0,0.08)',
+  },
+
+  mobileBottomBarLeft: {
+    display: 'flex',
+    alignItems: 'baseline',
+    gap: '4px',
+  },
+
+  mobilePrice: {
+    fontFamily: 'var(--font-display)',
+    fontWeight: '700',
+    fontSize: '24px',
+    color: 'var(--color-forest-green)',
+  },
+
+  mobilePricePer: {
+    fontFamily: 'var(--font-body)',
+    fontSize: 'var(--text-small)',
+    color: 'var(--color-n600)',
+  },
+
+  mobileBookBtn: {
+    height: '44px',
+    padding: '0 24px',
+    backgroundColor: 'var(--color-amber)',
+    color: 'var(--color-n900)',
+    fontFamily: 'var(--font-body)',
+    fontWeight: '700',
+    fontSize: 'var(--text-body)',
+    borderRadius: 'var(--radius)',
+    border: 'none',
+    cursor: 'pointer',
+  },
+
+  // Drawer overlay
+  drawerOverlay: {
+    position: 'fixed',
+    inset: 0,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    zIndex: 200,
+    transition: 'opacity 0.3s ease',
+  },
+
+  // Drawer — slides up from bottom.
+  // Max height 85vh so it never fully covers the screen —
+  // the visitor can always see the page behind it
+  // and knows they can dismiss it.
+  drawer: {
+    position: 'fixed',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    zIndex: 201,
+    backgroundColor: 'var(--color-n000)',
+    borderRadius: '20px 20px 0 0',
+    maxHeight: '85vh',
+    overflowY: 'auto',
+    transition: 'transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+    boxShadow: '0 -8px 40px rgba(0,0,0,0.15)',
+  },
+
+  drawerHeader: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: '6px',
+    padding: '16px 20px 8px 20px',
+    position: 'relative',
+    flexShrink: 0,
   },
 
-  errorMessage: {
-    fontFamily: 'var(--font-body)',
-    fontSize: 'var(--text-small)',
-    color: 'var(--color-error)',
-    textAlign: 'center',
-    marginTop: '8px',
+  // Visual handle at top of drawer —
+  // the universal mobile drawer affordance.
+  // Tells visitors they can swipe down to dismiss.
+  drawerHandle: {
+    width: '40px',
+    height: '4px',
+    borderRadius: '2px',
+    backgroundColor: 'var(--color-n300)',
+  },
+
+  drawerClose: {
+    position: 'absolute',
+    right: '16px',
+    top: '12px',
+    background: 'none',
+    border: 'none',
+    cursor: 'pointer',
+    padding: '4px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  drawerContent: {
+    padding: '8px 20px 32px 20px',
+    overflowY: 'auto',
   },
 }
 

@@ -8,6 +8,8 @@ import TourDetail from './pages/TourDetail'
 import Packages from './pages/Packages'
 import Contact from './pages/Contact'
 import PackageDetail from './pages/PackageDetail'
+import PersonalisedTour from './pages/PersonalisedTour'
+import About from './pages/About'
 
 function App() {
   return (
@@ -21,6 +23,8 @@ function App() {
         <Route path="/packages" element={<Packages />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/packages/:id" element={<PackageDetail />} />
+        <Route path="/personalised" element={<PersonalisedTour />} />
+        <Route path="/about" element={<About />} />
       </Routes>
 
       <Footer />
