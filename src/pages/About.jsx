@@ -1,5 +1,6 @@
+import SEO from '../components/SEO'
 import { Link } from 'react-router-dom'
-import { ArrowRight, MapPin, Star, Users } from 'lucide-react'
+import { ArrowRight, MapPin, Star, Languages, Heart } from 'lucide-react'
 import useWindowWidth from '../hooks/useWindowWidth'
 
 // Import your about photo — add this file to src/assets
@@ -12,7 +13,11 @@ function About() {
 
   return (
     <div>
-
+<SEO
+  title="About Your Guide"
+  description="Meet Almedin — born and raised in Sarajevo, guiding since day one. 500+ guests, 4.9 TripAdvisor rating, maximum 8 people per tour."
+  url="/about"
+/>
       {/* ── PAGE HEADER ─────────────────────────────────── */}
       <section style={styles.pageHeader}>
         <div style={styles.headerInner}>
@@ -40,92 +45,121 @@ function About() {
         }}>
 
           {/* ── LEFT — Text ─────────────────────────────── */}
-          <div style={styles.textColumn}>
+          <div style={{ ...styles.textColumn, order: isMobile ? 2 : 1 }}>
 
-            <p style={styles.leadText}>
-              Sarajevo isn't just where I work — it's everything I have.
-              My family, my people, and the stories that built me are
-              all rooted in this city. I was born here, raised here,
-              and I chose to stay here — not because I had to, but
-              because I genuinely believe there is no better place
-              to build a life.
-            </p>
+  <p style={styles.leadText}>
+    Some careers are planned. Mine was built conversation by conversation.
+  </p>
 
-            <p style={styles.bodyText}>
-              Tallest Tourguide started as a mission. I wanted
-              travellers to feel seen — not processed. I wanted them
-              to leave Bosnia carrying something real. A conversation
-              they didn't expect. A story that surprised them. A meal
-              that had nothing to do with any menu they'd ever seen.
-            </p>
+  <p style={styles.bodyText}>
+    I came to tourism the way most good things happen — accidentally.
+    During my university years, I started working the front desk at a
+    local hostel, partly for the income, mostly because I have never
+    been someone who could sit still. I am outgoing by nature, always
+    have been, and a hostel lobby turned out to be the perfect place
+    for someone like me. Guests came through from everywhere, and I
+    was always ready to talk.
+  </p>
 
-            <p style={styles.bodyText}>
-              What makes a tour here different isn't the itinerary —
-              it's the approach. You won't be a number in a group of
-              forty. You'll be a guest, welcomed the way we welcome
-              people in Bosnia — like a friend arriving at our door.
-              The history, the culture, the complexity of this place —
-              I know it deeply, and I'll share all of it with you.
-            </p>
+  <p style={styles.bodyText}>
+    The guiding started quietly. A few tours here and there in the
+    early months, nothing serious. But as my English sharpened and my
+    confidence grew, so did the work. What I had going for me was
+    never a textbook — it was a lifetime of listening. Stories from
+    my father, my family, neighbors, friends — people who remembered
+    Sarajevo in ways no guidebook ever captured. I had been collecting
+    those stories long before I knew what to do with them. Later, I
+    filled in the gaps with proper research and the knowledge of
+    colleagues who had worked in tourism for decades. The result was
+    a voice that felt lived-in, not recited.
+  </p>
 
-            <p style={styles.bodyText}>
-              I started this because I wanted every traveller who comes
-              here to feel free, to feel connected, and to feel like
-              Bosnia was made for them. I started it to become an
-              ambassador for my people. After 500+ guests and 180
-              TripAdvisor reviews, I still feel exactly the same way
-              about every single tour I guide.
-            </p>
+  <p style={styles.bodyText}>
+    After years splitting my time between the hostel desk and the
+    streets of Sarajevo, one of the leading agencies in the region
+    took a chance on me as a young prospect. I spent nearly three
+    years there, growing into the role, learning the industry from
+    the inside. Then, at 24, I opened my own tour agency — Tallest
+    Tourguide — and it became the first real proof that I could build
+    something from scratch.
+  </p>
 
-            {/* Pull quote */}
-            <blockquote style={styles.pullQuote}>
-              "I want every traveller who comes here to feel free,
-              to feel connected, and to feel like Bosnia was made
-              for them."
-            </blockquote>
+  <p style={styles.bodyText}>
+    Tallest Tourguide was never just a tour company. It was an attempt
+    to do tourism differently — cooking classes, alternative routes,
+    experiences that felt personal rather than packaged. It worked.
+    And then COVID came, and like so much else, it stopped.
+  </p>
 
-            {/* Stats row */}
-            <div style={{
-              ...styles.statsRow,
-              flexDirection: isMobile ? 'column' : 'row',
-              gap: isMobile ? '16px' : '32px',
-            }}>
-              <div style={styles.stat}>
-                <span style={styles.statNumber}>500+</span>
-                <span style={styles.statLabel}>Guests Guided</span>
-              </div>
-              <div style={styles.statDivider} />
-              <div style={styles.stat}>
-                <span style={styles.statNumber}>180</span>
-                <span style={styles.statLabel}>
-                  TripAdvisor Reviews
-                </span>
-              </div>
-              <div style={styles.statDivider} />
-              <div style={styles.stat}>
-                <span style={styles.statNumber}>4.9</span>
-                <span style={styles.statLabel}>Average Rating</span>
-              </div>
-            </div>
+  <p style={styles.bodyText}>
+    Rather than wait, I pivoted. I turned to something I had always
+    been drawn to visually — UX/UI design. Over the next four years,
+    I built genuine expertise in how people navigate digital spaces,
+    what makes an experience feel intuitive, and how design decisions
+    shape the way people feel. Skills that, as it turns out, are not
+    so different from guiding a stranger through an unfamiliar city.
+  </p>
 
-            {/* CTA buttons */}
-            <div style={{
-              ...styles.ctaRow,
-              flexDirection: isMobile ? 'column' : 'row',
-            }}>
-              <Link to="/tours" style={styles.primaryBtn}>
-                <span>Browse Tours</span>
-                <ArrowRight size={16} color="var(--color-n000)" />
-              </Link>
-              <Link to="/contact" style={styles.secondaryBtn}>
-                Get in Touch
-              </Link>
-            </div>
+  <blockquote style={styles.pullQuote}>
+    "Now I am back. Tallest Tourguide & Friends is back. This is not
+    a return. It is a second chapter, built on everything the first
+    one taught me."
+  </blockquote>
 
-          </div>
+
+{/* Stats */}
+  <div style={{
+    ...styles.statsRow,
+    display: isMobile ? 'grid' : 'flex',
+    gridTemplateColumns: isMobile ? '1fr 1fr' : undefined,
+    flexDirection: isMobile ? undefined : 'row',
+    alignItems: isMobile ? 'stretch' : 'center',
+  }}>
+    <div style={{ ...styles.stat, textAlign: isMobile ? 'center' : 'left', padding: isMobile ? '16px 8px' : '0' }}>
+      <span style={styles.statNumber}>5000+</span>
+      <span style={styles.statLabel}>Guests Guided</span>
+    </div>
+    {!isMobile && <div style={styles.statDivider} />}
+    <div style={{ ...styles.stat, textAlign: isMobile ? 'center' : 'left', padding: isMobile ? '16px 8px' : '0' }}>
+      <span style={styles.statNumber}>14</span>
+      <span style={styles.statLabel}>Years in Tourism</span>
+    </div>
+    {!isMobile && <div style={styles.statDivider} />}
+    <div style={{
+      ...styles.stat,
+      textAlign: isMobile ? 'center' : 'left',
+      padding: isMobile ? '16px 8px' : '0',
+      gridColumn: isMobile ? 'span 2' : 'auto',
+      borderTop: isMobile ? '1px solid var(--color-n300)' : 'none',
+    }}>
+      <span style={styles.statNumber}>4.9</span>
+      <span style={styles.statLabel}>TripAdvisor Rating</span>
+    </div>
+  </div>
+
+ {/* CTA buttons */}
+  <div style={{
+    ...styles.ctaRow,
+    flexDirection: isMobile ? 'column' : 'row',
+  }}>
+    <Link to="/tours" style={styles.primaryBtn}>
+      <span>Browse Tours</span>
+      <ArrowRight size={16} color="var(--color-n000)" />
+    </Link>
+    <Link to="/contact" style={styles.secondaryBtn}>
+      Get in Touch
+    </Link>
+  </div>
+
+</div>
 
           {/* ── RIGHT — Photo ────────────────────────────── */}
-          <div style={styles.photoColumn}>
+          <div style={{
+            ...styles.photoColumn,
+            order: isMobile ? 1 : 2,
+            position: isMobile ? 'static' : 'sticky',
+            top: isMobile ? 'auto' : '100px',
+          }}>
 
             <div style={styles.photoWrapper}>
               <img
@@ -139,7 +173,7 @@ function About() {
             <div style={styles.infoCard}>
               <div style={styles.infoCardItem}>
                 <MapPin
-                  size={15}
+                  size={18}
                   color="var(--color-forest-green)"
                 />
                 <span style={styles.infoCardText}>
@@ -147,22 +181,21 @@ function About() {
                 </span>
               </div>
               <div style={styles.infoCardItem}>
-                <Star
-                  size={15}
-                  color="var(--color-amber)"
-                  fill="var(--color-amber)"
-                />
-                <span style={styles.infoCardText}>
-                  4.9 rating across 180+ reviews
-                </span>
-              </div>
-              <div style={styles.infoCardItem}>
-                <Users
-                  size={15}
+                <Heart
+                  size={18}
                   color="var(--color-forest-green)"
                 />
                 <span style={styles.infoCardText}>
-                  Max 8 people per tour
+                  Volleyball, painting, and reading
+                </span>
+              </div>
+              <div style={styles.infoCardItem}>
+                <Languages
+                  size={18}
+                  color="var(--color-forest-green)"
+                />
+                <span style={styles.infoCardText}>
+                  English, Bosnian, and a bit of Spanish
                 </span>
               </div>
             </div>
@@ -226,7 +259,7 @@ const styles = {
 
   leadText: {
     fontFamily: 'var(--font-body)',
-    fontSize: 'var(--text-body-l)',
+    fontSize: '24px',
     color: 'var(--color-n900)',
     lineHeight: 'var(--leading-body)',
     margin: 0,
@@ -258,6 +291,8 @@ const styles = {
   statsRow: {
     display: 'flex',
     alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: '24px',
     padding: '24px',
     backgroundColor: 'var(--color-n000)',
     borderRadius: '12px',
@@ -331,14 +366,12 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     gap: '16px',
-    position: 'sticky',
-    top: '100px',
   },
 
-  photoWrapper: {
+ photoWrapper: {
     borderRadius: '16px',
     overflow: 'hidden',
-    aspectRatio: '4/3',
+    aspectRatio: '2/3',
     boxShadow: '0 8px 32px rgba(0,0,0,0.12)',
   },
 

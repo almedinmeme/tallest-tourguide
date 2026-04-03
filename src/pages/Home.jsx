@@ -5,6 +5,8 @@
 // Each section will eventually become its own component,
 // but we'll write everything here first so you can see it working
 // before we break it apart.
+import SEO from '../components/SEO'
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { MapPin, ArrowRight, Star, ChevronDown, Users, UserCheck, ShieldCheck } from 'lucide-react'
 import TourCard from '../components/TourCard'
@@ -20,12 +22,22 @@ import PackagesPreview from '../components/PackagesPreview'
 
 function Home() {
   const width = useWindowWidth()
-const isMobile = width <= 768
+  const isMobile = width <= 768
+  const [primaryHovered, setPrimaryHovered] = useState(false)
+  const [secondaryHovered, setSecondaryHovered] = useState(false)
+
   return (
+
+    
+    
     // The outer div is your page wrapper.
     // As we add more sections below the hero, they'll stack here.
     <div>
-
+<SEO
+  title="Guided Tours in Sarajevo"
+  description="Small group tours in Sarajevo and Bosnia led by a local guide. War history, food tours, day trips to Mostar and more. Max 12 people. Book online."
+  url="/"
+/>
      {/* ═══════════════════════════════
           HERO SECTION — Redesigned
           Full-viewport photo hero with
@@ -98,7 +110,7 @@ const isMobile = width <= 768
             fontSize: isMobile ? '16px' : '18px',
             maxWidth: isMobile ? '100%' : '420px',
           }}>
-            Small groups. Real stories. A guide who never left.
+            Small groups. Real stories. Local guides.
           </p>
 
           {/* CTA row — primary and secondary buttons.
@@ -110,12 +122,35 @@ const isMobile = width <= 768
             alignItems: isMobile ? 'flex-start' : 'center',
           }}>
 
-            <Link to="/tours" style={styles.heroPrimaryBtn}>
+            <Link
+              to="/tours"
+              style={{
+                ...styles.heroPrimaryBtn,
+                backgroundColor: primaryHovered ? '#e8920a' : 'var(--color-amber)',
+                transform: primaryHovered ? 'translateY(-2px)' : 'translateY(0)',
+                boxShadow: primaryHovered ? '0 8px 24px rgba(244,161,48,0.45)' : '0 2px 8px rgba(244,161,48,0.2)',
+                transition: 'all 0.2s ease',
+              }}
+              onMouseEnter={() => setPrimaryHovered(true)}
+              onMouseLeave={() => setPrimaryHovered(false)}
+            >
               <span>Explore Tours</span>
               <ArrowRight size={18} color="var(--color-n900)" />
             </Link>
 
-            <Link to="/packages" style={styles.heroSecondaryBtn}>
+            <Link
+              to="/packages"
+              style={{
+                ...styles.heroSecondaryBtn,
+                backgroundColor: secondaryHovered ? 'rgba(255,255,255,0.18)' : 'rgba(255,255,255,0.1)',
+                transform: secondaryHovered ? 'translateY(-2px)' : 'translateY(0)',
+                boxShadow: secondaryHovered ? '0 8px 24px rgba(0,0,0,0.25)' : 'none',
+                borderColor: secondaryHovered ? 'rgba(255,255,255,0.4)' : 'rgba(255,255,255,0.2)',
+                transition: 'all 0.2s ease',
+              }}
+              onMouseEnter={() => setSecondaryHovered(true)}
+              onMouseLeave={() => setSecondaryHovered(false)}
+            >
               <span>View Packages</span>
             </Link>
 
@@ -134,7 +169,7 @@ const isMobile = width <= 768
               fill="var(--color-amber)"
             />
             <span style={styles.heroProofText}>
-              4.9 · 180 reviews · 500+ guests guided
+              4.9 · 180 reviews · 5000+ guests guided
             </span>
           </div>
 
@@ -187,7 +222,7 @@ const isMobile = width <= 768
               </div>
               <div style={styles.trustContent}>
                 <span style={styles.trustLabel}>Happy Guests</span>
-                <span style={styles.trustValue}>500+ guided</span>
+                <span style={styles.trustValue}>5000+ guided</span>
               </div>
             </div>
 
@@ -199,7 +234,7 @@ const isMobile = width <= 768
               </div>
               <div style={styles.trustContent}>
                 <span style={styles.trustLabel}>Group Size</span>
-                <span style={styles.trustValue}>Max 8 people</span>
+                <span style={styles.trustValue}>Max 12 people</span>
               </div>
             </div>
 
@@ -211,7 +246,7 @@ const isMobile = width <= 768
               </div>
               <div style={styles.trustContent}>
                 <span style={styles.trustLabel}>Cancellation</span>
-                <span style={styles.trustValue}>Free anytime</span>
+                <span style={styles.trustValue}>24 hours before</span>
               </div>
             </div>
 
@@ -233,19 +268,19 @@ const isMobile = width <= 768
 
             <div style={styles.trustItemMobile}>
               <Users size={20} color="var(--color-forest-green)" />
-              <span style={styles.trustValueMobile}>500+</span>
+              <span style={styles.trustValueMobile}>5000+</span>
               <span style={styles.trustLabelMobile}>Guests Guided</span>
             </div>
 
             <div style={styles.trustItemMobile}>
               <UserCheck size={20} color="var(--color-forest-green)" />
-              <span style={styles.trustValueMobile}>Max 8</span>
+              <span style={styles.trustValueMobile}>Max 12</span>
               <span style={styles.trustLabelMobile}>Per Group</span>
             </div>
 
             <div style={styles.trustItemMobile}>
               <ShieldCheck size={20} color="var(--color-forest-green)" />
-              <span style={styles.trustValueMobile}>Free</span>
+              <span style={styles.trustValueMobile}>24h before</span>
               <span style={styles.trustLabelMobile}>Cancellation</span>
             </div>
 
@@ -267,8 +302,7 @@ const isMobile = width <= 768
           <span style={styles.sectionEyebrow}>What We Offer</span>
           <h2 style={styles.sectionTitle}>Our Most Popular Tours</h2>
           <p style={styles.sectionSubtitle}>
-            Every tour is led personally by your guide. Small groups only —
-            never more than 8 people — so every question gets answered.
+            Every tour runs with a maximum of 12 guests. Small enough to feel personal. Guided closely enough to feel private.
           </p>
         </div>
 
@@ -279,21 +313,45 @@ const isMobile = width <= 768
   ...styles.cardGrid,
   gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)',
 }}>
-  {tours.slice(0, 3).map((tour) => (
-    <TourCard
-      key={tour.id}
-      id={tour.id}
-      title={tour.title}
-      price={tour.price}
-      rating={tour.rating}
-      reviews={tour.reviews}
-      duration={tour.duration}
-      groupSize={tour.groupSize}
-      badge={tour.badge}
-      hero={tour.hero}
-    />
+  {tours.slice(0, 6).map((tour) => (
+  <TourCard
+  key={tour.id}
+  id={tour.id}
+  title={tour.title}
+  price={tour.price}
+  rating={tour.rating}
+  reviews={tour.reviews}
+  duration={tour.duration}
+  groupSize={tour.groupSize}
+  badge={tour.badge}
+  hero={tour.hero}
+  startingTimes={tour.startingTimes}
+  languages={tour.languages}
+/>
+
   ))}
 </div>
+
+        {/* View all tours button */}
+        <div style={{ textAlign: 'center', marginTop: '48px' }}>
+          <Link
+            to="/tours"
+            style={styles.viewAllBtn}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = 'var(--color-forest-green)'
+              e.currentTarget.style.color = '#fff'
+              e.currentTarget.style.transform = 'translateY(-2px)'
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = 'transparent'
+              e.currentTarget.style.color = 'var(--color-forest-green)'
+              e.currentTarget.style.transform = 'translateY(0)'
+            }}
+          >
+            View All Tours
+            <ArrowRight size={16} style={{ marginLeft: '8px' }} />
+          </Link>
+        </div>
 
 
       </section>
@@ -359,6 +417,22 @@ const styles = {
     gap: '28px',
     maxWidth: '1100px',
     margin: '0 auto',
+  },
+
+  viewAllBtn: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    height: '52px',
+    padding: '0 32px',
+    backgroundColor: 'transparent',
+    color: 'var(--color-forest-green)',
+    fontFamily: 'var(--font-body)',
+    fontWeight: '700',
+    fontSize: 'var(--text-body)',
+    borderRadius: 'var(--radius)',
+    textDecoration: 'none',
+    border: '2px solid var(--color-forest-green)',
+    transition: 'all 0.2s ease',
   },
   // Trust Bar styles
 trustBar: {

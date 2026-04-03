@@ -2,14 +2,18 @@ import { useState, useRef, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { ChevronDown, Sparkles } from 'lucide-react'
 import useWindowWidth from '../hooks/useWindowWidth'
+import logo from '../assets/logo.svg'
 
 const tourLinks = [
-  { id: 1, label: 'Sarajevo War & Peace Tour', price: '€29' },
-  { id: 2, label: 'Mostar & Old Bridge Day Trip', price: '€49' },
-  { id: 3, label: 'Sarajevo Walking Tour', price: '€22' },
-  { id: 4, label: 'Jewish Heritage of Sarajevo', price: '€25' },
-  { id: 5, label: 'Sarajevo Food Tour', price: '€35' },
-  { id: 6, label: 'Yellow Fortress Sunset Walk', price: '€18' },
+  { id: 1, label: 'Sarajevo Grand Walking Tour', price: '€29' },
+  { id: 2, label: 'Mostar, Kravice & More: Full Day', price: '€69' },
+  { id: 3, label: 'Siege, Genocide, Survival: Half-Day Sarajevo War Tour', price: '€35' },
+  { id: 4, label: 'Authentic Bosnian Cooking Experience', price: '€49' },
+  { id: 5, label: 'Jajce & Travnik: Full Day in Medieval Bosnia', price: '€69' },
+  { id: 7, label: "Sarajevo's Jewish Heritage Tour", price: '€29' },
+  { id: 8, label: 'Mostar & the Old Bridge: Half-Day', price: '€45' },
+  { id: 9, label: 'Sarajevo Coffee & Culinary Walk', price: '€39' },
+  { id: 6, label: 'Sunrise or Sunset: Intro Walking Tour', price: '€22' },
 ]
 
 const packageLinks = [
@@ -44,6 +48,7 @@ function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [toursDropdownOpen, setToursDropdownOpen] = useState(false)
   const [packagesDropdownOpen, setPackagesDropdownOpen] = useState(false)
+  const [contactHovered, setContactHovered] = useState(false)
 
   const toursTimer = useRef(null)
   const packagesTimer = useRef(null)
@@ -122,7 +127,7 @@ function Navbar() {
 
         {/* Brand */}
         <Link to="/" style={styles.brand} onClick={handleHomeClick}>
-          Tallest Tourguide
+          <img src={logo} alt="Tallest Tourguide" style={styles.logoImg} />
         </Link>
 
         {/* Desktop links */}
@@ -346,7 +351,17 @@ function Navbar() {
               About
             </Link>
 
-            <Link to="/contact" style={styles.contactBtn}>
+            <Link
+              to="/contact"
+              style={{
+                ...styles.contactBtn,
+                backgroundColor: contactHovered ? 'var(--color-amber)' : 'transparent',
+                color: contactHovered ? 'var(--color-n900)' : 'var(--color-amber)',
+                transition: 'background-color 0.2s ease, color 0.2s ease',
+              }}
+              onMouseEnter={() => setContactHovered(true)}
+              onMouseLeave={() => setContactHovered(false)}
+            >
               Contact
             </Link>
 
@@ -468,11 +483,16 @@ const styles = {
   },
 
   brand: {
-    fontFamily: 'var(--font-display)',
-    fontWeight: '700',
-    fontSize: '20px',
-    color: 'var(--color-forest-green)',
+    display: 'flex',
+    alignItems: 'center',
     textDecoration: 'none',
+    flexShrink: 0,
+  },
+
+  logoImg: {
+    height: '36px',
+    width: 'auto',
+    display: 'block',
   },
 
   links: {

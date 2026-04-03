@@ -10,7 +10,7 @@
 // create a second template specifically for contact messages.
 // This keeps your inbox organised — booking requests look different
 // from general enquiries so you know how to prioritise responses.
-
+import SEO from '../components/SEO'
 import { useState } from 'react'
 import emailjs from '@emailjs/browser'
 import useWindowWidth from '../hooks/useWindowWidth'
@@ -75,6 +75,11 @@ const isMobile = width <= 768
 
   return (
     <div>
+      <SEO
+  title="Contact Us"
+  description="Get in touch with Tallest Tourguide. Questions about tours, private groups, or custom itineraries — we respond within 24 hours."
+  url="/contact"
+/>
 
       {/* ── PAGE HEADER ───────────────────────────────────
           Same green header pattern as the Tours page —
@@ -193,7 +198,7 @@ const isMobile = width <= 768
                       <label style={styles.label}>Your Name</label>
                       <input
                         type="text"
-                        placeholder="Ana Kovačević"
+                        placeholder="John Doe"
                         style={styles.input}
                         value={name}
                         onChange={(e) => setName(e.target.value)}
@@ -204,7 +209,7 @@ const isMobile = width <= 768
                       <label style={styles.label}>Email Address</label>
                       <input
                         type="email"
-                        placeholder="ana@example.com"
+                        placeholder="john.doe@email.com"
                         style={styles.input}
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}

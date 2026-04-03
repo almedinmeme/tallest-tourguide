@@ -15,10 +15,13 @@
 
 import { useState, useEffect } from 'react'
 import { ArrowUp } from 'lucide-react'
+import useWindowWidth from '../hooks/useWindowWidth'
 
 function ScrollToTopButton() {
   const [isVisible, setIsVisible] = useState(false)
   const [isHovered, setIsHovered] = useState(false)
+  const width = useWindowWidth()
+  const isMobile = width <= 768
 
   useEffect(() => {
     const handleScroll = () => {
@@ -46,9 +49,8 @@ function ScrollToTopButton() {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
-  // Don't render anything if not visible —
-  // keeps the DOM clean when the button isn't needed.
-  if (!isVisible) return null
+  // Don't render on mobile or when not visible
+  if (!isVisible || isMobile) return null
 
   return (
     <button

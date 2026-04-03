@@ -1,3 +1,4 @@
+import SEO from '../components/SEO'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import {
@@ -71,8 +72,14 @@ function Packages() {
 
   return (
     <div>
-
       
+      
+
+      <SEO
+  title="Tour Packages"
+  description="Multi-day tour packages in Bosnia. Sarajevo Essential (2 days) and Bosnia Deep Dive (5 days). Includes private transfers, meals, and all guided experiences."
+  url="/packages"
+/>
 
       {/* Page header */}
       <section style={styles.pageHeader}>
@@ -264,9 +271,6 @@ function Packages() {
 
                 <div style={styles.cardFooter}>
                   <div style={styles.priceBlock}>
-                    <span style={styles.originalPrice}>
-                      €{pkg.originalPrice}
-                    </span>
                     <span style={styles.price}>€{pkg.price}</span>
                     <span style={styles.perPerson}>per person</span>
                   </div>

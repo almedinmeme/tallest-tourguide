@@ -26,11 +26,11 @@ import guide5 from '../assets/guide-5.webp'
 // context about where and what the visitor is seeing.
 // Keep captions short — one location, one detail.
 const photos = [
-  { src: guide1, caption: 'Baščaršija — the heart of Sarajevo' },
-  { src: guide2, caption: 'Bosnian coffee ceremony' },
-  { src: guide3, caption: 'Rafting the Neretva' },
-  { src: guide4, caption: 'Trip to Albania' },
-  { src: guide5, caption: 'Stari Most, Mostar' },
+  { src: guide1, caption: 'Things Tallest Tourguide & Friends do... ' },
+  { src: guide2, caption: 'Early morning Bosnian coffee ceremony' },
+  { src: guide3, caption: 'Surviving the Neretva Rafting' },
+  { src: guide4, caption: 'Doing a good banter with each other' },
+  { src: guide5, caption: 'Forgetting the banter after the lunch'  },
 ]
 
 function GuideSection() {
@@ -73,35 +73,34 @@ function GuideSection() {
         <div style={styles.textColumn}>
 
           {/* Section eyebrow — same pattern as every other section */}
-          <span style={styles.eyebrow}>Your Guide</span>
+          <span style={styles.eyebrow}>Our belief</span>
 
           {/* Main headline — uses the copy we wrote together */}
           <h2 style={styles.headline}>
-            Born Here.<br />
-            Still Here.<br />
-            Proudly Here.
+              Deeply Local.<br />
+         Deeply Commited.
           </h2>
 
           {/* Subheading */}
           <p style={styles.subheading}>
             Sarajevo isn't just where I work — it's everything I have.
             My family, my people, and the stories that built me are all
-            rooted in this city. Tallest Tourguide started as a mission —
-            to show Bosnia as it actually is, through the eyes of someone
-            who never left.
+            rooted in this city. Starting Tallest Tourguide & Friends was born from a single belief: 
+            Bosnia deserves to be seen as it actually is. Not through a tour operator's lens, but through the 
+            eyes of someone who lives this story every day. That changes everything about what a tour becomes.
           </p>
 
           {/* Body copy */}
           <p style={styles.body}>
-            What makes a tour here different isn't the itinerary — it's
-            the approach. You won't be a number in a group of forty.
-            You'll be a guest, welcomed the way we welcome people in
-            Bosnia — like a friend arriving at our door. The history,
-            the culture, the complexity of this place — I know it deeply,
-            and I'll share all of it with you. But more than anything,
-            I want you to leave feeling seen. To carry Bosnia with you
-            proudly when you go home and tell people about it. That's
-            why I started this. To be an ambassador for my people.
+            You won't be a tourist moving through checkpoints. You'll be a guest — welcomed the 
+            way we welcome a friend arriving at the door. I'll share the history, the culture, 
+            the complexity of this place, but not as information. As something that matters. Because it does.
+          </p>
+
+         <p style={styles.body}>
+            What I want most is for you to leave feeling seen — to carry Bosnia with you when you go home and 
+            tell people about it, because you felt the presence 
+            of real people behind every story. That's why I started this. To be an ambassador for my people.
           </p>
 
           {/* Pull quote — the single most important sentence.
@@ -111,13 +110,12 @@ function GuideSection() {
               Italic style reinforces that this is a direct, personal statement
               rather than marketing copy. */}
           <blockquote style={styles.pullQuote}>
-            "I want every traveller who comes here to feel free,
-            to feel connected, and to feel like Bosnia was made for them."
+            "And none of this works alone. Every person you meet through us — your guide, your driver, 
+            the person cooking your meal — is someone I deeply trust.  <br />They believe, the way I do, 
+            that every single guest is valuable. That this work matters. 
+            That Bosnia deserves to be known by people who actually love it"
           </blockquote>
-          <Link to="/about" style={styles.aboutBtn}>
-  <span>Read My Full Story</span>
-  <ArrowRight size={15} color="var(--color-forest-green)" />
-</Link>
+         
 
         </div>
 

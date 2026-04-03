@@ -3,7 +3,7 @@
 // It imports and reuses the TourCard component we already built —
 // this is the payoff of building reusable components.
 // Notice we're not rewriting any card design here, just providing data.
-
+import SEO from '../components/SEO'
 import TourCard from '../components/TourCard'
 import useWindowWidth from '../hooks/useWindowWidth'
 
@@ -19,6 +19,11 @@ function Tours() {
 const isMobile = width <= 768
   return (
     <div>
+      <SEO
+  title="Guided Tours in Sarajevo"
+  description="Small group tours in Sarajevo and Bosnia led by a local guide. War history, food tours, day trips to Mostar and more. Max 8 people. Book online."
+  url="/tours"
+/>
 
       {/* ── PAGE HEADER ─────────────────────────────────────
           A compact header section — not as tall as the homepage hero.
@@ -28,8 +33,8 @@ const isMobile = width <= 768
           <span style={styles.eyebrow}>Explore Bosnia</span>
           <h1 style={styles.headline}>All Tours</h1>
           <p style={styles.subheading}>
-            Six tours. One local guide. Every experience designed to show you
-            the Bosnia that most visitors never find.
+            Many tours. One local guide. Every experience designed to show you
+            the Bosnia and Herzegovina that most visitors never find.
           </p>
         </div>
       </section>
@@ -51,18 +56,21 @@ const isMobile = width <= 768
               The "key" prop is required by React whenever you render a list —
               it helps React track which item is which when the list updates. */}
           {tours.map((tour) => (
-            <TourCard
-              key={tour.id}
-              id={tour.id}  
-              title={tour.title}
-              price={tour.price}
-              rating={tour.rating}
-              reviews={tour.reviews}
-              duration={tour.duration}
-              groupSize={tour.groupSize}
-              badge={tour.badge}
-              hero={tour.hero}
-            />
+          <TourCard
+  key={tour.id}
+  id={tour.id}
+  title={tour.title}
+  price={tour.price}
+  rating={tour.rating}
+  reviews={tour.reviews}
+  duration={tour.duration}
+  groupSize={tour.groupSize}
+  badge={tour.badge}
+  hero={tour.hero}
+  startingTimes={tour.startingTimes}
+  languages={tour.languages}
+/>
+
           ))}
 
         </div>

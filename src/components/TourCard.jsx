@@ -5,11 +5,15 @@
 // invitation that matches the card's role as a discovery surface.
 // The booking action lives on the detail page where the visitor
 // has full information to make a confident decision.
-
+import { useState } from 'react'
+import { Star, Clock, Users, ArrowRight, Watch } from 'lucide-react'
 import { Link } from 'react-router-dom'
-import { Star, Clock, Users, ArrowRight } from 'lucide-react'
+import { getTourLanguages } from '../data/tourLanguages'
 
-function TourCard({ id, title, price, rating, reviews, duration, groupSize, badge, hero }) {
+function TourCard({ id, title, price, rating, reviews, duration, groupSize, badge, hero, startingTimes, languages }) {
+  const supportedLanguages = getTourLanguages(languages)
+  const [btnHovered, setBtnHovered] = useState(false)
+
   return (
     // The entire card is wrapped in a Link component.
     // style={{ display: 'block' }} is required because Link
@@ -38,6 +42,7 @@ function TourCard({ id, title, price, rating, reviews, duration, groupSize, badg
 
           {badge && (
             <span style={styles.badge}>{badge}</span>
+            
           )}
 
           {/* Price pill overlaid on the bottom right of the photo.
@@ -63,19 +68,29 @@ function TourCard({ id, title, price, rating, reviews, duration, groupSize, badg
           </div>
 
           {/* Tour title */}
-          <h3 style={styles.title}>{title}</h3>
+          <div style={styles.titleWrapper}>
+            <h3 style={styles.title}>{title}</h3>
+          </div>
 
           {/* Meta row — duration and group size */}
           <div style={styles.metaRow}>
-            <div style={styles.metaItem}>
-              <Clock size={13} color="var(--color-n600)" />
-              <span style={styles.meta}>{duration}</span>
-            </div>
-            <div style={styles.metaItem}>
-              <Users size={13} color="var(--color-n600)" />
-              <span style={styles.meta}>Max {groupSize}</span>
-            </div>
-          </div>
+  <div style={styles.metaItem}>
+    <Clock size={13} color="var(--color-n600)" />
+    <span style={styles.meta}>{duration}</span>
+  </div>
+  <div style={styles.metaItem}>
+    <Users size={13} color="var(--color-n600)" />
+    <span style={styles.meta}>Max {groupSize}</span>
+  </div>
+  {startingTimes && startingTimes.length > 0 && (
+    <div style={styles.metaItem}>
+      <Watch size={13} color="var(--color-n600)" />
+      <span style={styles.meta}>
+        {Array.isArray(startingTimes) ? startingTimes.join(' / ') : startingTimes}
+      </span>
+    </div>
+  )}
+</div>
 
           {/* Divider */}
           <div style={styles.divider} />
@@ -85,10 +100,40 @@ function TourCard({ id, title, price, rating, reviews, duration, groupSize, badg
               this is an invitation to explore, not a demand to commit. */}
           {/* Footer — View Tour CTA */}
           <div style={styles.footer}>
-            <div style={styles.viewTourBtn}>
-              <span style={styles.viewTour}>View Tour</span>
-              <ArrowRight size={14} color="var(--color-forest-green)" />
+            <div
+              style={{
+                ...styles.viewTourBtn,
+                backgroundColor: btnHovered ? 'var(--color-forest-green)' : 'transparent',
+                transition: 'background-color 0.2s ease, border-color 0.2s ease',
+              }}
+              onMouseEnter={() => setBtnHovered(true)}
+              onMouseLeave={() => setBtnHovered(false)}
+            >
+              <span style={{
+                ...styles.viewTour,
+                color: btnHovered ? '#fff' : 'var(--color-forest-green)',
+                transition: 'color 0.2s ease',
+              }}>View Tour</span>
+              <ArrowRight size={14} color={btnHovered ? '#fff' : 'var(--color-forest-green)'} />
             </div>
+
+            {supportedLanguages.length > 0 && (
+              <div
+                style={styles.languageFlags}
+                aria-label={`Available in ${supportedLanguages.map((language) => language.label).join(' and ')}`}
+              >
+                {supportedLanguages.map((language) => (
+                  <span
+                    key={language.id}
+                    style={styles.languageFlag}
+                    title={language.label}
+                    aria-label={language.label}
+                  >
+                    {language.flag}
+                  </span>
+                ))}
+              </div>
+            )}
           </div>
 
         </div>
@@ -180,7 +225,7 @@ cardLink: {
   priceAmount: {
     fontFamily: 'var(--font-display)',
     fontWeight: '700',
-    fontSize: '16px',
+    fontSize: '20px',
     color: 'var(--color-n000)',
   },
 
@@ -219,8 +264,13 @@ cardLink: {
     fontWeight: '700',
     fontSize: 'var(--text-h3)',
     color: 'var(--color-n900)',
-    marginBottom: '10px',
+    marginBottom: 0,
     lineHeight: '1.3',
+  },
+
+  titleWrapper: {
+    minHeight: '86px',
+    marginBottom: '10px',
   },
 
   metaRow: {
@@ -250,7 +300,29 @@ cardLink: {
  footer: {
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'flex-start',
+    justifyContent: 'space-between',
+    gap: '12px',
+    flexWrap: 'wrap',
+  },
+
+  languageFlags: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px',
+  },
+
+  languageFlag: {
+    width: '28px',
+    height: '28px',
+    borderRadius: '50%',
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'var(--color-n100)',
+    border: '1px solid var(--color-n300)',
+    fontSize: '16px',
+    lineHeight: 1,
+    boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
   },
 
   viewTourBtn: {

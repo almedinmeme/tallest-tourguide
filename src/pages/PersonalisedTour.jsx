@@ -7,7 +7,7 @@
 // The questionnaire is broken into 4 steps with a progress bar.
 // Each step is focused and manageable — research shows multi-step
 // forms convert at significantly higher rates than single long forms.
-
+import SEO from '../components/SEO'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import {
@@ -182,6 +182,11 @@ function PersonalisedTour() {
 
   return (
     <div>
+      <SEO
+  title="Personalised Tour Package"
+  description="Build a custom Bosnia itinerary around your interests. Private guide, flexible dates, accommodation arranged on request. Fill in our short questionnaire."
+  url="/personalised"
+/>
 
       {/* ── HERO ────────────────────────────────────────── */}
       <section style={styles.hero}>
