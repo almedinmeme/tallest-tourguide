@@ -1,4 +1,5 @@
 import { Routes, Route } from 'react-router-dom'
+import { LocalBusinessSchema } from './schema/SchemaMarkup'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import ScrollToTopButton from './components/ScrollToTopButton'
@@ -71,12 +72,17 @@ function NotFound() {
 function App() {
   return (
     <div>
+      {/* LocalBusinessSchema renders a <script> tag in <head> on every page.
+          It tells Google this is a real local business in Sarajevo.
+          Invisible to visitors — only read by search engines. */}
+      <LocalBusinessSchema />
+
       <Navbar />
 
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/tours" element={<Tours />} />
-        <Route path="/tours/:id" element={<TourDetail />} />
+        <Route path="/tours/:slug" element={<TourDetail />} />
         <Route path="/packages" element={<Packages />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/packages/:id" element={<PackageDetail />} />

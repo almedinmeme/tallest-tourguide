@@ -5,15 +5,16 @@ import useWindowWidth from '../hooks/useWindowWidth'
 import logo from '../assets/logo.svg'
 
 const tourLinks = [
-  { id: 1, label: 'Sarajevo Grand Walking Tour', price: '€29' },
-  { id: 2, label: 'Mostar, Kravice & More: Full Day', price: '€69' },
-  { id: 3, label: 'Siege, Genocide, Survival: Half-Day Sarajevo War Tour', price: '€35' },
-  { id: 4, label: 'Authentic Bosnian Cooking Experience', price: '€49' },
-  { id: 5, label: 'Jajce & Travnik: Full Day in Medieval Bosnia', price: '€69' },
-  { id: 7, label: "Sarajevo's Jewish Heritage Tour", price: '€29' },
-  { id: 8, label: 'Mostar & the Old Bridge: Half-Day', price: '€45' },
-  { id: 9, label: 'Sarajevo Coffee & Culinary Walk', price: '€39' },
-  { id: 6, label: 'Sunrise or Sunset: Intro Walking Tour', price: '€22' },
+  { id: 1, slug: 'sarajevo-walking-tour', label: 'Essential Sarajevo Walking Tour', price: '€25' },
+  { id: 2, slug: 'mostar-day-trip-from-sarajevo', label: 'Mostar Day Trip from Sarajevo', price: '€65' },
+  { id: 8, slug: 'lukomir-hike-bosnia', label: 'Lukomir Hike Bosnia', price: '€65' },
+  { id: 4, slug: 'bosnian-cooking-class-sarajevo', label: 'Bosnian Cooking Class in Sarajevo', price: '€45' },
+  { id: 5, slug: 'jajce-travnik-day-trip-sarajevo', label: 'Jajce & Travnik Day Trip', price: '€65' },
+ { id: 6, slug: 'sarajevo-morning-walk-tour', label: 'Sarajevo Morning Walk Tour', price: '€15' },
+  { id: 7, slug: 'sarajevo-jewish-heritage-tour', label: 'Sarajevo Jewish Heritage Tour', price: '€25' },
+    { id: 3, slug: 'sarajevo-war-tour', label: 'Sarajevo War Tour', price: '€30' },
+  { id: 9, slug: 'srebrenica-day-trip-from-sarajevo', label: 'Srebrenica Day Trip from Sarajevo', price: '€65' },
+
 ]
 
 const packageLinks = [
@@ -27,14 +28,14 @@ const packageLinks = [
   {
     id: 1,
     label: 'Sarajevo Essential',
-    description: '2 days · From €199',
+    description: '2 days · From €99',
     href: '/packages/1',
     isSpecial: false,
   },
   {
     id: 2,
     label: 'Bosnia Deep Dive',
-    description: '5 days · From €349',
+    description: '5 days · From €759',
     href: '/packages/2',
     isSpecial: false,
   },
@@ -199,7 +200,7 @@ function Navbar() {
                     {tourLinks.map((tour, index) => (
                       <div key={tour.id}>
                         <Link
-  to={`/tours/${tour.id}`}
+  to={`/tours/${tour.slug}`}
   style={styles.dropdownItem}
   className="dropdown-item"
   onClick={handleLinkClick}
@@ -404,7 +405,7 @@ function Navbar() {
           {tourLinks.map((tour) => (
             <Link
               key={tour.id}
-              to={`/tours/${tour.id}`}
+              to={`/tours/${tour.slug}`}
               style={styles.mobileSubLink}
               onClick={handleLinkClick}
             >

@@ -186,6 +186,7 @@ function PersonalisedTour() {
   title="Personalised Tour Package"
   description="Build a custom Bosnia itinerary around your interests. Private guide, flexible dates, accommodation arranged on request. Fill in our short questionnaire."
   url="/personalised"
+  image="https://tallesttourguide.com/og-image.jpg"
 />
 
       {/* ── HERO ────────────────────────────────────────── */}

@@ -13,6 +13,7 @@ import useWindowWidth from '../hooks/useWindowWidth'
 import package1Hero from '../assets/package-1-hero.webp'
 import package2Hero from '../assets/package-2-hero.webp'
 import Gallery from '../components/Gallery'
+import TourReviews from '../components/TourReviews'
 
 const activityIconMap = {
   sunset: Sunset,
@@ -854,6 +855,11 @@ function PackageDetail() {
                 )
               })()}
             </div>
+
+            {/* Package Reviews — approved reviews from Airtable + submission form */}
+       <div id="reviews">
+  <TourReviews tourId={pkg.id} tourName={pkg.name} />
+</div>
 
           </div>
 

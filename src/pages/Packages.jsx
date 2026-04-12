@@ -15,11 +15,11 @@ const standardPackages = [
     name: 'Sarajevo Essential',
     subtitle: 'Stories, Survival & Soul',
     duration: '2 Days',
-    groupSize: 8,
-    price: 199,
-    originalPrice: 275,
-    rating: 4.9,
-    reviews: 47,
+    groupSize: 12,
+    price: 99,
+    originalPrice: 120,
+    rating: 5.0,
+    reviews: 1,
     badge: 'Most Popular',
     badgeColor: 'var(--color-amber)',
     badgeTextColor: 'var(--color-n900)',
@@ -42,11 +42,11 @@ const standardPackages = [
     name: 'Bosnia Deep Dive',
     subtitle: 'Real Bosnia, Deeply Experienced',
     duration: '5 Days',
-    groupSize: 8,
-    price: 349,
-    originalPrice: 550,
-    rating: 4.9,
-    reviews: 31,
+    groupSize: 12,
+    price: 759,
+    originalPrice: 850,
+    rating: 5.0,
+    reviews: 11,
     badge: 'Best Value',
     badgeColor: 'var(--color-forest-green)',
     badgeTextColor: 'var(--color-n000)',
@@ -79,6 +79,7 @@ function Packages() {
   title="Tour Packages"
   description="Multi-day tour packages in Bosnia. Sarajevo Essential (2 days) and Bosnia Deep Dive (5 days). Includes private transfers, meals, and all guided experiences."
   url="/packages"
+  image="https://tallesttourguide.com/og-image.jpg"
 />
 
       {/* Page header */}

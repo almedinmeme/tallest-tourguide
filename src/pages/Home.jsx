@@ -37,6 +37,7 @@ function Home() {
   title="Guided Tours in Sarajevo"
   description="Small group tours in Sarajevo and Bosnia led by a local guide. War history, food tours, day trips to Mostar and more. Max 12 people. Book online."
   url="/"
+  image="https://tallesttourguide.com/og-image.jpg"
 />
      {/* ═══════════════════════════════
           HERO SECTION — Redesigned
@@ -45,7 +46,11 @@ function Home() {
           left-aligned typographic headline,
           and animated scroll indicator.
           ═══════════════════════════════ */}
-      <section style={styles.hero}>
+      <section style={{
+          ...styles.hero,
+          height: isMobile ? '80vh' : '100vh',
+          minHeight: isMobile ? '480px' : '600px',
+        }}>
 
         {/* Background photo layer —
             sits behind everything else via z-index.
@@ -54,7 +59,10 @@ function Home() {
         <img
           src={heroBg}
           alt="Sarajevo guided tour experience"
-          style={styles.heroBg}
+          style={{
+            ...styles.heroBg,
+            objectPosition: isMobile ? 'left center' : 'center',
+          }}
         />
 
         {/* Gradient overlay — runs left to right.
@@ -91,14 +99,14 @@ function Home() {
               to make everything big and loud simultaneously. */}
           <h1 style={{
             ...styles.heroHeadline,
-            fontSize: isMobile ? '36px' : '64px',
+            fontSize: isMobile ? '32px' : '56px',
           }}>
             <span style={styles.heroHeadlineThin}>
-              Discover Bosnia
+              You Won't Just See Bosnia.
             </span>
             <br />
             <span style={styles.heroHeadlineBold}>
-              Like a Local.
+              You'll Understand It.
             </span>
           </h1>
 
@@ -107,10 +115,10 @@ function Home() {
               the sections below handle the detail. */}
           <p style={{
             ...styles.heroSub,
-            fontSize: isMobile ? '16px' : '18px',
+            fontSize: isMobile ? '14px' : '14px',
             maxWidth: isMobile ? '100%' : '420px',
           }}>
-            Small groups. Real stories. Local guides.
+            Small groups. Trusted guides. Experiences that stay with you.
           </p>
 
           {/* CTA row — primary and secondary buttons.
@@ -151,7 +159,7 @@ function Home() {
               onMouseEnter={() => setSecondaryHovered(true)}
               onMouseLeave={() => setSecondaryHovered(false)}
             >
-              <span>View Packages</span>
+              <span>Plan a Full Trip</span>
             </Link>
 
           </div>
@@ -317,6 +325,7 @@ function Home() {
   <TourCard
   key={tour.id}
   id={tour.id}
+  slug={tour.slug}
   title={tour.title}
   price={tour.price}
   rating={tour.rating}
@@ -621,7 +630,7 @@ hero: {
   },
 
   heroHeadline: {
-    fontFamily: 'var(--font-display)',
+    fontFamily: "'Fraunces', Georgia, serif",
     color: 'var(--color-n000)',
     lineHeight: '1.1',
     margin: 0,
@@ -631,6 +640,7 @@ hero: {
   // with the bold line below it.
   heroHeadlineThin: {
     fontWeight: '300',
+    fontStyle: 'italic',
     display: 'block',
     opacity: 0.9,
   },

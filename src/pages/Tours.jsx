@@ -21,8 +21,9 @@ const isMobile = width <= 768
     <div>
       <SEO
   title="Guided Tours in Sarajevo"
-  description="Small group tours in Sarajevo and Bosnia led by a local guide. War history, food tours, day trips to Mostar and more. Max 8 people. Book online."
+  description="Small group tours in Sarajevo and Bosnia led by a local guide. War history, food tours, day trips to Mostar and more. Max 12 people. Book online."
   url="/tours"
+  image="https://tallesttourguide.com/og-image.jpg"
 />
 
       {/* ── PAGE HEADER ─────────────────────────────────────
@@ -59,6 +60,7 @@ const isMobile = width <= 768
           <TourCard
   key={tour.id}
   id={tour.id}
+  slug={tour.slug}
   title={tour.title}
   price={tour.price}
   rating={tour.rating}

@@ -79,6 +79,7 @@ const isMobile = width <= 768
   title="Contact Us"
   description="Get in touch with Tallest Tourguide. Questions about tours, private groups, or custom itineraries — we respond within 24 hours."
   url="/contact"
+  image="https://tallesttourguide.com/og-image.jpg"
 />
 
       {/* ── PAGE HEADER ───────────────────────────────────

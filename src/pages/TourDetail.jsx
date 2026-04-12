@@ -6,6 +6,11 @@
 // - Desktop: sticky booking card on right
 // - Mobile: fixed bottom bar with drawer booking form
 import SEO from '../components/SEO'
+import {
+  TourActivitySchema,
+  BreadcrumbSchema,
+  FAQSchema,
+} from '../schema/SchemaMarkup'
 import { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import {
@@ -18,10 +23,11 @@ import useWindowWidth from '../hooks/useWindowWidth'
 import tours from '../data/tours'
 import { getTourLanguages } from '../data/tourLanguages'
 import Gallery from '../components/Gallery'
+import TourReviews from '../components/TourReviews'
 
 function TourDetail() {
-  const { id } = useParams()
-  const tour = tours.find((t) => t.id === Number(id))
+  const { slug } = useParams()
+  const tour = tours.find((t) => t.slug === slug)
   const width = useWindowWidth()
   const isMobile = width <= 768
   const supportedLanguages = getTourLanguages(tour?.languages)
@@ -245,12 +251,13 @@ function TourDetail() {
 
               <div style={styles.formGroup}>
                 <label style={styles.label}>Select Date</label>
-                <input
-                  type="date"
-                  style={styles.input}
-                  value={selectedDate}
-                  onChange={(e) => setSelectedDate(e.target.value)}
-                />
+               <input
+  type="date"
+  style={styles.input}
+  value={selectedDate}
+  onChange={(e) => setSelectedDate(e.target.value)}
+  onClick={(e) => e.target.showPicker()}
+/>
               </div>
 
               <div style={styles.formGroup}>
@@ -443,8 +450,20 @@ function TourDetail() {
       <SEO
   title={tour.title}
   description={`${tour.description.slice(0, 155)}...`}
-  url={`/tours/${tour.id}`}
+  url={`/tours/${tour.slug}`}
 />
+
+      {/* TourActivitySchema — tells Google this page is a bookable tour.
+          Enables price, rating, and duration in search results. */}
+      <TourActivitySchema tour={tour} />
+
+      {/* BreadcrumbSchema — shows breadcrumb trail in Google search:
+          tallesttourguide.com > Tours > [Tour Name] */}
+      <BreadcrumbSchema tour={tour} />
+
+      {/* FAQSchema — turns tour.faqs into expandable dropdowns in Google.
+          Automatically skips tours that have no faqs defined. */}
+      <FAQSchema tour={tour} />
 
       {/* ── HERO PHOTO ──────────────────────────────────── */}
       <div style={styles.heroWrapper}>
@@ -547,9 +566,20 @@ function TourDetail() {
             )}
 
             {/* Tour description */}
-            <div style={styles.section}>
-              <p style={styles.bodyText}>{tour.description}</p>
-            </div>
+            {/* Tour description */}
+<div style={styles.section}>
+  {tour.description.split('\n\n').map((paragraph, index) => (
+    <p
+      key={index}
+      style={{
+        ...styles.bodyText,
+        marginBottom: index === tour.description.split('\n\n').length - 1 ? 0 : '16px',
+      }}
+    >
+      {paragraph}
+    </p>
+  ))}
+</div>
 
             {/* Tour Highlights — styled numbered steps */}
             <div style={styles.section}>
@@ -764,6 +794,11 @@ function TourDetail() {
 
               </div>
             </div>
+
+            {/* Tour Reviews — approved reviews from Airtable + submission form */}
+            <div id="reviews">
+  <TourReviews tourId={tour.id} tourName={tour.title} />
+</div>
 
           </div>
 

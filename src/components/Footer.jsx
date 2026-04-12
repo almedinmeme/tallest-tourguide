@@ -91,6 +91,8 @@ function Footer() {
             <Link to="/" style={styles.footerLink}>Home</Link>
             <Link to="/tours" style={styles.footerLink}>Tours</Link>
             <Link to="/packages" style={styles.footerLink}>Packages</Link>
+            <Link to="/about" style={styles.footerLink}>About</Link>
+            <Link to="/personalised" style={styles.footerLink}>Personalised Tour</Link>
             <Link to="/contact" style={styles.footerLink}>Contact</Link>
           </nav>
         </div>

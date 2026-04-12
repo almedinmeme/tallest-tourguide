@@ -10,7 +10,7 @@ import { Star, Clock, Users, ArrowRight, Watch } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { getTourLanguages } from '../data/tourLanguages'
 
-function TourCard({ id, title, price, rating, reviews, duration, groupSize, badge, hero, startingTimes, languages }) {
+function TourCard({ id, slug, title, price, rating, reviews, duration, groupSize, badge, hero, startingTimes, languages }) {
   const supportedLanguages = getTourLanguages(languages)
   const [btnHovered, setBtnHovered] = useState(false)
 
@@ -22,7 +22,7 @@ function TourCard({ id, title, price, rating, reviews, duration, groupSize, badg
     // textDecoration: none removes the default blue underline
     // that browsers apply to all anchor elements.
     <Link
-  to={`/tours/${id}`}
+  to={`/tours/${slug || id}`}
   style={styles.cardLink}
   className="tour-card-link"
 >

@@ -17,6 +17,7 @@ function About() {
   title="About Your Guide"
   description="Meet Almedin — born and raised in Sarajevo, guiding since day one. 500+ guests, 4.9 TripAdvisor rating, maximum 8 people per tour."
   url="/about"
+  image="https://tallesttourguide.com/og-image.jpg"
 />
       {/* ── PAGE HEADER ─────────────────────────────────── */}
       <section style={styles.pageHeader}>
