@@ -37,10 +37,10 @@ export default defineConfig({
   build: {
     rollupOptions: {
       output: {
-        manualChunks: {
-          'vendor-react': ['react', 'react-dom', 'react-router-dom'],
-          'vendor-ui':    ['lucide-react'],
-          'vendor-misc':  ['marked', '@emailjs/browser', 'react-helmet-async'],
+        manualChunks(id) {
+          if (id.includes('react') || id.includes('react-dom') || id.includes('react-router-dom')) return 'vendor-react'
+          if (id.includes('lucide-react')) return 'vendor-ui'
+          if (id.includes('marked') || id.includes('@emailjs') || id.includes('react-helmet-async')) return 'vendor-misc'
         },
       },
     },
