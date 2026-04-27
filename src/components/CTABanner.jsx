@@ -75,7 +75,7 @@ function CTABanner() {
               justifyContent: 'center',
               flex: isMobile ? 'none' : 1,
               width: isMobile ? '100%' : 'auto',
-            }}>
+            }} className="btn-lift btn-glow-green">
               <span>Book a Tour</span>
               <ArrowRight size={16} color="var(--color-n000)" />
             </Link>
@@ -85,7 +85,7 @@ function CTABanner() {
               justifyContent: 'center',
               flex: isMobile ? 'none' : 1,
               width: isMobile ? '100%' : 'auto',
-            }}>
+            }} className="btn-lift">
               <Mail size={15} color="var(--color-forest-green)" />
               <span>Contact Us</span>
             </Link>
@@ -191,7 +191,7 @@ eyebrow: {
     display: 'inline-flex',
     alignItems: 'center',
     gap: '8px',
-    height: '48px',
+    height: '44px',
     padding: '0 24px',
     backgroundColor: 'var(--color-forest-green)',  // Green on light bg
     color: 'var(--color-n000)',
@@ -207,7 +207,7 @@ eyebrow: {
     display: 'inline-flex',
     alignItems: 'center',
     gap: '8px',
-    height: '48px',
+    height: '44px',
     padding: '0 24px',
     backgroundColor: 'transparent',
     color: 'var(--color-forest-green)',

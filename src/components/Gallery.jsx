@@ -143,8 +143,8 @@ function Gallery({ images = [], alt = 'Gallery image' }) {
               onClick={() => open(index)}
               style={{
                 flexShrink: 0,
-                width: '280px',
-                height: '224px',
+                width: '380px',
+                height: '272px',
                 borderRadius: '10px',
                 overflow: 'hidden',
                 cursor: 'pointer',
@@ -167,12 +167,13 @@ function Gallery({ images = [], alt = 'Gallery image' }) {
                 src={item.src}
                 alt={item.caption || `${alt} ${index + 1}`}
                 draggable={false}
+                loading="lazy"
                 style={{
                   width: '100%',
                   height: '100%',
                   objectFit: 'cover',
                   display: 'block',
-                  pointerEvents: 'none', // prevents browser image drag interfering
+                  pointerEvents: 'none',
                 }}
               />
             </div>
@@ -186,7 +187,7 @@ function Gallery({ images = [], alt = 'Gallery image' }) {
           style={{
             position: 'fixed',
             inset: 0,
-            zIndex: 1000,
+            zIndex: 9999,
             backgroundColor: 'rgba(0,0,0,0.96)',
             display: 'flex',
             flexDirection: 'column',
@@ -204,7 +205,7 @@ function Gallery({ images = [], alt = 'Gallery image' }) {
               alignItems: 'center',
               justifyContent: 'space-between',
               padding: '20px 24px',
-              zIndex: 1001,
+              zIndex: 10000,
             }}
             onClick={(e) => e.stopPropagation()}
           >
@@ -254,7 +255,7 @@ function Gallery({ images = [], alt = 'Gallery image' }) {
                 alignItems: 'center',
                 justifyContent: 'center',
                 cursor: 'pointer',
-                zIndex: 1001,
+                zIndex: 10000,
                 transition: 'background 0.15s ease',
               }}
               onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.18)'}
@@ -317,7 +318,7 @@ function Gallery({ images = [], alt = 'Gallery image' }) {
                 alignItems: 'center',
                 justifyContent: 'center',
                 cursor: 'pointer',
-                zIndex: 1001,
+                zIndex: 10000,
                 transition: 'background 0.15s ease',
               }}
               onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.18)'}

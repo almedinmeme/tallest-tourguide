@@ -8,8 +8,6 @@
 // Clicking a thumbnail or an arrow updates that index,
 // React rerenders the main photo instantly.
 // No libraries needed — pure useState logic you already know.
-import { Link } from 'react-router-dom'
-import { ArrowRight } from 'lucide-react'
 import { useState } from 'react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import useWindowWidth from '../hooks/useWindowWidth'
@@ -58,71 +56,13 @@ function GuideSection() {
     <section style={styles.section}>
       <div style={{
         ...styles.inner,
-        gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
-        gap: isMobile ? '40px' : '72px',
+        gridTemplateColumns: isMobile ? '1fr' : '55% 1fr',
+        gap: isMobile ? '40px' : '64px',
       }}>
 
-        {/* ── LEFT COLUMN — Text Content ──────────────────
-            On mobile this appears below the photo carousel
-            because the grid collapses to a single column
-            and the photo div comes first in the JSX order.
-            We deliberately put photos first in JSX so mobile
-            visitors see the visual before the text — images
-            load faster perceptually and set the emotional
-            context for the words that follow. */}
-        <div style={styles.textColumn}>
-
-          {/* Section eyebrow — same pattern as every other section */}
-          <span style={styles.eyebrow}>Our belief</span>
-
-          {/* Main headline — uses the copy we wrote together */}
-          <h2 style={styles.headline}>
-              Deeply Local.<br />
-         Deeply Commited.
-          </h2>
-
-          {/* Subheading */}
-          <p style={styles.subheading}>
-            Sarajevo isn't just where I work — it's everything I have.
-            My family, my people, and the stories that built me are all
-            rooted in this city. Starting Tallest Tourguide & Friends was born from a single belief: 
-            Bosnia deserves to be seen as it actually is. Not through a tour operator's lens, but through the 
-            eyes of someone who lives this story every day. That changes everything about what a tour becomes.
-          </p>
-
-          {/* Body copy */}
-          <p style={styles.body}>
-            You won't be a tourist moving through checkpoints. You'll be a guest — welcomed the 
-            way we welcome a friend arriving at the door. I'll share the history, the culture, 
-            the complexity of this place, but not as information. As something that matters. Because it does.
-          </p>
-
-         <p style={styles.body}>
-            What I want most is for you to leave feeling seen — to carry Bosnia with you when you go home and 
-            tell people about it, because you felt the presence 
-            of real people behind every story. That's why I started this. To be an ambassador for my people.
-          </p>
-
-          {/* Pull quote — the single most important sentence.
-              Displayed with a Forest Green left border — a typographic
-              pattern called a blockquote that signals to scanning visitors
-              "this is the most important thing this person said."
-              Italic style reinforces that this is a direct, personal statement
-              rather than marketing copy. */}
-          <blockquote style={styles.pullQuote}>
-            "And none of this works alone. Every person you meet through us — your guide, your driver, 
-            the person cooking your meal — is someone I deeply trust.  <br />They believe, the way I do, 
-            that every single guest is valuable. That this work matters. 
-            That Bosnia deserves to be known by people who actually love it"
-          </blockquote>
-         
-
-        </div>
-
-        {/* ── RIGHT COLUMN — Photo Carousel ──────────────
-            On mobile this appears first — full width,
-            with arrow buttons for navigation.
-            On desktop it sits beside the text column. */}
+        {/* ── LEFT COLUMN — Photo Carousel ──────────────
+            Photo leads on both desktop and mobile —
+            the visual sets the emotional tone before the words. */}
         <div style={styles.photoColumn}>
 
           {/* Main photo display */}
@@ -143,6 +83,7 @@ function GuideSection() {
               style={{ ...styles.arrowBtn, left: '12px' }}
               onClick={handlePrev}
               aria-label="Previous photo"
+              className="btn-overlay"
             >
               <ChevronLeft size={20} color="var(--color-n000)" />
             </button>
@@ -152,6 +93,7 @@ function GuideSection() {
               style={{ ...styles.arrowBtn, right: '12px' }}
               onClick={handleNext}
               aria-label="Next photo"
+              className="btn-overlay"
             >
               <ChevronRight size={20} color="var(--color-n000)" />
             </button>
@@ -231,6 +173,31 @@ function GuideSection() {
 
         </div>
 
+        {/* ── RIGHT COLUMN — Text ─────────────────────── */}
+        <div style={styles.textColumn}>
+
+          <span style={styles.eyebrow}>Our belief</span>
+
+          <h2 style={styles.headline}>
+            Deeply Local.<br />
+            Deeply Committed.
+          </h2>
+
+          <p style={styles.subheading}>
+            Sarajevo isn't just where I work — it's everything I have.
+            Tallest Tourguide & Friends was born from one belief: Bosnia deserves
+            to be seen through the eyes of someone who lives this story every day,
+            not through a tour operator's lens.
+          </p>
+
+          <blockquote style={styles.pullQuote}>
+            "Every person you meet through us — your guide, your driver,
+            the person cooking your meal — is someone I deeply trust.
+            Bosnia deserves to be known by people who actually love it."
+          </blockquote>
+
+        </div>
+
       </div>
     </section>
   )
@@ -254,7 +221,8 @@ const styles = {
   textColumn: {
     display: 'flex',
     flexDirection: 'column',
-    gap: '0px',
+    gap: '0',
+    justifyContent: 'center',
   },
 
   eyebrow: {
@@ -282,15 +250,7 @@ const styles = {
     fontSize: 'var(--text-body-l)',
     color: 'var(--color-n600)',
     lineHeight: 'var(--leading-body)',
-    marginBottom: '20px',
-  },
-
-  body: {
-    fontFamily: 'var(--font-body)',
-    fontSize: 'var(--text-body)',
-    color: 'var(--color-n600)',
-    lineHeight: 'var(--leading-body)',
-    marginBottom: '28px',
+    marginBottom: '24px',
   },
 
   // The pull quote uses a Forest Green left border —
@@ -310,24 +270,6 @@ const styles = {
     fontStyle: 'italic',
     lineHeight: '1.5',
     margin: '0',
-  },
-
-  aboutBtn: {
-    display: 'inline-flex',
-    alignItems: 'center',
-    gap: '8px',
-    height: '44px',
-    padding: '0 20px',
-    backgroundColor: 'transparent',
-    color: 'var(--color-forest-green)',
-    fontFamily: 'var(--font-body)',
-    fontWeight: '700',
-    fontSize: 'var(--text-small)',
-    borderRadius: 'var(--radius)',
-    textDecoration: 'none',
-    border: '1.5px solid var(--color-forest-green)',
-    width: 'fit-content',
-    marginTop: '8px',
   },
 
   photoColumn: {

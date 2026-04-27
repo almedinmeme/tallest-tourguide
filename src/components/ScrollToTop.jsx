@@ -12,6 +12,7 @@
 
 import { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
+import { trackPageView } from '../utils/analytics'
 
 function ScrollToTop() {
   const { pathname } = useLocation()
@@ -20,10 +21,8 @@ function ScrollToTop() {
     // behavior: 'instant' scrolls immediately with no animation —
     // smooth scrolling here would feel wrong because the page
     // content is already changing. Instant reset is the right UX.
-    window.scrollTo({
-      top: 0,
-      behavior: 'instant'
-    })
+    window.scrollTo({ top: 0, behavior: 'instant' })
+    trackPageView(pathname)
   }, [pathname])
 
   // Returns null — this component has no visual output.

@@ -1,4 +1,5 @@
 import { Search, CalendarCheck, Smile } from 'lucide-react'
+import { useState, useRef } from 'react'
 import useWindowWidth from '../hooks/useWindowWidth'
 
 const steps = [
@@ -25,6 +26,8 @@ const steps = [
 function HowItWorks() {
   const width = useWindowWidth()
   const isMobile = width <= 768
+  const [activeStep, setActiveStep] = useState(0)
+  const touchStartX = useRef(null)
 
   return (
     <section style={styles.section}>
@@ -38,48 +41,79 @@ function HowItWorks() {
         </p>
       </div>
 
-      {/* Steps grid — three equal columns on desktop,
-          single column on mobile. Using CSS grid instead
-          of flexbox gives us perfect equal-width columns
-          with no fighting between content and connectors.
-          Every element in each column aligns to the same
-          invisible grid lines automatically. */}
-      <div style={{
-        ...styles.stepsGrid,
-        gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)',
-        maxWidth: isMobile ? '400px' : '860px',
-      }}>
-
-        {steps.map((step, index) => {
-          const Icon = step.icon
-
-          return (
-            <div key={step.id} style={styles.step}>
-
-              {/* Step number */}
-              <span style={styles.stepNumber}>0{step.id}</span>
-
-              {/* Icon circle */}
-              <div style={styles.iconCircle}>
-                <Icon size={26} color="var(--color-n000)" strokeWidth={1.8} />
-              </div>
-
-              {/* Divider line below icon — a short decorative
-                  line that visually separates the icon from the
-                  text below it. Cleaner than a connector between
-                  steps and keeps every column self-contained
-                  so alignment is never dependent on adjacent columns. */}
-              <div style={styles.stepDivider} />
-
-              {/* Step text */}
-              <h3 style={styles.stepLabel}>{step.label}</h3>
-              <p style={styles.stepDescription}>{step.description}</p>
-
+      {isMobile ? (
+        <>
+          <div
+            style={styles.mobileCarouselWrapper}
+            onTouchStart={(e) => { touchStartX.current = e.touches[0].clientX }}
+            onTouchEnd={(e) => {
+              if (touchStartX.current === null) return
+              const delta = touchStartX.current - e.changedTouches[0].clientX
+              if (Math.abs(delta) > 40) {
+                if (delta > 0) setActiveStep((p) => Math.min(steps.length - 1, p + 1))
+                else setActiveStep((p) => Math.max(0, p - 1))
+              }
+              touchStartX.current = null
+            }}
+          >
+            <div style={{
+              ...styles.mobileTrack,
+              transform: `translateX(-${activeStep * 100}%)`,
+            }}>
+              {steps.map((step) => {
+                const Icon = step.icon
+                return (
+                  <div key={step.id} style={styles.mobileSlide}>
+                    <div style={styles.step}>
+                      <span style={styles.stepNumber}>0{step.id}</span>
+                      <div style={styles.iconCircle}>
+                        <Icon size={26} color="var(--color-n000)" strokeWidth={1.8} />
+                      </div>
+                      <div style={styles.stepDivider} />
+                      <h3 style={styles.stepLabel}>{step.label}</h3>
+                      <p style={styles.stepDescription}>{step.description}</p>
+                    </div>
+                  </div>
+                )
+              })}
             </div>
-          )
-        })}
+          </div>
 
-      </div>
+          <div style={styles.mobileDots}>
+            {steps.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setActiveStep(i)}
+                style={{
+                  ...styles.dot,
+                  width: activeStep === i ? '24px' : '8px',
+                  backgroundColor: activeStep === i
+                    ? 'var(--color-forest-green)'
+                    : 'var(--color-n300)',
+                }}
+                aria-label={`Go to step ${i + 1}`}
+              />
+            ))}
+          </div>
+        </>
+      ) : (
+        <div style={{ ...styles.stepsGrid, gridTemplateColumns: 'repeat(3, 1fr)', maxWidth: '860px' }}>
+          {steps.map((step) => {
+            const Icon = step.icon
+            return (
+              <div key={step.id} style={styles.step}>
+                <span style={styles.stepNumber}>0{step.id}</span>
+                <div style={styles.iconCircle}>
+                  <Icon size={26} color="var(--color-n000)" strokeWidth={1.8} />
+                </div>
+                <div style={styles.stepDivider} />
+                <h3 style={styles.stepLabel}>{step.label}</h3>
+                <p style={styles.stepDescription}>{step.description}</p>
+              </div>
+            )
+          })}
+        </div>
+      )}
 
     </section>
   )
@@ -127,6 +161,41 @@ const styles = {
     display: 'grid',
     gap: '40px',
     margin: '0 auto',
+  },
+
+  mobileCarouselWrapper: {
+    overflow: 'hidden',
+    width: '100%',
+    maxWidth: '340px',
+    margin: '0 auto',
+  },
+
+  mobileTrack: {
+    display: 'flex',
+    transition: 'transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+  },
+
+  mobileSlide: {
+    minWidth: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+  },
+
+  mobileDots: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '6px',
+    marginTop: '28px',
+  },
+
+  dot: {
+    height: '8px',
+    borderRadius: '4px',
+    border: 'none',
+    cursor: 'pointer',
+    padding: 0,
+    transition: 'width 0.3s ease, background-color 0.3s ease',
   },
 
   // Each step is a self-contained column.

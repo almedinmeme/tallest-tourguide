@@ -47,19 +47,17 @@ const isMobile = width <= 768
     setIsSending(true)
     setIsError(false)
 
-    // These placeholder names must match exactly what you set up
-    // in your second EmailJS template — we'll create that template
-    // together after you've seen this page working in the browser.
     const templateParams = {
-      contact_name: name,
-      contact_email: email,
-      contact_subject: subject || 'General Enquiry',
-      contact_message: message,
+      type: 'Contact',
+      tour_name: subject || 'General Enquiry',
+      guest_name: name,
+      guest_email: email,
+      message,
     }
 
     emailjs.send(
       import.meta.env.VITE_EMAILJS_SERVICE_ID,
-      import.meta.env.VITE_EMAILJS_CONTACT_TEMPLATE_ID,
+      import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
       templateParams,
       import.meta.env.VITE_EMAILJS_PUBLIC_KEY
     )
@@ -105,7 +103,7 @@ const isMobile = width <= 768
           read left to right, so they encounter your human
           details first before they see the form. This reduces
           the feeling that they're submitting into a void. */}
-      <section style={styles.contentSection}>
+      <section style={{ ...styles.contentSection, padding: isMobile ? '40px 16px 56px' : '72px 40px 80px' }}>
         <div style={{
   ...styles.contentGrid,
   gridTemplateColumns: isMobile ? '1fr' : '1fr 1.4fr',
@@ -167,7 +165,7 @@ const isMobile = width <= 768
 
           {/* ── RIGHT COLUMN — Contact Form ────────────── */}
           <div style={styles.formColumn}>
-            <div style={styles.formCard}>
+            <div style={{ ...styles.formCard, padding: isMobile ? '24px 20px' : '36px' }}>
 
               {/* Same conditional rendering pattern as TourDetail —
                   swap the form for a success message on completion.
@@ -201,6 +199,7 @@ const isMobile = width <= 768
                         type="text"
                         placeholder="John Doe"
                         style={styles.input}
+                        className="contact-input"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                       />
@@ -212,6 +211,7 @@ const isMobile = width <= 768
                         type="email"
                         placeholder="john.doe@email.com"
                         style={styles.input}
+                        className="contact-input"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                       />
@@ -228,6 +228,7 @@ const isMobile = width <= 768
                       type="text"
                       placeholder="Private group tour for 12 people"
                       style={styles.input}
+                      className="contact-input"
                       value={subject}
                       onChange={(e) => setSubject(e.target.value)}
                     />
@@ -243,6 +244,7 @@ const isMobile = width <= 768
                     <textarea
                       placeholder="Tell us about your group, travel dates, or any questions you have..."
                       style={styles.textarea}
+                      className="contact-input"
                       value={message}
                       onChange={(e) => setMessage(e.target.value)}
                     />
@@ -254,6 +256,7 @@ const isMobile = width <= 768
                       opacity: isSending ? 0.7 : 1,
                       cursor: isSending ? 'not-allowed' : 'pointer',
                     }}
+                    className="btn-lift btn-glow-green"
                     onClick={handleSubmit}
                     disabled={isSending}
                   >
@@ -283,7 +286,7 @@ const isMobile = width <= 768
 const styles = {
   pageHeader: {
     backgroundColor: 'var(--color-forest-green)',
-    padding: '72px 40px',
+    padding: '36px 40px',
   },
 
   headerInner: {

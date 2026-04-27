@@ -16,6 +16,7 @@ function SEO({
   image = 'https://tallesttourguide.com/og-image.jpg',
   url,
   type = 'website',
+  publishedDate,
 }) {
   const fullTitle = title
     ? `${title} | Tallest Tourguide Sarajevo`
@@ -50,6 +51,14 @@ function SEO({
       {/* Geographic meta — helps with local search */}
       <meta name="geo.region" content="BA" />
       <meta name="geo.placename" content="Sarajevo" />
+
+      {/* Article-specific meta */}
+      {type === 'article' && publishedDate && (
+        <meta property="article:published_time" content={publishedDate} />
+      )}
+      {type === 'article' && (
+        <meta property="article:author" content="Almedin Omerović" />
+      )}
     </Helmet>
   )
 }

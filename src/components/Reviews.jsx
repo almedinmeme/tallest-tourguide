@@ -252,6 +252,7 @@ function Reviews() {
               style={styles.navBtn}
               onClick={handlePrev}
               aria-label="Previous review"
+              className="btn-overlay"
             >
               <ChevronLeft size={20} color="rgba(255,255,255,0.8)" />
             </button>
@@ -285,6 +286,7 @@ function Reviews() {
               style={styles.navBtn}
               onClick={handleNext}
               aria-label="Next review"
+              className="btn-overlay"
             >
               <ChevronRight size={20} color="rgba(255,255,255,0.8)" />
             </button>
@@ -301,6 +303,7 @@ function Reviews() {
             target="_blank"
             rel="noopener noreferrer"
             style={styles.tripAdvisorBtn}
+            className="btn-outline-light"
           >
             <span>Read all 180 reviews</span>
             <ExternalLink size={14} color="var(--color-n000)" />
@@ -336,15 +339,11 @@ const progressAnimation = `
 
 const styles = {
   section: {
-    // min-height: 100vh makes the section at least full viewport height.
-    // This is the foundation of the cinematic full-screen effect —
-    // when a visitor scrolls to this section, it occupies their
-    // entire screen with nothing else visible.
-    minHeight: '100vh',
+    minHeight: '520px',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',
-    padding: '48px 40px',
+    padding: '40px 40px 32px',
     position: 'relative',
     overflow: 'hidden',
   },
@@ -381,8 +380,8 @@ const styles = {
     textAlign: 'center',
     maxWidth: '860px',
     margin: '0 auto',
-    padding: '48px 0',
-    gap: '32px',
+    padding: '24px 0',
+    gap: '24px',
   },
 
   quoteMarkWrapper: {

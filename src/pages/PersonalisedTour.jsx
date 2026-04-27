@@ -155,19 +155,25 @@ function PersonalisedTour() {
       .map((a) => a.label)
       .join(', ')
 
+    const budgetLabel = budgetOptions.find(b => b.id === formData.budget)?.label || 'Not specified'
+    const travellerLabel = travellerTypes.find(t => t.id === formData.travellerType)?.label || 'Not specified'
+    const accommodationLabel = accommodationOptions.find(a => a.id === formData.accommodation)?.label || 'Not specified'
+
     const templateParams = {
-      tour_name: 'Personalised Tour Package — Questionnaire',
-      guest_name: formData.name,
-      guest_email: formData.email,
-      guest_phone: formData.phone || 'Not provided',
-      tour_date: `${formData.arrivalDate || 'Flexible'} to ${formData.departureDate || 'Flexible'}`,
-      num_people: formData.groupSize,
-      total_price: `Budget: ${budgetOptions.find(b => b.id === formData.budget)?.label || 'Not specified'}`,
-      traveller_type: travellerTypes.find(t => t.id === formData.travellerType)?.label || '',
-      activities: selectedActivities,
-      accommodation: formData.accommodation,
-      other_info: formData.otherInfo || 'None provided',
-      how_heard: formData.howHeard || 'Not specified',
+      contact_name: formData.name,
+      contact_email: formData.email,
+      contact_subject: 'Personalised Tour Request',
+      contact_message:
+        `Traveller type: ${travellerLabel}\n` +
+        `Group size: ${formData.groupSize}\n` +
+        `Dates: ${formData.arrivalDate || 'Flexible'} to ${formData.departureDate || 'Flexible'}\n` +
+        `Duration: ${formData.duration || 'Flexible'}\n` +
+        `Budget: ${budgetLabel}\n` +
+        `Accommodation: ${accommodationLabel}\n` +
+        `Phone: ${formData.phone || 'Not provided'}\n\n` +
+        `Interests: ${selectedActivities}\n\n` +
+        `Additional notes: ${formData.otherInfo || 'None'}\n` +
+        `How they heard about us: ${formData.howHeard || 'Not specified'}`,
     }
 
     emailjs.send(
@@ -191,25 +197,16 @@ function PersonalisedTour() {
 
       {/* ── HERO ────────────────────────────────────────── */}
       <section style={styles.hero}>
-        <div style={styles.heroInner}>
-          <div style={styles.heroIconWrapper}>
-            <Sparkles
-              size={28}
-              color="var(--color-amber)"
-              strokeWidth={1.5}
-            />
-          </div>
+        <div style={{ maxWidth: '1060px', margin: '0 auto' }}>
           <span style={styles.eyebrow}>Personalised Tour Package</span>
           <h1 style={{
             ...styles.heroTitle,
-            fontSize: isMobile ? '32px' : '52px',
+            fontSize: isMobile ? '28px' : '36px',
           }}>
-            Your Bosnia.<br />
-            Your Way.
+            Your Bosnia. Your Way.
           </h1>
-          <p style={styles.heroSubtitle}>
-            Tell us what you're curious about and we'll build
-            an itinerary around you — not the other way around.
+          <p style={{ ...styles.heroSubtitle, maxWidth: '520px', margin: '10px auto 0' }}>
+            Tell us what you're curious about and we'll build an itinerary around you — not the other way around.
           </p>
         </div>
       </section>
@@ -243,7 +240,7 @@ function PersonalisedTour() {
               <div key={i} style={styles.whyCard}>
                 <div style={styles.whyIconWrapper}>
                   <Icon
-                    size={20}
+                    size={15}
                     color="var(--color-forest-green)"
                     strokeWidth={1.8}
                   />
@@ -904,8 +901,8 @@ const styles = {
   },
 
   hero: {
-    backgroundColor: 'var(--color-forest-green)',  // Green instead of near-black
-    padding: '80px 40px',
+    backgroundColor: 'var(--color-forest-green)',
+    padding: '36px 40px',
     textAlign: 'center',
     position: 'relative',
     overflow: 'hidden',
@@ -938,12 +935,12 @@ const styles = {
 
  whySection: {
     backgroundColor: 'var(--color-n100)',
-    padding: '64px 40px',
+    padding: '28px 40px',
   },
 
   whyGrid: {
     display: 'grid',
-    gap: '24px',
+    gap: '16px',
     maxWidth: '900px',
     margin: '0 auto',
   },
@@ -951,17 +948,17 @@ const styles = {
   whyCard: {
     display: 'flex',
     flexDirection: 'column',
-    gap: '10px',
-    padding: '24px',
+    gap: '6px',
+    padding: '14px 16px',
     backgroundColor: 'var(--color-n100)',
     borderRadius: '12px',
     border: '1px solid var(--color-n300)',
   },
 
   whyIconWrapper: {
-    width: '40px',
-    height: '40px',
-    borderRadius: '10px',
+    width: '30px',
+    height: '30px',
+    borderRadius: '8px',
     backgroundColor: 'rgba(46,125,94,0.1)',
     display: 'flex',
     alignItems: 'center',
@@ -971,14 +968,14 @@ const styles = {
   whyTitle: {
     fontFamily: 'var(--font-display)',
     fontWeight: '700',
-    fontSize: 'var(--text-h3)',
+    fontSize: 'var(--text-body)',
     color: 'var(--color-n900)',
     margin: 0,
   },
 
   whyText: {
     fontFamily: 'var(--font-body)',
-    fontSize: 'var(--text-body)',
+    fontSize: 'var(--text-small)',
     color: 'var(--color-n600)',
     lineHeight: 'var(--leading-body)',
     margin: 0,
@@ -986,12 +983,12 @@ const styles = {
 
   questionnaireSection: {
     backgroundColor: 'var(--color-n100)',
-    padding: '64px 40px 80px 40px',
+    padding: '28px 40px 60px 40px',
   },
 
   questionnaireCard: {
     backgroundColor: 'var(--color-n000)',
-    borderRadius: '20px',
+    borderRadius: 'var(--radius-lg)',
     maxWidth: '760px',
     margin: '0 auto',
     boxShadow: '0 4px 32px rgba(0,0,0,0.08)',
@@ -1283,7 +1280,7 @@ const styles = {
     display: 'inline-flex',
     alignItems: 'center',
     gap: '8px',
-    height: '48px',
+    height: '44px',
     padding: '0 28px',
     backgroundColor: 'var(--color-amber)',
     color: 'var(--color-n900)',
@@ -1299,7 +1296,7 @@ const styles = {
     display: 'inline-flex',
     alignItems: 'center',
     gap: '8px',
-    height: '48px',
+    height: '44px',
     padding: '0 28px',
     backgroundColor: 'var(--color-forest-green)',
     color: 'var(--color-n000)',

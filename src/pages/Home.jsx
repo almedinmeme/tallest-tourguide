@@ -6,25 +6,40 @@
 // but we'll write everything here first so you can see it working
 // before we break it apart.
 import SEO from '../components/SEO'
-import { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { MapPin, ArrowRight, Star, ChevronDown, Users, UserCheck, ShieldCheck } from 'lucide-react'
+import { MapPin, ArrowRight, Star, ChevronDown, ChevronLeft, ChevronRight, Users, UserCheck, ShieldCheck } from 'lucide-react'
 import TourCard from '../components/TourCard'
 import tours from '../data/tours'
 import useWindowWidth from '../hooks/useWindowWidth'
-import heroBg from '../assets/hero-bg.webp'
+import hero2 from '../assets/tour-2-hero.webp'
+import hero3 from '../assets/tour-3-hero.webp'
+import hero4 from '../assets/tour-5-hero.webp'
+import hero5 from '../assets/tour-7-hero.webp'
+
+const HERO_IMAGES = ['/hero-bg.webp', hero2, hero3, hero4, hero5]
 import GuideSection from '../components/GuideSection'
 import HowItWorks from '../components/HowItWorks'
 import Reviews from '../components/Reviews'
 import CTABanner from '../components/CTABanner'
 import PackagesPreview from '../components/PackagesPreview'
+import { useBlog } from '../hooks/useBlog'
+import { useAllReviews } from '../hooks/useAllReviews'
 
 
 function Home() {
   const width = useWindowWidth()
+  const { stats } = useAllReviews()
   const isMobile = width <= 768
-  const [primaryHovered, setPrimaryHovered] = useState(false)
-  const [secondaryHovered, setSecondaryHovered] = useState(false)
+  const { posts } = useBlog()
+  const [blogPage, setBlogPage] = useState(0)
+  const touchStartX = React.useRef(null)
+  const [heroIndex, setHeroIndex] = useState(0)
+
+  useEffect(() => {
+    const t = setInterval(() => setHeroIndex(i => (i + 1) % HERO_IMAGES.length), 6000)
+    return () => clearInterval(t)
+  }, [])
 
   return (
 
@@ -56,28 +71,30 @@ function Home() {
             sits behind everything else via z-index.
             objectFit cover fills the entire section
             regardless of the photo's original dimensions. */}
-        <img
-          src={heroBg}
-          alt="Sarajevo guided tour experience"
-          style={{
-            ...styles.heroBg,
-            objectPosition: isMobile ? 'left center' : 'center',
-          }}
-        />
+        {HERO_IMAGES.map((img, i) => (
+          <img
+            key={i}
+            src={img}
+            alt=""
+            style={{
+              ...styles.heroBg,
+              opacity: i === heroIndex ? 1 : 0,
+              transition: 'opacity 1.2s ease',
+              objectPosition: 'center',
+            }}
+          />
+        ))}
 
-        {/* Gradient overlay — runs left to right.
-            Left side is dark for text readability.
-            Right side fades to transparent so the
-            photo breathes and stays visually present.
-            A second subtle bottom gradient ensures
-            the scroll indicator is always readable. */}
-        <div style={styles.heroGradient} />
+        <div style={isMobile ? styles.heroGradientMobile : styles.heroGradient} />
         <div style={styles.heroGradientBottom} />
 
-        {/* Main content — anchored to the left middle */}
+        {/* Main content */}
         <div style={{
           ...styles.heroContent,
           padding: isMobile ? '0 24px' : '0 72px',
+          alignItems: isMobile ? 'center' : 'flex-start',
+          textAlign: isMobile ? 'center' : 'left',
+          gap: isMobile ? '20px' : '24px',
         }}>
 
           {/* Location tag — small pill above the headline.
@@ -113,13 +130,11 @@ function Home() {
           {/* Subheading — kept to one line on desktop.
               Short and punchy rather than descriptive —
               the sections below handle the detail. */}
-          <p style={{
-            ...styles.heroSub,
-            fontSize: isMobile ? '14px' : '14px',
-            maxWidth: isMobile ? '100%' : '420px',
-          }}>
-            Small groups. Trusted guides. Experiences that stay with you.
-          </p>
+          {!isMobile && (
+            <p style={{ ...styles.heroSub, fontSize: '14px', maxWidth: '420px' }}>
+              Small groups. Trusted guides. Experiences that stay with you.
+            </p>
+          )}
 
           {/* CTA row — primary and secondary buttons.
               Buttons are slightly larger than the rest of
@@ -127,37 +142,29 @@ function Home() {
           <div style={{
             ...styles.heroCtas,
             flexDirection: isMobile ? 'column' : 'row',
-            alignItems: isMobile ? 'flex-start' : 'center',
+            alignItems: isMobile ? 'stretch' : 'center',
+            width: isMobile ? '100%' : 'auto',
           }}>
 
             <Link
               to="/tours"
               style={{
                 ...styles.heroPrimaryBtn,
-                backgroundColor: primaryHovered ? '#e8920a' : 'var(--color-amber)',
-                transform: primaryHovered ? 'translateY(-2px)' : 'translateY(0)',
-                boxShadow: primaryHovered ? '0 8px 24px rgba(244,161,48,0.45)' : '0 2px 8px rgba(244,161,48,0.2)',
-                transition: 'all 0.2s ease',
+                justifyContent: isMobile ? 'center' : undefined,
               }}
-              onMouseEnter={() => setPrimaryHovered(true)}
-              onMouseLeave={() => setPrimaryHovered(false)}
+              className="btn-lift btn-glow-amber"
             >
               <span>Explore Tours</span>
               <ArrowRight size={18} color="var(--color-n900)" />
             </Link>
 
             <Link
-              to="/packages"
+              to="/multi-day-tours"
               style={{
                 ...styles.heroSecondaryBtn,
-                backgroundColor: secondaryHovered ? 'rgba(255,255,255,0.18)' : 'rgba(255,255,255,0.1)',
-                transform: secondaryHovered ? 'translateY(-2px)' : 'translateY(0)',
-                boxShadow: secondaryHovered ? '0 8px 24px rgba(0,0,0,0.25)' : 'none',
-                borderColor: secondaryHovered ? 'rgba(255,255,255,0.4)' : 'rgba(255,255,255,0.2)',
-                transition: 'all 0.2s ease',
+                justifyContent: isMobile ? 'center' : undefined,
               }}
-              onMouseEnter={() => setSecondaryHovered(true)}
-              onMouseLeave={() => setSecondaryHovered(false)}
+              className="btn-overlay"
             >
               <span>Plan a Full Trip</span>
             </Link>
@@ -269,25 +276,25 @@ function Home() {
           <div style={styles.trustBarMobile}>
 
             <div style={styles.trustItemMobile}>
-              <Star size={20} color="var(--color-amber)" fill="var(--color-amber)" />
+              <Star size={15} color="var(--color-amber)" fill="var(--color-amber)" />
               <span style={styles.trustValueMobile}>4.9 / 5</span>
               <span style={styles.trustLabelMobile}>TripAdvisor</span>
             </div>
 
             <div style={styles.trustItemMobile}>
-              <Users size={20} color="var(--color-forest-green)" />
+              <Users size={15} color="var(--color-forest-green)" />
               <span style={styles.trustValueMobile}>5000+</span>
               <span style={styles.trustLabelMobile}>Guests Guided</span>
             </div>
 
             <div style={styles.trustItemMobile}>
-              <UserCheck size={20} color="var(--color-forest-green)" />
+              <UserCheck size={15} color="var(--color-forest-green)" />
               <span style={styles.trustValueMobile}>Max 12</span>
               <span style={styles.trustLabelMobile}>Per Group</span>
             </div>
 
             <div style={styles.trustItemMobile}>
-              <ShieldCheck size={20} color="var(--color-forest-green)" />
+              <ShieldCheck size={15} color="var(--color-forest-green)" />
               <span style={styles.trustValueMobile}>24h before</span>
               <span style={styles.trustLabelMobile}>Cancellation</span>
             </div>
@@ -328,10 +335,11 @@ function Home() {
   slug={tour.slug}
   title={tour.title}
   price={tour.price}
-  rating={tour.rating}
-  reviews={tour.reviews}
+  rating={stats[String(tour.id)]?.avgRating ?? tour.rating}
+  reviews={stats[String(tour.id)]?.count ?? tour.reviews}
   duration={tour.duration}
   groupSize={tour.groupSize}
+
   badge={tour.badge}
   hero={tour.hero}
   startingTimes={tour.startingTimes}
@@ -348,7 +356,7 @@ function Home() {
             style={styles.viewAllBtn}
             onMouseEnter={(e) => {
               e.currentTarget.style.backgroundColor = 'var(--color-forest-green)'
-              e.currentTarget.style.color = '#fff'
+              e.currentTarget.style.color = 'var(--color-n000)'
               e.currentTarget.style.transform = 'translateY(-2px)'
             }}
             onMouseLeave={(e) => {
@@ -364,11 +372,138 @@ function Home() {
 
 
       </section>
-       {/* Packages Preview — surfaces multi-day packages
-          to visitors who've just browsed individual tours */}
-      <HowItWorks />
+      <Divider />
       <PackagesPreview />
+      <Divider />
       <Reviews />
+      <Divider />
+
+      {/* ═══════════════════════════════
+          BLOG PREVIEW — latest 3 posts
+          Only renders when Airtable has
+          published posts to show.
+          ═══════════════════════════════ */}
+      {posts.length > 0 && (() => {
+        const blogPosts = posts.slice(0, 6)
+        const visibleCount = isMobile ? 1 : 3
+        const totalPages = Math.ceil(blogPosts.length / visibleCount)
+        return (
+          <>
+            <section style={blogStyles.section}>
+              <div style={blogStyles.header}>
+                <div>
+                  <span style={blogStyles.eyebrow}>From the Guide</span>
+                  <h2 style={blogStyles.title}>Stories &amp; Insights</h2>
+                </div>
+                <Link to="/blog" style={blogStyles.viewAll}>
+                  View all posts →
+                </Link>
+              </div>
+
+              {/* Carousel track */}
+              <div
+                style={blogStyles.carouselWrapper}
+                onTouchStart={(e) => { touchStartX.current = e.touches[0].clientX }}
+                onTouchEnd={(e) => {
+                  if (touchStartX.current === null) return
+                  const delta = touchStartX.current - e.changedTouches[0].clientX
+                  if (Math.abs(delta) > 40) {
+                    if (delta > 0) setBlogPage((p) => Math.min(totalPages - 1, p + 1))
+                    else setBlogPage((p) => Math.max(0, p - 1))
+                  }
+                  touchStartX.current = null
+                }}
+              >
+                <div style={{
+                  ...blogStyles.carouselTrack,
+                  transform: `translateX(-${blogPage * 100}%)`,
+                }}>
+                  {Array.from({ length: totalPages }).map((_, pageIdx) => (
+                    <div key={pageIdx} style={{
+                      ...blogStyles.carouselPage,
+                      gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)',
+                    }}>
+                      {blogPosts.slice(pageIdx * visibleCount, (pageIdx + 1) * visibleCount).map((post) => (
+                        <Link key={post.id} to={`/blog/${post.slug}`} style={blogStyles.card} className="card-lift">
+                          <div style={blogStyles.cardImageWrapper}>
+                            {post.heroImage
+                              ? <img src={post.heroImage} alt={post.title} loading="lazy" style={blogStyles.cardImage} />
+                              : <div style={blogStyles.cardImagePlaceholder} />
+                            }
+                            {post.category && (
+                              <span style={blogStyles.categoryPill}>{post.category}</span>
+                            )}
+                          </div>
+                          <div style={blogStyles.cardBody}>
+                            {post.publishedDate && (
+                              <span style={blogStyles.cardDate}>
+                                {new Date(post.publishedDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
+                              </span>
+                            )}
+                            <h3 style={blogStyles.cardTitle}>{post.title}</h3>
+                            {post.excerpt && <p style={blogStyles.cardExcerpt}>{post.excerpt}</p>}
+                            <span style={blogStyles.readMore}>Read more →</span>
+                          </div>
+                        </Link>
+                      ))}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Controls */}
+              {totalPages > 1 && (
+                <div style={blogStyles.controls}>
+                  <button
+                    style={{
+                      ...blogStyles.navBtn,
+                      opacity: blogPage === 0 ? 0.35 : 1,
+                    }}
+                    onClick={() => setBlogPage((p) => Math.max(0, p - 1))}
+                    disabled={blogPage === 0}
+                    aria-label="Previous posts"
+                  >
+                    <ChevronLeft size={18} color="var(--color-forest-green)" />
+                  </button>
+
+                  <div style={blogStyles.dots}>
+                    {Array.from({ length: totalPages }).map((_, i) => (
+                      <button
+                        key={i}
+                        onClick={() => setBlogPage(i)}
+                        style={{
+                          ...blogStyles.dot,
+                          width: blogPage === i ? '24px' : '8px',
+                          backgroundColor: blogPage === i
+                            ? 'var(--color-forest-green)'
+                            : 'var(--color-n300)',
+                        }}
+                        aria-label={`Go to page ${i + 1}`}
+                      />
+                    ))}
+                  </div>
+
+                  <button
+                    style={{
+                      ...blogStyles.navBtn,
+                      opacity: blogPage === totalPages - 1 ? 0.35 : 1,
+                    }}
+                    onClick={() => setBlogPage((p) => Math.min(totalPages - 1, p + 1))}
+                    disabled={blogPage === totalPages - 1}
+                    aria-label="Next posts"
+                  >
+                    <ChevronRight size={18} color="var(--color-forest-green)" />
+                  </button>
+                </div>
+              )}
+            </section>
+            <Divider />
+          </>
+        )
+      })()}
+
+      <HowItWorks />
+      <Divider />
       <CTABanner />
     </div>
   )
@@ -431,7 +566,7 @@ const styles = {
   viewAllBtn: {
     display: 'inline-flex',
     alignItems: 'center',
-    height: '52px',
+    height: '44px',
     padding: '0 32px',
     backgroundColor: 'transparent',
     color: 'var(--color-forest-green)',
@@ -527,8 +662,8 @@ trustBar: {
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: '4px',
-    padding: '20px 16px',
+    gap: '3px',
+    padding: '12px 10px',
     backgroundColor: 'var(--color-n000)',
     textAlign: 'center',
   },
@@ -536,14 +671,14 @@ trustBar: {
   trustValueMobile: {
     fontFamily: 'var(--font-display)',
     fontWeight: '700',
-    fontSize: '20px',
+    fontSize: '15px',
     color: 'var(--color-n900)',
     lineHeight: 1,
   },
 
   trustLabelMobile: {
     fontFamily: 'var(--font-body)',
-    fontSize: '11px',
+    fontSize: '10px',
     fontWeight: '500',
     color: 'var(--color-n600)',
     textTransform: 'uppercase',
@@ -585,6 +720,13 @@ hero: {
     position: 'absolute',
     inset: 0,
     background: 'linear-gradient(105deg, rgba(10,20,15,0.92) 0%, rgba(10,20,15,0.75) 40%, rgba(10,20,15,0.2) 70%, transparent 100%)',
+    zIndex: 1,
+  },
+
+  heroGradientMobile: {
+    position: 'absolute',
+    inset: 0,
+    background: 'linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.25) 50%, rgba(0,0,0,0.55) 100%)',
     zIndex: 1,
   },
 
@@ -630,7 +772,7 @@ hero: {
   },
 
   heroHeadline: {
-    fontFamily: "'Fraunces', Georgia, serif",
+    fontFamily: 'var(--font-hero)',
     color: 'var(--color-n000)',
     lineHeight: '1.1',
     margin: 0,
@@ -725,6 +867,194 @@ hero: {
     flexDirection: 'column',
     alignItems: 'center',
     gap: '4px',
+  },
+}
+
+function Divider() {
+  return (
+    <div style={{
+      height: '1px',
+      background: 'linear-gradient(90deg, transparent 0%, var(--color-amber) 50%, transparent 100%)',
+      opacity: 0.55,
+    }} />
+  )
+}
+
+const blogStyles = {
+  section: {
+    backgroundColor: 'var(--color-n100)',
+    padding: '80px 40px',
+  },
+  header: {
+    display: 'flex',
+    alignItems: 'flex-end',
+    justifyContent: 'space-between',
+    maxWidth: '1100px',
+    margin: '0 auto 40px',
+    gap: '16px',
+    flexWrap: 'wrap',
+  },
+  eyebrow: {
+    display: 'block',
+    fontFamily: 'var(--font-body)',
+    fontWeight: '500',
+    fontSize: 'var(--text-small)',
+    color: 'var(--color-forest-green)',
+    letterSpacing: '2px',
+    textTransform: 'uppercase',
+    marginBottom: '8px',
+  },
+  title: {
+    fontFamily: 'var(--font-display)',
+    fontWeight: '700',
+    fontSize: 'var(--text-h2)',
+    color: 'var(--color-n900)',
+    margin: 0,
+  },
+  viewAll: {
+    fontFamily: 'var(--font-body)',
+    fontWeight: '700',
+    fontSize: 'var(--text-small)',
+    color: 'var(--color-forest-green)',
+    textDecoration: 'none',
+    whiteSpace: 'nowrap',
+  },
+  carouselWrapper: {
+    maxWidth: '1100px',
+    margin: '0 auto',
+    overflow: 'hidden',
+  },
+
+  carouselTrack: {
+    display: 'flex',
+    transition: 'transform 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+  },
+
+  carouselPage: {
+    display: 'grid',
+    gap: '24px',
+    minWidth: '100%',
+    alignItems: 'stretch',
+  },
+
+  controls: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '16px',
+    marginTop: '32px',
+  },
+
+  navBtn: {
+    width: '40px',
+    height: '40px',
+    borderRadius: '50%',
+    border: '1.5px solid var(--color-n300)',
+    backgroundColor: 'var(--color-n000)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    cursor: 'pointer',
+    transition: 'opacity 0.2s ease',
+    flexShrink: 0,
+  },
+
+  dots: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '6px',
+  },
+
+  dot: {
+    height: '8px',
+    borderRadius: '4px',
+    border: 'none',
+    cursor: 'pointer',
+    padding: 0,
+    transition: 'width 0.3s ease, background-color 0.3s ease',
+  },
+  card: {
+    backgroundColor: 'var(--color-n000)',
+    borderRadius: '16px',
+    border: '1px solid var(--color-n300)',
+    overflow: 'hidden',
+    textDecoration: 'none',
+    display: 'flex',
+    flexDirection: 'column',
+    height: '100%',
+    boxShadow: '0 2px 16px rgba(0,0,0,0.06)',
+    transition: 'box-shadow 0.2s ease, transform 0.2s ease',
+  },
+  cardImageWrapper: {
+    position: 'relative',
+    width: '100%',
+    aspectRatio: '16 / 9',
+    overflow: 'hidden',
+    flexShrink: 0,
+  },
+  cardImage: {
+    width: '100%',
+    height: '100%',
+    objectFit: 'cover',
+    display: 'block',
+  },
+  cardImagePlaceholder: {
+    width: '100%',
+    height: '100%',
+    backgroundColor: 'var(--color-mint-wash, #F0F7F4)',
+  },
+  categoryPill: {
+    position: 'absolute',
+    top: '12px',
+    left: '12px',
+    backgroundColor: 'var(--color-forest-green)',
+    color: 'var(--color-n000)',
+    fontFamily: 'var(--font-body)',
+    fontWeight: '600',
+    fontSize: '11px',
+    textTransform: 'uppercase',
+    letterSpacing: '0.8px',
+    padding: '4px 10px',
+    borderRadius: '100px',
+  },
+  cardBody: {
+    padding: '20px 20px 24px',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '8px',
+    flex: 1,
+  },
+  cardDate: {
+    fontFamily: 'var(--font-body)',
+    fontSize: '12px',
+    color: 'var(--color-n600)',
+  },
+  cardTitle: {
+    fontFamily: 'var(--font-display)',
+    fontWeight: '700',
+    fontSize: '18px',
+    color: 'var(--color-n900)',
+    lineHeight: '1.3',
+    margin: 0,
+  },
+  cardExcerpt: {
+    fontFamily: 'var(--font-body)',
+    fontSize: 'var(--text-small)',
+    color: 'var(--color-n600)',
+    lineHeight: '1.6',
+    margin: 0,
+    display: '-webkit-box',
+    WebkitLineClamp: 3,
+    WebkitBoxOrient: 'vertical',
+    overflow: 'hidden',
+  },
+  readMore: {
+    fontFamily: 'var(--font-body)',
+    fontWeight: '700',
+    fontSize: 'var(--text-small)',
+    color: 'var(--color-forest-green)',
+    marginTop: 'auto',
+    paddingTop: '4px',
   },
 }
 

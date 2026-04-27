@@ -23,6 +23,11 @@
     <changefreq>monthly</changefreq>
   </url>
   <url>
+    <loc>https://tallesttourguide.com/blog</loc>
+    <priority>0.7</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
     <loc>https://tallesttourguide.com/contact</loc>
     <priority>0.6</priority>
     <changefreq>monthly</changefreq>
@@ -40,28 +45,13 @@
     <changefreq>monthly</changefreq>
   </url>
   <url>
-    <loc>https://tallesttourguide.com/tours/sarajevo-old-town-walking-tour</loc>
+    <loc>https://tallesttourguide.com/tours/mostar-day-trip-from-sarajevo</loc>
     <priority>0.9</priority>
     <changefreq>monthly</changefreq>
   </url>
   <url>
     <loc>https://tallesttourguide.com/tours/sarajevo-war-tour</loc>
     <priority>0.9</priority>
-    <changefreq>monthly</changefreq>
-  </url>
-  <url>
-    <loc>https://tallesttourguide.com/tours/mostar-day-trip-from-sarajevo</loc>
-    <priority>0.9</priority>
-    <changefreq>monthly</changefreq>
-  </url>
-  <url>
-    <loc>https://tallesttourguide.com/tours/sarajevo-jewish-heritage-tour</loc>
-    <priority>0.8</priority>
-    <changefreq>monthly</changefreq>
-  </url>
-  <url>
-    <loc>https://tallesttourguide.com/tours/jajce-travnik-day-trip-sarajevo</loc>
-    <priority>0.8</priority>
     <changefreq>monthly</changefreq>
   </url>
   <url>
@@ -75,6 +65,21 @@
     <changefreq>monthly</changefreq>
   </url>
   <url>
+    <loc>https://tallesttourguide.com/tours/jajce-travnik-day-trip-sarajevo</loc>
+    <priority>0.8</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://tallesttourguide.com/tours/sarajevo-morning-walk-tour</loc>
+    <priority>0.8</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://tallesttourguide.com/tours/sarajevo-jewish-heritage-tour</loc>
+    <priority>0.8</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
     <loc>https://tallesttourguide.com/tours/srebrenica-day-trip-from-sarajevo</loc>
     <priority>0.8</priority>
     <changefreq>monthly</changefreq>
@@ -82,13 +87,50 @@
 
   <!-- Individual packages -->
   <url>
-    <loc>https://tallesttourguide.com/packages/1</loc>
+    <loc>https://tallesttourguide.com/packages/sarajevo-essential</loc>
     <priority>0.8</priority>
     <changefreq>monthly</changefreq>
   </url>
   <url>
-    <loc>https://tallesttourguide.com/packages/2</loc>
+    <loc>https://tallesttourguide.com/packages/bosnia-deep-dive</loc>
     <priority>0.8</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+
+  <!-- Individual blog posts -->
+  <url>
+    <loc>https://tallesttourguide.com/blog/5-things-to-see-in-sarajevo</loc>
+    <priority>0.7</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://tallesttourguide.com/blog/world-war-one-sarajevo-assassination-franz-ferdinand</loc>
+    <priority>0.7</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://tallesttourguide.com/blog/stolac-bosnia-oldest-town-guide</loc>
+    <priority>0.7</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://tallesttourguide.com/blog/bosnian-food-guide-cuisine</loc>
+    <priority>0.7</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://tallesttourguide.com/blog/mostar-old-bridge-story-history</loc>
+    <priority>0.7</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://tallesttourguide.com/blog/wild-horses-livno-bosnia</loc>
+    <priority>0.7</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://tallesttourguide.com/blog/stecak-tombstones-bosnia-herzegovina</loc>
+    <priority>0.7</priority>
     <changefreq>monthly</changefreq>
   </url>
 

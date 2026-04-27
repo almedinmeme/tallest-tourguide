@@ -1,6 +1,6 @@
 import SEO from '../components/SEO'
 import { Link } from 'react-router-dom'
-import { ArrowRight, MapPin, Star, Languages, Heart } from 'lucide-react'
+import { ArrowRight, MapPin, Languages, Heart, BookOpen, Users, Globe, Clock } from 'lucide-react'
 import useWindowWidth from '../hooks/useWindowWidth'
 
 // Import your about photo — add this file to src/assets
@@ -19,21 +19,6 @@ function About() {
   url="/about"
   image="https://tallesttourguide.com/og-image.jpg"
 />
-      {/* ── PAGE HEADER ─────────────────────────────────── */}
-      <section style={styles.pageHeader}>
-        <div style={styles.headerInner}>
-          <span style={styles.eyebrow}>Your Guide</span>
-          <h1 style={{
-            ...styles.headline,
-            fontSize: isMobile ? '32px' : '48px',
-          }}>
-            Born Here.<br />
-            Still Here.<br />
-            Proudly Here.
-          </h1>
-        </div>
-      </section>
-
       {/* ── MAIN CONTENT ────────────────────────────────── */}
       <section style={{
         ...styles.contentSection,
@@ -41,113 +26,54 @@ function About() {
       }}>
         <div style={{
           ...styles.contentGrid,
-          gridTemplateColumns: isMobile ? '1fr' : '1fr 420px',
-          gap: isMobile ? '40px' : '72px',
+          gridTemplateColumns: isMobile ? '1fr' : '1fr 340px',
+          gap: isMobile ? '40px' : '64px',
         }}>
 
           {/* ── LEFT — Text ─────────────────────────────── */}
           <div style={{ ...styles.textColumn, order: isMobile ? 2 : 1 }}>
 
   <p style={styles.leadText}>
-    Some careers are planned. Mine was built conversation by conversation.
+    My name is Almedin Memović. I was born in Sarajevo in 1993 — in the first year of the Siege.
   </p>
 
   <p style={styles.bodyText}>
     I came to tourism the way most good things happen — accidentally.
-    During my university years, I started working the front desk at a
-    local hostel, partly for the income, mostly because I have never
-    been someone who could sit still. I am outgoing by nature, always
-    have been, and a hostel lobby turned out to be the perfect place
-    for someone like me. Guests came through from everywhere, and I
-    was always ready to talk.
+    During my university years I started working the front desk at a local hostel,
+    and a lobby full of guests from everywhere turned out to be the perfect place
+    for someone who has never been able to sit still.
   </p>
 
   <p style={styles.bodyText}>
-    The guiding started quietly. A few tours here and there in the
-    early months, nothing serious. But as my English sharpened and my
-    confidence grew, so did the work. What I had going for me was
-    never a textbook — it was a lifetime of listening. Stories from
-    my father, my family, neighbors, friends — people who remembered
-    Sarajevo in ways no guidebook ever captured. I had been collecting
-    those stories long before I knew what to do with them. Later, I
-    filled in the gaps with proper research and the knowledge of
-    colleagues who had worked in tourism for decades. The result was
-    a voice that felt lived-in, not recited.
+    The guiding grew from there. What I had going for me was never a textbook —
+    it was a lifetime of listening. Stories from my father, my family, people who
+    remembered Sarajevo in ways no guidebook captured. The Siege. Yugoslavia. The years
+    after. I had been collecting those stories long before I knew what to do with them.
   </p>
 
   <p style={styles.bodyText}>
-    After years splitting my time between the hostel desk and the
-    streets of Sarajevo, one of the leading agencies in the region
-    took a chance on me as a young prospect. I spent nearly three
-    years there, growing into the role, learning the industry from
-    the inside. Then, at 24, I opened my own tour agency — Tallest
-    Tourguide — and it became the first real proof that I could build
-    something from scratch.
-  </p>
-
-  <p style={styles.bodyText}>
-    Tallest Tourguide was never just a tour company. It was an attempt
-    to do tourism differently — cooking classes, alternative routes,
-    experiences that felt personal rather than packaged. It worked.
-    And then COVID came, and like so much else, it stopped.
-  </p>
-
-  <p style={styles.bodyText}>
-    Rather than wait, I pivoted. I turned to something I had always
-    been drawn to visually — UX/UI design. Over the next four years,
-    I built genuine expertise in how people navigate digital spaces,
-    what makes an experience feel intuitive, and how design decisions
-    shape the way people feel. Skills that, as it turns out, are not
-    so different from guiding a stranger through an unfamiliar city.
+    One of the leading agencies in the region took a chance on me as a young prospect.
+    Three years later I opened Tallest Tourguide at 24 — cooking classes, alternative routes,
+    experiences that felt personal rather than packaged. Then COVID came, and like so much else, it stopped.
+    I spent the next four years building expertise in UX and design. Now I am back.
   </p>
 
   <blockquote style={styles.pullQuote}>
-    "Now I am back. Tallest Tourguide & Friends is back. This is not
-    a return. It is a second chapter, built on everything the first
-    one taught me."
+    "Tallest Tourguide & Friends is back. This is not a return. It is a second chapter,
+    built on everything the first one taught me."
   </blockquote>
 
-
-{/* Stats */}
-  <div style={{
-    ...styles.statsRow,
-    display: isMobile ? 'grid' : 'flex',
-    gridTemplateColumns: isMobile ? '1fr 1fr' : undefined,
-    flexDirection: isMobile ? undefined : 'row',
-    alignItems: isMobile ? 'stretch' : 'center',
-  }}>
-    <div style={{ ...styles.stat, textAlign: isMobile ? 'center' : 'left', padding: isMobile ? '16px 8px' : '0' }}>
-      <span style={styles.statNumber}>5000+</span>
-      <span style={styles.statLabel}>Guests Guided</span>
-    </div>
-    {!isMobile && <div style={styles.statDivider} />}
-    <div style={{ ...styles.stat, textAlign: isMobile ? 'center' : 'left', padding: isMobile ? '16px 8px' : '0' }}>
-      <span style={styles.statNumber}>14</span>
-      <span style={styles.statLabel}>Years in Tourism</span>
-    </div>
-    {!isMobile && <div style={styles.statDivider} />}
-    <div style={{
-      ...styles.stat,
-      textAlign: isMobile ? 'center' : 'left',
-      padding: isMobile ? '16px 8px' : '0',
-      gridColumn: isMobile ? 'span 2' : 'auto',
-      borderTop: isMobile ? '1px solid var(--color-n300)' : 'none',
-    }}>
-      <span style={styles.statNumber}>4.9</span>
-      <span style={styles.statLabel}>TripAdvisor Rating</span>
-    </div>
-  </div>
 
  {/* CTA buttons */}
   <div style={{
     ...styles.ctaRow,
     flexDirection: isMobile ? 'column' : 'row',
   }}>
-    <Link to="/tours" style={styles.primaryBtn}>
+    <Link to="/tours" style={styles.primaryBtn} className="btn-lift btn-glow-green">
       <span>Browse Tours</span>
       <ArrowRight size={16} color="var(--color-n000)" />
     </Link>
-    <Link to="/contact" style={styles.secondaryBtn}>
+    <Link to="/contact" style={styles.secondaryBtn} className="btn-lift">
       Get in Touch
     </Link>
   </div>
@@ -173,31 +99,24 @@ function About() {
             {/* Small info card below photo */}
             <div style={styles.infoCard}>
               <div style={styles.infoCardItem}>
-                <MapPin
-                  size={18}
-                  color="var(--color-forest-green)"
-                />
-                <span style={styles.infoCardText}>
-                  Born and raised in Sarajevo
-                </span>
+                <MapPin size={14} color="var(--color-forest-green)" />
+                <span style={styles.infoCardText}>Born in Sarajevo, 1993</span>
               </div>
               <div style={styles.infoCardItem}>
-                <Heart
-                  size={18}
-                  color="var(--color-forest-green)"
-                />
-                <span style={styles.infoCardText}>
-                  Volleyball, painting, and reading
-                </span>
+                <Clock size={14} color="var(--color-forest-green)" />
+                <span style={styles.infoCardText}>14 years in tourism</span>
               </div>
               <div style={styles.infoCardItem}>
-                <Languages
-                  size={18}
-                  color="var(--color-forest-green)"
-                />
-                <span style={styles.infoCardText}>
-                  English, Bosnian, and a bit of Spanish
-                </span>
+                <Users size={14} color="var(--color-forest-green)" />
+                <span style={styles.infoCardText}>5,000+ guests guided</span>
+              </div>
+              <div style={styles.infoCardItem}>
+                <Languages size={14} color="var(--color-forest-green)" />
+                <span style={styles.infoCardText}>English · Bosnian · Spanish</span>
+              </div>
+              <div style={styles.infoCardItem}>
+                <Heart size={14} color="var(--color-forest-green)" />
+                <span style={styles.infoCardText}>Volleyball, painting, reading</span>
               </div>
             </div>
 
@@ -206,41 +125,104 @@ function About() {
         </div>
       </section>
 
+      {/* ── GUIDE CREDENTIALS ───────────────────────────── */}
+      <section style={{
+        ...styles.credentialsSection,
+        padding: isMobile ? '56px 24px 72px' : '80px 40px 96px',
+      }}>
+        <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
+
+          <div style={{
+            ...styles.credentialsGrid,
+            gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
+            gap: isMobile ? '40px' : '72px',
+          }}>
+
+            {/* LEFT — text */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+              <div>
+                <span style={styles.eyebrow}>Guide Credentials</span>
+                <h2 style={styles.credentialsHeadline}>
+                  History is personal here.
+                </h2>
+                <p style={styles.credentialsLead}>
+                  My father remembers the Siege. My grandparents remember Yugoslavia. I grew up hearing
+                  these stories long before I knew what to do with them. When I guide, I am not reading
+                  from a script — I am translating decades of family memory, shaped by fourteen years of
+                  work and learning from colleagues who built entire careers in this city.
+                </p>
+                <p style={styles.credentialsBody}>
+                  The result is a voice that carries weight. Not performative. Not packaged. Just honest
+                  proximity to events that shaped a continent — delivered to eight people at a time, at a
+                  pace that actually lets you absorb what you are seeing.
+                </p>
+              </div>
+
+              <div style={styles.specializationBlock}>
+                <span style={styles.specializationLabel}>Areas of depth</span>
+                <div style={styles.specializationTags}>
+                  {[
+                    'Ottoman Sarajevo',
+                    'Austro-Hungarian era',
+                    'WWII in Bosnia',
+                    'The Siege (1992–1995)',
+                    'Srebrenica',
+                    'Dayton Agreement',
+                    'Interreligious coexistence',
+                    'Balkan politics',
+                  ].map((tag) => (
+                    <span key={tag} style={styles.tag}>{tag}</span>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* RIGHT — credential cards */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+
+              {[
+                {
+                  icon: Globe,
+                  title: 'Languages',
+                  body: 'English (fluent) · Bosnian / Croatian / Serbian (native) · Spanish (conversational). Every tour runs in English; local context is never lost in translation.',
+                },
+                {
+                  icon: MapPin,
+                  title: 'Born and Raised in Sarajevo',
+                  body: 'Not a transplant, not a travel enthusiast who moved here. Sarajevo is home in the literal sense — the streets, the neighborhoods, the people. That depth does not come from a guidebook.',
+                },
+                {
+                  icon: BookOpen,
+                  title: 'Fourteen Years in the Industry',
+                  body: 'Started at a hostel front desk during university. Moved to one of the leading regional agencies. Built and ran Tallest Tourguide from age 24. Every year added a layer that no certification replaces.',
+                },
+                {
+                  icon: Users,
+                  title: 'Maximum Eight Guests',
+                  body: 'A deliberate limit, not a marketing line. Small groups move differently — through crowds, through conversations, through moments that a bus tour cannot reach.',
+                },
+              ].map(({ icon: Icon, title, body }) => (
+                <div key={title} style={styles.credentialCard}>
+                  <div style={styles.credentialCardIcon}>
+                    <Icon size={18} color="var(--color-forest-green)" />
+                  </div>
+                  <div>
+                    <h3 style={styles.credentialCardTitle}>{title}</h3>
+                    <p style={styles.credentialCardBody}>{body}</p>
+                  </div>
+                </div>
+              ))}
+
+            </div>
+          </div>
+        </div>
+      </section>
+
     </div>
   )
 }
 
 const styles = {
-  pageHeader: {
-    backgroundColor: 'var(--color-forest-green)',
-    padding: '72px 40px 80px 40px',
-    position: 'relative',
-    overflow: 'hidden',
-  },
-
-  headerInner: {
-    maxWidth: '680px',
-  },
-
-  eyebrow: {
-    display: 'block',
-    fontFamily: 'var(--font-body)',
-    fontWeight: '500',
-    fontSize: 'var(--text-small)',
-    color: 'var(--color-mid-green)',
-    letterSpacing: '2px',
-    textTransform: 'uppercase',
-    marginBottom: '16px',
-  },
-
-  headline: {
-    fontFamily: 'var(--font-display)',
-    fontWeight: '700',
-    color: 'var(--color-n000)',
-    lineHeight: '1.15',
-    margin: 0,
-  },
-
   contentSection: {
     backgroundColor: 'var(--color-n100)',
   },
@@ -370,9 +352,9 @@ const styles = {
   },
 
  photoWrapper: {
-    borderRadius: '16px',
+    borderRadius: '14px',
     overflow: 'hidden',
-    aspectRatio: '2/3',
+    aspectRatio: '3/4',
     boxShadow: '0 8px 32px rgba(0,0,0,0.12)',
   },
 
@@ -385,24 +367,185 @@ const styles = {
 
   infoCard: {
     backgroundColor: 'var(--color-n000)',
-    borderRadius: '12px',
-    padding: '20px',
+    borderRadius: '10px',
+    padding: '14px 16px',
     border: '1px solid var(--color-n300)',
     display: 'flex',
     flexDirection: 'column',
-    gap: '12px',
+    gap: '10px',
   },
 
   infoCardItem: {
     display: 'flex',
     alignItems: 'center',
-    gap: '10px',
+    gap: '8px',
   },
 
   infoCardText: {
     fontFamily: 'var(--font-body)',
+    fontSize: '13px',
+    color: 'var(--color-n600)',
+  },
+
+  // ── Credentials strip ──────────────────────────────
+  credentialsStrip: {
+    backgroundColor: 'var(--color-n000)',
+    borderBottom: '1px solid var(--color-n300)',
+  },
+
+  credentialsStripInner: {
+    maxWidth: '1100px',
+    margin: '0 auto',
+    padding: '0 40px',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0',
+    overflowX: 'auto',
+  },
+
+  credentialsStripItem: {
+    display: 'flex',
+    alignItems: 'flex-start',
+    gap: '10px',
+    padding: '18px 32px 18px 0',
+    marginRight: '32px',
+    borderRight: '1px solid var(--color-n300)',
+    flexShrink: 0,
+  },
+
+  credentialsStripLabel: {
+    display: 'block',
+    fontFamily: 'var(--font-display)',
+    fontWeight: '700',
+    fontSize: '15px',
+    color: 'var(--color-n900)',
+    lineHeight: 1.2,
+  },
+
+  credentialsStripSub: {
+    display: 'block',
+    fontFamily: 'var(--font-body)',
+    fontSize: '12px',
+    color: 'var(--color-n600)',
+    marginTop: '2px',
+  },
+
+  // ── Credentials section ────────────────────────────
+  credentialsSection: {
+    backgroundColor: 'var(--color-n000)',
+    borderTop: '1px solid var(--color-n300)',
+  },
+
+  credentialsGrid: {
+    display: 'grid',
+    alignItems: 'start',
+  },
+
+  eyebrow: {
+    display: 'block',
+    fontFamily: 'var(--font-body)',
+    fontWeight: '600',
+    fontSize: '11px',
+    color: 'var(--color-forest-green)',
+    letterSpacing: '0.12em',
+    textTransform: 'uppercase',
+    marginBottom: '12px',
+  },
+
+  credentialsHeadline: {
+    fontFamily: 'var(--font-display)',
+    fontWeight: '700',
+    fontSize: '32px',
+    color: 'var(--color-n900)',
+    margin: '0 0 16px 0',
+    lineHeight: 1.2,
+  },
+
+  credentialsLead: {
+    fontFamily: 'var(--font-body)',
+    fontSize: 'var(--text-body)',
+    color: 'var(--color-n700)',
+    lineHeight: '1.75',
+    margin: '0 0 16px 0',
+  },
+
+  credentialsBody: {
+    fontFamily: 'var(--font-body)',
     fontSize: 'var(--text-body)',
     color: 'var(--color-n600)',
+    lineHeight: '1.75',
+    margin: 0,
+  },
+
+  specializationBlock: {
+    paddingTop: '8px',
+  },
+
+  specializationLabel: {
+    display: 'block',
+    fontFamily: 'var(--font-body)',
+    fontWeight: '600',
+    fontSize: '11px',
+    color: 'var(--color-n500)',
+    letterSpacing: '0.1em',
+    textTransform: 'uppercase',
+    marginBottom: '12px',
+  },
+
+  specializationTags: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: '8px',
+  },
+
+  tag: {
+    fontFamily: 'var(--font-body)',
+    fontSize: '12px',
+    fontWeight: '500',
+    color: 'var(--color-n700)',
+    backgroundColor: 'var(--color-n100)',
+    border: '1px solid var(--color-n300)',
+    borderRadius: '100px',
+    padding: '4px 12px',
+  },
+
+  // ── Credential cards ───────────────────────────────
+  credentialCard: {
+    backgroundColor: 'var(--color-n100)',
+    border: '1px solid var(--color-n300)',
+    borderRadius: '12px',
+    padding: '20px',
+    display: 'flex',
+    alignItems: 'flex-start',
+    gap: '16px',
+  },
+
+  credentialCardIcon: {
+    width: '38px',
+    height: '38px',
+    borderRadius: '10px',
+    backgroundColor: 'rgba(46,125,94,0.1)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexShrink: 0,
+  },
+
+  credentialCardTitle: {
+    fontFamily: 'var(--font-display)',
+    fontWeight: '700',
+    fontSize: '15px',
+    color: 'var(--color-n900)',
+    margin: '0 0 6px 0',
+    lineHeight: 1.3,
+  },
+
+  credentialCardBody: {
+    fontFamily: 'var(--font-body)',
+    fontSize: '13px',
+    color: 'var(--color-n600)',
+    lineHeight: '1.7',
+    margin: 0,
   },
 }
 

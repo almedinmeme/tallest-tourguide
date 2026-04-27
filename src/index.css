@@ -4,8 +4,6 @@
    all colors, fonts, and sizing in the project.
    ============================================ */
 
-/* Import your fonts from Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;1,9..144,300;1,9..144,700&family=Plus+Jakarta+Sans:wght@400;600;700&family=Inter:wght@400;500&display=swap');
 
 /* CSS variables live on :root which means
    every single component in the app can access them */
@@ -21,8 +19,12 @@
 
   /* --- NEUTRAL SCALE --- */
   --color-n900: #1A1A2E;   /* Headings */
+  --color-n800: #2D3748;   /* Dark text */
   --color-n600: #4A5568;   /* Body text */
+  --color-n500: #718096;   /* Secondary text */
+  --color-n400: #A0AEC0;   /* Placeholder / muted */
   --color-n300: #CBD5E0;   /* Borders */
+  --color-n200: #E2E8F0;   /* Subtle dividers */
   --color-n100: #F7F9FC;   /* Page background */
   --color-n000: #FFFFFF;   /* Card background */
 
@@ -53,8 +55,26 @@
   --leading-body: 1.6;
 
   /* --- SPACING & SHAPE --- */
-  --radius: 8px;          /* Border radius used on all buttons and inputs */
-  --touch-target: 44px;   /* Minimum height for all interactive elements */
+  --radius: 8px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-pill: 100px;
+  --touch-target: 44px;
+
+  /* --- DEEP GREEN (dark cards) --- */
+  --color-forest-deep:   #1A3D2B;
+  --color-forest-darker: #143222;
+
+  /* --- TRANSITIONS (one easing curve, three speeds) --- */
+  --t-fast: 0.15s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --t-base: 0.22s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --t-lift: 0.32s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+  /* --- SHADOWS (elevation scale) --- */
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.06);
+  --shadow-md: 0 4px 24px rgba(0,0,0,0.08);
+  --shadow-lg: 0 12px 40px rgba(0,0,0,0.14);
+  --shadow-xl: 0 20px 60px rgba(0,0,0,0.16);
 }
 
 /* --- GLOBAL RESETS ---
@@ -132,12 +152,40 @@ h1, h2, h3, h4, h5, h6 {
    The longer duration (0.35s vs 0.2s) gives it weight. */
 /* Tour card hover — only applies to cards in the main content,
    not navbar dropdown links */
+.tour-card-link > div {
+  transition: transform var(--t-lift), box-shadow var(--t-lift);
+}
 .tour-card-link:hover > div {
   transform: translateY(-6px);
-  box-shadow: 0 12px 40px rgba(0,0,0,0.16);
-  transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-              box-shadow 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}s
+  box-shadow: var(--shadow-lg);
+}
+
+/* Package card — full-bleed poster hover effects */
+.pkg-card {
+  transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.3s ease;
+}
+.pkg-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 56px rgba(0, 0, 0, 0.22);
+}
+.pkg-card-img {
+  transition: transform 0.45s ease, filter 0.35s ease;
+}
+.pkg-card:hover .pkg-card-img {
+  transform: scale(1.05);
+  filter: brightness(0.72);
+}
+.pkg-card-btn {
+  color: #ffffff;
+  background-color: transparent;
+  border: 1.5px solid rgba(255, 255, 255, 0.65);
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+.pkg-card:hover .pkg-card-btn {
+  background-color: #ffffff;
+  color: var(--color-forest-green);
+  border-color: #ffffff;
+}
 
 /* View Tour pill fills with Forest Green on card hover —
    the entire card hover state triggers the button fill,
@@ -180,7 +228,7 @@ a[href^="/tours/"]:hover .view-tour-pill {
   border-radius: 1px;
   transform: scaleX(0);
   transform-origin: left;
-  transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transition: transform var(--t-fast);
 }
 
 .nav-trigger:hover::after,
@@ -195,4 +243,282 @@ a[href^="/tours/"]:hover .view-tour-pill {
 
 .dropdown-special-item:hover {
   background-color: rgba(244,161,48,0.10);
+}
+
+.search-result-item:hover {
+  background-color: var(--color-n100);
+}
+
+/* ── Hover system ────────────────────────────────────────── */
+
+/* Card lift — used on package cards, blog cards */
+.card-lift {
+  transition: transform var(--t-lift), box-shadow var(--t-lift);
+  will-change: transform;
+}
+.card-lift:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Solid button lift — amber or green background buttons */
+.btn-lift {
+  transition: transform var(--t-base), box-shadow var(--t-base), filter var(--t-base);
+  will-change: transform;
+}
+.btn-lift:hover {
+  transform: translateY(-2px);
+  filter: brightness(0.93);
+}
+.btn-lift:active {
+  transform: translateY(0);
+  filter: brightness(0.88);
+}
+
+/* Amber glow — add alongside btn-lift on amber buttons */
+.btn-glow-amber:hover {
+  box-shadow: 0 6px 20px rgba(244,161,48,0.45);
+}
+
+/* Green glow — add alongside btn-lift on green buttons */
+.btn-glow-green:hover {
+  box-shadow: 0 6px 20px rgba(46,125,94,0.35);
+}
+
+/* Semi-transparent overlay buttons (nav arrows, review buttons) */
+.btn-overlay {
+  transition: filter var(--t-fast);
+}
+.btn-overlay:hover {
+  filter: brightness(1.5);
+}
+
+/* TripAdvisor / white outline button on dark background */
+.btn-outline-light {
+  transition: background-color var(--t-fast), border-color var(--t-fast), transform var(--t-fast) !important;
+}
+.btn-outline-light:hover {
+  background-color: rgba(255,255,255,0.15) !important;
+  border-color: rgba(255,255,255,0.8) !important;
+  transform: translateY(-2px);
+}
+
+/* Horizontally scrollable chip rows — hides scrollbar cross-browser */
+.chips-scroll {
+  overflow-x: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.chips-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* Blog post related rows */
+.blog-row {
+  transition: background-color var(--t-fast);
+}
+.blog-row:hover {
+  background-color: var(--color-n100);
+}
+
+/* Focus ring — accessibility */
+:focus-visible {
+  outline: 2px solid var(--color-forest-green);
+  outline-offset: 3px;
+  border-radius: var(--radius);
+}
+
+/* Dropdown entrance animation */
+@keyframes dropdownAppear {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.nav-dropdown {
+  animation: dropdownAppear var(--t-base) cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+/* Nav link background hover */
+.nav-link { border-radius: var(--radius); }
+.nav-link:hover { background-color: var(--color-n100); }
+
+/* Contact button CSS hover — replaces JS contactHovered state */
+.nav-contact-btn {
+  transition: background-color var(--t-fast), color var(--t-fast) !important;
+}
+.nav-contact-btn:hover {
+  background-color: var(--color-amber) !important;
+  color: var(--color-n900) !important;
+}
+
+/* Card image zoom on hover */
+.card-lift img {
+  transition: transform var(--t-lift);
+}
+.card-lift:hover img {
+  transform: scale(1.04);
+}
+
+/* Contact form input focus ring */
+.contact-input:focus {
+  outline: none;
+  border-color: var(--color-forest-green) !important;
+  box-shadow: 0 0 0 3px rgba(46,125,94,0.15);
+  transition: border-color var(--t-fast), box-shadow var(--t-fast);
+}
+
+/* Day-by-day itinerary cards */
+.itinerary-card {
+  border: 1.5px solid transparent;
+  border-radius: 16px;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+.itinerary-card:hover {
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
+}
+.itinerary-card.is-open {
+  border-color: rgba(46, 125, 94, 0.28);
+  box-shadow: 0 6px 24px rgba(46, 125, 94, 0.09);
+}
+
+@keyframes itineraryExpand {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.itinerary-body {
+  animation: itineraryExpand 0.24s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Booking form input focus ring */
+.booking-input:focus {
+  outline: none;
+  border-color: var(--color-forest-green) !important;
+  box-shadow: 0 0 0 3px rgba(46,125,94,0.15);
+  transition: border-color var(--t-fast), box-shadow var(--t-fast);
+}
+
+/* ── Blog post editorial typography ─────────────────────── */
+
+.blog-content {
+  color: var(--color-n900);
+}
+
+.blog-content p {
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.9;
+  color: #2D3748;
+  margin: 0 0 1.6em 0;
+}
+
+.blog-content p:first-child {
+  font-size: 19px;
+  line-height: 1.85;
+  color: var(--color-n900);
+}
+
+.blog-content h2 {
+  font-family: var(--font-hero);
+  font-weight: 700;
+  font-size: 26px;
+  line-height: 1.2;
+  color: var(--color-n900);
+  letter-spacing: -0.3px;
+  margin: 2.5em 0 0.6em 0;
+  padding-bottom: 0.4em;
+  border-bottom: 1px solid var(--color-n300);
+}
+
+.blog-content h3 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 19px;
+  line-height: 1.3;
+  color: var(--color-n900);
+  margin: 2em 0 0.5em 0;
+}
+
+.blog-content strong {
+  font-weight: 700;
+  color: var(--color-n900);
+}
+
+.blog-content em {
+  font-family: var(--font-hero);
+  font-style: italic;
+  font-size: 1.02em;
+  color: #3D5A52;
+}
+
+.blog-content a {
+  color: var(--color-forest-green);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.blog-content a:hover {
+  color: var(--color-mid-green);
+}
+
+.blog-content ul {
+  margin: 0 0 1.6em 0;
+  padding-left: 0;
+  list-style: none;
+}
+
+.blog-content ul li {
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.75;
+  color: #2D3748;
+  padding-left: 1.4em;
+  position: relative;
+  margin-bottom: 0.5em;
+}
+
+.blog-content ul li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.65em;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--color-forest-green);
+}
+
+.blog-content ol {
+  margin: 0 0 1.6em 0;
+  padding-left: 1.6em;
+}
+
+.blog-content ol li {
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.75;
+  color: #2D3748;
+  margin-bottom: 0.5em;
+  padding-left: 0.3em;
+}
+
+.blog-content blockquote {
+  margin: 2em 0;
+  padding: 24px 28px;
+  background: rgba(46, 125, 94, 0.05);
+  border-left: 3px solid var(--color-forest-green);
+  border-radius: 0 8px 8px 0;
+}
+
+.blog-content blockquote p {
+  font-family: var(--font-hero);
+  font-style: italic;
+  font-size: 20px;
+  line-height: 1.7;
+  color: var(--color-n900);
+  margin: 0;
+}
+
+.blog-content hr {
+  border: none;
+  border-top: 1px solid var(--color-n300);
+  margin: 2.5em 0;
 }

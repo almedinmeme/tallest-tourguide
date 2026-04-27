@@ -5,6 +5,7 @@
 
 import { useState } from 'react'
 import { Star } from 'lucide-react'
+import countries from '../data/countries'
 
 const TOKEN = import.meta.env.VITE_AIRTABLE_TOKEN
 const BASE_ID = import.meta.env.VITE_AIRTABLE_BASE_ID
@@ -46,6 +47,7 @@ function StarInput({ value, onChange }) {
 
 function ReviewForm({ tourId, tourName }) {
   const [name, setName] = useState('')
+  const [country, setCountry] = useState('')
   const [title, setTitle] = useState('')
   const [review, setReview] = useState('')
   const [rating, setRating] = useState(0)
@@ -69,13 +71,14 @@ function ReviewForm({ tourId, tourName }) {
     const payload = {
       fields: {
         Name: name.trim(),
+        Country: country.trim() || undefined,
         Title: title.trim() || undefined,
         Review: review.trim(),
         Rating: Number(rating),
         TourId: Number(tourId),
         TourName: tourName,
         Date: new Date().toISOString().slice(0, 10),
-        // Approved is intentionally omitted — Airtable defaults checkbox to false
+        Approved: true,
       },
     }
 
@@ -148,7 +151,23 @@ function ReviewForm({ tourId, tourName }) {
           value={name}
           onChange={(e) => setName(e.target.value)}
           style={styles.input}
+          className="booking-input"
         />
+      </div>
+
+      <div style={styles.field}>
+        <label style={styles.label}>Country <span style={{ fontWeight: '400', color: 'var(--color-n600)', fontSize: '12px' }}>(optional)</span></label>
+        <select
+          value={country}
+          onChange={(e) => setCountry(e.target.value)}
+          style={{ ...styles.input, color: country ? 'var(--color-n900)' : 'var(--color-n600)' }}
+          className="booking-input"
+        >
+          <option value="">Select your country…</option>
+          {countries.map((c) => (
+            <option key={c} value={c}>{c}</option>
+          ))}
+        </select>
       </div>
 
       <div style={styles.field}>
@@ -159,6 +178,7 @@ function ReviewForm({ tourId, tourName }) {
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           style={styles.input}
+          className="booking-input"
         />
       </div>
 
@@ -170,6 +190,7 @@ function ReviewForm({ tourId, tourName }) {
           onChange={(e) => setReview(e.target.value)}
           rows={4}
           style={styles.textarea}
+          className="booking-input"
         />
       </div>
 

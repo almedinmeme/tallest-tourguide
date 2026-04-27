@@ -53,6 +53,7 @@ export function useReviews(tourId) {
         const parsed = (data.records || []).map((r) => ({
           id: r.id,
           name: r.fields.Name || 'Anonymous',
+          country: r.fields.Country || '',
           title: r.fields.Title || '',
           review: r.fields.Review || '',
           rating: r.fields.Rating || 5,

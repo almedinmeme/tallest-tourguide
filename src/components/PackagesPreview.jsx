@@ -1,205 +1,159 @@
-// PackagesPreview.jsx
-// Homepage teaser section for the two standard packages.
-// Shows enough detail to create desire and link through
-// to the full package detail pages.
-// Deliberately different layout from tour cards —
-// horizontal instead of vertical, larger, more editorial.
-
 import { Link } from 'react-router-dom'
-import {
-  Clock, Users, ArrowRight, Star
-} from 'lucide-react'
+import { ArrowRight, Star, Gauge, MapPin, Globe } from 'lucide-react'
 import useWindowWidth from '../hooks/useWindowWidth'
+import { useAllReviews } from '../hooks/useAllReviews'
 import package1Hero from '../assets/package-1-hero.webp'
 import package2Hero from '../assets/package-2-hero.webp'
+import package3Hero from '../assets/package-3-hero.webp'
 
 const packages = [
   {
     id: 1,
-    name: 'Sarajevo Essential',
+    slug: 'sarajevo-essential',
+    name: '3-Day Complete Sarajevo Experience: Let us show you our home',
     subtitle: 'Stories, Survival & Soul',
-    duration: '2 Days',
-    groupSize: 12,
+    duration: '3 Days',
     price: 99,
-    originalPrice: 120,
     rating: 5,
     reviews: 1,
     badge: 'Most Popular',
+    badgeStyle: 'amber',
     hero: package1Hero,
-    description: 'Two days that tell the complete story of Sarajevo. A home-hosted meal, the golden hour walking tour, and the siege explained by someone who lived through it.',
-    highlights: [
-      'Home-hosted welcome meal',
-      'Sarajevo Sunset Walking Tour',
-      'Siege of Sarajevo Tour',
-    ],
+    difficulty: 'Easy',
+    locations: 3,
+    countries: 1,
   },
   {
     id: 2,
+    slug: 'bosnia-deep-dive',
     name: 'Bosnia Deep Dive',
     subtitle: 'Real Bosnia, Deeply Experienced',
     duration: '5 Days',
-    groupSize: 12,
-    price: 759,
-    originalPrice: 850,
+    price: 480,
     rating: 5,
-    reviews: 11,
+    reviews: 31,
     badge: 'Best Value',
+    badgeStyle: 'green',
     hero: package2Hero,
-    description: 'Five days through Sarajevo, Herzegovina, and Yugoslavia\'s strangest legacy. Waterfalls, wine cellars, a nuclear bunker, and white water rafting.',
-    highlights: [
-      'Kravice Waterfalls & Swimming',
-      'Tito\'s Nuclear Bunker',
-      'White Water Rafting',
-    ],
+    difficulty: 'Easy',
+    locations: 7,
+    countries: 1,
+  },
+  {
+    id: 3,
+    slug: 'sarajevo-to-dubrovnik',
+    name: 'Sarajevo to Dubrovnik',
+    subtitle: 'Empires, Mountains & the Adriatic Coast',
+    duration: '7 Days',
+    price: 890,
+    rating: 5,
+    reviews: 0,
+    badge: 'New',
+    badgeStyle: 'dark',
+    hero: package3Hero,
+    difficulty: 'Moderate',
+    locations: 8,
+    countries: 2,
   },
 ]
 
+const DIFFICULTY_COLOR = {
+  Easy: { color: 'var(--color-forest-green)', bg: 'rgba(46,125,94,0.10)', border: 'rgba(46,125,94,0.20)' },
+  Moderate: { color: '#b45309', bg: 'rgba(180,83,9,0.08)', border: 'rgba(180,83,9,0.18)' },
+  Challenging: { color: '#c0392b', bg: 'rgba(192,57,43,0.08)', border: 'rgba(192,57,43,0.18)' },
+}
+
 function PackagesPreview() {
   const width = useWindowWidth()
-  const isMobile = width <= 768
+  const { stats } = useAllReviews()
+  const isMobile = width <= 640
+  const isTablet = width <= 960
+
+  const cols = isMobile ? '1fr' : isTablet ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)'
 
   return (
     <section style={styles.section}>
 
-      {/* Section header */}
       <div style={styles.header}>
         <span style={styles.eyebrow}>Curated Experiences</span>
-        <h2 style={styles.title}>Multi-Day Packages</h2>
+        <h2 style={styles.title}>Multi-day tours</h2>
         <p style={styles.subtitle}>
           Want more than a single tour? These packages combine
-          our best experiences into a complete Bosnia story —
+          our best experiences into a complete story —
           planned, guided, and taken care of from arrival to departure.
         </p>
       </div>
 
-      {/* Package cards */}
-      <div style={styles.cardsList}>
-        {packages.map((pkg, index) => (
-          <div
-            key={pkg.id}
-            style={{
-              ...styles.card,
-              // Alternate photo position — first card photo left,
-              // second card photo right. Creates visual rhythm
-              // and prevents the section from feeling like a list.
-              flexDirection: isMobile
-                ? 'column'
-                : index % 2 === 0
-                  ? 'row'
-                  : 'row-reverse',
-            }}
-          >
+      <div style={{ ...styles.cardsList, gridTemplateColumns: cols }}>
+        {packages.map((pkg) => {
+          const diff = DIFFICULTY_COLOR[pkg.difficulty] ?? DIFFICULTY_COLOR.Easy
+          const avgRating = stats[pkg.slug]?.avgRating ?? pkg.rating
+          const reviewCount = stats[pkg.slug]?.count ?? pkg.reviews
 
-            {/* Photo side */}
-            <div style={styles.photoSide}>
-              <img
-                src={pkg.hero}
-                alt={pkg.name}
-                style={styles.photo}
-              />
-              {/* Badge overlaid on photo */}
-              <span style={{
-                ...styles.badge,
-                backgroundColor: index === 0
-                  ? 'var(--color-amber)'
-                  : 'var(--color-forest-green)',
-                color: index === 0
-                  ? 'var(--color-n900)'
-                  : 'var(--color-n000)',
-              }}>
-                {pkg.badge}
-              </span>
-            </div>
+          return (
+            <Link key={pkg.id} to={`/packages/${pkg.slug}`} style={styles.cardLink}>
+              <div style={styles.card} className="pkg-card">
 
-            {/* Content side */}
-            <div style={styles.contentSide}>
+                <div style={styles.imageWrapper}>
+                  <img src={pkg.hero} alt={pkg.name} style={styles.photo} className="pkg-card-img" />
+                  <div style={styles.imageGradient} />
 
-              {/* Rating */}
-              <div style={styles.ratingRow}>
-                <Star
-                  size={13}
-                  color="var(--color-amber)"
-                  fill="var(--color-amber)"
-                />
-                <span style={styles.rating}>{pkg.rating}</span>
-                <span style={styles.reviews}>
-                  ({pkg.reviews} reviews)
-                </span>
-              </div>
-
-              {/* Name and subtitle */}
-              <h3 style={styles.packageName}>{pkg.name}</h3>
-              <p style={styles.packageSubtitle}>{pkg.subtitle}</p>
-
-              {/* Meta */}
-              <div style={styles.metaRow}>
-                <div style={styles.metaItem}>
-                  <Clock
-                    size={13}
-                    color="var(--color-forest-green)"
-                  />
-                  <span style={styles.meta}>{pkg.duration}</span>
-                </div>
-                <div style={styles.metaItem}>
-                  <Users
-                    size={13}
-                    color="var(--color-forest-green)"
-                  />
-                  <span style={styles.meta}>
-                    Max {pkg.groupSize} people
-                  </span>
-                </div>
-              </div>
-
-              {/* Description */}
-              <p style={styles.description}>{pkg.description}</p>
-
-              {/* Highlights — three key experiences */}
-              <div style={styles.highlightsList}>
-                {pkg.highlights.map((highlight, i) => (
-                  <div key={i} style={styles.highlightItem}>
-                    <div style={styles.highlightDot} />
-                    <span style={styles.highlightText}>
-                      {highlight}
+                  {/* Badge + Days */}
+                  <div style={styles.imageTop}>
+                    <span style={{
+                      ...styles.badge,
+                      ...(pkg.badgeStyle === 'amber'
+                        ? { backgroundColor: 'var(--color-amber)', color: 'var(--color-n900)' }
+                        : pkg.badgeStyle === 'green'
+                        ? { backgroundColor: 'var(--color-forest-green)', color: 'var(--color-n000)' }
+                        : { backgroundColor: 'rgba(0,0,0,0.55)', color: 'var(--color-n000)' }),
+                    }}>
+                      {pkg.badge}
                     </span>
+                    <span style={styles.daysPill}>{pkg.duration}</span>
                   </div>
-                ))}
-              </div>
 
-              {/* Price and CTA */}
-              <div style={styles.footer}>
-                <div style={styles.priceBlock}>
-                  <span style={styles.originalPrice}>
-                    €{pkg.originalPrice}
-                  </span>
-                  <span style={styles.price}>€{pkg.price}</span>
-                  <span style={styles.perPerson}>per person</span>
+                  {/* All content overlaid at the bottom */}
+                  <div style={styles.imageBottom}>
+                    <h3 style={styles.packageName}>{pkg.name}</h3>
+                    <p style={styles.packageSubtitle}>{pkg.subtitle}</p>
+                    <div style={styles.statPills}>
+                      <span style={styles.statPill}>
+                        <Gauge size={11} />
+                        {pkg.difficulty}
+                      </span>
+                      <span style={styles.statPill}>
+                        <MapPin size={11} />
+                        {pkg.locations} stops
+                      </span>
+                      <span style={styles.statPill}>
+                        <Globe size={11} />
+                        {pkg.countries} {pkg.countries === 1 ? 'country' : 'countries'}
+                      </span>
+                    </div>
+                    <div style={styles.priceRow}>
+                      <div style={styles.priceBlock}>
+                        <span style={styles.priceFrom}>from</span>
+                        <span style={styles.price}>€{pkg.price}</span>
+                      </div>
+                      <button className="pkg-card-btn" style={styles.ctaBtn}>
+                        View Package
+                        <ArrowRight size={13} />
+                      </button>
+                    </div>
+                  </div>
                 </div>
 
-                <Link
-                  to={`/packages/${pkg.id}`}
-                  style={styles.ctaBtn}
-                >
-                  <span>See Package</span>
-                  <ArrowRight
-                    size={15}
-                    color="var(--color-n000)"
-                  />
-                </Link>
               </div>
-
-            </div>
-          </div>
-        ))}
+            </Link>
+          )
+        })}
       </div>
 
-      {/* Bottom link — surfaces Private Group option */}
       <div style={styles.bottomRow}>
-        <p style={styles.bottomText}>
-          Looking for a private group experience?
-        </p>
-        <Link to="/packages" style={styles.bottomLink}>
-          View all packages including private tours
+        <p style={styles.bottomText}>Looking for a longer journey or a private group?</p>
+        <Link to="/multi-day-tours" style={styles.bottomLink}>
+          View all 7 packages
           <ArrowRight size={14} color="var(--color-forest-green)" />
         </Link>
       </div>
@@ -210,14 +164,14 @@ function PackagesPreview() {
 
 const styles = {
   section: {
-    backgroundColor: 'var(--color-n100)',
+    backgroundColor: 'var(--color-n000)',
     padding: '88px 40px',
   },
 
   header: {
     textAlign: 'center',
     maxWidth: '600px',
-    margin: '0 auto 56px auto',
+    margin: '0 auto 48px auto',
   },
 
   eyebrow: {
@@ -247,31 +201,29 @@ const styles = {
   },
 
   cardsList: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '24px',
-    maxWidth: '1000px',
+    display: 'grid',
+    gap: '20px',
+    maxWidth: '1160px',
     margin: '0 auto',
   },
 
-  // Horizontal card — photo on one side, content on the other.
-  // Each side is exactly 50% of the card width.
-  // overflow hidden keeps the photo corners rounded.
-  card: {
-    display: 'flex',
-    backgroundColor: 'var(--color-n000)',
+  cardLink: {
+    display: 'block',
+    textDecoration: 'none',
     borderRadius: '16px',
-    overflow: 'hidden',
-    boxShadow: '0 4px 24px rgba(0,0,0,0.08)',
-    border: '1px solid var(--color-n300)',
-    minHeight: '320px',
   },
 
-  photoSide: {
-    flex: '0 0 45%',
-    position: 'relative',
+  card: {
+    borderRadius: '16px',
     overflow: 'hidden',
-    minHeight: '260px',
+    boxShadow: '0 4px 24px rgba(0,0,0,0.12)',
+  },
+
+  imageWrapper: {
+    position: 'relative',
+    width: '100%',
+    height: '420px',
+    overflow: 'hidden',
   },
 
   photo: {
@@ -281,171 +233,141 @@ const styles = {
     display: 'block',
   },
 
-  badge: {
+  imageGradient: {
     position: 'absolute',
-    top: '16px',
-    left: '16px',
+    inset: 0,
+    background: 'linear-gradient(to bottom, rgba(0,0,0,0.30) 0%, transparent 28%, transparent 40%, rgba(0,0,0,0.88) 100%)',
+  },
+
+  imageTop: {
+    position: 'absolute',
+    top: '14px',
+    left: '14px',
+    right: '14px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+
+  daysPill: {
+    fontFamily: 'var(--font-body)',
+    fontWeight: '700',
+    fontSize: '12px',
+    color: 'var(--color-n000)',
+    backgroundColor: 'rgba(0,0,0,0.40)',
+    backdropFilter: 'blur(6px)',
+    border: '1px solid rgba(255,255,255,0.18)',
+    padding: '5px 12px',
+    borderRadius: '100px',
+    letterSpacing: '0.2px',
+  },
+
+  badge: {
     fontFamily: 'var(--font-body)',
     fontWeight: '700',
     fontSize: '10px',
-    letterSpacing: '1.5px',
+    letterSpacing: '1px',
     textTransform: 'uppercase',
-    padding: '4px 10px',
-    borderRadius: '4px',
+    padding: '4px 11px',
+    borderRadius: '100px',
   },
 
-  contentSide: {
-    flex: 1,
-    padding: '28px 32px',
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '10px',
-    justifyContent: 'center',
+  imageBottom: {
+    position: 'absolute',
+    bottom: '0',
+    left: '0',
+    right: '0',
+    padding: '20px 18px 18px',
   },
 
-  ratingRow: {
+  statPills: {
     display: 'flex',
+    gap: '5px',
+    flexWrap: 'wrap',
+    marginBottom: '12px',
+  },
+
+  statPill: {
+    display: 'inline-flex',
     alignItems: 'center',
     gap: '4px',
-  },
-
-  rating: {
     fontFamily: 'var(--font-body)',
-    fontWeight: '700',
-    fontSize: '13px',
-    color: 'var(--color-n900)',
-  },
-
-  reviews: {
-    fontFamily: 'var(--font-body)',
-    fontSize: '13px',
-    color: 'var(--color-n600)',
+    fontWeight: '600',
+    fontSize: '11px',
+    color: 'rgba(255,255,255,0.92)',
+    backgroundColor: 'rgba(0,0,0,0.42)',
+    backdropFilter: 'blur(6px)',
+    border: '1px solid rgba(255,255,255,0.16)',
+    padding: '3px 9px',
+    borderRadius: '100px',
+    whiteSpace: 'nowrap',
   },
 
   packageName: {
     fontFamily: 'var(--font-display)',
     fontWeight: '700',
-    fontSize: 'var(--text-h2)',
-    color: 'var(--color-n900)',
-    margin: 0,
+    fontSize: '20px',
+    color: 'var(--color-n000)',
     lineHeight: '1.2',
+    letterSpacing: '-0.2px',
+    margin: '0 0 4px 0',
   },
 
   packageSubtitle: {
     fontFamily: 'var(--font-body)',
-    fontSize: 'var(--text-body)',
-    color: 'var(--color-n600)',
-    margin: 0,
+    fontSize: '12px',
+    color: 'rgba(255,255,255,0.70)',
+    margin: '0 0 10px 0',
+    fontStyle: 'italic',
   },
 
-  metaRow: {
-    display: 'flex',
-    gap: '16px',
-  },
-
-  metaItem: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '5px',
-  },
-
-  meta: {
-    fontFamily: 'var(--font-body)',
-    fontSize: 'var(--text-small)',
-    color: 'var(--color-n600)',
-  },
-
-  description: {
-    fontFamily: 'var(--font-body)',
-    fontSize: 'var(--text-body)',
-    color: 'var(--color-n600)',
-    lineHeight: 'var(--leading-body)',
-    margin: 0,
-  },
-
-  highlightsList: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '6px',
-  },
-
-  highlightItem: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '10px',
-  },
-
-  // Small Forest Green dot — minimal, unobtrusive indicator.
-  // Keeps the highlight list readable without the visual
-  // weight of checkmarks or numbered circles here.
-  highlightDot: {
-    width: '6px',
-    height: '6px',
-    borderRadius: '50%',
-    backgroundColor: 'var(--color-forest-green)',
-    flexShrink: 0,
-  },
-
-  highlightText: {
-    fontFamily: 'var(--font-body)',
-    fontSize: 'var(--text-small)',
-    color: 'var(--color-n600)',
-  },
-
-  footer: {
+  priceRow: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginTop: '4px',
-    paddingTop: '16px',
-    borderTop: '1px solid var(--color-n300)',
+    gap: '10px',
   },
 
   priceBlock: {
     display: 'flex',
     alignItems: 'baseline',
-    gap: '6px',
+    gap: '4px',
   },
 
-  originalPrice: {
+  priceFrom: {
     fontFamily: 'var(--font-body)',
-    fontSize: 'var(--text-small)',
-    color: 'var(--color-n600)',
-    textDecoration: 'line-through',
+    fontSize: '10px',
+    color: 'rgba(255,255,255,0.60)',
+    fontWeight: '500',
+    letterSpacing: '0.3px',
   },
 
   price: {
     fontFamily: 'var(--font-display)',
-    fontWeight: '700',
-    fontSize: 'var(--text-h2)',
-    color: 'var(--color-forest-green)',
-  },
-
-  perPerson: {
-    fontFamily: 'var(--font-body)',
-    fontSize: 'var(--text-small)',
-    color: 'var(--color-n600)',
+    fontWeight: '800',
+    fontSize: '28px',
+    color: 'var(--color-n000)',
+    lineHeight: 1,
   },
 
   ctaBtn: {
     display: 'inline-flex',
     alignItems: 'center',
-    gap: '8px',
-    height: '44px',
-    padding: '0 20px',
-    backgroundColor: 'var(--color-forest-green)',
-    color: 'var(--color-n000)',
+    gap: '6px',
+    height: '34px',
+    padding: '0 14px',
     fontFamily: 'var(--font-body)',
     fontWeight: '700',
-    fontSize: 'var(--text-small)',
-    borderRadius: 'var(--radius)',
-    textDecoration: 'none',
+    fontSize: '12px',
+    letterSpacing: '0.3px',
+    borderRadius: '100px',
     whiteSpace: 'nowrap',
+    cursor: 'pointer',
   },
 
   bottomRow: {
     textAlign: 'center',
-    marginTop: '40px',
+    marginTop: '36px',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',

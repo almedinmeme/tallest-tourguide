@@ -77,8 +77,8 @@ function ScrollToTopButton() {
 const styles = {
   button: {
     position: 'fixed',
-    bottom: '32px',
-    right: '32px',
+    bottom: '96px',
+    right: '36px',
     zIndex: 200,
     width: '44px',
     height: '44px',

@@ -1,17 +1,27 @@
+import { lazy, Suspense } from 'react'
 import { Routes, Route } from 'react-router-dom'
 import { LocalBusinessSchema } from './schema/SchemaMarkup'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import ScrollToTopButton from './components/ScrollToTopButton'
-import Home from './pages/Home'
-import Tours from './pages/Tours'
-import TourDetail from './pages/TourDetail'
-import Packages from './pages/Packages'
-import Contact from './pages/Contact'
-import PackageDetail from './pages/PackageDetail'
-import PersonalisedTour from './pages/PersonalisedTour'
-import About from './pages/About'
+import WhatsAppButton from './components/WhatsAppButton'
 import { Link } from 'react-router-dom'
+
+const Home           = lazy(() => import('./pages/Home'))
+const Tours          = lazy(() => import('./pages/Tours'))
+const TourDetail     = lazy(() => import('./pages/TourDetail'))
+const Packages       = lazy(() => import('./pages/Packages'))
+const Contact        = lazy(() => import('./pages/Contact'))
+const PackageDetail  = lazy(() => import('./pages/PackageDetail'))
+const PersonalisedTour = lazy(() => import('./pages/PersonalisedTour'))
+const About          = lazy(() => import('./pages/About'))
+const Blog           = lazy(() => import('./pages/Blog'))
+const BlogPost       = lazy(() => import('./pages/BlogPost'))
+const LeaveReview       = lazy(() => import('./pages/LeaveReview'))
+const BookingConditions = lazy(() => import('./pages/BookingConditions'))
+const SafeTravels       = lazy(() => import('./pages/SafeTravels'))
+const PracticalInfo        = lazy(() => import('./pages/PracticalInfo'))
+const BosniaCulturalGuide  = lazy(() => import('./pages/BosniaCulturalGuide'))
 
 function NotFound() {
   return (
@@ -79,21 +89,31 @@ function App() {
 
       <Navbar />
 
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/tours" element={<Tours />} />
-        <Route path="/tours/:slug" element={<TourDetail />} />
-        <Route path="/packages" element={<Packages />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/packages/:id" element={<PackageDetail />} />
-        <Route path="/personalised" element={<PersonalisedTour />} />
-        <Route path="/about" element={<About />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
+      <Suspense fallback={null}>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/tours" element={<Tours />} />
+          <Route path="/tours/:slug" element={<TourDetail />} />
+          <Route path="/multi-day-tours" element={<Packages />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/packages/:slug" element={<PackageDetail />} />
+          <Route path="/personalised" element={<PersonalisedTour />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/blog/:slug" element={<BlogPost />} />
+          <Route path="/review/:slug" element={<LeaveReview />} />
+          <Route path="/booking-conditions" element={<BookingConditions />} />
+          <Route path="/safe-travels" element={<SafeTravels />} />
+          <Route path="/practical-info" element={<PracticalInfo />} />
+          <Route path="/bosnia-guide" element={<BosniaCulturalGuide />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </Suspense>
 
       <Footer />
 
       <ScrollToTopButton />
+      <WhatsAppButton />
     </div>
   )
 }

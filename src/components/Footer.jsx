@@ -14,6 +14,7 @@ function Footer() {
   const [taHovered, setTaHovered] = useState(false)
   const [waHovered, setWaHovered] = useState(false)
   const [taCardHovered, setTaCardHovered] = useState(false)
+  const [hoveredLink, setHoveredLink] = useState(null)
 
   return (
    <footer style={{
@@ -32,7 +33,9 @@ function Footer() {
 
         {/* ── COLUMN 1 — Brand ── */}
         <div style={styles.brandColumn}>
-          <img src={logo} alt="Tallest Tourguide" style={styles.footerLogo} />
+          <Link to="/" style={{ display: 'block' }}>
+            <img src={logo} alt="Tallest Tourguide" style={styles.footerLogo} />
+          </Link>
           <p style={styles.brandStatement}>
             Local knowledge. Small groups.<br />
             Real Bosnia and Herzegovina. Raw Balkan.
@@ -88,42 +91,54 @@ function Footer() {
         <div style={styles.column}>
           <span style={styles.columnLabel}>Explore</span>
           <nav style={styles.linkList}>
-            <Link to="/" style={styles.footerLink}>Home</Link>
-            <Link to="/tours" style={styles.footerLink}>Tours</Link>
-            <Link to="/packages" style={styles.footerLink}>Packages</Link>
-            <Link to="/about" style={styles.footerLink}>About</Link>
-            <Link to="/personalised" style={styles.footerLink}>Personalised Tour</Link>
-            <Link to="/contact" style={styles.footerLink}>Contact</Link>
+            {[
+              { to: '/tours', label: 'Tours' },
+              { to: '/multi-day-tours', label: 'Multi-day tours' },
+              { to: '/personalised', label: 'Personalised Tour' },
+              { to: '/blog', label: 'Blog' },
+            ].map(({ to, label }) => (
+              <Link
+                key={to}
+                to={to}
+                style={{
+                  ...styles.footerLink,
+                  color: hoveredLink === to ? 'var(--color-amber)' : 'rgba(255,255,255,0.55)',
+                }}
+                onMouseEnter={() => setHoveredLink(to)}
+                onMouseLeave={() => setHoveredLink(null)}
+              >
+                {label}
+              </Link>
+            ))}
           </nav>
         </div>
 
-        {/* ── COLUMN 3 — Contact ── */}
+        {/* ── COLUMN 3 — Info ── */}
         <div style={styles.column}>
-          <span style={styles.columnLabel}>Find Us</span>
-          <div style={styles.contactList}>
-
-            <div style={styles.contactItem}>
-              <MapPin size={14} color="var(--color-mid-green)" />
-              <span style={styles.contactText}>
-                Sarajevo, Bosnia & Herzegovina
-              </span>
-            </div>
-
-            <div style={styles.contactItem}>
-              <Mail size={14} color="var(--color-mid-green)" />
-              <a href="mailto:tallest.tourguide@gmail.com" style={styles.contactLink}>
-                hello@tallesttourguide.com
-              </a>
-            </div>
-
-            <div style={styles.contactItem}>
-              <Phone size={14} color="var(--color-mid-green)" />
-              <a href="https://wa.me/38762664244" target="_blank" rel="noopener noreferrer" style={styles.contactLink}>
-                +387 62 664 244
-              </a>
-            </div>
-
-          </div>
+          <span style={styles.columnLabel}>Info</span>
+          <nav style={styles.linkList}>
+            {[
+              { to: '/about', label: 'About' },
+              { to: '/contact', label: 'Contact' },
+              { to: '/safe-travels', label: 'Safe Travels' },
+              { to: '/booking-conditions', label: 'Booking Conditions' },
+              { to: '/practical-info', label: 'Practical Info' },
+              { to: '/bosnia-guide', label: 'Bosnia Travel Guide' },
+            ].map(({ to, label }) => (
+              <Link
+                key={to}
+                to={to}
+                style={{
+                  ...styles.footerLink,
+                  color: hoveredLink === to ? 'var(--color-amber)' : 'rgba(255,255,255,0.55)',
+                }}
+                onMouseEnter={() => setHoveredLink(to)}
+                onMouseLeave={() => setHoveredLink(null)}
+              >
+                {label}
+              </Link>
+            ))}
+          </nav>
         </div>
 
         {/* ── COLUMN 4 — TripAdvisor CTA ── */}
@@ -155,6 +170,43 @@ function Footer() {
 
       </div>
 
+      {/* ── FIND US BAR ── */}
+      <div style={styles.findUsBar}>
+        <div style={styles.bottomDivider} />
+        <div style={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          alignItems: 'center',
+          gap: isMobile ? '16px' : '32px',
+          justifyContent: isMobile ? 'center' : 'flex-start',
+        }}>
+          <span style={styles.columnLabel}>Find Us</span>
+          <div style={styles.contactItem}>
+            <MapPin size={13} color="var(--color-mid-green)" style={{ flexShrink: 0 }} />
+            <a
+              href="https://www.google.com/maps/place/Tallest+Tourguide+%26+Friends/@43.8568344,18.4235815,17z/data=!3m1!4b1!4m6!3m5!1s0x4758c99dd99dd453:0xdf1f0c03f4626494!8m2!3d43.8568344!4d18.4265152!16s%2Fg%2F11nc0x5ysx?entry=ttu&g_ep=EgoyMDI2MDQxNS4wIKXMDSoASAFQAw%3D%3D"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={styles.contactLink}
+            >
+              Hamdije Kreševljakovića 61, Sarajevo
+            </a>
+          </div>
+          <div style={styles.contactItem}>
+            <Mail size={13} color="var(--color-mid-green)" style={{ flexShrink: 0 }} />
+            <a href="mailto:tallest.tourguide@gmail.com" style={styles.contactLink}>
+              tallest.tourguide@gmail.com
+            </a>
+          </div>
+          <div style={styles.contactItem}>
+            <Phone size={13} color="var(--color-mid-green)" style={{ flexShrink: 0 }} />
+            <a href="https://wa.me/38762664244" target="_blank" rel="noopener noreferrer" style={styles.contactLink}>
+              +387 62 664 244
+            </a>
+          </div>
+        </div>
+      </div>
+
       {/* ── BOTTOM BAR ── */}
       <div style={styles.bottomBar}>
         <div style={styles.bottomDivider} />
@@ -167,9 +219,7 @@ function Footer() {
           <span style={styles.copyright}>
             © {year} Tallest Tourguide. All rights reserved.
           </span>
-          <span style={styles.madeWith}>
-            Sarajevo, Bosnia & Herzegovina
-          </span>
+          <span style={styles.madeWith}>Sarajevo, Bosnia & Herzegovina</span>
         </div>
       </div>
 
@@ -267,6 +317,7 @@ const styles = {
     fontSize: 'var(--text-small)',
     color: 'rgba(255,255,255,0.55)',
     textDecoration: 'none',
+    transition: 'color 0.2s ease',
   },
 
   contactList: {
@@ -277,8 +328,8 @@ const styles = {
 
   contactItem: {
     display: 'flex',
-    alignItems: 'flex-start',
-    gap: '10px',
+    alignItems: 'center',
+    gap: '8px',
   },
 
   contactText: {
@@ -343,6 +394,12 @@ const styles = {
     margin: 0,
   },
 
+  findUsBar: {
+    padding: '0 40px 24px 40px',
+    maxWidth: '1100px',
+    margin: '0 auto',
+  },
+
   bottomBar: {
     padding: '0 40px 32px 40px',
     maxWidth: '1100px',
@@ -371,6 +428,13 @@ const styles = {
     fontFamily: 'var(--font-body)',
     fontSize: 'var(--text-tiny)',
     color: 'rgba(255,255,255,0.25)',
+  },
+  legalLink: {
+    fontFamily: 'var(--font-body)',
+    fontSize: 'var(--text-tiny)',
+    color: 'rgba(255,255,255,0.35)',
+    textDecoration: 'none',
+    transition: 'color 0.15s',
   },
 }
 

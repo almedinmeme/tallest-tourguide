@@ -11,12 +11,13 @@ import {
   BreadcrumbSchema,
   FAQSchema,
 } from '../schema/SchemaMarkup'
-import { useEffect, useState } from 'react'
+import { lazy, Suspense, useCallback, useEffect, useRef, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
+import { trackEvent } from '../utils/analytics'
 import {
   Star, Clock, Users, MapPin, CheckCircle,
   XCircle, ShieldCheck, ChevronDown, ChevronUp,
-  X, Globe, Timer
+  X, Globe, Timer, AlertTriangle, Accessibility
 } from 'lucide-react'
 import emailjs from '@emailjs/browser'
 import useWindowWidth from '../hooks/useWindowWidth'
@@ -24,6 +25,138 @@ import tours from '../data/tours'
 import { getTourLanguages } from '../data/tourLanguages'
 import Gallery from '../components/Gallery'
 import TourReviews from '../components/TourReviews'
+const RouteMap = lazy(() => import('../components/RouteMap'))
+import { useAvailability } from '../hooks/useAvailability'
+import { useBlockedDates } from '../hooks/useBlockedDates'
+import TourCalendar from '../components/TourCalendar'
+
+const NAVBAR_HEIGHT = 68
+
+function SectionNav({ tabs, isMobile }) {
+  const [activeId, setActiveId] = useState(tabs[0]?.id ?? '')
+  const [navbarVisible, setNavbarVisible] = useState(true)
+  const lastScrollY = useRef(0)
+
+  useEffect(() => {
+    const onScroll = () => {
+      const y = window.scrollY
+      if (y < 80) {
+        setNavbarVisible(true)
+      } else if (y > lastScrollY.current) {
+        setNavbarVisible(false)
+      } else {
+        setNavbarVisible(true)
+      }
+      lastScrollY.current = y
+    }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
+  useEffect(() => {
+    if (tabs.length === 0) return
+    const observers = []
+    tabs.forEach(({ id }) => {
+      const el = document.getElementById(id)
+      if (!el) return
+      const obs = new IntersectionObserver(
+        ([entry]) => { if (entry.isIntersecting) setActiveId(id) },
+        { rootMargin: '-10% 0px -80% 0px' }
+      )
+      obs.observe(el)
+      observers.push(obs)
+    })
+    return () => observers.forEach((obs) => obs.disconnect())
+  }, [tabs])
+
+  const scrollTo = (id) => {
+    const el = document.getElementById(id)
+    if (!el) return
+    const offset = (navbarVisible ? NAVBAR_HEIGHT : 0) + 48 + 8
+    const y = el.getBoundingClientRect().top + window.scrollY - offset
+    window.scrollTo({ top: y, behavior: 'smooth' })
+  }
+
+  return (
+    <nav style={{
+      position: 'sticky',
+      top: navbarVisible ? `${NAVBAR_HEIGHT}px` : '0px',
+      transition: 'top 0.3s ease',
+      zIndex: 95,
+      backgroundColor: 'var(--color-n000)',
+      borderBottom: '1px solid var(--color-n300)',
+      overflowX: 'auto',
+      scrollbarWidth: 'none',
+      msOverflowStyle: 'none',
+      whiteSpace: 'nowrap',
+    }}>
+      <div style={{
+        display: 'flex',
+        alignItems: 'stretch',
+        height: '48px',
+        maxWidth: '1200px',
+        margin: '0 auto',
+        padding: isMobile ? '0 20px' : '0 40px',
+        minWidth: 'max-content',
+      }}>
+        {tabs.map(({ id, label }) => {
+          const isActive = activeId === id
+          return (
+            <button
+              key={id}
+              onClick={() => scrollTo(id)}
+              style={{
+                height: '100%',
+                padding: isMobile ? '0 12px' : '0 16px',
+                background: 'none',
+                border: 'none',
+                borderBottom: isActive ? '2px solid var(--color-forest-green)' : '2px solid transparent',
+                color: isActive ? 'var(--color-forest-green)' : 'var(--color-n500)',
+                fontFamily: 'var(--font-body)',
+                fontSize: isMobile ? '13px' : '14px',
+                fontWeight: isActive ? '600' : '400',
+                cursor: 'pointer',
+                whiteSpace: 'nowrap',
+                transition: 'color 0.15s ease, border-color 0.15s ease',
+              }}
+            >
+              {label}
+            </button>
+          )
+        })}
+      </div>
+    </nav>
+  )
+}
+
+function getTomorrow() {
+  const d = new Date()
+  d.setDate(d.getDate() + 1)
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+}
+
+function formatSelectedDate(dateStr) {
+  if (!dateStr) return 'Select a date'
+  const [y, m, d] = dateStr.split('-').map(Number)
+  return new Date(y, m - 1, d).toLocaleDateString('en-GB', {
+    weekday: 'short', day: 'numeric', month: 'long', year: 'numeric',
+  })
+}
+
+const showMoreBtnStyle = {
+  display: 'block',
+  margin: '12px auto 0',
+  height: '34px',
+  padding: '0 18px',
+  borderRadius: '100px',
+  border: '1.5px solid var(--color-n300)',
+  backgroundColor: 'transparent',
+  color: 'var(--color-n600)',
+  fontFamily: 'var(--font-body)',
+  fontWeight: '600',
+  fontSize: '13px',
+  cursor: 'pointer',
+}
 
 function TourDetail() {
   const { slug } = useParams()
@@ -31,10 +164,12 @@ function TourDetail() {
   const width = useWindowWidth()
   const isMobile = width <= 768
   const supportedLanguages = getTourLanguages(tour?.languages)
+  const { getSpotsLeft, bookings } = useAvailability()
+  const { isBlocked } = useBlockedDates()
 
   // Booking form state
-  const [selectedDate, setSelectedDate] = useState('')
-  const [startTime, setStartTime] = useState('')
+  const [selectedDate, setSelectedDate] = useState(getTomorrow())
+  const [startTime, setStartTime] = useState(tour?.startingTimes?.[0] ?? '')
   const [selectedLanguage, setSelectedLanguage] = useState(
     supportedLanguages[0]?.id ?? 'english'
   )
@@ -43,10 +178,26 @@ function TourDetail() {
   const [guestName, setGuestName] = useState('')
   const [guestEmail, setGuestEmail] = useState('')
   const [guestPhone, setGuestPhone] = useState('')
+  const [discountCode, setDiscountCode] = useState('')
   const [tourType, setTourType] = useState('shared')
   const [isSending, setIsSending] = useState(false)
   const [isSuccess, setIsSuccess] = useState(false)
   const [isError, setIsError] = useState(false)
+
+  // Calendar dropdown state
+  const [calendarOpen, setCalendarOpen] = useState(false)
+  const calendarWrapperRef = useRef(null)
+
+  useEffect(() => {
+    if (!calendarOpen) return
+    function handleOutsideClick(e) {
+      if (calendarWrapperRef.current && !calendarWrapperRef.current.contains(e.target)) {
+        setCalendarOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleOutsideClick)
+    return () => document.removeEventListener('mousedown', handleOutsideClick)
+  }, [calendarOpen])
 
   // Mobile drawer state
   const [drawerOpen, setDrawerOpen] = useState(false)
@@ -54,10 +205,48 @@ function TourDetail() {
   // FAQ accordion state
   const [openFaq, setOpenFaq] = useState(null)
 
+  // Highlights expand state
+  const [highlightsExpanded, setHighlightsExpanded] = useState(false)
+
+  // Inclusions expand state
+  const [includedExpanded, setIncludedExpanded] = useState(false)
+  const [excludedExpanded, setExcludedExpanded] = useState(false)
+
   useEffect(() => {
     setSelectedLanguage(supportedLanguages[0]?.id ?? 'english')
     setBookingStep(1)
+    setSelectedDate(getTomorrow())
+    setStartTime(tour?.startingTimes?.[0] ?? '')
   }, [tour?.id])
+
+  useEffect(() => {
+    if (!tour) return
+    trackEvent('view_item', {
+      currency: 'EUR',
+      value: tour.price,
+      items: [{ item_id: tour.slug, item_name: tour.title, item_category: tour.category, price: tour.price }],
+    })
+  }, [tour?.slug])
+
+  const scrollFired = useRef(new Set())
+  useEffect(() => {
+    if (!tour) return
+    scrollFired.current = new Set()
+    const thresholds = [25, 50, 75, 90]
+    const onScroll = () => {
+      const scrollable = document.body.scrollHeight - window.innerHeight
+      if (scrollable <= 0) return
+      const pct = Math.round((window.scrollY / scrollable) * 100)
+      thresholds.forEach((t) => {
+        if (pct >= t && !scrollFired.current.has(t)) {
+          scrollFired.current.add(t)
+          trackEvent('scroll_depth', { page: tour.slug, depth: t })
+        }
+      })
+    }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [tour?.slug])
 
   const selectedLanguageLabel =
     supportedLanguages.find((language) => language.id === selectedLanguage)?.label
@@ -70,6 +259,10 @@ function TourDetail() {
       : tour.price * numPeople
     : 0
   const bookingPriceLabel = tourType === 'private' ? 'Quote' : `€${totalPrice}`
+  const spotsLeft = tour ? getSpotsLeft(tour.slug, selectedDate, selectedLanguage, tour.groupSize) : null
+  const maxPeople = tourType === 'private'
+    ? 20
+    : (spotsLeft != null ? Math.min(tour.groupSize, spotsLeft) : tour.groupSize)
 
   if (!tour) {
     return (
@@ -91,6 +284,7 @@ function TourDetail() {
     setIsError(false)
 
     const templateParams = {
+      type: 'Booking',
       tour_name: tour.title,
       tour_date: selectedDate,
       tour_start_time: startTime || 'Not specified',
@@ -101,11 +295,44 @@ function TourDetail() {
       guest_name: guestName,
       guest_email: guestEmail,
       guest_phone: guestPhone || 'Not provided',
+      discount_code: discountCode || 'None',
       tour_type: tourType === 'private'
         ? 'Private Tour'
         : 'Shared Tour',
       tour_language: selectedLanguageLabel,
     }
+
+    fetch(`https://api.airtable.com/v0/${import.meta.env.VITE_AIRTABLE_BASE_ID}/Bookings`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${import.meta.env.VITE_AIRTABLE_TOKEN}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        fields: {
+          TourSlug: tour.slug,
+          TourName: tour.title,
+          TourDate: selectedDate,
+          StartTime: startTime || '',
+          NumPeople: numPeople,
+          TourType: tourType,
+          Language: selectedLanguageLabel,
+          TotalPrice: tourType === 'private' ? 0 : totalPrice,
+          GuestName: guestName,
+          GuestEmail: guestEmail,
+          GuestPhone: guestPhone || '',
+          DiscountCode: discountCode || '',
+          Status: 'Pending',
+        },
+      }),
+    }).catch((err) => console.warn('Airtable booking save failed:', err))
+
+    emailjs.send(
+      import.meta.env.VITE_EMAILJS_SERVICE_ID,
+      import.meta.env.VITE_EMAILJS_CONFIRMATION_TEMPLATE_ID,
+      templateParams,
+      import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+    ).catch(() => {})
 
     emailjs.send(
       import.meta.env.VITE_EMAILJS_SERVICE_ID,
@@ -113,7 +340,16 @@ function TourDetail() {
       templateParams,
       import.meta.env.VITE_EMAILJS_PUBLIC_KEY
     )
-    .then(() => { setIsSending(false); setIsSuccess(true) })
+    .then(() => {
+      setIsSending(false)
+      setIsSuccess(true)
+      trackEvent('purchase', {
+        transaction_id: `${tour.slug}-${Date.now()}`,
+        currency: 'EUR',
+        value: totalPrice,
+        items: [{ item_id: tour.slug, item_name: tour.title, item_category: tour.category, price: tour.price, quantity: numPeople }],
+      })
+    })
     .catch(() => { setIsSending(false); setIsError(true) })
   }
 
@@ -123,16 +359,18 @@ function TourDetail() {
       return
     }
 
+    trackEvent('begin_checkout', {
+      currency: 'EUR',
+      value: totalPrice,
+      items: [{ item_id: tour.slug, item_name: tour.title, item_category: tour.category, price: tour.price, quantity: numPeople }],
+    })
+
     setBookingStep(2)
     setIsError(false)
   }
 
-  // The booking form JSX is extracted into a variable
-  // so it can be rendered in both the desktop right column
-  // AND the mobile drawer without duplicating code.
-  // This is the DRY principle applied to JSX.
   const bookingForm = (
-    <div style={styles.bookingCard}>
+    <div style={{ ...styles.bookingCard, padding: '16px' }}>
       {isSuccess ? (
         <div style={styles.successMessage}>
           <div style={styles.successIcon}>
@@ -152,30 +390,13 @@ function TourDetail() {
         </div>
       ) : (
         <>
-          <div style={styles.stepHeader}>
-            <span style={styles.stepKicker}>Booking Flow</span>
-            <h3 style={styles.stepTitle}>
-              {bookingStep === 1 ? 'Step 1: Tour Details' : 'Step 2: Guest Details'}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
+            <h3 style={{ fontFamily: 'var(--font-display)', fontWeight: '700', fontSize: '17px', color: 'var(--color-n900)', margin: 0 }}>
+              {bookingStep === 1 ? 'Tour details' : 'Your details'}
             </h3>
-            <div style={styles.stepIndicatorRow}>
-              <span
-                style={{
-                  ...styles.stepIndicator,
-                  ...(bookingStep >= 1 ? styles.stepIndicatorActive : {}),
-                }}
-              >
-                1
-              </span>
-              <span style={styles.stepIndicatorLine} />
-              <span
-                style={{
-                  ...styles.stepIndicator,
-                  ...(bookingStep >= 2 ? styles.stepIndicatorActive : {}),
-                }}
-              >
-                2
-              </span>
-            </div>
+            <span style={{ fontFamily: 'var(--font-body)', fontSize: '12px', fontWeight: '600', color: 'var(--color-n600)' }}>
+              Step {bookingStep} of 2
+            </span>
           </div>
 
           {bookingStep === 1 ? (
@@ -249,64 +470,174 @@ function TourDetail() {
 
               <div style={styles.formDivider} />
 
-              <div style={styles.formGroup}>
-                <label style={styles.label}>Select Date</label>
-               <input
-  type="date"
-  style={styles.input}
-  value={selectedDate}
-  onChange={(e) => setSelectedDate(e.target.value)}
-  onClick={(e) => e.target.showPicker()}
-/>
-              </div>
-
-              <div style={styles.formGroup}>
-                <label style={styles.label}>Preferred Start Time</label>
-                <select
-                  style={styles.input}
-                  value={startTime}
-                  onChange={(e) => setStartTime(e.target.value)}
-                >
-                  <option value="">Select a time</option>
-                  {tour.startingTimes.map((time) => (
-                    <option key={time} value={time}>{time}</option>
-                  ))}
-                </select>
-              </div>
-
               {supportedLanguages.length > 0 && (
-                <div style={styles.formGroup}>
+                <div style={{ ...styles.formGroup, marginBottom: '8px' }}>
                   <label style={styles.label}>Tour Language</label>
-                  <select
-                    style={styles.input}
-                    value={selectedLanguage}
-                    onChange={(e) => setSelectedLanguage(e.target.value)}
-                  >
+                  <div style={styles.pillGroup}>
                     {supportedLanguages.map((language) => (
-                      <option key={language.id} value={language.id}>
+                      <button
+                        key={language.id}
+                        type="button"
+                        onClick={() => {
+                          setSelectedLanguage(language.id)
+                          const spots = getSpotsLeft(tour.slug, selectedDate, language.id, tour.groupSize)
+                          if (spots != null) setNumPeople((n) => Math.min(n, spots))
+                        }}
+                        style={{
+                          ...styles.pillOption,
+                          borderColor: selectedLanguage === language.id ? 'var(--color-forest-green)' : 'var(--color-n300)',
+                          backgroundColor: selectedLanguage === language.id ? 'rgba(46,125,94,0.08)' : 'var(--color-n000)',
+                          color: selectedLanguage === language.id ? 'var(--color-forest-green)' : 'var(--color-n700)',
+                          fontWeight: selectedLanguage === language.id ? '600' : '500',
+                        }}
+                      >
                         {language.label}
-                      </option>
+                      </button>
                     ))}
-                  </select>
+                  </div>
                 </div>
               )}
 
-              <div style={styles.formGroup}>
-                <label style={styles.label}>Number of People</label>
-                <select
-                  style={styles.input}
-                  value={numPeople}
-                  onChange={(e) => setNumPeople(Number(e.target.value))}
+              <div style={{ ...styles.formGroup, marginBottom: '8px', position: 'relative' }} ref={calendarWrapperRef}>
+                <label style={styles.label}>Select Date</label>
+                <button
+                  type="button"
+                  style={{
+                    ...styles.input,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    cursor: 'pointer',
+                    textAlign: 'left',
+                    color: 'var(--color-n800)',
+                  }}
+                  onClick={() => setCalendarOpen((v) => !v)}
                 >
-                  {Array.from(
-                    { length: tourType === 'private' ? 20 : tour.groupSize },
-                    (_, i) => i + 1
-                  ).map((num) => (
-                    <option key={num} value={num}>
-                      {num} {num === 1 ? 'person' : 'people'}
-                    </option>
+                  <span>{formatSelectedDate(selectedDate)}</span>
+                  <ChevronDown
+                    size={14}
+                    color="var(--color-n500)"
+                    style={{ flexShrink: 0, transform: calendarOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}
+                  />
+                </button>
+
+                {/* Mobile backdrop */}
+                {isMobile && calendarOpen && (
+                  <div
+                    style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.45)', zIndex: 299 }}
+                    onMouseDown={(e) => { e.stopPropagation(); setCalendarOpen(false) }}
+                  />
+                )}
+
+                {calendarOpen && (
+                  <div style={{
+                    ...(isMobile ? {
+                      position: 'fixed',
+                      top: '50%',
+                      left: '50%',
+                      transform: 'translate(-50%, -50%)',
+                      width: 'min(360px, calc(100vw - 32px))',
+                      zIndex: 300,
+                    } : {
+                      position: 'absolute',
+                      top: 'calc(100% + 6px)',
+                      left: 0,
+                      right: 0,
+                      minWidth: '300px',
+                      zIndex: 200,
+                    }),
+                    backgroundColor: 'var(--color-n000)',
+                    border: '1px solid var(--color-n300)',
+                    borderRadius: '14px',
+                    boxShadow: '0 12px 40px rgba(0,0,0,0.14)',
+                    padding: '16px',
+                  }}>
+                    {isMobile && (
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
+                        <span style={{ fontFamily: 'var(--font-display)', fontWeight: '700', fontSize: '15px', color: 'var(--color-n800)' }}>
+                          Choose a date
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => setCalendarOpen(false)}
+                          style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '4px', color: 'var(--color-n500)' }}
+                        >
+                          <X size={18} />
+                        </button>
+                      </div>
+                    )}
+                    <TourCalendar
+                      slug={tour.slug}
+                      groupSize={tour.groupSize}
+                      tourType={tourType}
+                      selectedDate={selectedDate}
+                      onChange={(date) => {
+                        setSelectedDate(date)
+                        setCalendarOpen(false)
+                        const spots = getSpotsLeft(tour.slug, date, selectedLanguage, tour.groupSize)
+                        if (spots != null) setNumPeople((n) => Math.min(n, spots))
+                      }}
+                      isBlocked={isBlocked}
+                      bookings={bookings}
+                      language={selectedLanguage}
+                    />
+                  </div>
+                )}
+              </div>
+
+              <div style={{ ...styles.formGroup, marginBottom: '8px' }}>
+                <label style={styles.label}>Preferred Start Time</label>
+                <div style={styles.pillGroup}>
+                  {tour.startingTimes.map((time) => (
+                    <button
+                      key={time}
+                      type="button"
+                      onClick={() => setStartTime(time)}
+                      style={{
+                        ...styles.pillOption,
+                        borderColor: startTime === time ? 'var(--color-forest-green)' : 'var(--color-n300)',
+                        backgroundColor: startTime === time ? 'rgba(46,125,94,0.08)' : 'var(--color-n000)',
+                        color: startTime === time ? 'var(--color-forest-green)' : 'var(--color-n700)',
+                        fontWeight: startTime === time ? '600' : '500',
+                      }}
+                    >
+                      {time}
+                    </button>
                   ))}
-                </select>
+                </div>
+              </div>
+
+              <div style={{ ...styles.formGroup, marginBottom: '8px' }}>
+                <label style={styles.label}>Number of People</label>
+                <div style={styles.stepper}>
+                  <button
+                    type="button"
+                    disabled={numPeople <= 1}
+                    onClick={() => setNumPeople((n) => Math.max(1, n - 1))}
+                    style={{
+                      ...styles.stepperBtn,
+                      opacity: numPeople <= 1 ? 0.35 : 1,
+                      cursor: numPeople <= 1 ? 'not-allowed' : 'pointer',
+                    }}
+                  >
+                    −
+                  </button>
+                  <span style={styles.stepperValue}>
+                    {numPeople} {numPeople === 1 ? 'person' : 'people'}
+                  </span>
+                  <button
+                    type="button"
+                    disabled={numPeople >= maxPeople}
+                    onClick={() => setNumPeople((n) => Math.min(maxPeople, n + 1))}
+                    style={{
+                      ...styles.stepperBtn,
+                      opacity: numPeople >= maxPeople ? 0.35 : 1,
+                      cursor: numPeople >= maxPeople ? 'not-allowed' : 'pointer',
+                    }}
+                  >
+                    +
+                  </button>
+                </div>
               </div>
 
               {tourType === 'shared' && (
@@ -316,8 +647,10 @@ function TourDetail() {
                 </div>
               )}
 
+
               <button
                 style={styles.bookBtn}
+                className="btn-lift btn-glow-amber"
                 onClick={handleContinueToBooking}
               >
                 {`Continue to Booking - ${bookingPriceLabel}`}
@@ -325,39 +658,32 @@ function TourDetail() {
             </>
           ) : (
             <>
-              <div style={styles.bookingSummary}>
-                <span style={styles.summaryHeading}>Booking Summary</span>
-                <div style={styles.summaryGrid}>
-                  <div style={styles.summaryItem}>
-                    <span style={styles.summaryLabel}>Type</span>
-                    <span style={styles.summaryValue}>
-                      {tourType === 'private' ? 'Private Tour' : 'Shared Tour'}
-                    </span>
+              {/* Chip-style selection summary */}
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '12px' }}>
+                {[
+                  ['Type', tourType === 'private' ? 'Private' : 'Shared'],
+                  ['Date', selectedDate],
+                  ['Time', startTime || 'Any'],
+                  ['Language', selectedLanguageLabel],
+                  ['Guests', `${numPeople} ${numPeople === 1 ? 'person' : 'people'}`],
+                  ...(tourType === 'shared' ? [['Total', `€${totalPrice}`]] : []),
+                ].map(([label, value]) => (
+                  <div key={label} style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '5px',
+                    backgroundColor: 'rgba(46,125,94,0.07)',
+                    border: '1px solid rgba(46,125,94,0.18)',
+                    borderRadius: '100px',
+                    padding: '3px 10px',
+                  }}>
+                    <span style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: 'var(--color-n600)' }}>{label}:</span>
+                    <span style={{ fontFamily: 'var(--font-body)', fontWeight: '700', fontSize: '11px', color: 'var(--color-forest-green)' }}>{value}</span>
                   </div>
-                  <div style={styles.summaryItem}>
-                    <span style={styles.summaryLabel}>Date</span>
-                    <span style={styles.summaryValue}>{selectedDate || 'Not selected'}</span>
-                  </div>
-                  <div style={styles.summaryItem}>
-                    <span style={styles.summaryLabel}>Time</span>
-                    <span style={styles.summaryValue}>{startTime || 'To be confirmed'}</span>
-                  </div>
-                  <div style={styles.summaryItem}>
-                    <span style={styles.summaryLabel}>Language</span>
-                    <span style={styles.summaryValue}>{selectedLanguageLabel}</span>
-                  </div>
-                  <div style={styles.summaryItem}>
-                    <span style={styles.summaryLabel}>Guests</span>
-                    <span style={styles.summaryValue}>
-                      {numPeople} {numPeople === 1 ? 'person' : 'people'}
-                    </span>
-                  </div>
-                </div>
+                ))}
               </div>
 
-              <div style={styles.formDivider} />
-
-              <div style={styles.formGroup}>
+              <div style={{ ...styles.formGroup, marginBottom: '8px' }}>
                 <label style={styles.label}>Your Name</label>
                 <input
                   type="text"
@@ -368,7 +694,7 @@ function TourDetail() {
                 />
               </div>
 
-              <div style={styles.formGroup}>
+              <div style={{ ...styles.formGroup, marginBottom: '8px' }}>
                 <label style={styles.label}>Email Address</label>
                 <input
                   type="email"
@@ -379,7 +705,7 @@ function TourDetail() {
                 />
               </div>
 
-              <div style={styles.formGroup}>
+              <div style={{ ...styles.formGroup, marginBottom: '8px' }}>
                 <label style={styles.label}>Phone (optional)</label>
                 <input
                   type="tel"
@@ -387,6 +713,20 @@ function TourDetail() {
                   style={styles.input}
                   value={guestPhone}
                   onChange={(e) => setGuestPhone(e.target.value)}
+                />
+              </div>
+
+              <div style={{ ...styles.formGroup, marginBottom: '8px' }}>
+                <label style={styles.label}>
+                  Referral Code
+                  <span style={styles.optional}> — optional</span>
+                </label>
+                <input
+                  type="text"
+                  placeholder="e.g. HOTEL123"
+                  style={styles.input}
+                  value={discountCode}
+                  onChange={(e) => setDiscountCode(e.target.value)}
                 />
               </div>
 
@@ -401,6 +741,7 @@ function TourDetail() {
                 <button
                   type="button"
                   style={styles.secondaryActionBtn}
+                  className="btn-lift"
                   onClick={() => setBookingStep(1)}
                 >
                   Back
@@ -414,6 +755,7 @@ function TourDetail() {
                     opacity: isSending ? 0.7 : 1,
                     cursor: isSending ? 'not-allowed' : 'pointer',
                   }}
+                  className="btn-lift btn-glow-amber"
                   onClick={handleBooking}
                   disabled={isSending}
                 >
@@ -432,17 +774,31 @@ function TourDetail() {
               email us directly.
             </p>
           )}
-
-          <div style={styles.cancellationRow}>
-            <ShieldCheck size={14} color="var(--color-success)" />
-            <p style={styles.freeCancellation}>
-              Free cancellation available
-            </p>
-          </div>
         </>
       )}
     </div>
   )
+
+  // Highlights rendering with progressive disclosure
+  const highlights = tour.highlights
+  const needsDisclosure = highlights.length > 5
+  const visibleHighlights = needsDisclosure && !highlightsExpanded
+    ? highlights.slice(0, 4)
+    : highlights
+  const lastHighlight = needsDisclosure && !highlightsExpanded
+    ? highlights[highlights.length - 1]
+    : null
+
+  // Inclusions slicing
+  const includesItems = tour.includes
+  const excludesItems = tour.excludes || [
+    'Food and drinks',
+    'Entrance fees to museums',
+    'Gratuities',
+    'Personal expenses',
+  ]
+  const visibleIncludes = includedExpanded ? includesItems : includesItems.slice(0, 4)
+  const visibleExcludes = excludedExpanded ? excludesItems : excludesItems.slice(0, 4)
 
   return (
     <div>
@@ -453,20 +809,12 @@ function TourDetail() {
   url={`/tours/${tour.slug}`}
 />
 
-      {/* TourActivitySchema — tells Google this page is a bookable tour.
-          Enables price, rating, and duration in search results. */}
       <TourActivitySchema tour={tour} />
-
-      {/* BreadcrumbSchema — shows breadcrumb trail in Google search:
-          tallesttourguide.com > Tours > [Tour Name] */}
       <BreadcrumbSchema tour={tour} />
-
-      {/* FAQSchema — turns tour.faqs into expandable dropdowns in Google.
-          Automatically skips tours that have no faqs defined. */}
       <FAQSchema tour={tour} />
 
       {/* ── HERO PHOTO ──────────────────────────────────── */}
-      <div style={styles.heroWrapper}>
+      <div style={{ ...styles.heroWrapper, height: isMobile ? '52vh' : '65vh' }}>
         {tour.detailHero ? (
           <img
             src={tour.detailHero}
@@ -485,12 +833,22 @@ function TourDetail() {
         </div>
       </div>
 
+      {/* ── SECTION NAV ─────────────────────────────────── */}
+      <SectionNav isMobile={isMobile} tabs={[
+        { id: 'overview', label: 'Overview' },
+        { id: 'highlights', label: 'Highlights' },
+        { id: 'included', label: "What's included" },
+        ...(tour.rightFor || tour.notRightFor ? [{ id: 'suitability', label: 'Is this for you?' }] : []),
+        { id: 'info', label: 'Important information' },
+        { id: 'reviews', label: 'Reviews' },
+      ]} />
+
       {/* ── CONTENT CARD ────────────────────────────────── */}
       <div style={{
         ...styles.contentCard,
         padding: isMobile
-          ? '28px 20px 100px 20px'
-          : '48px 40px 80px 40px',
+          ? '80px 20px 100px 20px'
+          : '96px 40px 48px',
       }}>
 
         {/* Title block */}
@@ -566,8 +924,7 @@ function TourDetail() {
             )}
 
             {/* Tour description */}
-            {/* Tour description */}
-<div style={styles.section}>
+<div id="overview" style={styles.section}>
   {tour.description.split('\n\n').map((paragraph, index) => (
     <p
       key={index}
@@ -581,26 +938,24 @@ function TourDetail() {
   ))}
 </div>
 
-            {/* Tour Highlights — styled numbered steps */}
-            <div style={styles.section}>
-              <h2 style={styles.sectionTitle}>Tour Highlights</h2>
-              <div style={styles.highlightsList}>
-                {tour.highlights.map((highlight, index) => (
-                  <div key={index} style={styles.highlightItem}>
+            {/* Route map — only if tour has waypoints */}
+            {tour.mapWaypoints && tour.mapWaypoints.length > 0 && (
+              <Suspense fallback={null}>
+                <RouteMap waypoints={tour.mapWaypoints} profile={tour.mapProfile} />
+              </Suspense>
+            )}
 
-                    {/* Step circle with number */}
+            {/* Tour Highlights — styled numbered steps with progressive disclosure */}
+            <div id="highlights" style={styles.section}>
+              <h2 style={styles.sectionTitle}>Tour highlights</h2>
+              <div style={styles.highlightsList}>
+                {visibleHighlights.map((highlight, index) => (
+                  <div key={index} style={styles.highlightItem}>
                     <div style={styles.highlightNumber}>
                       <span style={styles.highlightNumberText}>
                         {index + 1}
                       </span>
                     </div>
-
-                    {/* Highlight content — title and subtext.
-                        We split on ' — ' to separate the location
-                        name from its description, giving each
-                        highlight a title and a subtext line.
-                        If no ' — ' exists, the whole string
-                        is the title with no subtext. */}
                     <div style={styles.highlightContent}>
                       {highlight.includes(' — ') ? (
                         <>
@@ -608,7 +963,10 @@ function TourDetail() {
                             {highlight.split(' — ')[0]}
                           </span>
                           <span style={styles.highlightSubtext}>
-                            {highlight.split(' — ')[1]}
+                            {(() => {
+                              const t = highlight.split(' — ')[1]
+                              return t.charAt(0).toUpperCase() + t.slice(1)
+                            })()}
                           </span>
                         </>
                       ) : (
@@ -617,15 +975,100 @@ function TourDetail() {
                         </span>
                       )}
                     </div>
-
                   </div>
                 ))}
+
+                {/* Progressive disclosure: dots + last item when collapsed */}
+                {needsDisclosure && !highlightsExpanded && (
+                  <>
+                    <div style={{ paddingLeft: '48px' }}>
+                      <span style={{ ...styles.highlightSubtext, color: 'var(--color-n400)' }}>…</span>
+                    </div>
+                    <div style={styles.highlightItem}>
+                      <div style={styles.highlightNumber}>
+                        <span style={styles.highlightNumberText}>
+                          {highlights.length}
+                        </span>
+                      </div>
+                      <div style={styles.highlightContent}>
+                        {lastHighlight.includes(' — ') ? (
+                          <>
+                            <span style={styles.highlightTitle}>
+                              {lastHighlight.split(' — ')[0]}
+                            </span>
+                            <span style={styles.highlightSubtext}>
+                              {(() => {
+                                const t = lastHighlight.split(' — ')[1]
+                                return t.charAt(0).toUpperCase() + t.slice(1)
+                              })()}
+                            </span>
+                          </>
+                        ) : (
+                          <span style={styles.highlightTitle}>{lastHighlight}</span>
+                        )}
+                      </div>
+                    </div>
+                  </>
+                )}
               </div>
+
+              {needsDisclosure && (
+                <button
+                  style={showMoreBtnStyle}
+                  onClick={() => setHighlightsExpanded(v => !v)}
+                >
+                  {highlightsExpanded
+                    ? 'Show less'
+                    : `See all ${highlights.length} highlights`}
+                </button>
+              )}
             </div>
 
+            {/* Fitness / Emotional warning — only for tours with fitnessNote */}
+            {tour.fitnessNote && (
+              <div style={styles.section}>
+                <div style={{
+                  display: 'flex',
+                  gap: '14px',
+                  alignItems: 'flex-start',
+                  backgroundColor: tour.fitnessNote.type === 'emotional' ? 'rgba(221,107,32,0.06)' : 'rgba(46,125,94,0.06)',
+                  borderLeft: `3px solid ${tour.fitnessNote.type === 'emotional' ? 'var(--color-warning)' : 'var(--color-forest-green)'}`,
+                  borderRadius: '0 var(--radius) var(--radius) 0',
+                  padding: '16px 20px',
+                }}>
+                  <AlertTriangle
+                    size={18}
+                    color={tour.fitnessNote.type === 'emotional' ? 'var(--color-warning)' : 'var(--color-forest-green)'}
+                    style={{ flexShrink: 0, marginTop: '2px' }}
+                  />
+                  <div>
+                    <span style={{
+                      display: 'block',
+                      fontFamily: 'var(--font-display)',
+                      fontWeight: '700',
+                      fontSize: '14px',
+                      color: tour.fitnessNote.type === 'emotional' ? 'var(--color-warning)' : 'var(--color-forest-green)',
+                      marginBottom: '6px',
+                    }}>
+                      {tour.fitnessNote.level}
+                    </span>
+                    <p style={{
+                      fontFamily: 'var(--font-body)',
+                      fontSize: '14px',
+                      color: 'var(--color-n600)',
+                      lineHeight: '1.65',
+                      margin: 0,
+                    }}>
+                      {tour.fitnessNote.detail}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* Inclusions & Exclusions — side by side */}
-            <div style={styles.section}>
-              <h2 style={styles.sectionTitle}>What's Included</h2>
+            <div id="included" style={styles.section}>
+              <h2 style={styles.sectionTitle}>What's included</h2>
               <div style={{
                 ...styles.inclusionsGrid,
                 gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
@@ -634,57 +1077,104 @@ function TourDetail() {
                 <div>
                   <h3 style={styles.inclusionSubtitle}>Included</h3>
                   <div style={styles.inclusionsList}>
-                    {tour.includes.map((item, i) => (
+                    {visibleIncludes.map((item, i) => (
                       <div key={i} style={styles.inclusionItem}>
-                        <CheckCircle
-                          size={15}
-                          color="var(--color-success)"
-                        />
-                        <span style={styles.inclusionText}>
-                          {item}
-                        </span>
+                        <CheckCircle size={15} color="var(--color-success)" />
+                        <span style={styles.inclusionText}>{item}</span>
                       </div>
                     ))}
                   </div>
+                  {includesItems.length > 4 && (
+                    <button style={showMoreBtnStyle} onClick={() => setIncludedExpanded(v => !v)}>
+                      {includedExpanded ? 'Show less' : `See ${includesItems.length - 4} more`}
+                    </button>
+                  )}
                 </div>
 
-                {/* Exclusions — if your tour data has them,
-                    otherwise we show a sensible default set */}
                 <div>
-                  <h3 style={styles.exclusionSubtitle}>
-                    Not Included
-                  </h3>
+                  <h3 style={styles.exclusionSubtitle}>Not included</h3>
                   <div style={styles.inclusionsList}>
-                    {(tour.excludes || [
-                      'Food and drinks',
-                      'Entrance fees to museums',
-                      'Gratuities',
-                      'Personal expenses',
-                    ]).map((item, i) => (
+                    {visibleExcludes.map((item, i) => (
                       <div key={i} style={styles.inclusionItem}>
-                        <XCircle
-                          size={15}
-                          color="var(--color-n300)"
-                        />
-                        <span style={{
-                          ...styles.inclusionText,
-                          color: 'var(--color-n600)',
-                        }}>
+                        <XCircle size={15} color="var(--color-n300)" />
+                        <span style={{ ...styles.inclusionText, color: 'var(--color-n600)' }}>
                           {item}
                         </span>
                       </div>
                     ))}
                   </div>
+                  {excludesItems.length > 4 && (
+                    <button style={showMoreBtnStyle} onClick={() => setExcludedExpanded(v => !v)}>
+                      {excludedExpanded ? 'Show less' : `See ${excludesItems.length - 4} more`}
+                    </button>
+                  )}
                 </div>
 
               </div>
             </div>
 
+            {/* Is This Right for You — only renders when tour has rightFor / notRightFor */}
+            {(tour.rightFor || tour.notRightFor) && (
+              <div id="suitability" style={styles.section}>
+                <h2 style={styles.sectionTitle}>Is this tour right for you?</h2>
+                <div style={{
+                  display: 'grid',
+                  gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
+                  gap: '16px',
+                }}>
+                  {tour.rightFor && (
+                    <div style={{
+                      backgroundColor: 'rgba(46,125,94,0.06)',
+                      border: '1px solid rgba(46,125,94,0.2)',
+                      borderRadius: 'var(--radius)',
+                      padding: '16px 18px',
+                    }}>
+                      <p style={{
+                        fontFamily: 'var(--font-display)',
+                        fontWeight: '700',
+                        fontSize: '13px',
+                        color: 'var(--color-forest-green)',
+                        margin: '0 0 12px 0',
+                      }}>This tour is for you if…</p>
+                      {tour.rightFor.map((item, i) => (
+                        <div key={i} style={{ display: 'flex', gap: '10px', alignItems: 'flex-start', marginBottom: i < tour.rightFor.length - 1 ? '8px' : 0 }}>
+                          <CheckCircle size={15} color="var(--color-forest-green)" style={{ flexShrink: 0, marginTop: '2px' }} />
+                          <span style={{ fontFamily: 'var(--font-body)', fontSize: '14px', color: 'var(--color-n600)', lineHeight: '1.55', margin: 0 }}>{item}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  {tour.notRightFor && (
+                    <div style={{
+                      backgroundColor: 'var(--color-n100)',
+                      border: '1px solid var(--color-n300)',
+                      borderRadius: 'var(--radius)',
+                      padding: '16px 18px',
+                    }}>
+                      <p style={{
+                        fontFamily: 'var(--font-display)',
+                        fontWeight: '700',
+                        fontSize: '13px',
+                        color: 'var(--color-n600)',
+                        margin: '0 0 12px 0',
+                      }}>This tour may not be right if…</p>
+                      {tour.notRightFor.map((item, i) => (
+                        <div key={i} style={{ display: 'flex', gap: '10px', alignItems: 'flex-start', marginBottom: i < tour.notRightFor.length - 1 ? '8px' : 0 }}>
+                          <XCircle size={15} color="var(--color-n300)" style={{ flexShrink: 0, marginTop: '2px' }} />
+                          <span style={{ fontFamily: 'var(--font-body)', fontSize: '14px', color: 'var(--color-n600)', lineHeight: '1.55', margin: 0 }}>{item}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
             {/* FAQ section — only renders if tour has faqs */}
             {tour.faqs && tour.faqs.length > 0 && (
               <div style={styles.section}>
                 <h2 style={styles.sectionTitle}>
-                  Frequently Asked Questions
+                  Frequently asked questions
                 </h2>
                 <div style={styles.faqList}>
                   {tour.faqs.map((faq, index) => {
@@ -731,73 +1221,55 @@ function TourDetail() {
               </div>
             )}
 
-            {/* Important Info — meeting point, what to wear,
-                cancellation. Always last in the left column. */}
-            <div style={styles.section}>
+            {/* Important information — meeting point, starting times, accessibility */}
+            <div id="info" style={styles.section}>
               <h2 style={styles.sectionTitle}>
-                Good to Know
+                Important information
               </h2>
               <div style={styles.infoGrid}>
 
                 <div style={styles.infoItem}>
                   <div style={styles.infoIconWrapper}>
-                    <MapPin
-                      size={16}
-                      color="var(--color-forest-green)"
-                    />
+                    <MapPin size={16} color="var(--color-forest-green)" />
                   </div>
                   <div>
-                    
-                    <span style={styles.infoLabel}>
-                      Meeting Point
-                    </span>
-                    <span style={styles.infoValue}>
-                      {tour.meetingPoint}
-                    </span>
+                    <span style={styles.infoLabel}>Meeting point</span>
+                    <span style={styles.infoValue}>{tour.meetingPoint}</span>
                   </div>
                 </div>
-
-                {/* Starting Times — new */}
-  <div style={styles.infoItem}>
-    <div style={styles.infoIconWrapper}>
-      <Clock
-        size={16}
-        color="var(--color-forest-green)"
-      />
-    </div>
-    <div>
-      <span style={styles.infoLabel}>Starting Times</span>
-      <span style={styles.infoValue}>
-        {Array.isArray(tour.startingTimes)
-          ? tour.startingTimes.join(' / ')
-          : tour.startingTimes}
-      </span>
-    </div>
-  </div>
 
                 <div style={styles.infoItem}>
                   <div style={styles.infoIconWrapper}>
-                    <ShieldCheck
-                      size={16}
-                      color="var(--color-forest-green)"
-                    />
+                    <Clock size={16} color="var(--color-forest-green)" />
                   </div>
                   <div>
-                    <span style={styles.infoLabel}>
-                      Cancellation
-                    </span>
+                    <span style={styles.infoLabel}>Starting times</span>
                     <span style={styles.infoValue}>
-                      Free cancellation up to 24 hours before
+                      {Array.isArray(tour.startingTimes)
+                        ? tour.startingTimes.join(' / ')
+                        : tour.startingTimes}
                     </span>
                   </div>
                 </div>
+
+                {tour.accessibility && (
+                  <div style={styles.infoItem}>
+                    <div style={styles.infoIconWrapper}>
+                      <Accessibility size={16} color="var(--color-forest-green)" />
+                    </div>
+                    <div>
+                      <span style={styles.infoLabel}>Accessibility</span>
+                      <span style={styles.infoValue}>{tour.accessibility.notes}</span>
+                    </div>
+                  </div>
+                )}
 
               </div>
             </div>
 
             {/* Tour Reviews — approved reviews from Airtable + submission form */}
             <div id="reviews">
-  <TourReviews tourId={tour.id} tourName={tour.title} />
+  <TourReviews tourId={tour.id} tourName={tour.title} tourSlug={tour.slug} basePath="/tours" />
 </div>
 
           </div>
@@ -806,7 +1278,7 @@ function TourDetail() {
           {!isMobile && (
             <div style={{
               position: 'sticky',
-              top: '88px',
+              top: '124px',
               alignSelf: 'start',
             }}>
               {bookingForm}
@@ -816,12 +1288,7 @@ function TourDetail() {
         </div>
       </div>
 
-      {/* ── MOBILE BOTTOM BAR ────────────────────────────
-          Fixed bar at the bottom of the screen on mobile.
-          Shows price and a "Choose a Date" button.
-          Tapping opens the booking drawer from below.
-          The 100px bottom padding on contentCard ensures
-          the last content section isn't hidden behind this bar. */}
+      {/* ── MOBILE BOTTOM BAR ──────────────────────────── */}
       {isMobile && (
         <div style={styles.mobileBottomBar}>
           <div style={styles.mobileBottomBarLeft}>
@@ -830,22 +1297,17 @@ function TourDetail() {
           </div>
           <button
             style={styles.mobileBookBtn}
+            className="btn-lift btn-glow-amber"
             onClick={() => setDrawerOpen(true)}
           >
-            Choose a Date
+            Book Now
           </button>
         </div>
       )}
 
-      {/* ── MOBILE BOOKING DRAWER ────────────────────────
-          Slides up from the bottom when the visitor taps
-          "Choose a Date". A dark overlay covers the page
-          behind it — tapping the overlay closes the drawer.
-          The drawer itself slides up via CSS transform
-          controlled by the drawerOpen state. */}
+      {/* ── MOBILE BOOKING DRAWER ────────────────────────*/}
       {isMobile && (
         <>
-          {/* Overlay — dark background behind the drawer */}
           <div
             style={{
               ...styles.drawerOverlay,
@@ -855,7 +1317,6 @@ function TourDetail() {
             onClick={() => setDrawerOpen(false)}
           />
 
-          {/* Drawer — slides up from bottom */}
           <div style={{
             ...styles.drawer,
             transform: drawerOpen
@@ -863,7 +1324,6 @@ function TourDetail() {
               : 'translateY(100%)',
           }}>
 
-            {/* Drawer handle and close button */}
             <div style={styles.drawerHeader}>
               <div style={styles.drawerHandle} />
               <button
@@ -875,7 +1335,6 @@ function TourDetail() {
               </button>
             </div>
 
-            {/* Scrollable drawer content */}
             <div style={styles.drawerContent}>
               {bookingForm}
             </div>
@@ -962,7 +1421,7 @@ const styles = {
   },
 
   contentCard: {
-    backgroundColor: 'var(--color-n100)',
+    backgroundColor: 'var(--color-n000)',
     marginTop: '-60px',
     borderRadius: '20px 20px 0 0',
     position: 'relative',
@@ -1050,57 +1509,6 @@ const styles = {
     color: 'var(--color-n900)',
   },
 
-  titleMetaRow: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '12px',
-    flexWrap: 'wrap',
-    marginBottom: '14px',
-  },
-
-  titleMetaItem: {
-    display: 'inline-flex',
-    alignItems: 'center',
-    gap: '8px',
-    padding: '8px 12px',
-    borderRadius: '999px',
-    border: '1px solid var(--color-n300)',
-    backgroundColor: 'var(--color-n000)',
-  },
-
-  titleMetaText: {
-    fontFamily: 'var(--font-body)',
-    fontSize: 'var(--text-small)',
-    color: 'var(--color-n900)',
-    lineHeight: '1.4',
-  },
-
-  languageMetaGroup: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px',
-    flexWrap: 'wrap',
-  },
-
-  languageMetaFlags: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '6px',
-  },
-
-  languageMetaFlag: {
-    width: '24px',
-    height: '24px',
-    borderRadius: '50%',
-    display: 'inline-flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'var(--color-n100)',
-    border: '1px solid var(--color-n300)',
-    fontSize: '14px',
-    lineHeight: 1,
-  },
-
   ratingRow: {
     display: 'flex',
     alignItems: 'center',
@@ -1121,16 +1529,6 @@ const styles = {
     color: 'var(--color-n600)',
   },
 
-  ratingDot: {
-    color: 'var(--color-n300)',
-  },
-
-  ratingMeta: {
-    fontFamily: 'var(--font-body)',
-    fontSize: 'var(--text-body)',
-    color: 'var(--color-n600)',
-  },
-
   contentGrid: {
     display: 'grid',
     maxWidth: '1100px',
@@ -1143,11 +1541,9 @@ const styles = {
   },
 
   section: {
-    backgroundColor: 'var(--color-n000)',
-    borderRadius: '12px',
-    padding: '24px',
-    marginBottom: '16px',
-    border: '1px solid var(--color-n300)',
+    paddingBottom: '36px',
+    marginBottom: '36px',
+    borderBottom: '1px solid var(--color-n300)',
   },
 
   sectionTitle: {
@@ -1166,7 +1562,6 @@ const styles = {
     margin: 0,
   },
 
-  // Highlights — styled numbered steps
   highlightsList: {
     display: 'flex',
     flexDirection: 'column',
@@ -1179,9 +1574,6 @@ const styles = {
     gap: '16px',
   },
 
-  // Numbered circle — Forest Green filled circle
-  // with white number inside. Consistent with the
-  // How It Works section design language.
   highlightNumber: {
     width: '32px',
     height: '32px',
@@ -1208,7 +1600,6 @@ const styles = {
     flex: 1,
   },
 
-  // Highlight title — the location or landmark name
   highlightTitle: {
     fontFamily: 'var(--font-display)',
     fontWeight: '700',
@@ -1217,7 +1608,6 @@ const styles = {
     lineHeight: '1.3',
   },
 
-  // Highlight subtext — the description after the dash
   highlightSubtext: {
     fontFamily: 'var(--font-body)',
     fontSize: 'var(--text-small)',
@@ -1225,7 +1615,6 @@ const styles = {
     lineHeight: '1.5',
   },
 
-  // Inclusions
   inclusionsGrid: {
     display: 'grid',
     gap: '24px',
@@ -1271,7 +1660,6 @@ const styles = {
     lineHeight: '1.5',
   },
 
-  // FAQ
   faqList: {
     display: 'flex',
     flexDirection: 'column',
@@ -1318,7 +1706,6 @@ const styles = {
     margin: 0,
   },
 
-  // Good to Know
   infoGrid: {
     display: 'flex',
     flexDirection: 'column',
@@ -1361,93 +1748,14 @@ const styles = {
     lineHeight: '1.5',
   },
 
-  // Desktop booking card
-  desktopPriceRow: {
-    display: 'flex',
-    alignItems: 'baseline',
-    gap: '6px',
-    marginBottom: '12px',
-    paddingLeft: '4px',
-  },
-
-  desktopPrice: {
-    fontFamily: 'var(--font-display)',
-    fontWeight: '700',
-    fontSize: '36px',
-    color: 'var(--color-forest-green)',
-  },
-
-  desktopPerPerson: {
-    fontFamily: 'var(--font-body)',
-    fontSize: 'var(--text-small)',
-    color: 'var(--color-n600)',
-  },
-
   bookingCard: {
     backgroundColor: 'var(--color-n000)',
     borderRadius: '16px',
     padding: '24px',
-    boxShadow: '0 4px 24px rgba(0,0,0,0.08)',
+    boxShadow: '0 4px 32px rgba(0,0,0,0.12)',
     border: '1px solid var(--color-n300)',
   },
 
-  stepHeader: {
-    marginBottom: '16px',
-  },
-
-  stepKicker: {
-    display: 'block',
-    fontFamily: 'var(--font-body)',
-    fontWeight: '600',
-    fontSize: '11px',
-    color: 'var(--color-forest-green)',
-    textTransform: 'uppercase',
-    letterSpacing: '0.6px',
-    marginBottom: '6px',
-  },
-
-  stepTitle: {
-    fontFamily: 'var(--font-display)',
-    fontWeight: '700',
-    fontSize: '20px',
-    color: 'var(--color-n900)',
-    marginBottom: '12px',
-  },
-
-  stepIndicatorRow: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px',
-  },
-
-  stepIndicator: {
-    width: '28px',
-    height: '28px',
-    borderRadius: '50%',
-    border: '1px solid var(--color-n300)',
-    color: 'var(--color-n600)',
-    backgroundColor: 'var(--color-n100)',
-    fontFamily: 'var(--font-body)',
-    fontWeight: '700',
-    fontSize: '12px',
-    display: 'inline-flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-
-  stepIndicatorActive: {
-    backgroundColor: 'var(--color-forest-green)',
-    borderColor: 'var(--color-forest-green)',
-    color: 'var(--color-n000)',
-  },
-
-  stepIndicatorLine: {
-    flex: 1,
-    height: '1px',
-    backgroundColor: 'var(--color-n300)',
-  },
-
-  // Tour type toggle
   tourTypeSection: {
     marginBottom: '4px',
   },
@@ -1524,6 +1832,58 @@ const styles = {
     margin: '12px 0 16px 0',
   },
 
+  pillGroup: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: '6px',
+  },
+
+  stepper: {
+    display: 'flex',
+    alignItems: 'center',
+    border: '1.5px solid var(--color-n300)',
+    borderRadius: 'var(--radius)',
+    overflow: 'hidden',
+    height: '36px',
+  },
+
+  stepperBtn: {
+    flexShrink: 0,
+    width: '40px',
+    height: '100%',
+    border: 'none',
+    backgroundColor: 'var(--color-n100)',
+    fontFamily: 'var(--font-display)',
+    fontSize: '18px',
+    fontWeight: '400',
+    color: 'var(--color-n800)',
+    lineHeight: 1,
+  },
+
+  stepperValue: {
+    flex: 1,
+    textAlign: 'center',
+    fontFamily: 'var(--font-body)',
+    fontSize: '14px',
+    fontWeight: '600',
+    color: 'var(--color-n900)',
+    borderLeft: '1px solid var(--color-n300)',
+    borderRight: '1px solid var(--color-n300)',
+    userSelect: 'none',
+  },
+
+  pillOption: {
+    height: '36px',
+    padding: '0 14px',
+    borderRadius: '100px',
+    border: '1.5px solid',
+    fontFamily: 'var(--font-body)',
+    fontSize: '13px',
+    cursor: 'pointer',
+    whiteSpace: 'nowrap',
+    transition: 'border-color 0.15s, background-color 0.15s, color 0.15s',
+  },
+
   formGroup: {
     display: 'flex',
     flexDirection: 'column',
@@ -1538,64 +1898,22 @@ const styles = {
     color: 'var(--color-n900)',
   },
 
+  optional: {
+    fontWeight: '400',
+    color: 'var(--color-n600)',
+  },
+
   input: {
-    height: 'var(--touch-target)',
+    height: '36px',
     borderRadius: 'var(--radius)',
     border: '1.5px solid var(--color-n300)',
-    padding: '0 12px',
+    padding: '0 10px',
     fontFamily: 'var(--font-body)',
-    fontSize: 'var(--text-body)',
+    fontSize: '14px',
     color: 'var(--color-n900)',
     backgroundColor: 'var(--color-n000)',
     width: '100%',
     boxSizing: 'border-box',
-  },
-
-  bookingSummary: {
-    backgroundColor: 'rgba(46,125,94,0.05)',
-    borderRadius: '12px',
-    border: '1px solid rgba(46,125,94,0.12)',
-    padding: '14px',
-  },
-
-  summaryHeading: {
-    display: 'block',
-    fontFamily: 'var(--font-body)',
-    fontWeight: '600',
-    fontSize: '11px',
-    color: 'var(--color-forest-green)',
-    textTransform: 'uppercase',
-    letterSpacing: '0.5px',
-    marginBottom: '10px',
-  },
-
-  summaryGrid: {
-    display: 'grid',
-    gridTemplateColumns: '1fr 1fr',
-    gap: '12px',
-  },
-
-  summaryItem: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '3px',
-    minWidth: 0,
-  },
-
-  summaryLabel: {
-    fontFamily: 'var(--font-body)',
-    fontSize: '11px',
-    color: 'var(--color-n600)',
-    textTransform: 'uppercase',
-    letterSpacing: '0.4px',
-  },
-
-  summaryValue: {
-    fontFamily: 'var(--font-body)',
-    fontWeight: '600',
-    fontSize: 'var(--text-small)',
-    color: 'var(--color-n900)',
-    lineHeight: '1.4',
   },
 
   totalRow: {
@@ -1655,20 +1973,6 @@ const styles = {
     flexShrink: 0,
   },
 
-  cancellationRow: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: '6px',
-  },
-
-  freeCancellation: {
-    fontFamily: 'var(--font-body)',
-    fontSize: 'var(--text-small)',
-    color: 'var(--color-success)',
-    margin: 0,
-  },
-
   errorMessage: {
     fontFamily: 'var(--font-body)',
     fontSize: 'var(--text-small)',
@@ -1703,7 +2007,6 @@ const styles = {
     lineHeight: 'var(--leading-body)',
   },
 
-  // Mobile bottom bar
   mobileBottomBar: {
     position: 'fixed',
     bottom: 0,
@@ -1751,7 +2054,6 @@ const styles = {
     cursor: 'pointer',
   },
 
-  // Drawer overlay
   drawerOverlay: {
     position: 'fixed',
     inset: 0,
@@ -1760,10 +2062,6 @@ const styles = {
     transition: 'opacity 0.3s ease',
   },
 
-  // Drawer — slides up from bottom.
-  // Max height 85vh so it never fully covers the screen —
-  // the visitor can always see the page behind it
-  // and knows they can dismiss it.
   drawer: {
     position: 'fixed',
     bottom: 0,
@@ -1787,9 +2085,6 @@ const styles = {
     flexShrink: 0,
   },
 
-  // Visual handle at top of drawer —
-  // the universal mobile drawer affordance.
-  // Tells visitors they can swipe down to dismiss.
   drawerHandle: {
     width: '40px',
     height: '4px',
@@ -1811,7 +2106,7 @@ const styles = {
   },
 
   drawerContent: {
-    padding: '8px 20px 32px 20px',
+    padding: '8px 20px 36px 20px',
     overflowY: 'auto',
   },
 }

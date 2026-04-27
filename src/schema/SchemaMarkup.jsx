@@ -206,3 +206,111 @@ export function FAQSchema({ tour }) {
     </Helmet>
   )
 }
+
+// ----------------------------------------------------------
+// 5. PACKAGE SCHEMA
+//    Tells Google: this is a multi-day tour package with pricing.
+//    Used in PackageDetail.jsx — one per package page.
+// ----------------------------------------------------------
+export function PackageSchema({ pkg }) {
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'TouristAttraction',
+    name: `${pkg.name} — ${pkg.subtitle}`,
+    description: pkg.description || 'A multi-day guided tour package in Bosnia and Herzegovina.',
+    url: `https://tallesttourguide.com/packages/${pkg.slug}`,
+    touristType: ['History Enthusiast', 'Culture Seeker', 'Independent Traveler'],
+    offers: {
+      '@type': 'Offer',
+      price: pkg.price,
+      priceCurrency: 'EUR',
+      availability: 'https://schema.org/InStock',
+      url: `https://tallesttourguide.com/packages/${pkg.slug}`,
+    },
+    provider: {
+      '@type': 'LocalBusiness',
+      name: 'Tallest Tourguide',
+      url: 'https://tallesttourguide.com',
+    },
+    location: {
+      '@type': 'Place',
+      name: 'Sarajevo, Bosnia and Herzegovina',
+      address: { '@type': 'PostalAddress', addressLocality: 'Sarajevo', addressCountry: 'BA' },
+    },
+    maximumAttendeeCapacity: pkg.groupSize || 8,
+  }
+
+  return (
+    <Helmet>
+      <script type="application/ld+json">
+        {JSON.stringify(schema)}
+      </script>
+    </Helmet>
+  )
+}
+
+// ----------------------------------------------------------
+// 6. BLOG POSTING SCHEMA
+//    Tells Google: this is a blog article with a known author
+//    and publication date. Enables article rich snippets.
+//    Used in BlogPost.jsx — one per blog post page.
+//
+//    Props: post — the parsed post object from useBlog
+// ----------------------------------------------------------
+export function BlogPostingSchema({ post }) {
+  if (!post) return null
+
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: post.title,
+    description: post.excerpt || post.title,
+    image: post.heroImage || 'https://tallesttourguide.com/og-image.jpg',
+    datePublished: post.publishedDate,
+    url: `https://tallesttourguide.com/blog/${post.slug}`,
+    author: {
+      '@type': 'Person',
+      name: 'Almedin Omerović',
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'Tallest Tourguide',
+      logo: {
+        '@type': 'ImageObject',
+        url: 'https://tallesttourguide.com/og-image.jpg',
+      },
+    },
+  }
+
+  return (
+    <Helmet>
+      <script type="application/ld+json">
+        {JSON.stringify(schema)}
+      </script>
+    </Helmet>
+  )
+}
+
+// ----------------------------------------------------------
+// 7. PACKAGE BREADCRUMB SCHEMA
+//    Home > Packages > Package Name
+// ----------------------------------------------------------
+export function PackageBreadcrumbSchema({ pkg }) {
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://tallesttourguide.com' },
+      { '@type': 'ListItem', position: 2, name: 'Multi-day tours', item: 'https://tallesttourguide.com/packages' },
+      { '@type': 'ListItem', position: 3, name: pkg.name, item: `https://tallesttourguide.com/packages/${pkg.slug}` },
+    ],
+  }
+
+  return (
+    <Helmet>
+      <script type="application/ld+json">
+        {JSON.stringify(schema)}
+      </script>
+    </Helmet>
+  )
+}

@@ -12,7 +12,7 @@ import { getTourLanguages } from '../data/tourLanguages'
 
 function TourCard({ id, slug, title, price, rating, reviews, duration, groupSize, badge, hero, startingTimes, languages }) {
   const supportedLanguages = getTourLanguages(languages)
-  const [btnHovered, setBtnHovered] = useState(false)
+  const [cardHovered, setCardHovered] = useState(false)
 
   return (
     // The entire card is wrapped in a Link component.
@@ -26,7 +26,7 @@ function TourCard({ id, slug, title, price, rating, reviews, duration, groupSize
   style={styles.cardLink}
   className="tour-card-link"
 >
-      <div style={styles.card}>
+      <div style={styles.card} onMouseEnter={() => setCardHovered(true)} onMouseLeave={() => setCardHovered(false)}>
 
         {/* ── PHOTO ───────────────────────────────────── */}
         <div style={styles.photoContainer}>
@@ -34,6 +34,7 @@ function TourCard({ id, slug, title, price, rating, reviews, duration, groupSize
             <img
               src={hero}
               alt={title}
+              loading="lazy"
               style={styles.photo}
             />
           ) : (
@@ -103,18 +104,16 @@ function TourCard({ id, slug, title, price, rating, reviews, duration, groupSize
             <div
               style={{
                 ...styles.viewTourBtn,
-                backgroundColor: btnHovered ? 'var(--color-forest-green)' : 'transparent',
-                transition: 'background-color 0.2s ease, border-color 0.2s ease',
+                backgroundColor: cardHovered ? 'var(--color-forest-green)' : 'transparent',
+                transition: 'background-color 0.2s ease',
               }}
-              onMouseEnter={() => setBtnHovered(true)}
-              onMouseLeave={() => setBtnHovered(false)}
             >
               <span style={{
                 ...styles.viewTour,
-                color: btnHovered ? '#fff' : 'var(--color-forest-green)',
+                color: cardHovered ? '#ffffff' : 'var(--color-forest-green)',
                 transition: 'color 0.2s ease',
               }}>View Tour</span>
-              <ArrowRight size={14} color={btnHovered ? '#fff' : 'var(--color-forest-green)'} />
+              <ArrowRight size={14} color={cardHovered ? '#ffffff' : 'var(--color-forest-green)'} />
             </div>
 
             {supportedLanguages.length > 0 && (
