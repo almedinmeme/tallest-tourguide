@@ -1,0 +1,435 @@
+[
+  {
+    "id": 1,
+    "slug": "our-story",
+    "title": "Our Story",
+    "seo": {
+      "title": "Our Story — Why Travel With Us",
+      "description": "We live and travel these Balkan roads year-round. That is the difference between promising the authentic and actually delivering it."
+    },
+    "hero": {
+      "kicker": "Our story",
+      "heading": "We're here year-round. That's the difference.",
+      "subheading": "A letter from Almedin — born in Sarajevo, on these roads for fourteen years.",
+      "image": "/uploads/our-story.webp"
+    },
+    "sections": [
+      {
+        "id": "founder",
+        "heading": "How it started",
+        "body": "<p>My name is Almedin Memović. I was born in Sarajevo in 1993 — in the first year of the Siege.</p><p>I came to tourism the way most good things happen — accidentally. During my university years I started working the front desk at a local hostel, and a lobby full of guests from everywhere turned out to be the perfect place for someone who has never been able to sit still.</p><p>The guiding grew from there. One of the leading agencies in the region took a chance on me as a young prospect. Three years later I opened Tallest Tourguide at 24 — cooking classes, alternative routes, experiences that felt personal rather than packaged. Then COVID came, and like so much else, it stopped. I spent the next four years building expertise in UX and design. Now I am back.</p>",
+        "image": "/uploads/our-story-5nyav8ve.webp",
+        "imageCaption": "",
+        "layout": "text"
+      },
+      {
+        "id": "personal",
+        "heading": "History is personal here",
+        "body": "<p>What I had going for me was never a textbook — it was a lifetime of listening. My father remembers the Siege. My grandparents remember Yugoslavia. I grew up hearing these stories long before I knew what to do with them.</p><p>When I guide, I am not reading from a script. I am translating decades of family memory, shaped by fourteen years of work and learning from colleagues who built entire careers in this city. The result is a voice that carries weight — not performative, not packaged, just honest proximity to events that shaped a continent.</p>",
+        "image": "",
+        "imageCaption": "",
+        "layout": "text"
+      },
+      {
+        "id": "year-round",
+        "heading": "We don't arrive when a group books",
+        "body": "<p>[EDITABLE] We travel these routes in every season, not only when there is a departure to run. That is why we can tell you which mountain pass is still snowed in, which family is making cheese this week, and which road washed out in the spring.</p><p>It is the difference between promising the authentic and actually delivering it.</p>",
+        "image": "/uploads/our-story-f15s5qzn.webp",
+        "imageCaption": "",
+        "layout": "image-left"
+      },
+      {
+        "id": "team",
+        "heading": "A small team with skin in the game",
+        "body": "<p>[EDITABLE] Everyone who guides with us has a stake in how the trip goes. We are not a call centre booking a subcontractor — we are the people you will actually travel with, and the families who host you are people we have known for years.</p>",
+        "image": "",
+        "imageCaption": "",
+        "layout": "text"
+      }
+    ],
+    "pullQuotes": [
+      {
+        "quote": "Tallest Tourguide & Friends is back. This is not a return. It is a second chapter, built on everything the first one taught me.",
+        "attribution": "Almedin Memović"
+      },
+      {
+        "quote": "We don't promise the authentic. We deliver it, because we live inside it.",
+        "attribution": ""
+      }
+    ],
+    "cta": {
+      "label": "See how we travel",
+      "href": "/destinations",
+      "note": ""
+    },
+    "extra": {
+      "credentials": [
+        {
+          "title": "Born and raised in Sarajevo",
+          "body": "Not a transplant. The streets, the neighbourhoods, the people — home in the literal sense. That depth doesn't come from a guidebook."
+        },
+        {
+          "title": "Fourteen years in tourism",
+          "body": "From a hostel front desk, to a leading regional agency, to running Tallest Tourguide from age 24. Every year added a layer no certification replaces."
+        },
+        {
+          "title": "Languages",
+          "body": "English (fluent) · Bosnian / Croatian / Serbian (native) · Spanish (conversational). Local context is never lost in translation."
+        },
+        {
+          "title": "Maximum eight guests",
+          "body": "A deliberate limit, not a marketing line. Small groups move differently — through crowds, through conversations, through moments a bus tour can't reach."
+        }
+      ],
+      "areasOfDepth": [
+        "Ottoman Sarajevo",
+        "Austro-Hungarian era",
+        "WWII in Bosnia",
+        "The Siege (1992–1995)",
+        "Srebrenica",
+        "Dayton Agreement",
+        "Interreligious coexistence",
+        "Balkan politics"
+      ]
+    }
+  },
+  {
+    "id": 2,
+    "slug": "hospitality",
+    "title": "Gostoprimstvo",
+    "seo": {
+      "title": "Gostoprimstvo — The Balkan Art of Hospitality",
+      "description": "Balkan hospitality is not a product we sell. Gostoprimstvo is the sacred host–guest relationship we build every trip inside of."
+    },
+    "hero": {
+      "kicker": "The way we travel",
+      "heading": "gostoprimstvo",
+      "subheading": "The sacred relationship between host and guest — and the operating principle of everything we do.",
+      "image": ""
+    },
+    "sections": [
+      {
+        "id": "what",
+        "heading": "What it means",
+        "body": "<p>[PLACEHOLDER] A clear, human explanation of gostoprimstvo — what the word means, where it comes from, and how it shapes Balkan social life. Write it the way you would explain it to a guest at the table.</p>",
+        "image": "",
+        "imageCaption": "",
+        "layout": "full-image"
+      },
+      {
+        "id": "principle",
+        "heading": "Not a feature. The principle.",
+        "body": "<p>[PLACEHOLDER] How this philosophy is embedded in the trips — not as an add-on, but as the thing everything else is built around.</p>",
+        "image": "",
+        "imageCaption": "",
+        "layout": "text"
+      },
+      {
+        "id": "examples",
+        "heading": "The coffee you can't refuse",
+        "body": "<p>[PLACEHOLDER] Specific moments: sitting at a family's table, the unspoken rules of the exchange, the coffee that is never just coffee.</p>",
+        "image": "",
+        "imageCaption": "",
+        "layout": "full-image"
+      },
+      {
+        "id": "why-not-replicable",
+        "heading": "Why it can't be subcontracted",
+        "body": "<p>[PLACEHOLDER] Trust like this is built over years, not signed in a contract. That is why a large operator can put it in a brochure but not at the table.</p>",
+        "image": "",
+        "imageCaption": "",
+        "layout": "text"
+      }
+    ],
+    "pullQuotes": [
+      {
+        "quote": "Balkan hospitality is not a product we sell. It's a practice we live inside.",
+        "attribution": ""
+      }
+    ],
+    "cta": {
+      "label": "This is why we travel the way we do. Read our story",
+      "href": "/about",
+      "note": ""
+    },
+    "extra": {}
+  },
+  {
+    "id": 3,
+    "slug": "signature",
+    "title": "Signature Experiences",
+    "seo": {
+      "title": "Signature Experiences — Private, Expert-Led Balkan Journeys",
+      "description": "Not a tour. A private, expert-led journey designed around you — boutique stays, custom routes, a maximum of six guests."
+    },
+    "hero": {
+      "kicker": "Signature",
+      "heading": "Not a tour. A journey designed around you.",
+      "subheading": "Private, expert-led, and built one conversation at a time.",
+      "image": ""
+    },
+    "sections": [
+      {
+        "id": "intro",
+        "heading": "",
+        "body": "<p>[PLACEHOLDER] One unhurried paragraph that sets the register — this is the top of the value ladder. Slow, exclusive, fully supported.</p>",
+        "image": "",
+        "imageCaption": "",
+        "layout": "text"
+      }
+    ],
+    "pullQuotes": [],
+    "cta": {
+      "label": "Start a conversation",
+      "href": "/contact",
+      "note": "These journeys begin with a conversation, not a booking form."
+    },
+    "extra": {
+      "scarcity": "Limited to 6 guests per departure · 2 signature journeys available per month",
+      "journeys": [
+        {
+          "title": "[Placeholder] The Balkans History Journey",
+          "blurb": "A 7-day study-group-style journey with a resident historian, from Sarajevo to the southern monasteries.",
+          "fromPrice": "4,200",
+          "duration": "7 days",
+          "maxGuests": "6 guests",
+          "expert": "With a historian",
+          "image": ""
+        },
+        {
+          "title": "[Placeholder] Herzegovina & Montenegro Agrotourism Circuit",
+          "blurb": "A private circuit through family estates and boutique stays, led by a food anthropologist.",
+          "fromPrice": "3,800",
+          "duration": "6 days",
+          "maxGuests": "6 guests",
+          "expert": "With a food anthropologist",
+          "image": ""
+        },
+        {
+          "title": "[Placeholder] Custom Family Heritage Trip",
+          "blurb": "A bespoke route built around your family's roots, at whatever pace suits you.",
+          "fromPrice": "On request",
+          "duration": "Custom",
+          "maxGuests": "Private",
+          "expert": "Privately guided",
+          "image": ""
+        }
+      ],
+      "process": [
+        {
+          "step": "A brief call",
+          "detail": "[Placeholder] We listen first — what you've done, what you're missing, what you want this to feel like."
+        },
+        {
+          "step": "A proposed itinerary",
+          "detail": "[Placeholder] We send a first draft of the journey, with stays, experts, and pacing."
+        },
+        {
+          "step": "Two rounds of refinement",
+          "detail": "[Placeholder] We shape it with you until it's right, then we run it."
+        }
+      ]
+    }
+  },
+  {
+    "id": 4,
+    "slug": "partners",
+    "title": "For Travel Professionals",
+    "seo": {
+      "title": "For Travel Professionals — Balkans DMC & Ground Partner",
+      "description": "You sell the Balkans. We make it real on the ground. Year-round local presence, vetted suppliers, and flexible itinerary design for agents and operators."
+    },
+    "hero": {
+      "kicker": "For travel professionals",
+      "heading": "You sell the Balkans. We make it real on the ground.",
+      "subheading": "A year-round destination management partner for agents and operators.",
+      "image": "/uploads/partners.webp"
+    },
+    "sections": [
+      {
+        "id": "intro",
+        "heading": "",
+        "body": "<p>[PLACEHOLDER] One paragraph positioning us as a reliable, knowledgeable ground partner — a DMC, not a reseller.</p>",
+        "image": "",
+        "imageCaption": "",
+        "layout": "text"
+      }
+    ],
+    "pullQuotes": [],
+    "cta": {
+      "label": "Start a conversation",
+      "href": "#partner-enquiry",
+      "note": ""
+    },
+    "extra": {
+      "services": [
+        {
+          "title": "Guiding & tour leading",
+          "detail": "[Placeholder] Expert local guides and tour leaders across the region."
+        },
+        {
+          "title": "Ground logistics",
+          "detail": "[Placeholder] Transfers, transport, and on-the-ground coordination."
+        },
+        {
+          "title": "Accommodation & supplier curation",
+          "detail": "[Placeholder] A vetted network of locally owned stays and suppliers."
+        },
+        {
+          "title": "Route creation",
+          "detail": "[Placeholder] Custom routes built from real, current knowledge of the roads."
+        },
+        {
+          "title": "Destination consultation",
+          "detail": "[Placeholder] Advisory support when you're scoping a new Balkans programme."
+        }
+      ],
+      "tiers": [
+        {
+          "name": "Per-booking ground support",
+          "detail": "[Placeholder] On-demand support for individual departures."
+        },
+        {
+          "name": "Seasonal retainer",
+          "detail": "[Placeholder] Priority capacity and rates across a season."
+        },
+        {
+          "name": "Full itinerary design",
+          "detail": "[Placeholder] End-to-end design and delivery of a programme."
+        }
+      ],
+      "stats": [
+        {
+          "value": "7",
+          "label": "countries covered"
+        },
+        {
+          "value": "Year-round",
+          "label": "local presence"
+        },
+        {
+          "value": "[X]+",
+          "label": "departures delivered"
+        }
+      ],
+      "pdfUrl": ""
+    }
+  },
+  {
+    "id": 5,
+    "slug": "consult",
+    "title": "Plan Your Trip",
+    "seo": {
+      "title": "Plan Your Trip — A 60-Minute Balkans Consultation",
+      "description": "60 minutes with someone who has actually been on these roads recently. Leave with a personalised route and a plan you can trust."
+    },
+    "hero": {
+      "kicker": "Plan your trip",
+      "heading": "60 minutes. Leave with a plan you can trust.",
+      "subheading": "A one-to-one consultation for independent travellers planning the Balkans.",
+      "image": "/uploads/consult-uf7n62ba.webp"
+    },
+    "sections": [
+      {
+        "id": "s1780868795692",
+        "heading": "Your window into Balkan",
+        "body": "",
+        "image": "/uploads/consult-jq8ob9vr.webp",
+        "imageCaption": "",
+        "layout": "text"
+      }
+    ],
+    "pullQuotes": [],
+    "cta": {
+      "label": "Book a consultation",
+      "href": "#book",
+      "note": "https://calendly.com/tallest-tourguide/new-meeting"
+    },
+    "extra": {
+      "price": "€90",
+      "priceNote": "60-minute video call · written summary included",
+      "calendlyUrl": "https://calendly.com/tallest-tourguide/new-meeting",
+      "includes": [
+        "A 60-minute video call",
+        "Personalised route recommendations",
+        "Accommodation advice for your style and budget",
+        "Local tips that aren't online",
+        "A written summary sent after the call"
+      ],
+      "forWho": [
+        "Independent travellers and couples planning a self-drive trip",
+        "Small groups wanting to add off-road stops to an existing plan",
+        "Anyone overwhelmed by fragmented, outdated information online"
+      ],
+      "worthIt": "<p>[PLACEHOLDER] The information exists online, but it's fragmented, outdated, and unverifiable. We've been on these roads recently — this is the shortcut.</p>",
+      "testimonials": [
+        {
+          "quote": "[Placeholder testimonial — a short line from a past consultation client.]",
+          "name": "[Name, country]"
+        },
+        {
+          "quote": "[Placeholder testimonial — keep it specific and credible.]",
+          "name": "[Name, country]"
+        }
+      ],
+      "faqs": [
+        {
+          "q": "Is this only for Bosnia?",
+          "a": "[Placeholder] No — we cover the whole region we operate in."
+        },
+        {
+          "q": "Can I book a tour after?",
+          "a": "[Placeholder] Yes, and the consultation fee can be credited toward a booking."
+        },
+        {
+          "q": "What if I need to reschedule?",
+          "a": "[Placeholder] Reschedule any time up to 24 hours before with no fee."
+        }
+      ]
+    }
+  },
+  {
+    "id": 6,
+    "slug": "where-we-stay",
+    "title": "Where We Stay",
+    "seo": {
+      "title": "Where We Stay — Our Accommodation Philosophy",
+      "description": "No international chains. Family-owned homestays, agrotourism estates and locally owned boutique hotels — the kinds of places we use, and why."
+    },
+    "hero": {
+      "kicker": "Where we stay",
+      "heading": "Every place we stay tells you something about where you are.",
+      "subheading": "We work between two poles — agrotourism and homestays at the authentic end, and locally owned 3–4 star boutique hotels at the comfort end. No international chains. No generic rooms. We look for family-owned places with local character and hosts who add to the trip.",
+      "image": ""
+    },
+    "sections": [],
+    "pullQuotes": [],
+    "cta": {
+      "label": "",
+      "href": "",
+      "note": ""
+    },
+    "extra": {
+      "types": [
+        {
+          "tag": "The authentic end",
+          "name": "Homestays",
+          "image": "/uploads/where-we-stay-srgvga4p.webp",
+          "body": "A room in a family home, a shared table, and a host who treats you as a guest of the house rather than a customer. The closest thing to living somewhere instead of visiting it."
+        },
+        {
+          "tag": "Authentic, with room to breathe",
+          "name": "Agrotourism estates",
+          "image": "",
+          "body": "Working farms and country estates with rooms of their own — home-grown food, quiet land, and mornings that begin with the place around you, not a buffet line."
+        },
+        {
+          "tag": "The comfort end",
+          "name": "Boutique hotels",
+          "image": "",
+          "body": "Locally owned three- and four-star hotels with genuine character. Never an international chain; always run by people from the place — comfort without losing the sense of where you are."
+        }
+      ]
+    }
+  }
+]

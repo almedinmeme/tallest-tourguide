@@ -1,61 +1,10 @@
+import { useState, useRef } from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowRight, Star, Gauge, MapPin, Globe } from 'lucide-react'
+import { ArrowRight, Gauge, MapPin, Globe, ChevronLeft, ChevronRight } from 'lucide-react'
 import useWindowWidth from '../hooks/useWindowWidth'
 import { useAllReviews } from '../hooks/useAllReviews'
-import package1Hero from '../assets/package-1-hero.webp'
-import package2Hero from '../assets/package-2-hero.webp'
-import package3Hero from '../assets/package-3-hero.webp'
 
-const packages = [
-  {
-    id: 1,
-    slug: 'sarajevo-essential',
-    name: '3-Day Complete Sarajevo Experience: Let us show you our home',
-    subtitle: 'Stories, Survival & Soul',
-    duration: '3 Days',
-    price: 99,
-    rating: 5,
-    reviews: 1,
-    badge: 'Most Popular',
-    badgeStyle: 'amber',
-    hero: package1Hero,
-    difficulty: 'Easy',
-    locations: 3,
-    countries: 1,
-  },
-  {
-    id: 2,
-    slug: 'bosnia-deep-dive',
-    name: 'Bosnia Deep Dive',
-    subtitle: 'Real Bosnia, Deeply Experienced',
-    duration: '5 Days',
-    price: 480,
-    rating: 5,
-    reviews: 31,
-    badge: 'Best Value',
-    badgeStyle: 'green',
-    hero: package2Hero,
-    difficulty: 'Easy',
-    locations: 7,
-    countries: 1,
-  },
-  {
-    id: 3,
-    slug: 'sarajevo-to-dubrovnik',
-    name: 'Sarajevo to Dubrovnik',
-    subtitle: 'Empires, Mountains & the Adriatic Coast',
-    duration: '7 Days',
-    price: 890,
-    rating: 5,
-    reviews: 0,
-    badge: 'New',
-    badgeStyle: 'dark',
-    hero: package3Hero,
-    difficulty: 'Moderate',
-    locations: 8,
-    countries: 2,
-  },
-]
+import { packages } from '../data/packages'
 
 const DIFFICULTY_COLOR = {
   Easy: { color: 'var(--color-forest-green)', bg: 'rgba(46,125,94,0.10)', border: 'rgba(46,125,94,0.20)' },
@@ -67,9 +16,11 @@ function PackagesPreview() {
   const width = useWindowWidth()
   const { stats } = useAllReviews()
   const isMobile = width <= 640
-  const isTablet = width <= 960
+  const [page, setPage] = useState(0)
+  const touchStartX = useRef(null)
 
-  const cols = isMobile ? '1fr' : isTablet ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)'
+  const visibleCount = isMobile ? 1 : 3
+  const totalPages = Math.ceil(packages.length / visibleCount)
 
   return (
     <section style={styles.section}>
@@ -84,71 +35,131 @@ function PackagesPreview() {
         </p>
       </div>
 
-      <div style={{ ...styles.cardsList, gridTemplateColumns: cols }}>
-        {packages.map((pkg) => {
-          const diff = DIFFICULTY_COLOR[pkg.difficulty] ?? DIFFICULTY_COLOR.Easy
-          const avgRating = stats[pkg.slug]?.avgRating ?? pkg.rating
-          const reviewCount = stats[pkg.slug]?.count ?? pkg.reviews
+      {/* Carousel */}
+      <div
+        style={styles.carouselWrapper}
+        onTouchStart={(e) => { touchStartX.current = e.touches[0].clientX }}
+        onTouchEnd={(e) => {
+          if (touchStartX.current === null) return
+          const delta = touchStartX.current - e.changedTouches[0].clientX
+          if (Math.abs(delta) > 40) {
+            if (delta > 0) setPage((p) => Math.min(totalPages - 1, p + 1))
+            else setPage((p) => Math.max(0, p - 1))
+          }
+          touchStartX.current = null
+        }}
+      >
+        <div style={{
+          ...styles.carouselTrack,
+          transform: `translateX(-${page * 100}%)`,
+        }}>
+          {Array.from({ length: totalPages }).map((_, pageIdx) => (
+            <div key={pageIdx} style={{
+              ...styles.carouselPage,
+              gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)',
+            }}>
+              {packages.slice(pageIdx * visibleCount, (pageIdx + 1) * visibleCount).map((pkg) => {
+                const avgRating = stats[pkg.slug]?.avgRating ?? pkg.rating
+                const reviewCount = stats[pkg.slug]?.count ?? pkg.reviews
 
-          return (
-            <Link key={pkg.id} to={`/packages/${pkg.slug}`} style={styles.cardLink}>
-              <div style={styles.card} className="pkg-card">
+                return (
+                  <Link key={pkg.id} to={`/packages/${pkg.slug}`} style={styles.cardLink}>
+                    <div style={styles.card} className="pkg-card">
+                      <div style={styles.imageWrapper}>
+                        <img src={pkg.hero} alt={pkg.name} style={styles.photo} className="pkg-card-img" />
+                        <div style={styles.imageGradient} />
 
-                <div style={styles.imageWrapper}>
-                  <img src={pkg.hero} alt={pkg.name} style={styles.photo} className="pkg-card-img" />
-                  <div style={styles.imageGradient} />
+                        <div style={styles.imageTop}>
+                          <span style={{
+                            ...styles.badge,
+                            ...(pkg.badgeColor
+                              ? { backgroundColor: pkg.badgeColor, color: pkg.badgeTextColor || 'var(--color-n000)' }
+                              : pkg.badgeStyle === 'amber'
+                              ? { backgroundColor: 'var(--color-amber)', color: 'var(--color-n900)' }
+                              : pkg.badgeStyle === 'green'
+                              ? { backgroundColor: 'var(--color-forest-green)', color: 'var(--color-n000)' }
+                              : { backgroundColor: 'rgba(0,0,0,0.55)', color: 'var(--color-n000)' }),
+                          }}>
+                            {pkg.badge}
+                          </span>
+                          <span style={styles.daysPill}>{pkg.duration}</span>
+                        </div>
 
-                  {/* Badge + Days */}
-                  <div style={styles.imageTop}>
-                    <span style={{
-                      ...styles.badge,
-                      ...(pkg.badgeStyle === 'amber'
-                        ? { backgroundColor: 'var(--color-amber)', color: 'var(--color-n900)' }
-                        : pkg.badgeStyle === 'green'
-                        ? { backgroundColor: 'var(--color-forest-green)', color: 'var(--color-n000)' }
-                        : { backgroundColor: 'rgba(0,0,0,0.55)', color: 'var(--color-n000)' }),
-                    }}>
-                      {pkg.badge}
-                    </span>
-                    <span style={styles.daysPill}>{pkg.duration}</span>
-                  </div>
-
-                  {/* All content overlaid at the bottom */}
-                  <div style={styles.imageBottom}>
-                    <h3 style={styles.packageName}>{pkg.name}</h3>
-                    <p style={styles.packageSubtitle}>{pkg.subtitle}</p>
-                    <div style={styles.statPills}>
-                      <span style={styles.statPill}>
-                        <Gauge size={11} />
-                        {pkg.difficulty}
-                      </span>
-                      <span style={styles.statPill}>
-                        <MapPin size={11} />
-                        {pkg.locations} stops
-                      </span>
-                      <span style={styles.statPill}>
-                        <Globe size={11} />
-                        {pkg.countries} {pkg.countries === 1 ? 'country' : 'countries'}
-                      </span>
-                    </div>
-                    <div style={styles.priceRow}>
-                      <div style={styles.priceBlock}>
-                        <span style={styles.priceFrom}>from</span>
-                        <span style={styles.price}>€{pkg.price}</span>
+                        <div style={styles.imageBottom}>
+                          <h3 style={styles.packageName}>{pkg.name}</h3>
+                          <p style={styles.packageSubtitle}>{pkg.subtitle}</p>
+                          <div style={styles.statPills}>
+                            <span style={styles.statPill}>
+                              <Gauge size={11} />
+                              {pkg.difficulty}
+                            </span>
+                            <span style={styles.statPill}>
+                              <MapPin size={11} />
+                              {pkg.locations} stops
+                            </span>
+                            <span style={styles.statPill}>
+                              <Globe size={11} />
+                              {pkg.countries} {pkg.countries === 1 ? 'country' : 'countries'}
+                            </span>
+                          </div>
+                          <div style={styles.priceRow}>
+                            <div style={styles.priceBlock}>
+                              <span style={styles.priceFrom}>from</span>
+                              <span style={styles.price}>€{pkg.price}</span>
+                            </div>
+                            <button className="pkg-card-btn" style={styles.ctaBtn}>
+                              View Package
+                              <ArrowRight size={13} />
+                            </button>
+                          </div>
+                        </div>
                       </div>
-                      <button className="pkg-card-btn" style={styles.ctaBtn}>
-                        View Package
-                        <ArrowRight size={13} />
-                      </button>
                     </div>
-                  </div>
-                </div>
-
-              </div>
-            </Link>
-          )
-        })}
+                  </Link>
+                )
+              })}
+            </div>
+          ))}
+        </div>
       </div>
+
+      {/* Controls */}
+      {totalPages > 1 && (
+        <div style={styles.controls}>
+          <button
+            style={{ ...styles.navBtn, opacity: page === 0 ? 0.35 : 1 }}
+            onClick={() => setPage((p) => Math.max(0, p - 1))}
+            disabled={page === 0}
+            aria-label="Previous packages"
+          >
+            <ChevronLeft size={18} color="var(--color-forest-green)" />
+          </button>
+
+          <div style={styles.dots}>
+            {Array.from({ length: totalPages }).map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setPage(i)}
+                style={{
+                  ...styles.dot,
+                  width: page === i ? '24px' : '8px',
+                  backgroundColor: page === i ? 'var(--color-forest-green)' : 'var(--color-n300)',
+                }}
+                aria-label={`Go to page ${i + 1}`}
+              />
+            ))}
+          </div>
+
+          <button
+            style={{ ...styles.navBtn, opacity: page === totalPages - 1 ? 0.35 : 1 }}
+            onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
+            disabled={page === totalPages - 1}
+            aria-label="Next packages"
+          >
+            <ChevronRight size={18} color="var(--color-forest-green)" />
+          </button>
+        </div>
+      )}
 
       <div style={styles.bottomRow}>
         <p style={styles.bottomText}>Looking for a longer journey or a private group?</p>
@@ -200,11 +211,59 @@ const styles = {
     lineHeight: 'var(--leading-body)',
   },
 
-  cardsList: {
-    display: 'grid',
-    gap: '20px',
+  carouselWrapper: {
     maxWidth: '1160px',
     margin: '0 auto',
+    overflow: 'hidden',
+  },
+
+  carouselTrack: {
+    display: 'flex',
+    transition: 'transform 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+  },
+
+  carouselPage: {
+    display: 'grid',
+    gap: '20px',
+    minWidth: '100%',
+    alignItems: 'stretch',
+  },
+
+  controls: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '16px',
+    marginTop: '32px',
+  },
+
+  navBtn: {
+    width: '40px',
+    height: '40px',
+    borderRadius: '50%',
+    border: '1.5px solid var(--color-n300)',
+    backgroundColor: 'var(--color-n000)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    cursor: 'pointer',
+    transition: 'opacity 0.2s ease',
+    flexShrink: 0,
+  },
+
+  dots: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '6px',
+  },
+
+  dot: {
+    height: '8px',
+    borderRadius: '4px',
+    border: 'none',
+    cursor: 'pointer',
+    padding: 0,
+    transition: 'width 0.3s ease, background-color 0.3s ease',
   },
 
   cardLink: {

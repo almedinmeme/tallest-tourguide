@@ -267,7 +267,7 @@ export function BlogPostingSchema({ post }) {
     description: post.excerpt || post.title,
     image: post.heroImage || 'https://tallesttourguide.com/og-image.jpg',
     datePublished: post.publishedDate,
-    url: `https://tallesttourguide.com/blog/${post.slug}`,
+    url: `https://tallesttourguide.com/journal/${post.slug}`,
     author: {
       '@type': 'Person',
       name: 'Almedin Omerović',

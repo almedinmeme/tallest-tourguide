@@ -1,0 +1,83 @@
+[
+  {
+    "id": 1,
+    "slug": "highland-homestay-lukomir",
+    "name": "[Placeholder] Highland Homestay",
+    "location": "Lukomir, Bjelašnica",
+    "country": "Bosnia & Herzegovina",
+    "type": "homestay",
+    "order": 1,
+    "image": "",
+    "teaser": "A working home in Bosnia's highest village, where dinner is whatever the family is eating.",
+    "description": "<p>[PLACEHOLDER] Describe what makes this stay worth it — the host, the food, the silence at 1,500 metres. No television, no menu, just a place at the table.</p>",
+    "lat": 43.65,
+    "lng": 18.18,
+    "featuredOn": [
+      { "slug": "lukomir-hike-bosnia", "type": "tour", "label": "Lukomir Highland Hike" }
+    ]
+  },
+  {
+    "id": 2,
+    "slug": "agrotourism-herzegovina",
+    "name": "[Placeholder] Family Agrotourism Estate",
+    "location": "Near Mostar, Herzegovina",
+    "country": "Bosnia & Herzegovina",
+    "type": "agrotourism",
+    "order": 2,
+    "image": "",
+    "teaser": "A family vineyard and farm where the wine, cheese, and prosciutto are all made on site.",
+    "description": "<p>[PLACEHOLDER] A few generous sentences about the family, the land, and why guests end up staying longer than they planned.</p>",
+    "lat": 43.34,
+    "lng": 17.81,
+    "featuredOn": [
+      { "slug": "bosnia-deep-dive", "type": "package", "label": "Bosnia Deep Dive" }
+    ]
+  },
+  {
+    "id": 3,
+    "slug": "boutique-hotel-sarajevo",
+    "name": "[Placeholder] Old Town Boutique Hotel",
+    "location": "Baščaršija, Sarajevo",
+    "country": "Bosnia & Herzegovina",
+    "type": "boutique-hotel",
+    "order": 3,
+    "image": "",
+    "teaser": "A small, locally owned hotel a minute's walk from the old bazaar.",
+    "description": "<p>[PLACEHOLDER] Comfort without losing character — family-run, in a restored building, with breakfast that is reason enough to book.</p>",
+    "lat": 43.859,
+    "lng": 18.431,
+    "featuredOn": [
+      { "slug": "4-days-sarajevo-experience", "type": "package", "label": "4-Day Sarajevo Experience" }
+    ]
+  },
+  {
+    "id": 4,
+    "slug": "river-guesthouse-konjic",
+    "name": "[Placeholder] Riverside Guesthouse",
+    "location": "Konjic, on the Neretva",
+    "country": "Bosnia & Herzegovina",
+    "type": "homestay",
+    "order": 4,
+    "image": "",
+    "teaser": "Wake up to the sound of an emerald river and a host who knows every bend of it.",
+    "description": "<p>[PLACEHOLDER] What makes this stop worth a night rather than a photo — the river, the trout, the family's stories.</p>",
+    "lat": 43.652,
+    "lng": 17.961,
+    "featuredOn": []
+  },
+  {
+    "id": 5,
+    "slug": "mountain-lodge-durmitor",
+    "name": "[Placeholder] Mountain Lodge",
+    "location": "Žabljak, Durmitor",
+    "country": "Montenegro",
+    "type": "boutique-hotel",
+    "order": 5,
+    "image": "",
+    "teaser": "A timber lodge at the edge of a national park, built for slow mornings.",
+    "description": "<p>[PLACEHOLDER] A comfortable base for the high country — wood fires, big windows, and trailheads from the door.</p>",
+    "lat": 43.154,
+    "lng": 19.123,
+    "featuredOn": []
+  }
+]

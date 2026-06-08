@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import { ChevronDown, ArrowUpDown, X, Check } from 'lucide-react'
+import { useSearchParams } from 'react-router-dom'
 import SEO from '../components/SEO'
 import TourCard from '../components/TourCard'
 import useWindowWidth from '../hooks/useWindowWidth'
@@ -63,6 +64,10 @@ function Tours() {
   const [sortBy,         setSortBy]         = useState('default')
   const [sortOpen,       setSortOpen]       = useState(false)
 
+  // Place-led entry: /tours?city=Sarajevo filters to that city's day tours.
+  const [searchParams, setSearchParams] = useSearchParams()
+  const activeCity = searchParams.get('city') || ''
+
   const sortRef = useRef(null)
 
   useEffect(() => {
@@ -76,6 +81,7 @@ function Tours() {
   }, [])
 
   const filtered = tours.filter((tour) => {
+    if (activeCity && (tour.city || '').toLowerCase() !== activeCity.toLowerCase()) return false
     if (activeCategory !== 'all' && tour.category !== activeCategory) return false
     if (activeLength !== 'all' && getLengthBucket(tour.duration) !== activeLength) return false
     return true
@@ -89,12 +95,19 @@ function Tours() {
     return 0
   })
 
-  const hasActiveFilters = activeCategory !== 'all' || activeLength !== 'all' || sortBy !== 'default'
+  const hasActiveFilters = activeCategory !== 'all' || activeLength !== 'all' || sortBy !== 'default' || !!activeCity
+
+  function clearCity() {
+    const next = new URLSearchParams(searchParams)
+    next.delete('city')
+    setSearchParams(next, { replace: true })
+  }
 
   function clearFilters() {
     setActiveCategory('all')
     setActiveLength('all')
     setSortBy('default')
+    clearCity()
   }
 
   const sortIsActive = sortBy !== 'default'
@@ -111,12 +124,21 @@ function Tours() {
       {/* ── PAGE HEADER ── */}
       <section style={styles.pageHeader}>
         <div style={styles.headerInner}>
-          <span style={styles.eyebrow}>Explore Bosnia</span>
-          <h1 style={styles.headline}>All Tours</h1>
+          <span style={styles.eyebrow}>{activeCity ? 'Day tours' : 'Explore Bosnia'}</span>
+          <h1 style={styles.headline}>{activeCity ? `Day tours in ${activeCity}` : 'All Tours'}</h1>
           <p style={styles.subheading}>
-            One local guide. Every experience designed to show you
-            the Bosnia most visitors never find.
+            {activeCity
+              ? `Our small-group day tours in ${activeCity}, each led by a local guide.`
+              : 'One local guide. Every experience designed to show you the Bosnia most visitors never find.'}
           </p>
+          {activeCity && (
+            <button
+              onClick={clearCity}
+              style={{ marginTop: 18, display: 'inline-flex', alignItems: 'center', gap: 7, height: 38, padding: '0 16px', background: 'rgba(255,255,255,0.14)', color: '#fff', border: '1px solid rgba(255,255,255,0.4)', borderRadius: 999, fontFamily: 'var(--font-body)', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}
+            >
+              <X size={14} /> Show all day tours
+            </button>
+          )}
         </div>
       </section>
 

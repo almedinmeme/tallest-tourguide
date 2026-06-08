@@ -164,7 +164,7 @@ const isMobile = width <= 768
           </div>
 
           {/* ── RIGHT COLUMN — Contact Form ────────────── */}
-          <div style={styles.formColumn}>
+          <div style={{ ...styles.formColumn, order: isMobile ? -1 : 0 }}>
             <div style={{ ...styles.formCard, padding: isMobile ? '24px 20px' : '36px' }}>
 
               {/* Same conditional rendering pattern as TourDetail —

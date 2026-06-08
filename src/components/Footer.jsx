@@ -94,8 +94,9 @@ function Footer() {
             {[
               { to: '/tours', label: 'Tours' },
               { to: '/multi-day-tours', label: 'Multi-day tours' },
+              { to: '/destinations', label: 'Destinations' },
+              { to: '/journal', label: 'The Journal' },
               { to: '/personalised', label: 'Personalised Tour' },
-              { to: '/blog', label: 'Blog' },
             ].map(({ to, label }) => (
               <Link
                 key={to}
@@ -115,15 +116,15 @@ function Footer() {
 
         {/* ── COLUMN 3 — Info ── */}
         <div style={styles.column}>
-          <span style={styles.columnLabel}>Info</span>
+          <span style={styles.columnLabel}>Discover</span>
           <nav style={styles.linkList}>
             {[
-              { to: '/about', label: 'About' },
-              { to: '/contact', label: 'Contact' },
-              { to: '/safe-travels', label: 'Safe Travels' },
-              { to: '/booking-conditions', label: 'Booking Conditions' },
-              { to: '/practical-info', label: 'Practical Info' },
-              { to: '/bosnia-guide', label: 'Bosnia Travel Guide' },
+              { to: '/about', label: 'Our Story' },
+              { to: '/hospitality', label: 'Gostoprimstvo' },
+              { to: '/where-we-stay', label: 'Where We Stay' },
+              { to: '/signature', label: 'Signature Experiences' },
+              { to: '/consult', label: 'Plan Your Trip' },
+              { to: '/partners', label: 'For Travel Professionals' },
             ].map(({ to, label }) => (
               <Link
                 key={to}
@@ -210,6 +211,31 @@ function Footer() {
       {/* ── BOTTOM BAR ── */}
       <div style={styles.bottomBar}>
         <div style={styles.bottomDivider} />
+        <nav style={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: isMobile ? '12px' : '20px',
+          justifyContent: isMobile ? 'center' : 'flex-start',
+          marginBottom: '20px',
+        }}>
+          {[
+            { to: '/contact', label: 'Contact' },
+            { to: '/safe-travels', label: 'Safe Travels' },
+            { to: '/booking-conditions', label: 'Booking Conditions' },
+            { to: '/practical-info', label: 'Practical Info' },
+            { to: '/bosnia-guide', label: 'Bosnia Travel Guide' },
+          ].map(({ to, label }) => (
+            <Link
+              key={to}
+              to={to}
+              style={{ ...styles.legalLink, color: hoveredLink === to ? 'var(--color-amber)' : 'rgba(255,255,255,0.35)' }}
+              onMouseEnter={() => setHoveredLink(to)}
+              onMouseLeave={() => setHoveredLink(null)}
+            >
+              {label}
+            </Link>
+          ))}
+        </nav>
         <div style={{
           ...styles.bottomRow,
           flexDirection: isMobile ? 'column' : 'row',

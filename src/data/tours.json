@@ -1,0 +1,1343 @@
+[
+  {
+    "id": 1,
+    "slug": "sarajevo-walking-tour",
+    "category": "city-walks",
+    "city": "Sarajevo",
+    "region": "Bosnia & Herzegovina",
+    "title": "Essential Sarajevo Walking Tour: History, Culture & the Full Story",
+    "price": 30,
+    "rating": 5,
+    "reviews": 12,
+    "duration": "3 hours",
+    "groupSize": 12,
+    "badge": "Essential",
+    "hero": "/uploads/tour-1-hero.webp",
+    "detailHero": "/uploads/sarajevo-essential-walking-tour.webp",
+    "description": "This tour is built around a different pace and a different mindset. It's for travelers who notice details, ask questions, and want to feel a place rather than move through it. Over three hours, Sarajevo opens gradually—through conversations, quiet corners, and moments that connect history with everyday life.\n\nA planned food stop and a traditional coffee degustation are part of the experience, giving context to how Sarajevo is lived, not just seen. By the end, the city feels familiar in a way most visitors don't reach—its contrasts make sense, and its story stays with you.\n\n Small group, local guide, no rushed stops. This is the most detailed Sarajevo walking experience available—built for the 10% of visitors who want the whole story.",
+    "highlights": [
+      "Latin Bridge — Stand where Archduke Franz Ferdinand was shot in 1914, the spark that ignited World War I.",
+      "Saint Anthony Catholic Church — A neo-Gothic Franciscan church beside the Miljacka, completed in 1914 and one of Sarajevo's most ornate sanctuaries.",
+      "City Hall (Vijećnica) — A stunning neo-Moorish building, rebuilt after wartime destruction, now a symbol of recovery.",
+      "Copersmith Street — Hammered copper souvenirs made by hand, a trade unchanged for over 500 years.",
+      "Sebilj — The wooden Ottoman fountain at the heart of Baščaršija square, ringed by pigeons and the city's oldest cafés.",
+      "Old Orthodox Church — One of the oldest in the region, quietly holding centuries of Sarajevo's Serbian heritage.",
+      "Morića Han — A 16th-century Ottoman caravanserai that hosted merchants on the silk and spice routes; today its courtyard houses one of the city's oldest coffee houses.",
+      "Gazi Husrev-beg Mosque — Built in 1531, this remains the architectural and spiritual anchor of the old town, balancing Ottoman design with continuous religious use.",
+      "Brusa Bezistan — A six-domed 16th-century covered market, originally built for silk from Bursa, now home to the Museum of Sarajevo.",
+      "Sarajevo Clock Tower — An Ottoman-era tower that still keeps lunar time, adjusted nightly to mark sunset for the call to prayer.",
+      "Sarajevo Meeting of Cultures — A small bronze line set into the pavement marking the exact point where Ottoman Sarajevo meets Austro-Hungarian Sarajevo — east becomes west in a single step.",
+      "Museum of the Jews of Bosnia and Herzegovina — Housed in the 16th-century Sephardic synagogue, it traces five centuries of Jewish life in Sarajevo with one of the richest collections in Southeast Europe.",
+      "Ferhadija Mosque — A 1561 Ottoman mosque on Sarajevo's main pedestrian street, rebuilt after the siege and still serving as a working place of prayer.",
+      "Sacred Heart Cathedral — The most important Catholic cathedral in Bosnia, a graceful anchor of Catholic presence in the city.",
+      "Open Marketplace Markale — Sarajevo's open-air fruit and vegetable market, and the site of two of the deadliest civilian massacres of the siege.",
+      "Closed Marketplace Markale — The covered meat and dairy hall adjoining the open market, its arched 1894 facade still scarred from wartime shelling.",
+      "L'uomo Multiculturale — A bronze “multicultural man” statue facing the cathedral square, gifted by Italian artist Francesco Perilli as a tribute to coexistence.",
+      "Orthodox Church of the Nativity of the Theotokos — The grand 19th-century Serbian Orthodox cathedral on Liberation Square, its golden domes a counterpoint to the Catholic cathedral nearby.",
+      "Drvenija Bridge — A pedestrian iron bridge over the Miljacka, once a key crossing between the city's Jewish, Catholic and Orthodox neighborhoods.",
+      "Ashkenazi Synagogue (Sarajevo Synagogue) — A striking early 20th-century building marking the arrival of Central European Jewish communities in Sarajevo.",
+      "Music Pavilion - At Mejdan — A small Austro-Hungarian bandstand by the river, where the city's military band once played open-air concerts on warm evenings."
+    ],
+    "includes": [
+      "Local guide",
+      "Small group max 12",
+      "Walking tour",
+      "Free cancellation 24h"
+    ],
+    "excludes": [
+      "Entrance fees to religious sites",
+      "Gratuities",
+      "Personal expenses"
+    ],
+    "faqs": [
+      {
+        "question": "Is this tour suitable for people who don't know much about Sarajevo's history?",
+        "answer": "Absolutely. The tour is built around discovery — no prior knowledge needed. Your guide connects the dots between cultures, eras, and stories as you walk."
+      },
+      {
+        "question": "How much walking is involved? Is it suitable for all fitness levels?",
+        "answer": "<p>The route is mostly flat through the old town, covering roughly 2–3 km at a relaxed pace. Comfortable shoes are recommended; no steep terrain.</p>"
+      },
+      {
+        "question": "Are entrance fees to mosques or other sites included?",
+        "answer": "The tour includes access to outdoor areas and select interiors. Some religious sites may request a small voluntary donation — your guide will let you know in advance."
+      }
+    ],
+    "meetingPoint": "In front of the Tallest Tourguide & Friends office, Hamdije Kresevljakovica 61, Sarajevo. Right next to the Viking Pub.",
+    "startingTimes": [
+      "10 AM",
+      "05 PM"
+    ],
+    "languages": [
+      "english",
+      "bosnian"
+    ],
+    "rightFor": [
+      "First-time visitors wanting the full story of Sarajevo",
+      "History and culture enthusiasts who notice details",
+      "Travelers who prefer a relaxed, unhurried pace",
+      "Anyone who wants context, not just checkpoints"
+    ],
+    "notRightFor": [
+      "Guests looking for a fast highlights-only overview",
+      "Those with significant mobility limitations (cobblestone terrain)",
+      "Guests who prefer solo exploration over guided storytelling"
+    ],
+    "accessibility": {
+      "walkingDistanceKm": 2.9,
+      "drivingDistanceKm": null,
+      "durationMin": 90,
+      "elevationGainM": null,
+      "effortLevel": "low",
+      "suitability": {
+        "wheelchair": "yes",
+        "stroller": null,
+        "smallChildren": null,
+        "children": "yes",
+        "pregnancy": null,
+        "seniors": "yes",
+        "pets": "yes"
+      },
+      "requirements": [
+        {
+          "key": "standing",
+          "label": "Stand for long periods",
+          "detail": ""
+        },
+        {
+          "key": "custom",
+          "label": "Climb a flight of stairs",
+          "detail": ""
+        }
+      ],
+      "terrain": "Cobblestone streets through the old town; no steep climbs",
+      "notes": "Walking: 2–3 km on mostly flat ground\nComfortable walking shoes strongly recommended. Not suitable for wheelchairs due to cobblestone surfaces."
+    },
+    "subtitle": "Sarajevo Unveiled: A Walk Through Cultures, Centuries & Crossroads",
+    "gallery": [
+      {
+        "src": "/uploads/sarajevo-1-grand.webp",
+        "caption": "Baščaršija — the old bazaar built in the 15th century."
+      },
+      {
+        "src": "/uploads/tour-1-hero.webp",
+        "caption": "Latin Bridge, where WWI began in 1914."
+      },
+      "/uploads/sarajevo-2-grand.webp",
+      "/uploads/sarajevo-3-grand.webp",
+      "/uploads/sarajevo-essential-walking-tour-group.webp"
+    ],
+    "mapWaypoints": [
+      {
+        "lat": 43.857799045620894,
+        "lng": 18.42901115277861,
+        "label": "Latin Bridge"
+      },
+      {
+        "lat": 43.85606933762311,
+        "lng": 18.431666099566826,
+        "label": "Saint Anthony Catholic Church"
+      },
+      {
+        "lat": 43.8590211484846,
+        "lng": 18.43406468291093,
+        "label": "City Hall (Vijećnica)"
+      },
+      {
+        "lat": 43.85934549319559,
+        "lng": 18.431253880305057,
+        "label": "Copersmith Street"
+      },
+      {
+        "lat": 43.859878268690615,
+        "lng": 18.43124904976868,
+        "label": "Sebilj"
+      },
+      {
+        "lat": 43.860389822468655,
+        "lng": 18.429940814368557,
+        "label": "Old Orthodox Church"
+      },
+      {
+        "lat": 43.85977607560072,
+        "lng": 18.430125340101366,
+        "label": "Morića Han"
+      },
+      {
+        "lat": 43.85923503860752,
+        "lng": 18.429282907858003,
+        "label": "Gazi Husrev-beg Mosque"
+      },
+      {
+        "lat": 43.85884908966776,
+        "lng": 18.430488262944504,
+        "label": "Brusa Bezistan"
+      },
+      {
+        "lat": 43.85921272680329,
+        "lng": 18.428646385736766,
+        "label": "Sarajevo Clock Tower"
+      },
+      {
+        "lat": 43.859354506922706,
+        "lng": 18.427818716995567,
+        "label": "Sarajevo Meeting of Cultures"
+      },
+      {
+        "lat": 43.85977095011879,
+        "lng": 18.427858105989465,
+        "label": "Museum of the Jews of Bosnia and Herzegovina"
+      },
+      {
+        "lat": 43.858879918509516,
+        "lng": 18.42716722391182,
+        "label": "Ferhadija Mosque"
+      },
+      {
+        "lat": 43.8594053045059,
+        "lng": 18.42554963443041,
+        "label": "Sacred Heart Cathedral"
+      },
+      {
+        "lat": 43.859581056959975,
+        "lng": 18.424330657371947,
+        "label": "Open Marketplace Markale"
+      },
+      {
+        "lat": 43.85885267249593,
+        "lng": 18.42336353948097,
+        "label": "Closed Marketplace Markale"
+      },
+      {
+        "lat": 43.85844039025762,
+        "lng": 18.424232732363343,
+        "label": "L'uomo Multiculturale"
+      },
+      {
+        "lat": 43.8583011042411,
+        "lng": 18.42528366667662,
+        "label": "Orthodox Church of the Nativity of the Theotokos"
+      },
+      {
+        "lat": 43.85657961019499,
+        "lng": 18.423918712924905,
+        "label": "Drvenija Bridge"
+      },
+      {
+        "lat": 43.856303418652736,
+        "lng": 18.425172535265624,
+        "label": "Ashkenazi Synagogue (Sarajevo Synagogue)"
+      },
+      {
+        "lat": 43.8570431536568,
+        "lng": 18.428447488310436,
+        "label": "Music Pavilion - At Mejdan"
+      }
+    ],
+    "mapProfile": "foot-walking",
+    "fitnessNote": null
+  },
+  {
+    "id": 2,
+    "slug": "mostar-day-trip-from-sarajevo",
+    "category": "day-trips",
+    "city": "Mostar",
+    "region": "Bosnia & Herzegovina",
+    "title": "Mostar Day Trip from Sarajevo: Old Bridge, Kravice & Herzegovina",
+    "price": 75,
+    "rating": 5,
+    "reviews": 18,
+    "duration": "Full day",
+    "groupSize": 12,
+    "badge": "Bestseller",
+    "hero": "/uploads/tour-5-hero.webp",
+    "detailHero": "/uploads/tour-5-hero.webp",
+    "description": "Most first-time visitors to Bosnia come expecting history. They leave talking about the water. This full-day tour from Sarajevo takes you deep into Herzegovina — a landscape of impossible turquoise rivers, medieval fortresses, and a bridge so beautiful it was rebuilt from memory after war destroyed it. Every stop earns its place on this route.\n\nDeparting Sarajevo in the morning, you travel south through changing terrain, stopping at Konjic's old bridge and Jablanica's open-air war museum, before the route opens into Herzegovina. Počitelj's hilltop fortress, the spring at Blagaj Buna rising from a cliff face, the cascading waterfalls at Kravice, and finally Mostar — its Old Bridge, its bazaar, its divers — all within a single, full day. This is Bosnia at its most visually stunning.",
+    "highlights": [
+      "Konjic — A charming riverside town with its own restored Ottoman bridge, a perfect first taste of what Herzegovina has in store.",
+      "Jablanica — Home to the legendary WWII battle site where Tito's partisans crossed the Neretva. The destroyed bridge still stands as a monument.",
+      "Počitelj — A fortified medieval village frozen in time, climbing up a limestone hill with panoramic views over the Neretva river valley.",
+      "Blagaj Buna — A 16th-century Dervish monastery built into a cliff above one of Europe's largest freshwater springs. Quietly breathtaking.",
+      "Kravice Waterfalls — A series of cascading falls spilling into a vivid emerald pool. One of Bosnia's most spectacular natural sights.",
+      "Mostar Old Bridge (Stari Most) — The iconic 16th-century bridge, rebuilt after its 1993 destruction, arching over the Neretva."
+    ],
+    "includes": [
+      "Local guide",
+      "Small group max 12",
+      "Transport in AC Vehicle",
+      "Free cancellation 24h"
+    ],
+    "excludes": [
+      "Entrance fees to Kravice Waterfalls (20 BAM/10 EUR)",
+      "Lunch",
+      "Gratuities (optional but appreciated)",
+      "Personal expenses"
+    ],
+    "faqs": [
+      {
+        "question": "How long is the full day tour and what time does it return to Sarajevo?",
+        "answer": "The tour departs Sarajevo in the morning and returns in the early evening, typically around 10-12 hours in total. Exact timing will be confirmed at booking."
+      },
+      {
+        "question": "Is swimming at Kravice Waterfalls included or optional?",
+        "answer": "Swimming at Kravice is possible during warmer months and is entirely optional. Bringing a swimsuit and a small towel is recommended if you'd like to take a dip."
+      },
+      {
+        "question": "Is this tour suitable for first-time visitors who don't know much about Bosnian history?",
+        "answer": "It is designed exactly for them. The guide provides context at every stop — history, culture, and local stories — without overwhelming. You leave with a genuine feel for the country, not just photographs of it."
+      }
+    ],
+    "meetingPoint": "In front of the Tallest Tourguide & Friends office, Hamdije Kresevljakovica 61, Sarajevo. Right next to the Viking Pub.",
+    "startingTimes": [
+      "08 AM"
+    ],
+    "languages": [
+      "english",
+      "bosnian"
+    ],
+    "rightFor": [
+      "First-time visitors wanting to see Herzegovina in a single day",
+      "Nature lovers drawn to turquoise rivers and waterfalls",
+      "Those with one full day to experience Bosnia beyond Sarajevo",
+      "Anyone curious about Ottoman history and architecture"
+    ],
+    "notRightFor": [
+      "Guests who prefer slow, deep single-location experiences",
+      "Those prone to motion sickness (mountain road driving)",
+      "Travelers who have already visited Mostar and Kravice"
+    ],
+    "accessibility": {
+      "walkingDistanceKm": 2,
+      "drivingDistanceKm": 340,
+      "walkingDurationMin": null,
+      "drivingDurationMin": null,
+      "durationMin": 360,
+      "elevationGainM": null,
+      "effortLevel": "moderate",
+      "suitability": {
+        "wheelchair": "no",
+        "stroller": "partial",
+        "smallChildren": "yes",
+        "children": "yes",
+        "pregnancy": "yes",
+        "seniors": "yes",
+        "pets": "partial"
+      },
+      "requirements": [
+        {
+          "key": "stairs",
+          "label": "Climb a flight of stairs",
+          "detail": "We have small climb to Pocitelj fortress and flight of stairs when going to Kravice Waterfalls"
+        }
+      ],
+      "terrain": "Steep cobblestone streets in Počitelj and Mostar; flatter terrain at Kravice",
+      "notes": "Walking: Moderate walking at each stop (1–2 km per location)\nSeveral sites involve uneven terrain and steep paths. Not suitable for guests with significant mobility limitations."
+    },
+    "subtitle": "Rivers, Ruins & the Old Bridge: A Full Day Through the Heart of Herzegovina",
+    "gallery": [
+      "/uploads/mostar-day-trip-from-sarajevo-konjic.webp",
+      "/uploads/tour-5-hero.webp",
+      "/uploads/mostar-2.webp",
+      "/uploads/mostar-day-trip-from-sarajevo-pocitelj-old-town.webp",
+      "/uploads/mostar-3.webp",
+      "/uploads/mostar-day-trip-from-sarajevo-kravice-waterfalls-group.webp",
+      "/uploads/mostar-day-trip-from-sarajevo-blagaj-buna.webp",
+      "/uploads/mostar-day-trip-from-sarajevo-buna-chanel.webp",
+      "/uploads/mostar-day-trip-from-sarajevo-pocitelj.webp",
+      "/uploads/mostar-day-trip-from-sarajevo-pocitelj-group.webp"
+    ],
+    "mapWaypoints": [
+      {
+        "lat": 43.8563,
+        "lng": 18.4132,
+        "label": "Sarajevo"
+      },
+      {
+        "lat": 43.6579,
+        "lng": 17.9621,
+        "label": "Konjic"
+      },
+      {
+        "lat": 43.1219,
+        "lng": 17.7315,
+        "label": "Počitelj"
+      },
+      {
+        "lat": 43.1367,
+        "lng": 17.6017,
+        "label": "Kravice Waterfalls"
+      },
+      {
+        "lat": 43.2534,
+        "lng": 17.9052,
+        "label": "Blagaj"
+      },
+      {
+        "lat": 43.337,
+        "lng": 17.8156,
+        "label": "Mostar Old Bridge"
+      }
+    ],
+    "mapProfile": "driving-car"
+  },
+  {
+    "id": 8,
+    "slug": "lukomir-hike-bosnia",
+    "category": "adventure",
+    "city": "Lukomir",
+    "region": "Bosnia & Herzegovina",
+    "title": "Lukomir Hike: Full Day Trek to Bosnia's Highest Mountain Village",
+    "price": 80,
+    "rating": 5,
+    "reviews": 4,
+    "duration": "Full day",
+    "groupSize": 12,
+    "badge": "Active",
+    "hero": "/uploads/lukomir-1.webp",
+    "detailHero": "/uploads/lukomir-5.webp",
+    "description": "Lukomir sits at 1,469 metres above sea level on the edge of the Rakitnica Canyon — the deepest and most untouched river canyon in the western Balkans. It is the highest permanently inhabited village in Bosnia, and in many ways it feels like the rest of the world simply forgot to arrive. Stone houses, traditional dress, shepherds moving across the plateau exactly as their grandparents did. Getting there on foot makes it mean something entirely different than arriving any other way.The route follows the canyon rim through the Bjelašnica plateau, with open mountain views that stretch further than you expect and a silence that takes some adjusting to. The hike is moderate — rewarding for those with some trail experience, manageable for anyone in good shape who takes it at their own pace. Lunch is taken in the village itself, with a local family. You descend with the kind of tiredness that feels earned, and a view of Bosnia that very few visitors ever reach.",
+    "highlights": [
+      "Umoljani Village — A mountain village on the slopes of Bjelašnica, so quiet and so unchanged that arriving here feels less like travel and more like stepping out of time entirely.",
+      "Bjelasnica — The hike opens across one of Bosnia's most dramatic high-altitude landscapes, wide open and quietly overwhelming in every direction.",
+      "Obalj (1896) — A highland shelter built in 1896, sitting above the treeline with views that stretch across the Bjelašnica plateau in every direction. The year is in the name — and everything about it earns that history.",
+      "Lukomir Village — Bosnia's highest permanently inhabited village, perched on the edge of the Rakitnica Canyon at 1,469 metres. Stone houses, traditional dress, and a silence that takes some adjusting to.",
+      "Lunch Prepared by Locals — A home-cooked meal inside the village, prepared by residents. Simple, seasonal, and one of the most grounding moments of the entire day.",
+      "Rakitnica Canyon Rim — The deepest and most untouched river canyon in the western Balkans, cutting through the limestone plateau with a scale and wildness that most visitors are completely unprepared for.",
+      "Cold Creek — A mountain spring so clear and so cold it stops you mid-step — the kind of water that reminds you what water is supposed to taste like."
+    ],
+    "fitnessNote": {
+      "type": "physical",
+      "level": "Moderate fitness required",
+      "detail": "This tour involves approximately 12–14 km of hiking on mountain terrain with uneven paths and moderate elevation gain across the Bjelašnica plateau. Guests should be comfortable walking for 4–5 hours. Not suitable for guests with significant mobility limitations, heart conditions, or those uncomfortable on rocky mountain paths."
+    },
+    "includes": [
+      "Experienced local guide",
+      "Return transport from Sarajevo",
+      "Small group max 12"
+    ],
+    "excludes": [
+      "Lunch in home of Lukomir residents (approx. 10 EUR / 20 BAM))",
+      "Personal expenses"
+    ],
+    "faqs": [
+      {
+        "question": "How long is the hike and how much elevation is involved?",
+        "answer": "The full route covers approximately 12–14 km with moderate elevation gain across the Bjelašnica plateau. The total day, including transport from Sarajevo, lunch, and the return, runs around 8–10 hours."
+      },
+      {
+        "question": "Is any special equipment required for this hike?",
+        "answer": "Sturdy trail or hiking shoes are essential. Layers are strongly recommended — plateau weather changes quickly regardless of season. Trekking poles are optional but helpful on the canyon rim sections."
+      },
+      {
+        "question": "Is this hike suitable for someone who doesn't hike regularly but is reasonably fit?",
+        "answer": "Yes, with the right preparation. The trail is moderate rather than technical — no climbing or scrambling involved. A reasonable base fitness level and proper footwear will carry most people through comfortably. Your guide sets a pace that works for the group."
+      }
+    ],
+    "meetingPoint": "In front of the Tallest Tourguide & Friends office, Hamdije Kresevljakovica 61, Sarajevo. Right next to the Viking Pub.",
+    "startingTimes": [
+      "08 AM"
+    ],
+    "languages": [
+      "english",
+      "bosnian"
+    ],
+    "rightFor": [
+      "Active travelers comfortable with mountain terrain and long walks",
+      "Anyone seeking a genuinely off-the-beaten-path Bosnia experience",
+      "Nature and mountain lovers who want views that feel earned",
+      "Guests with a full day and reasonable trail fitness"
+    ],
+    "notRightFor": [
+      "Guests not comfortable with 4–5 hours of continuous walking",
+      "Those with mobility limitations, heart conditions, or knee problems",
+      "Children under 10 or guests unaccustomed to mountain conditions"
+    ],
+    "accessibility": {
+      "walkingDistanceKm": 16.4,
+      "drivingDistanceKm": 90,
+      "walkingDurationMin": 360,
+      "drivingDurationMin": 120,
+      "durationMin": 600,
+      "elevationGainM": 914,
+      "effortLevel": "high",
+      "suitability": {
+        "wheelchair": "no",
+        "stroller": "no",
+        "smallChildren": "no",
+        "children": "partial",
+        "pregnancy": "no",
+        "seniors": "partial",
+        "pets": "yes"
+      },
+      "requirements": [
+        {
+          "key": "walkingKm",
+          "label": "Walk a minimum distance on uneven ground",
+          "detail": ""
+        },
+        {
+          "key": "altitude",
+          "label": "Tolerate high altitude",
+          "detail": ""
+        },
+        {
+          "key": "sun",
+          "label": "Tolerate prolonged sun exposure",
+          "detail": ""
+        }
+      ],
+      "terrain": "Uneven highland paths, plateau, and canyon rim; no technical climbing",
+      "notes": "Walking: 14–16 km on mountain terrain over a full day\n\nNot suitable for guests with mobility limitations. Sturdy hiking footwear and layered clothing are essential."
+    },
+    "subtitle": "There Is a Village in Bosnia That Time Completely Missed. You Can Walk There.",
+    "gallery": [
+      "/uploads/lukomir-1.webp",
+      "/uploads/lukomir-2.webp",
+      "/uploads/lukomir-3.webp",
+      "/uploads/lukomir-4.webp",
+      "/uploads/lukomir-5.webp"
+    ],
+    "mapWaypoints": [
+      {
+        "lat": 43.8563,
+        "lng": 18.4132,
+        "label": "Sarajevo"
+      },
+      {
+        "lat": 43.66731168141305,
+        "lng": 18.227316550547222,
+        "label": "Umoljani"
+      },
+      {
+        "lat": 43.64649412097815,
+        "lng": 18.197086678876374,
+        "label": "Obalj (1896)"
+      },
+      {
+        "lat": 43.63921882415106,
+        "lng": 18.18330659051382,
+        "label": "Lukomir"
+      },
+      {
+        "lat": 43.628888280963125,
+        "lng": 18.188084055128694,
+        "label": "Rakitnica Canyon"
+      },
+      {
+        "lat": 43.662833005448135,
+        "lng": 18.222599723369356,
+        "label": "Cold Creek"
+      }
+    ],
+    "mapProfile": "foot-hiking"
+  },
+  {
+    "id": 4,
+    "slug": "bosnian-cooking-class-sarajevo",
+    "category": "food-culture",
+    "city": "Sarajevo",
+    "region": "Bosnia & Herzegovina",
+    "title": "Bosnian Cooking Class in Sarajevo: Burek, Klepe & Local Home Dining",
+    "price": 55,
+    "rating": 5,
+    "reviews": 8,
+    "duration": "3 hours",
+    "groupSize": 6,
+    "badge": "Authentic",
+    "hero": "/uploads/cooking-4-class.webp",
+    "detailHero": "/uploads/tour-7-hero.webp",
+    "description": "There is a version of travel where you eat at the right places, see the right things, and still feel like an outsider. This is not that. In a warm Sarajevo home, your host welcomes you with traditional Bosnian coffee and the kind of unhurried hospitality that cannot be staged.\n\nWhat follows is three to four hours of cooking, storytelling, and sitting down together over a meal you made with your own hands. You will learn to stretch burek dough the way it has been done for generations, fold klepe dumplings by hand, and prepare a seasonal dish — stuffed peppers, Begova čorba, or sataraš — chosen by your host based on what is fresh. Everything bakes, simmers, and comes together while conversation flows naturally. You finish with sutlijaš or hurmašice, homemade juice, and the particular satisfaction of a meal that meant something.",
+    "highlights": [
+      "Seasonal Starter Dish — Cook a traditional recipe chosen by your host — stuffed peppers, sataraš, or Begova čorba — based on the season.",
+      "Handmade Burek or Bosnian Pita — Learn to stretch and fill dough entirely by hand, mastering a technique passed down through generations.",
+      "Klepe Dumplings from Scratch — Fold and cook delicate meat or vegetable dumplings — one of Bosnia's most beloved comfort foods.",
+      "Three-Course Shared Meal — Sit down and enjoy everything you prepared together, paired with homemade juices.",
+      "Traditional Bosnian Coffee — The experience is closed in the Bosnian way — slowly, warmly, with coffee prepared in a džezva and stories already beginning.",
+      "Traditional Desserts — End with sutlijaš or hurmašice, sweet, simple, and the kind of finish that makes the whole experience linger."
+    ],
+    "includes": [
+      "Family home hosted",
+      "Small group max 6",
+      "AC transportation"
+    ],
+    "excludes": [
+      "Gratuities (optional but appreciated)",
+      "Personal expenses"
+    ],
+    "faqs": [
+      {
+        "question": "Do I need any cooking experience to join this experience?",
+        "answer": "None at all. Your host guides every step with patience and warmth. The focus is on connection and enjoyment — not technique. If you can stretch dough and laugh at the same time, you are fully qualified."
+      },
+      {
+        "question": "Can dietary requirements or preferences be accommodated?",
+        "answer": "Yes. Vegetarian fillings for burek and klepe are available. Please mention any dietary needs at the time of booking so your host can prepare accordingly."
+      },
+      {
+        "question": "How many people participate in the cooking experience?",
+        "answer": "This is an intimate experience designed for small groups — typically two to six guests. It takes place in a private Sarajevo home, so the atmosphere stays personal and unhurried throughout."
+      }
+    ],
+    "meetingPoint": "In front of the Tallest Tourguide & Friends office, Hamdije Kresevljakovica 61, Sarajevo. Right next to the Viking Pub.",
+    "startingTimes": [
+      "04 PM"
+    ],
+    "languages": [
+      "english",
+      "bosnian"
+    ],
+    "rightFor": [
+      "Food lovers wanting a genuine local kitchen experience",
+      "Couples and small groups seeking intimate cultural immersion",
+      "Families with children who enjoy hands-on activities",
+      "Anyone who believes the best way into a culture is through its food"
+    ],
+    "notRightFor": [
+      "Guests expecting restaurant-style dining rather than home cooking",
+      "Those with severe allergies to dairy or meat (vegetarian options available, but the kitchen works with animal products)",
+      "Anyone looking for outdoor sightseeing rather than an indoor experience"
+    ],
+    "accessibility": {
+      "walkingDistanceKm": null,
+      "drivingDistanceKm": null,
+      "walkingDurationMin": null,
+      "drivingDurationMin": null,
+      "durationMin": null,
+      "elevationGainM": null,
+      "effortLevel": null,
+      "suitability": {
+        "wheelchair": null,
+        "stroller": null,
+        "smallChildren": null,
+        "children": null,
+        "pregnancy": "yes",
+        "seniors": "yes",
+        "pets": null
+      },
+      "requirements": [],
+      "terrain": "Indoor, first floor",
+      "notes": "Walking: None — the experience takes place in a private home\n\nPlease mention any mobility or dietary requirements at the time of booking."
+    },
+    "subtitle": "The Best Meal in Sarajevo Isn't in a Restaurant. It's in Someone's Home.",
+    "gallery": [
+      "/uploads/cooking-1-class.webp",
+      "/uploads/cooking-2-class.webp",
+      "/uploads/cooking-3-class.webp",
+      "/uploads/cooking-4-class.webp",
+      "/uploads/cooking-5-class.webp",
+      "/uploads/cooking-6-class.webp",
+      "/uploads/cooking-7-class.webp"
+    ],
+    "mapWaypoints": [
+      {
+        "lat": 43.85696584469741,
+        "lng": 18.427094566825225,
+        "label": "Tallest Tourguide & Friends Office"
+      },
+      {
+        "lat": 43.8595,
+        "lng": 18.4257,
+        "label": "Markale Market"
+      },
+      {
+        "lat": 43.84827609898238,
+        "lng": 18.43277373538746,
+        "label": "Guide's Home "
+      }
+    ],
+    "mapProfile": "foot-walking"
+  },
+  {
+    "id": 5,
+    "slug": "jajce-travnik-day-trip-sarajevo",
+    "category": "day-trips",
+    "city": "Jajce",
+    "region": "Bosnia & Herzegovina",
+    "title": "Jajce & Travnik Day Trip from Sarajevo: Medieval Bosnia Full Day Tour",
+    "price": 75,
+    "rating": 5,
+    "reviews": 12,
+    "duration": "Full day",
+    "groupSize": 12,
+    "badge": null,
+    "hero": "/uploads/jajce-1.webp",
+    "detailHero": "/uploads/jajce-5.webp",
+    "description": "Long before modern borders were drawn, Bosnia had its own medieval kingdom — with royal cities, fortress towns, and a landscape that made it nearly unconquerable. This full-day tour from Sarajevo takes you to two of its most remarkable survivors: Jajce, the last capital of the Bosnian kingdom, and Travnik, the seat of Ottoman viziers for over a century. Two towns, two eras, one extraordinary day.\n\nThe route winds through central Bosnia with a stop at Visoko — home to the controversial Bosnian pyramids — before arriving at Jajce, where a waterfall tumbles directly into the town center and the Pliva lakes mirror the sky just minutes away. Travnik follows, with its colourful bazaar, the birthplace of Nobel laureate Ivo Andrić, and a fortress that has watched over the valley for 600 years. This is Bosnia that most visitors never reach — and never stop thinking about.",
+    "highlights": [
+      "Visoko (optional) — A thought-provoking stop at the site of the so-called Bosnian Pyramids, one of the most debated archaeological mysteries in Europe.",
+      "Jajce Old Town — The royal capital of the last Bosnian kingdom, a walled hilltop town where medieval streets and Ottoman layers exist side by side.",
+      "Jajce Waterfall — One of the rarest sights in Europe — a full river waterfall crashing into the heart of a living town.",
+      "Pliva Lakes — Two glacial lakes just outside Jajce, calm and mirror-flat, surrounded by old watermills that still stand at the water's edge.",
+      "Travnik Castle — A commanding 15th-century fortress rising above Travnik, offering sweeping views over the valley and the old bazaar below.",
+      "Travnik Old Town — Birthplace of Ivo Andrić, Nobel Prize winner, and a town rich with Ottoman architecture and living tradition."
+    ],
+    "includes": [
+      "Local guide",
+      "Small group max 12",
+      "Transport in AC Vehicle",
+      "Free cancellation 24h"
+    ],
+    "excludes": [
+      "Museums and castle entrances",
+      "Lunch",
+      "Gratuities (optional but appreciated)",
+      "Personal expenses"
+    ],
+    "faqs": [
+      {
+        "question": "Is prior knowledge of Bosnian medieval history needed to enjoy this tour?",
+        "answer": "Not at all. The guide builds the story from the ground up — connecting the kingdoms, the Ottoman era, and the landscape in a way that makes everything click, even for first-time visitors."
+      },
+      {
+        "question": "Is the Visoko pyramid stop confirmed or truly optional?",
+        "answer": "It is an optional addition depending on group interest and timing. If included, your guide will present the site honestly — covering both the archaeological debate and what is definitively known — so you can form your own view."
+      },
+      {
+        "question": "Is this tour physically demanding?",
+        "answer": "There is moderate walking involved, including some uphill paths at Jajce and Travnik Castle. The pace is relaxed and manageable for most fitness levels. Comfortable walking shoes are strongly recommended."
+      }
+    ],
+    "meetingPoint": "In front of the Tallest Tourguide & Friends office, Hamdije Kresevljakovica 61, Sarajevo. Right next to the Viking Pub.",
+    "startingTimes": [
+      "08 AM"
+    ],
+    "languages": [
+      "english",
+      "bosnian"
+    ],
+    "rightFor": [
+      "History enthusiasts curious about medieval Bosnia and the Ottoman era",
+      "Travelers on longer Bosnia trips wanting to see central Bosnia",
+      "Those drawn to dramatic landscapes and fortified hilltop towns",
+      "Anyone who prefers layered historical storytelling over beach or nightlife"
+    ],
+    "notRightFor": [
+      "Guests who have already visited both Jajce and Travnik",
+      "Those prone to motion sickness on winding mountain roads",
+      "Visitors expecting mostly flat, easy walking throughout"
+    ],
+    "accessibility": {
+      "walkingDistanceKm": null,
+      "drivingDistanceKm": null,
+      "walkingDurationMin": null,
+      "drivingDurationMin": null,
+      "durationMin": null,
+      "elevationGainM": null,
+      "effortLevel": null,
+      "suitability": {
+        "wheelchair": "no",
+        "stroller": "partial",
+        "smallChildren": null,
+        "children": "yes",
+        "pregnancy": "yes",
+        "seniors": "yes",
+        "pets": "yes"
+      },
+      "requirements": [],
+      "terrain": "Cobblestone and uneven paths; steep climb to Travnik Castle",
+      "notes": "Walking: Moderate walking with uphill climbs at castle sites\n\nThe castle climbs involve steps and uneven ground. Comfortable walking shoes are essential."
+    },
+    "subtitle": "Kings, Castles & Waterfalls: A Full Day in Medieval Bosnia",
+    "gallery": [
+      "/uploads/jajce-1.webp",
+      "/uploads/jajce-2.webp",
+      "/uploads/jajce-3.webp",
+      "/uploads/jajce-4.webp",
+      "/uploads/jajce-5.webp",
+      "/uploads/jajce-6.webp",
+      "/uploads/jajce-7.webp",
+      "/uploads/jajce-8.webp",
+      "/uploads/tour-6-hero.webp"
+    ],
+    "mapWaypoints": [
+      {
+        "lat": 43.85678126021869,
+        "lng": 18.403531029387583,
+        "label": "Sarajevo"
+      },
+      {
+        "lat": 43.99260181048281,
+        "lng": 18.17739356711044,
+        "label": "Visoko"
+      },
+      {
+        "lat": 44.22610896578288,
+        "lng": 17.665149338101614,
+        "label": "Travnik"
+      },
+      {
+        "lat": 44.14501771809758,
+        "lng": 17.394726262684454,
+        "label": "Donji Vakuf"
+      },
+      {
+        "lat": 44.33746502572596,
+        "lng": 17.269794398579894,
+        "label": "Pliva Waterfall in Jajce"
+      },
+      {
+        "lat": 44.34845595729735,
+        "lng": 17.239768622581238,
+        "label": "Lover’s Bridge"
+      },
+      {
+        "lat": 44.347383633072965,
+        "lng": 17.22566739695896,
+        "label": "Plivski Mlinčići -  Pliva's Watermill's"
+      }
+    ],
+    "mapProfile": "driving-car"
+  },
+  {
+    "id": 6,
+    "slug": "sarajevo-morning-walk-tour",
+    "category": "city-walks",
+    "city": "Sarajevo",
+    "region": "Bosnia & Herzegovina",
+    "title": "Sarajevo Morning Walk Tour: Sarajevo Before the Crowds",
+    "price": 15,
+    "rating": 5,
+    "reviews": 8,
+    "duration": "1.5 hours",
+    "groupSize": 12,
+    "badge": "Early Bird",
+    "hero": "/uploads/morning-7.webp",
+    "detailHero": "/uploads/morning-7.webp",
+    "description": "Sarajevo is a compact crossroads of empires, faiths, and centuries — and this two-hour morning walking tour is built for travelers who want context, not just checkpoints. The city at this hour belongs to you — before the crowds arrive, before the heat settles, before Baščaršija fills with the noise of the day. \n\n From the Latin Bridge, where a single act in 1914 reshaped global history, through the Ottoman lanes of the old bazaar, past mosques, churches, and synagogues that still function side by side, to a final viewpoint over the valley. Craft streets that never industrialized. Markets that once linked trade routes. A city defined by what it survived. For early risers who want the best version of every place they visit. Small group, local guide, steady pace.",
+    "highlights": [
+      "Latin Bridge & Assassination Site — Stand where Archduke Franz Ferdinand was shot in 1914, the spark that ignited World War I.",
+      "Baščaršija Old Bazaar — Sarajevo's beating heart since the 15th century. Cobblestones, coffee, and crafts still alive today.",
+      "Coppersmith Street (Kazandžiluk) — Hammered copper souvenirs made by hand, a trade unchanged for over 500 years.",
+      "Gazi Husrev-Bey Mosque — Built in 1531, this remains the architectural and spiritual anchor of the old town, balancing Ottoman design with continuous religious use.",
+      "Gazi Husrev-Bey Bezistan — A covered 16th-century market where silk and spice routes once crossed.",
+      "Old Orthodox Church — One of the oldest in the region, quietly holding centuries of Sarajevo's Serbian heritage.",
+      "Jewish Quarter — A rare testament to Sephardic history in the heart of the Balkans, layered with resilience.",
+      "Sarajevo Cathedral — The most important catholic cathedral in Bosnia, a graceful anchor of Catholic presence in the city.",
+      "Hotel Europe — Opened during Austro-Hungarian rule, this landmark represents the city's shift toward Central European elegance.",
+      "City Hall (Vijećnica) — A stunning neo-Moorish building, rebuilt after wartime destruction, now a symbol of recovery."
+    ],
+    "includes": [
+      "Local guide",
+      "Small group max 12",
+      "Walking tour",
+      "Free cancellation 24h"
+    ],
+    "excludes": [
+      "Gratuities (optional but appreciated)",
+      "Personal expenses"
+    ],
+    "faqs": [
+      {
+        "question": "Is this tour suitable for people who don't know much about Sarajevo's history?",
+        "answer": "Absolutely. The tour is built around discovery — no prior knowledge needed. Your guide connects the dots between cultures, eras, and stories as you walk."
+      },
+      {
+        "question": "How much walking is involved? Is it suitable for all fitness levels?",
+        "answer": "The route covers roughly 2–3 km at a relaxed pace through the old town. Comfortable shoes are recommended; suitable for most fitness levels with basic mobility."
+      },
+      {
+        "question": "Are entrance fees to mosques or other sites included?",
+        "answer": "The tour includes access to outdoor areas and select interiors. Some religious sites may request a small voluntary donation — your guide will let you know in advance."
+      }
+    ],
+    "meetingPoint": "In front of the Tallest Tourguide & Friends office, Hamdije Kresevljakovica 61, Sarajevo. Right next to the Viking Pub.",
+    "startingTimes": [
+      "08 AM"
+    ],
+    "languages": [
+      "english",
+      "bosnian"
+    ],
+    "rightFor": [
+      "Early risers who want Sarajevo before the crowds arrive",
+      "Budget-conscious travelers wanting a short, high-value city orientation",
+      "Guests with limited time who want the essential story in 90 minutes",
+      "Those who enjoy cities at their quietest and most authentic"
+    ],
+    "notRightFor": [
+      "Guests who prefer sleeping in or evening activities",
+      "Those wanting deep historical immersion (see the 3-hour Essential tour)",
+      "Guests looking for food stops or tastings along the route"
+    ],
+    "accessibility": {
+      "walkingDistanceKm": 3,
+      "drivingDistanceKm": null,
+      "walkingDurationMin": 45,
+      "drivingDurationMin": null,
+      "durationMin": 90,
+      "elevationGainM": null,
+      "effortLevel": "low",
+      "suitability": {
+        "wheelchair": "yes",
+        "stroller": "yes",
+        "smallChildren": "yes",
+        "children": "yes",
+        "pregnancy": "yes",
+        "seniors": "yes",
+        "pets": "yes"
+      },
+      "requirements": [],
+      "terrain": "Cobblestone streets; mostly flat with no steep climbs",
+      "notes": "Walking: 2–3 km at a relaxed pace through the old town\nComfortable walking shoes recommended. Manageable for most fitness levels."
+    },
+    "subtitle": "90 minutes. Four centuries. One city unlike any other.",
+    "gallery": [
+      "/uploads/morning-1.webp",
+      "/uploads/morning-2.webp",
+      "/uploads/morning-3.webp",
+      "/uploads/morning-4.webp",
+      "/uploads/morning-5.webp",
+      "/uploads/morning-6.webp",
+      "/uploads/morning-7.webp",
+      "/uploads/tour-2-hero.webp"
+    ],
+    "mapWaypoints": [
+      {
+        "lat": 43.857799,
+        "lng": 18.429011,
+        "label": "Latin Bridge"
+      },
+      {
+        "lat": 43.859021,
+        "lng": 18.434065,
+        "label": "City Hall"
+      },
+      {
+        "lat": 43.859878,
+        "lng": 18.431249,
+        "label": "Sebilj"
+      },
+      {
+        "lat": 43.859235,
+        "lng": 18.429283,
+        "label": "Gazi Husrev Bey Mosque"
+      },
+      {
+        "lat": 43.859355,
+        "lng": 18.427819,
+        "label": "Sarajevo Meeting of Cultures"
+      },
+      {
+        "lat": 43.859771,
+        "lng": 18.427858,
+        "label": "Jewish Quarter"
+      },
+      {
+        "lat": 43.859405,
+        "lng": 18.42555,
+        "label": "Sacred Heart Cathedral"
+      },
+      {
+        "lat": 43.858301,
+        "lng": 18.425284,
+        "label": "Orthodox Church of the Nativity of the Theotokos"
+      }
+    ],
+    "mapProfile": "foot-walking"
+  },
+  {
+    "id": 7,
+    "slug": "sarajevo-jewish-heritage-tour",
+    "category": "history",
+    "city": "Sarajevo",
+    "region": "Bosnia & Herzegovina",
+    "title": "Sarajevo Jewish Heritage Tour: Synagogues, Museum & the Haggadah",
+    "price": 35,
+    "rating": 5,
+    "reviews": 11,
+    "duration": "2,5 hours",
+    "groupSize": 12,
+    "badge": null,
+    "hero": "/uploads/jewish-2.webp",
+    "detailHero": "/uploads/jewish-5.webp",
+    "description": "Sarajevo has been home to Jewish communities since the 16th century, when Sephardic Jews expelled from Spain found refuge here — welcomed in a way much of Europe refused to offer. This half-day tour traces that unbroken thread, from the oldest synagogue in the Balkans to a cemetery that holds five centuries of stories. It is not a history lesson. It is a conversation with the past that still echoes today.\n\nOver three to four hours, you will visit the Jewish Museum of Bosnia and Herzegovina, the grand Ashkenazi Synagogue, the Kal Grande — the Great Sephardic Synagogue — and the historic Jewish Cemetery on the hillside above the city. Where possible, the tour includes a viewing of the Sarajevo Haggadah, one of the oldest and most traveled Jewish manuscripts in the world — a book that survived the Inquisition, World War II, and the siege of Sarajevo itself.",
+    "highlights": [
+      "Jewish Museum of Bosnia and Herzegovina — Housed in the old Sephardic synagogue, it holds one of the richest Jewish collections in Southeast Europe.",
+      "Ashkenazi Synagogue — A striking early 20th-century building marking the arrival of Central European Jewish communities in Sarajevo.",
+      "Kal Grande — The Great Sephardic Synagogue, a cornerstone of Sarajevo's Jewish quarter and its community life for centuries.",
+      "Jewish Cemetery Sarajevo — Perched on a hillside, this cemetery spans five centuries and offers a profound, panoramic place of reflection.",
+      "Sarajevo Haggadah (if available) — One of the world's most remarkable Jewish manuscripts, safeguarded through wars, occupations, and sieges."
+    ],
+    "includes": [
+      "Local guide",
+      "Small group max 12",
+      "Walking tour"
+    ],
+    "excludes": [
+      "Entrance fees",
+      "Gratuities",
+      "Personal expenses"
+    ],
+    "faqs": [
+      {
+        "question": "Is this tour suitable for visitors with no prior knowledge of Jewish history in the Balkans?",
+        "answer": "Yes. The guide provides full context throughout, making the experience meaningful whether you are visiting for personal heritage reasons or out of cultural curiosity."
+      },
+      {
+        "question": "Is the Sarajevo Haggadah viewing guaranteed?",
+        "answer": "The Haggadah is housed at the National Museum of Bosnia and Herzegovina and access depends on museum scheduling. Your guide will confirm availability ahead of the tour and arrange the visit where possible."
+      },
+      {
+        "question": "Is this tour appropriate for older travelers or those with limited mobility?",
+        "answer": "The tour includes some uphill walking, particularly to the Jewish Cemetery. The pace is relaxed and the guide is mindful of the group. Anyone with mobility concerns is encouraged to mention this at booking."
+      }
+    ],
+    "meetingPoint": "In front of the Tallest Tourguide & Friends office, Hamdije Kresevljakovica 61, Sarajevo. Right next to the Viking Pub.",
+    "startingTimes": [
+      "10 AM"
+    ],
+    "languages": [
+      "english",
+      "bosnian"
+    ],
+    "rightFor": [
+      "Guests with Jewish heritage or a personal connection to Sephardic history",
+      "History enthusiasts interested in diaspora, resilience, and identity",
+      "Cultural travelers who want to understand Sarajevo beyond its Ottoman story",
+      "Anyone moved by rare manuscripts and long, layered memory"
+    ],
+    "notRightFor": [
+      "Guests expecting a light sightseeing experience",
+      "Those with significant mobility limitations (uphill walk to Jewish Cemetery)",
+      "Guests looking for outdoor nature or active pursuits"
+    ],
+    "accessibility": {
+      "walkingDistanceKm": 2.8,
+      "drivingDistanceKm": 3,
+      "durationMin": null,
+      "elevationGainM": null,
+      "effortLevel": "moderate",
+      "suitability": {
+        "wheelchair": "no",
+        "stroller": "partial",
+        "smallChildren": "yes",
+        "children": "yes",
+        "pregnancy": "yes",
+        "seniors": "yes",
+        "pets": "no"
+      },
+      "requirements": [
+        {
+          "key": "stairs",
+          "label": "Climb a flight of stairs",
+          "detail": "Stairs at the Ashkenazi Synagouge, Sephardic Synagouge and Jewish Cemeter"
+        }
+      ],
+      "terrain": "Mixed surfaces; includes a moderately steep climb on uneven ground",
+      "notes": "Walking: 2-3 km with one significant uphill section to Synagouge Bjelave.\n\nThe Jewish Cemetery involves a steep uphill walk. Guests with mobility concerns should mention this at booking."
+    },
+    "subtitle": "Roots & Remembrance: A half-day walk through survival, memory, and belonging.",
+    "gallery": [
+      "/uploads/jewish-1.webp",
+      "/uploads/jewish-2.webp",
+      "/uploads/jewish-3.webp",
+      "/uploads/jewish-4.webp",
+      "/uploads/jewish-5.webp",
+      "/uploads/jewish-6.webp",
+      "/uploads/jewish-7.webp",
+      "/uploads/tour-4-hero.webp"
+    ],
+    "mapWaypoints": [
+      {
+        "lat": 43.85995509576765,
+        "lng": 18.427854171796483,
+        "label": "Museum of the Jews of Bosnia and Herzegovina"
+      },
+      {
+        "lat": 43.85645523985706,
+        "lng": 18.425192067360967,
+        "label": "Ashkenazi Synagogue"
+      },
+      {
+        "lat": 43.85772230275747,
+        "lng": 18.422109187666212,
+        "label": "Bosnian Cultural Center / Kal Grande"
+      },
+      {
+        "lat": 43.86143501133153,
+        "lng": 18.420679833583268,
+        "label": "The Synagogue of Bjelave"
+      },
+      {
+        "lat": 43.85865253891387,
+        "lng": 18.420852630790076,
+        "label": "Salomon's Palace"
+      },
+      {
+        "lat": 43.850144293505295,
+        "lng": 18.40930945766043,
+        "label": "Jewish Cemetery"
+      }
+    ],
+    "mapProfile": "foot-walking"
+  },
+  {
+    "id": 3,
+    "slug": "sarajevo-war-tour",
+    "category": "history",
+    "city": "Sarajevo",
+    "region": "Bosnia & Herzegovina",
+    "title": "Sarajevo War Tour: Siege, Tunnel of Hope & Fall of Yugoslavia",
+    "price": 40,
+    "rating": 5,
+    "reviews": 36,
+    "duration": "4 hours",
+    "groupSize": 12,
+    "badge": null,
+    "hero": "/uploads/tour-3-hero.webp",
+    "detailHero": "/uploads/sarajevo-war-tour-unitic-towers.webp",
+    "description": "Between April 1992 and February 1996, the city of Sarajevo was encircled, shelled, and sniped at for 1,425 consecutive days. Ordinary people — teachers, doctors, children, neighbours — survived without electricity, without running water, without knowing if the next day would come. What they built in response was not just survival. It was an act of extraordinary collective resilience that the world was watching and largely failed to stop.\n\nThis half-day tour moves through the physical memory of that time — from Sniper Alley, where civilians ran for their lives across open ground, to the Markale Market massacre site, to the Tunnel of Hope that kept the city breathing beneath a besieged airport. War photography documents what cameras captured. Srebrenica genocide memorial materials bear witness to what happened beyond the city's boundaries. This tour does not sensationalise. It remembers, with honesty and with care.",
+    "highlights": [
+      "Markale — A busy market turned into a site of tragedy within seconds.",
+      "Sarajevo Roses — Each mark fixes a moment in place, connecting the city's surface with the stories of those who didn't survive.",
+      "Sarajevo Sniper Alley — Drive the same exposed roads where crossing a street once meant calculating risk in real time.",
+      "Sarajevo Tunnel Tour — Step into the narrow passage that kept Sarajevo alive when the city was completely cut off.",
+      "Trebevic Mountain — The hills that once shelled the city now offer a panoramic view of what was endured and what was saved.",
+      "Bobsleigh Track — The Olympic venue that became a frontline, still scarred by war but open to visitors as a reminder of what was lost and what was survived.",
+      "City Hall — What appears restored and elegant today once burned for days, taking centuries of written memory with it."
+    ],
+    "includes": [
+      "Local guide",
+      "Small group max 12",
+      "Walking tour",
+      "Free cancellation 24h"
+    ],
+    "excludes": [
+      "Entrance fees to Tunnel Museum (20 BAM/10 EUR)",
+      "Transport with AC Vehicles",
+      "Gratuities (optional but appreciated)",
+      "Personal expenses"
+    ],
+    "faqs": [
+      {
+        "question": "How intense or emotional is this tour?",
+        "answer": "The content is direct and based on real events, including civilian casualties and personal stories. It is not graphic, but it is serious in tone and often leaves a strong impression. Most visitors find it meaningful rather than overwhelming, especially with a guide providing context throughout."
+      },
+      {
+        "question": "How much walking is involved? Is it suitable for all fitness levels?",
+        "answer": "The route covers roughly 2–3 km at a relaxed pace. Comfortable shoes are recommended; suitable for most fitness levels with basic mobility."
+      },
+      {
+        "question": "Is this tour historically accurate and balanced?",
+        "answer": "Yes. The narrative is based on documented facts, verified timelines, and widely accepted historical sources. A professional guide explains events within their broader context, avoiding simplification while staying clear and structured."
+      }
+    ],
+    "meetingPoint": "In front of the Tallest Tourguide & Friends office, Hamdije Kresevljakovica 61, Sarajevo. Right next to the Viking Pub.",
+    "startingTimes": [
+      "10 AM"
+    ],
+    "languages": [
+      "english",
+      "bosnian"
+    ],
+    "rightFor": [
+      "Those who want to understand what happened in Sarajevo between 1992 and 1996",
+      "History enthusiasts ready for emotionally honest, serious content",
+      "Travelers who have done a city orientation and want deeper context",
+      "Educators, journalists, and those with professional interest in the conflict"
+    ],
+    "notRightFor": [
+      "Children under 14 — content includes wartime imagery and civilian deaths",
+      "Guests sensitive to trauma or PTSD-related material",
+      "Those expecting a typical sightseeing experience with light commentary"
+    ],
+    "accessibility": {
+      "walkingDistanceKm": null,
+      "drivingDistanceKm": 25,
+      "walkingDurationMin": null,
+      "drivingDurationMin": 60,
+      "durationMin": 240,
+      "elevationGainM": null,
+      "effortLevel": "low",
+      "suitability": {
+        "wheelchair": "no",
+        "stroller": "yes",
+        "smallChildren": "partial",
+        "children": "no",
+        "pregnancy": "yes",
+        "seniors": "yes",
+        "pets": "no"
+      },
+      "requirements": [
+        {
+          "key": "stairs",
+          "label": "Climb a flight of stairs",
+          "detail": ""
+        }
+      ],
+      "terrain": "Mostly flat urban terrain; the tunnel museum involves a narrow underground passage. There is a small uphill walking towards the bobsleigh track.",
+      "notes": "Walking: 2–3 km with vehicle sections between sites\n\nPlease mention any claustrophobia concerns at booking. Some sections involve vehicle transport."
+    },
+    "subtitle": "A half-day tour that does not look away — and neither should you.",
+    "gallery": [
+      "/uploads/tour-3-hero.webp",
+      "/uploads/siege-1.webp",
+      "/uploads/siege-3.webp",
+      "/uploads/siege-2.webp",
+      "/uploads/siege-5.webp",
+      "/uploads/siege-4.webp",
+      "/uploads/siege-6.webp",
+      "/uploads/siege-7.webp",
+      "/uploads/sarajevo-siege-tour-nermin-divovic.webp",
+      "/uploads/sarajevo-siege-tour-markale.webp",
+      "/uploads/sarajevo-war-tour-unitic-towers-burning.webp"
+    ],
+    "mapWaypoints": [
+      {
+        "lat": 43.856858068560506,
+        "lng": 18.426613390154273,
+        "label": "Start @ Tallest Tourguide & Friends "
+      },
+      {
+        "lat": 43.85966281634782,
+        "lng": 18.424659347472534,
+        "label": "Markale Market"
+      },
+      {
+        "lat": 43.85869591545082,
+        "lng": 18.423215140466656,
+        "label": "Sarajevo Rose Ferhadija"
+      },
+      {
+        "lat": 43.854315254168355,
+        "lng": 18.393200351723635,
+        "label": "Sniper Alley"
+      },
+      {
+        "lat": 43.81985799934413,
+        "lng": 18.337855990056497,
+        "label": "Tunnel of Salvation / Hope"
+      },
+      {
+        "lat": 43.8393893658853,
+        "lng": 18.444075518246915,
+        "label": "Olympic bobsleigh and luge track Trebević"
+      }
+    ],
+    "mapProfile": "driving-car"
+  },
+  {
+    "id": 9,
+    "slug": "srebrenica-day-trip-from-sarajevo",
+    "category": "history",
+    "city": "Srebrenica",
+    "region": "Bosnia & Herzegovina",
+    "title": "Srebrenica Day Trip from Sarajevo | Genocide Memorial & Museum Tour",
+    "price": 70,
+    "rating": 5,
+    "reviews": 2,
+    "duration": "Full day",
+    "groupSize": 12,
+    "badge": "Emotional",
+    "hero": "/uploads/srebrenica-7.webp",
+    "detailHero": "/uploads/srebrenica-7.webp",
+    "description": "In July 1995, over 8,000 Bosniak Muslim men and boys were systematically killed in and around the town of Srebrenica in what the International Court of Justice ruled a genocide. It happened in Europe, under a United Nations protection mandate, within living memory. The Srebrenica-Potočari Memorial and Cemetery now holds the identified remains of those victims — and the process of identification continues to this day. \n\n This full-day trip from Sarajevo is not designed to be comfortable. It is designed to be honest. Your guide will provide full historical context throughout — the lead-up to the genocide, the failure of international protection, the role of the Dutchbat UN battalion, the testimonies of survivors, and the ongoing work of documentation and justice. You will visit the memorial cemetery, the genocide museum, the former UN Dutch Battalion base, the Memorial Room of the Mothers of Srebrenica, and the town itself. You will leave knowing what happened, why it matters, and why remembrance is not optional.",
+    "highlights": [
+      "Srebrenica-Potočari Memorial & Cemetery — The primary site of remembrance, where thousands of identified victims are buried in white stone markers across a hillside that extends as far as the eye can see.",
+      "Srebrenica Genocide Museum — A deeply documented account of the events of July 1995, told through testimony, evidence, and the findings of international tribunals. One of the most important museums in Europe.",
+      "Dutch Battalion UN Base (Dutchbat) — The former headquarters of the UN peacekeeping force tasked with protecting the safe zone. A sobering site that raises necessary questions about the limits and failures of international intervention.",
+      "Memorial Room of the Mothers of Srebrenica — A space dedicated to the survivors — the mothers, wives, and daughters who lost everything and have spent decades demanding truth, identification, and accountability.",
+      "Town of Srebrenica — The town itself, quiet and still marked by the weight of what occurred here, provides essential human context that no museum exhibit can fully replicate."
+    ],
+    "fitnessNote": {
+      "type": "emotional",
+      "level": "Emotionally demanding",
+      "detail": "This tour covers the Srebrenica genocide — one of the most traumatic events in European post-war history. The experience includes memorial sites, documentary footage, and survivor testimonials. We encourage all guests to consider this carefully before booking. The round trip also involves approximately 5 hours of driving. Not recommended for children under 16."
+    },
+    "includes": [
+      "Local guide",
+      "Small group max 12",
+      "Transportation in AC Vehicle"
+    ],
+    "excludes": [
+      "Food and drinks at stops",
+      "Personal expenses"
+    ],
+    "faqs": [
+      {
+        "question": "Is this tour appropriate for visitors who are emotionally sensitive to trauma and genocide content?",
+        "answer": "This tour engages directly and unflinchingly with the Srebrenica genocide — mass atrocity, survivor testimony, and ongoing identification of victims. It is handled with full respect and care, but the content is heavy by nature. Guests should arrive prepared for that. It is not recommended for children under 16."
+      },
+      {
+        "question": "Does the tour present events from a particular political perspective?",
+        "answer": "The tour presents events as established historical and legal fact — as ruled by the International Court of Justice and the International Criminal Tribunal for the former Yugoslavia. Srebrenica is recognised as genocide under international law. The guide does not present this as contested. Denial of the genocide will not be entertained on this tour."
+      },
+      {
+        "question": "How long is the full day trip and what is the travel time from Sarajevo?",
+        "answer": "The drive from Sarajevo to Srebrenica takes approximately two and a half hours each way through mountain roads. The full day runs around 10 hours including transport, site visits, and time for quiet reflection. A stop for lunch in the area is included in the schedule."
+      }
+    ],
+    "meetingPoint": "In front of the Tallest Tourguide & Friends office, Hamdije Kresevljakovica 61, Sarajevo. Right next to the Viking Pub.",
+    "startingTimes": [
+      "08 AM"
+    ],
+    "languages": [
+      "english",
+      "bosnian"
+    ],
+    "rightFor": [
+      "Travelers committed to understanding modern European genocide",
+      "Guests who have already seen Sarajevo and want to go deeper into Bosnia",
+      "Educators, human rights advocates, and those with a professional interest",
+      "Anyone who believes remembrance is not optional"
+    ],
+    "notRightFor": [
+      "Children under 16 — content carries significant emotional weight",
+      "Guests who are emotionally sensitive to genocide content or survivor testimony",
+      "Those wanting sightseeing, nature, or a typical full-day excursion",
+      "Anyone not prepared for approximately 5 hours of driving"
+    ],
+    "accessibility": {
+      "walkingDistanceKm": null,
+      "drivingDistanceKm": 145,
+      "durationMin": 160,
+      "elevationGainM": null,
+      "effortLevel": "low",
+      "suitability": {
+        "wheelchair": "yes",
+        "stroller": "yes",
+        "smallChildren": null,
+        "children": "partial",
+        "pregnancy": "yes",
+        "seniors": "yes",
+        "pets": "no"
+      },
+      "requirements": [],
+      "terrain": "The memorial site involves walking on slightly uneven ground",
+      "notes": "Walking: Limited — most of the day is spent in vehicles and at the memorial\n\nPhysical accessibility is manageable for most guests. Please contact us with specific mobility concerns."
+    },
+    "subtitle": "What Happened in Srebrenica in July 1995 Must Not Be Forgotten. This Tour Exists So It Isn't.",
+    "gallery": [
+      "/uploads/srebrenica-1.webp",
+      "/uploads/srebrenica-2.webp",
+      "/uploads/srebrenica-3.webp",
+      "/uploads/srebrenica-4.webp",
+      "/uploads/srebrenica-5.webp",
+      "/uploads/srebrenica-6.webp",
+      "/uploads/srebrenica-7.webp"
+    ],
+    "mapWaypoints": [
+      {
+        "lat": 43.85578753562027,
+        "lng": 18.406962242918024,
+        "label": "Sarajevo"
+      },
+      {
+        "lat": 44.15828000736652,
+        "lng": 19.300190013969626,
+        "label": "Srebrenica Museum"
+      },
+      {
+        "lat": 44.158226689044554,
+        "lng": 19.302396560193312,
+        "label": "Srebrenica Memorial Center - Potocari"
+      },
+      {
+        "lat": 44.106173374838285,
+        "lng": 19.297775471575882,
+        "label": "Srebrenica"
+      }
+    ],
+    "mapProfile": "driving-car"
+  }
+]

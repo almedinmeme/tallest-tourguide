@@ -1,58 +1,61 @@
 import { useState, useRef, useEffect } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { ChevronDown, Sparkles, Search, X } from 'lucide-react'
+import { ChevronDown, Sparkles, Search, X, Map, CalendarDays, BookOpen, Info, MessageCircle, Compass } from 'lucide-react'
 import useWindowWidth from '../hooks/useWindowWidth'
 import logo from '../assets/logo.svg'
 import { useBlog } from '../hooks/useBlog'
 import tours from '../data/tours'
+import packages from '../data/packages'
+import { sortedDestinations } from '../data/destinations'
 
 const searchPackages = [
-  { slug: 'sarajevo-essential', name: '3-Day Complete Sarajevo Experience: Let us show you our home', meta: '3 days · €99', href: '/packages/sarajevo-essential' },
+  { slug: '4-days-sarajevo-experience', name: '4-Day Complete Sarajevo Experience: Let us show you our home', meta: '4 days · €250', href: '/packages/4-days-sarajevo-experience' },
   { slug: 'bosnia-deep-dive', name: 'Bosnia Deep Dive', meta: '5 days · €759', href: '/packages/bosnia-deep-dive' },
   { slug: 'personalised', name: 'Personalised Tour Package', meta: 'Custom experience', href: '/personalised' },
 ]
+
+// Brand & service pages under "Discover", split into two small groups so the
+// menu reads as curated sections rather than one long catch-all list.
+const discoverGroups = [
+  {
+    label: 'Our world',
+    items: [
+      { id: 'our-story', label: 'Our Story', description: 'Why we travel year-round', href: '/about' },
+      { id: 'hospitality', label: 'Gostoprimstvo', description: 'The Balkan art of hosting', href: '/hospitality' },
+      { id: 'where-we-stay', label: 'Where We Stay', description: 'Our accommodation philosophy', href: '/where-we-stay' },
+    ],
+  },
+  {
+    label: 'Plan with us',
+    items: [
+      { id: 'signature', label: 'Signature Experiences', description: 'Private, expert-led journeys', href: '/signature' },
+      { id: 'consult', label: 'Plan Your Trip', description: '60-minute consultation', href: '/consult' },
+      { id: 'partners', label: 'For Travel Professionals', description: 'Our DMC services', href: '/partners' },
+    ],
+  },
+]
+// Flat list kept for active-state checks and the mobile sheet.
+const discoverLinks = discoverGroups.flatMap((g) => g.items)
 
 function match(query, ...fields) {
   const q = query.toLowerCase()
   return fields.some((f) => f && f.toLowerCase().includes(q))
 }
 
-const tourLinks = [
-  { id: 1, slug: 'sarajevo-walking-tour', label: 'Essential Sarajevo Walking Tour', price: '€25' },
-  { id: 2, slug: 'mostar-day-trip-from-sarajevo', label: 'Mostar Day Trip from Sarajevo', price: '€65' },
-  { id: 8, slug: 'lukomir-hike-bosnia', label: 'Lukomir Hike Bosnia', price: '€65' },
-  { id: 4, slug: 'bosnian-cooking-class-sarajevo', label: 'Bosnian Cooking Class in Sarajevo', price: '€45' },
-  { id: 5, slug: 'jajce-travnik-day-trip-sarajevo', label: 'Jajce & Travnik Day Trip', price: '€65' },
- { id: 6, slug: 'sarajevo-morning-walk-tour', label: 'Sarajevo Morning Walk Tour', price: '€15' },
-  { id: 7, slug: 'sarajevo-jewish-heritage-tour', label: 'Sarajevo Jewish Heritage Tour', price: '€25' },
-    { id: 3, slug: 'sarajevo-war-tour', label: 'Sarajevo War Tour', price: '€30' },
-  { id: 9, slug: 'srebrenica-day-trip-from-sarajevo', label: 'Srebrenica Day Trip from Sarajevo', price: '€65' },
+// Place-led nav: the Destinations menu leads with Bosnia & Herzegovina (where
+// the day-tour depth is) and surfaces its cities as quick filters into /tours.
+const FEATURED_REGION_SLUG = 'bosnia-and-herzegovina'
+const featuredCities = ['Sarajevo', 'Mostar', 'Srebrenica']
 
-]
-
-const packageLinks = [
-  {
-    id: 'personalised',
-    label: 'Personalised Tour Package',
-    description: 'Built entirely around you',
-    href: '/personalised',
-    isSpecial: true,
-  },
-  {
-    id: 1,
-    label: 'Sarajevo Essential',
-    description: '2 days · From €99',
-    href: '/packages/sarajevo-essential',
-    isSpecial: false,
-  },
-  {
-    id: 2,
-    label: 'Bosnia Deep Dive',
-    description: '5 days · From €759',
-    href: '/packages/bosnia-deep-dive',
-    isSpecial: false,
-  },
-]
+// The full multi-day offer, driven from the package data so the menu always
+// matches /packages. Labels drop any leading "N-Days" prefix since the meta
+// column already shows the duration.
+const packageLinks = packages.map((p) => ({
+  id: p.slug,
+  label: (p.name || p.title || '').split(':')[0].replace(/^\d+[-\s]?Days?\s+/i, '').trim(),
+  meta: `${p.duration} · €${p.price}`,
+  href: `/packages/${p.slug}`,
+}))
 
 function Navbar() {
   const width = useWindowWidth()
@@ -63,13 +66,18 @@ function Navbar() {
   const { posts } = useBlog()
 
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [toursDropdownOpen, setToursDropdownOpen] = useState(false)
+  const [destDropdownOpen, setDestDropdownOpen] = useState(false)
   const [packagesDropdownOpen, setPackagesDropdownOpen] = useState(false)
+  const [discoverDropdownOpen, setDiscoverDropdownOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [searchFocused, setSearchFocused] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [navHidden, setNavHidden] = useState(false)
   const lastScrollY = useRef(0)
+
+  // Destinations menu: feature Bosnia & Herzegovina, list the remaining regions.
+  const featuredRegion = sortedDestinations.find((d) => d.slug === FEATURED_REGION_SLUG) || sortedDestinations[0]
+  const otherRegions = sortedDestinations.filter((d) => d.slug !== featuredRegion.slug)
 
   useEffect(() => {
     const onScroll = () => {
@@ -86,10 +94,12 @@ function Navbar() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  const toursTimer = useRef(null)
+  const destTimer = useRef(null)
   const packagesTimer = useRef(null)
-  const toursRef = useRef(null)
+  const discoverTimer = useRef(null)
+  const destRef = useRef(null)
   const packagesRef = useRef(null)
+  const discoverRef = useRef(null)
   const searchRef = useRef(null)
 
   // Close search dropdown on outside click
@@ -133,27 +143,30 @@ function Navbar() {
   // Close on route change
   useEffect(() => {
     setIsMenuOpen(false)
-    setToursDropdownOpen(false)
+    setDestDropdownOpen(false)
     setPackagesDropdownOpen(false)
+    setDiscoverDropdownOpen(false)
   }, [location.pathname])
 
   // Hover handlers with small delay to prevent accidental close
-  const openTours = () => {
-    clearTimeout(toursTimer.current)
-    setToursDropdownOpen(true)
+  const openDest = () => {
+    clearTimeout(destTimer.current)
+    setDestDropdownOpen(true)
     setPackagesDropdownOpen(false)
+    setDiscoverDropdownOpen(false)
   }
 
-  const closeTours = () => {
-    toursTimer.current = setTimeout(
-      () => setToursDropdownOpen(false), 150
+  const closeDest = () => {
+    destTimer.current = setTimeout(
+      () => setDestDropdownOpen(false), 150
     )
   }
 
   const openPackages = () => {
     clearTimeout(packagesTimer.current)
     setPackagesDropdownOpen(true)
-    setToursDropdownOpen(false)
+    setDestDropdownOpen(false)
+    setDiscoverDropdownOpen(false)
   }
 
   const closePackages = () => {
@@ -162,10 +175,24 @@ function Navbar() {
     )
   }
 
+  const openDiscover = () => {
+    clearTimeout(discoverTimer.current)
+    setDiscoverDropdownOpen(true)
+    setDestDropdownOpen(false)
+    setPackagesDropdownOpen(false)
+  }
+
+  const closeDiscover = () => {
+    discoverTimer.current = setTimeout(
+      () => setDiscoverDropdownOpen(false), 150
+    )
+  }
+
   const handleLinkClick = () => {
     setIsMenuOpen(false)
-    setToursDropdownOpen(false)
+    setDestDropdownOpen(false)
     setPackagesDropdownOpen(false)
+    setDiscoverDropdownOpen(false)
   }
 
   const sheetLinkStyle = (active) => ({
@@ -173,10 +200,14 @@ function Navbar() {
     fontWeight: active ? '700' : '500',
     fontSize: '17px',
     textDecoration: 'none',
-    padding: '14px 24px',
+    padding: '13px 16px',
+    margin: '0 8px',
+    borderRadius: '12px',
     display: 'flex',
     alignItems: 'center',
-    color: active ? 'var(--color-forest-green)' : 'var(--color-n600)',
+    gap: '10px',
+    color: active ? 'var(--color-forest-green)' : 'var(--color-n700)',
+    backgroundColor: active ? 'rgba(46,125,94,0.08)' : 'transparent',
   })
 
   const handleHomeClick = (e) => {
@@ -193,17 +224,6 @@ function Navbar() {
       ? 'var(--color-forest-green)'
       : 'var(--color-n600)',
     fontWeight: location.pathname === path ? '700' : '500',
-  })
-
-  const getMobileLinkStyle = (path) => ({
-    ...styles.mobileLink,
-    color: location.pathname === path
-      ? 'var(--color-forest-green)'
-      : 'var(--color-n600)',
-    fontWeight: location.pathname === path ? '700' : '500',
-    backgroundColor: location.pathname === path
-      ? 'var(--color-amber-light)'
-      : 'transparent',
   })
 
   return (
@@ -241,7 +261,7 @@ function Navbar() {
               <Search size={15} color="var(--color-n600)" style={{ flexShrink: 0 }} />
               <input
                 type="text"
-                placeholder="Search tours, packages, blog…"
+                placeholder="Search tours, packages…"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onFocus={() => setSearchFocused(true)}
@@ -282,9 +302,9 @@ function Navbar() {
                   </SearchGroup>
                 )}
                 {blogResults.length > 0 && (
-                  <SearchGroup label="Blog">
+                  <SearchGroup label="The Journal">
                     {blogResults.map((p) => (
-                      <SearchResult key={p.id} to={`/blog/${p.slug}`} title={p.title} meta={p.category || 'Blog'} onClick={handleSearchResultClick} />
+                      <SearchResult key={p.id} to={`/journal/${p.slug}`} title={p.title} meta={p.category || 'Journal'} onClick={handleSearchResultClick} />
                     ))}
                   </SearchGroup>
                 )}
@@ -297,87 +317,113 @@ function Navbar() {
         {!isMobile && (
           <div style={styles.links}>
 
-            <Link
-              to="/"
-              style={getLinkStyle('/')}
-              onClick={handleLinkClick}
-            >
-              Home
-            </Link>
-
             {/* Tours dropdown */}
             <div
-              ref={toursRef}
+              ref={destRef}
               style={styles.dropdownWrapper}
-              onMouseEnter={openTours}
-              onMouseLeave={closeTours}
+              onMouseEnter={openDest}
+              onMouseLeave={closeDest}
             >
               <button
-                className={`nav-trigger${location.pathname.startsWith('/tours') ? ' active' : ''}`}
+                className={`nav-trigger${location.pathname.startsWith('/destinations') || location.pathname.startsWith('/tours') ? ' active' : ''}`}
                 style={{
                   ...styles.dropdownTrigger,
-                  color: location.pathname.startsWith('/tours')
+                  color: location.pathname.startsWith('/destinations') || location.pathname.startsWith('/tours')
                     ? 'var(--color-forest-green)'
                     : 'var(--color-n600)',
-                  fontWeight: location.pathname.startsWith('/tours')
+                  fontWeight: location.pathname.startsWith('/destinations') || location.pathname.startsWith('/tours')
                     ? '700' : '500',
                 }}
               >
                 
-                Tours
+                Destinations
                 <ChevronDown
                   size={14}
                   style={{
-                    transform: toursDropdownOpen
+                    transform: destDropdownOpen
                       ? 'rotate(180deg)' : 'rotate(0)',
                     transition: 'transform var(--t-fast)',
                   }}
                 />
               </button>
 
-              {toursDropdownOpen && (
+              {destDropdownOpen && (
                 <div
-                  style={styles.dropdown}
+                  style={{ ...styles.dropdown, minWidth: 380 }}
                   className="nav-dropdown"
                   onMouseEnter={() =>
-                    clearTimeout(toursTimer.current)
+                    clearTimeout(destTimer.current)
                   }
-                  onMouseLeave={closeTours}
+                  onMouseLeave={closeDest}
                 >
                   <div style={styles.dropdownHeader}>
                     <span style={styles.dropdownHeaderTitle}>
-                      Our Tours
+                      Where to go
                     </span>
                     <Link
-                      to="/tours"
+                      to="/destinations"
                       style={styles.dropdownViewAll}
                       onClick={handleLinkClick}
                     >
-                      View all →
+                      All destinations →
                     </Link>
                   </div>
 
                   <div style={styles.dropdownDivider} />
 
-                  <div style={styles.dropdownItems}>
-                    {tourLinks.map((tour, index) => (
-                      <div key={tour.id}>
-                        <Link
-  to={`/tours/${tour.slug}`}
-  style={styles.dropdownItem}
-  className="dropdown-item"
-  onClick={handleLinkClick}
->
-                          <span style={styles.dropdownItemLabel}>
-                            {tour.label}
-                          </span>
-                        </Link>
-                        {index < tourLinks.length - 1 && (
-                          <div style={styles.dropdownItemDivider} />
-                        )}
+                  {/* Featured region + its cities as quick filters into /tours */}
+                  {featuredRegion && (
+                    <div style={styles.destFeatured}>
+                      <Link
+                        to={`/destinations/${featuredRegion.slug}`}
+                        style={styles.destFeaturedLink}
+                        className="dropdown-special-item"
+                        onClick={handleLinkClick}
+                      >
+                        <span style={styles.dropdownSpecialItemLabel}>{featuredRegion.name}</span>
+                        <span style={styles.dropdownItemDescription}>Where it all started — and where our day tours run</span>
+                      </Link>
+                      <div style={styles.destCityRow}>
+                        {featuredCities.map((city) => (
+                          <Link
+                            key={city}
+                            to={`/tours?city=${encodeURIComponent(city)}`}
+                            style={styles.destCityChip}
+                            className="dest-city-chip"
+                            onClick={handleLinkClick}
+                          >
+                            {city}
+                          </Link>
+                        ))}
                       </div>
+                    </div>
+                  )}
+
+                  <span style={styles.dropdownGroupLabel}>More regions</span>
+                  <div style={styles.destRegionGrid}>
+                    {otherRegions.map((r) => (
+                      <Link
+                        key={r.slug}
+                        to={`/destinations/${r.slug}`}
+                        style={styles.dropdownItem}
+                        className="dropdown-item"
+                        onClick={handleLinkClick}
+                      >
+                        <span style={styles.dropdownItemLabel}>{r.name}</span>
+                      </Link>
                     ))}
                   </div>
+
+                  <div style={styles.dropdownDivider} />
+
+                  <Link
+                    to="/tours"
+                    style={styles.destFooterLink}
+                    className="dropdown-item"
+                    onClick={handleLinkClick}
+                  >
+                    Browse all day tours →
+                  </Link>
                 </div>
               )}
             </div>
@@ -408,7 +454,7 @@ function Navbar() {
                       ? '700' : '500',
                 }}
               >
-                Multi-day tours
+                Journeys
                 <ChevronDown
                   size={14}
                   style={{
@@ -421,7 +467,7 @@ function Navbar() {
 
               {packagesDropdownOpen && (
                 <div
-                  style={styles.dropdown}
+                  style={{ ...styles.dropdown, minWidth: 360 }}
                   className="nav-dropdown"
                   onMouseEnter={() =>
                     clearTimeout(packagesTimer.current)
@@ -430,7 +476,7 @@ function Navbar() {
                 >
                   <div style={styles.dropdownHeader}>
                     <span style={styles.dropdownHeaderTitle}>
-                      Multi-day tours
+                      Journeys
                     </span>
                     <Link
                       to="/multi-day-tours"
@@ -445,16 +491,13 @@ function Navbar() {
 
                   {/* Personalised — special highlighted item */}
                   <Link
-  to="/personalised"
-  style={styles.dropdownSpecialItem}
-  className="dropdown-special-item"
-  onClick={handleLinkClick}
->
+                    to="/personalised"
+                    style={styles.dropdownSpecialItem}
+                    className="dropdown-special-item"
+                    onClick={handleLinkClick}
+                  >
                     <div style={styles.dropdownSpecialItemLeft}>
-                      <Sparkles
-                        size={14}
-                        color="var(--color-amber)"
-                      />
+                      <Sparkles size={14} color="var(--color-amber)" />
                       <div style={styles.dropdownItemContent}>
                         <span style={styles.dropdownSpecialItemLabel}>
                           Personalised Tour Package
@@ -469,52 +512,82 @@ function Navbar() {
                   <div style={styles.dropdownDivider} />
 
                   <div style={styles.dropdownItems}>
-                    {packageLinks
-                      .filter((p) => !p.isSpecial)
-                      .map((pkg, index, arr) => (
-                        <div key={pkg.id}>
-                          <Link
-  to={pkg.href}
-  style={styles.dropdownItem}
-  className="dropdown-item"
-  onClick={handleLinkClick}
->
-                            <div style={styles.dropdownItemLeft}>
-                              <div style={styles.dropdownItemContent}>
-                                <span style={styles.dropdownItemLabel}>
-                                  {pkg.label}
-                                </span>
-                                <span style={styles.dropdownItemDescription}>
-                                  {pkg.description}
-                                </span>
-                              </div>
-                            </div>
-                          </Link>
-                          {index < arr.length - 1 && (
-                            <div style={styles.dropdownItemDivider} />
-                          )}
-                        </div>
-                      ))
-                    }
+                    {packageLinks.map((pkg) => (
+                      <Link
+                        key={pkg.id}
+                        to={pkg.href}
+                        style={styles.dropdownItem}
+                        className="dropdown-item"
+                        onClick={handleLinkClick}
+                      >
+                        <span style={styles.dropdownItemLabel}>{pkg.label}</span>
+                        <span style={styles.dropdownItemMeta}>{pkg.meta}</span>
+                      </Link>
+                    ))}
                   </div>
                 </div>
               )}
             </div>
 
-            <Link
-              to="/about"
-              style={getLinkStyle('/about')}
-              onClick={handleLinkClick}
+            {/* Discover dropdown — brand & service pages */}
+            <div
+              ref={discoverRef}
+              style={styles.dropdownWrapper}
+              onMouseEnter={openDiscover}
+              onMouseLeave={closeDiscover}
             >
-              About
-            </Link>
+              <button
+                className={`nav-trigger${discoverLinks.some((l) => l.href === location.pathname) ? ' active' : ''}`}
+                style={{
+                  ...styles.dropdownTrigger,
+                  color: discoverLinks.some((l) => l.href === location.pathname)
+                    ? 'var(--color-forest-green)'
+                    : 'var(--color-n600)',
+                  fontWeight: discoverLinks.some((l) => l.href === location.pathname) ? '700' : '500',
+                }}
+              >
+                Discover
+                <ChevronDown
+                  size={14}
+                  style={{
+                    transform: discoverDropdownOpen ? 'rotate(180deg)' : 'rotate(0)',
+                    transition: 'transform var(--t-fast)',
+                  }}
+                />
+              </button>
+
+              {discoverDropdownOpen && (
+                <div
+                  style={{ ...styles.dropdown, minWidth: 300 }}
+                  className="nav-dropdown"
+                  onMouseEnter={() => clearTimeout(discoverTimer.current)}
+                  onMouseLeave={closeDiscover}
+                >
+                  {discoverGroups.map((group, gi) => (
+                    <div key={group.label} style={{ marginTop: gi ? 6 : 0 }}>
+                      <span style={styles.dropdownGroupLabel}>{group.label}</span>
+                      <div style={styles.dropdownItems}>
+                        {group.items.map((item) => (
+                          <Link key={item.id} to={item.href} style={styles.dropdownItem} className="dropdown-item" onClick={handleLinkClick}>
+                            <div style={styles.dropdownItemContent}>
+                              <span style={styles.dropdownItemLabel}>{item.label}</span>
+                              <span style={styles.dropdownItemDescription}>{item.description}</span>
+                            </div>
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
 
             <Link
-              to="/blog"
-              style={getLinkStyle('/blog')}
+              to="/journal"
+              style={getLinkStyle('/journal')}
               onClick={handleLinkClick}
             >
-              Blog
+              The Journal
             </Link>
 
             <Link
@@ -631,34 +704,55 @@ function Navbar() {
               </SearchGroup>
             )}
             {blogResults.length > 0 && (
-              <SearchGroup label="Blog">
+              <SearchGroup label="The Journal">
                 {blogResults.map((p) => (
-                  <SearchResult key={p.id} to={`/blog/${p.slug}`} title={p.title} meta={p.category || 'Blog'} onClick={() => { handleSearchResultClick(); handleLinkClick() }} />
+                  <SearchResult key={p.id} to={`/journal/${p.slug}`} title={p.title} meta={p.category || 'Journal'} onClick={() => { handleSearchResultClick(); handleLinkClick() }} />
                 ))}
               </SearchGroup>
             )}
           </div>
         ) : (
           <div style={styles.sheetNav}>
-            <Link to="/" style={sheetLinkStyle(location.pathname === '/')} onClick={handleHomeClick}>
-              Home
+            <span style={styles.sheetGroupLabel}>Where to go</span>
+            <Link to="/destinations" style={sheetLinkStyle(location.pathname.startsWith('/destinations'))} onClick={handleLinkClick}>
+              <Compass size={16} style={styles.sheetLinkIcon} />
+              Destinations
             </Link>
+            <div style={styles.sheetCityRow}>
+              {featuredCities.map((city) => (
+                <Link key={city} to={`/tours?city=${encodeURIComponent(city)}`} style={styles.sheetCityChip} className="dest-city-chip" onClick={handleLinkClick}>
+                  {city}
+                </Link>
+              ))}
+            </div>
             <Link to="/tours" style={sheetLinkStyle(location.pathname.startsWith('/tours'))} onClick={handleLinkClick}>
-              Tours
+              <Map size={16} style={styles.sheetLinkIcon} />
+              All day tours
             </Link>
             <Link to="/multi-day-tours" style={sheetLinkStyle(location.pathname.startsWith('/multi-day-tours') || location.pathname.startsWith('/packages') || location.pathname === '/personalised')} onClick={handleLinkClick}>
-              Multi-day tours
+              <CalendarDays size={16} style={styles.sheetLinkIcon} />
+              Journeys
             </Link>
-            <Link to="/about" style={sheetLinkStyle(location.pathname === '/about')} onClick={handleLinkClick}>
-              About
+            <Link to="/journal" style={sheetLinkStyle(location.pathname.startsWith('/journal'))} onClick={handleLinkClick}>
+              <BookOpen size={16} style={styles.sheetLinkIcon} />
+              The Journal
             </Link>
-            <Link to="/blog" style={sheetLinkStyle(location.pathname === '/blog')} onClick={handleLinkClick}>
-              Blog
-            </Link>
+
             <div style={styles.sheetDivider} />
-            <Link to="/contact" style={styles.mobileContactBtn} onClick={handleLinkClick}>
-              Contact Us
-            </Link>
+            <span style={styles.sheetGroupLabel}>Discover</span>
+            {discoverLinks.map((item) => (
+              <Link key={item.id} to={item.href} style={sheetLinkStyle(location.pathname === item.href)} onClick={handleLinkClick}>
+                <Info size={16} style={styles.sheetLinkIcon} />
+                {item.label}
+              </Link>
+            ))}
+
+            <div style={{ padding: '16px 12px 0' }}>
+              <Link to="/contact" style={{ ...styles.mobileContactBtn, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', borderRadius: '14px' }} onClick={handleLinkClick}>
+                <MessageCircle size={16} style={{ flexShrink: 0 }} />
+                Contact Us
+              </Link>
+            </div>
           </div>
         )}
 
@@ -856,6 +950,74 @@ const styles = {
     marginLeft: '8px',
   },
 
+  // Duration · price on multi-day rows — muted so the menu stays calm.
+  dropdownItemMeta: {
+    fontFamily: 'var(--font-body)',
+    fontWeight: '600',
+    fontSize: '12px',
+    color: 'var(--color-n500)',
+    whiteSpace: 'nowrap',
+    marginLeft: '12px',
+  },
+
+  // Small-caps section label inside the Discover / Destinations menus.
+  dropdownGroupLabel: {
+    display: 'block',
+    fontFamily: 'var(--font-body)',
+    fontWeight: '700',
+    fontSize: '10px',
+    color: 'var(--color-n500)',
+    textTransform: 'uppercase',
+    letterSpacing: '1.2px',
+    padding: '8px 8px 4px',
+  },
+
+  // Destinations menu — featured region + city quick-links + region grid.
+  destFeatured: { padding: '2px 0 4px' },
+  destFeaturedLink: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '2px',
+    textDecoration: 'none',
+    padding: '10px',
+    borderRadius: '8px',
+    backgroundColor: 'rgba(244,161,48,0.07)',
+  },
+  destCityRow: { display: 'flex', flexWrap: 'wrap', gap: '6px', padding: '8px 10px 2px' },
+  destCityChip: {
+    fontFamily: 'var(--font-body)',
+    fontSize: '12.5px',
+    fontWeight: '600',
+    color: 'var(--color-forest-green)',
+    textDecoration: 'none',
+    padding: '5px 12px',
+    border: '1px solid var(--color-n300)',
+    borderRadius: '999px',
+    backgroundColor: 'var(--color-n000)',
+  },
+  destRegionGrid: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0 8px' },
+  destFooterLink: {
+    display: 'block',
+    textDecoration: 'none',
+    padding: '9px 8px',
+    borderRadius: '8px',
+    fontFamily: 'var(--font-body)',
+    fontSize: '13px',
+    fontWeight: '700',
+    color: 'var(--color-forest-green)',
+  },
+  sheetCityRow: { display: 'flex', flexWrap: 'wrap', gap: '8px', padding: '4px 24px 8px' },
+  sheetCityChip: {
+    fontFamily: 'var(--font-body)',
+    fontSize: '13px',
+    fontWeight: '600',
+    color: 'var(--color-forest-green)',
+    textDecoration: 'none',
+    padding: '7px 14px',
+    border: '1px solid var(--color-n300)',
+    borderRadius: '999px',
+  },
+
   dropdownItemDivider: {
     height: '1px',
     backgroundColor: 'var(--color-n300)',
@@ -889,7 +1051,7 @@ const styles = {
   searchWrapper: {
     position: 'relative',
     width: '100%',
-    maxWidth: '420px',
+    maxWidth: '320px',
     margin: '0 auto',
   },
 
@@ -1101,6 +1263,22 @@ const styles = {
   sheetNav: {
     display: 'flex',
     flexDirection: 'column',
+    padding: '0 4px',
+  },
+
+  sheetGroupLabel: {
+    fontFamily: 'var(--font-body)',
+    fontSize: '10px',
+    fontWeight: 700,
+    textTransform: 'uppercase',
+    letterSpacing: '0.07em',
+    color: 'var(--color-n500)',
+    padding: '12px 20px 4px',
+    display: 'block',
+  },
+
+  sheetLinkIcon: {
+    flexShrink: 0,
   },
 }
 

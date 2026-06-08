@@ -33,6 +33,8 @@ function Home() {
   const isMobile = width <= 768
   const { posts } = useBlog()
   const [blogPage, setBlogPage] = useState(0)
+  const [tourPage, setTourPage] = useState(0)
+  const tourTouchStartX = React.useRef(null)
   const touchStartX = React.useRef(null)
   const [heroIndex, setHeroIndex] = useState(0)
 
@@ -63,8 +65,12 @@ function Home() {
           ═══════════════════════════════ */}
       <section style={{
           ...styles.hero,
-          height: isMobile ? '80vh' : '100vh',
-          minHeight: isMobile ? '480px' : '600px',
+          height: isMobile ? '85vh' : '100vh',
+          minHeight: isMobile ? '540px' : '600px',
+          justifyContent: isMobile ? 'center' : 'flex-start',
+          paddingTop: isMobile ? '15vh' : '12vh',
+          alignItems: isMobile ? 'center' : 'center',
+          boxSizing: 'border-box',
         }}>
 
         {/* Background photo layer —
@@ -80,7 +86,7 @@ function Home() {
               ...styles.heroBg,
               opacity: i === heroIndex ? 1 : 0,
               transition: 'opacity 1.2s ease',
-              objectPosition: 'center',
+              objectPosition: isMobile ? 'center 30%' : 'center',
             }}
           />
         ))}
@@ -91,10 +97,12 @@ function Home() {
         {/* Main content */}
         <div style={{
           ...styles.heroContent,
-          padding: isMobile ? '0 24px' : '0 72px',
+          padding: isMobile ? '0 28px' : '0 72px',
           alignItems: isMobile ? 'center' : 'flex-start',
           textAlign: isMobile ? 'center' : 'left',
           gap: isMobile ? '20px' : '24px',
+          width: isMobile ? '100%' : undefined,
+          maxWidth: isMobile ? '480px' : '600px',
         }}>
 
           {/* Location tag — small pill above the headline.
@@ -127,14 +135,14 @@ function Home() {
             </span>
           </h1>
 
-          {/* Subheading — kept to one line on desktop.
-              Short and punchy rather than descriptive —
-              the sections below handle the detail. */}
-          {!isMobile && (
-            <p style={{ ...styles.heroSub, fontSize: '14px', maxWidth: '420px' }}>
-              Small groups. Trusted guides. Experiences that stay with you.
-            </p>
-          )}
+          {/* Subheading */}
+          <p style={{
+            ...styles.heroSub,
+            fontSize: isMobile ? '13px' : '14px',
+            maxWidth: isMobile ? '320px' : '420px',
+          }}>
+            Small groups. Trusted guides. Experiences that stay with you.
+          </p>
 
           {/* CTA row — primary and secondary buttons.
               Buttons are slightly larger than the rest of
@@ -321,36 +329,100 @@ function Home() {
           </p>
         </div>
 
-        {/* Card grid — three cards side by side on desktop.
-            Each TourCard receives its specific data via props.
-            Notice we're not repeating the card design — just the data. */}
-<div style={{
-  ...styles.cardGrid,
-  gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)',
-}}>
-  {tours.slice(0, 6).map((tour) => (
-  <TourCard
-  key={tour.id}
-  id={tour.id}
-  slug={tour.slug}
-  title={tour.title}
-  price={tour.price}
-  rating={stats[String(tour.id)]?.avgRating ?? tour.rating}
-  reviews={stats[String(tour.id)]?.count ?? tour.reviews}
-  duration={tour.duration}
-  groupSize={tour.groupSize}
+        {/* Tour carousel */}
+        {(() => {
+          const tourList = tours.slice(0, 6)
+          const visibleCount = isMobile ? 1 : 3
+          const totalPages = Math.ceil(tourList.length / visibleCount)
+          return (
+            <>
+              <div
+                style={styles.carouselWrapper}
+                onTouchStart={(e) => { tourTouchStartX.current = e.touches[0].clientX }}
+                onTouchEnd={(e) => {
+                  if (tourTouchStartX.current === null) return
+                  const delta = tourTouchStartX.current - e.changedTouches[0].clientX
+                  if (Math.abs(delta) > 40) {
+                    if (delta > 0) setTourPage((p) => Math.min(totalPages - 1, p + 1))
+                    else setTourPage((p) => Math.max(0, p - 1))
+                  }
+                  tourTouchStartX.current = null
+                }}
+              >
+                <div style={{
+                  ...styles.carouselTrack,
+                  transform: `translateX(-${tourPage * 100}%)`,
+                }}>
+                  {Array.from({ length: totalPages }).map((_, pageIdx) => (
+                    <div key={pageIdx} style={{
+                      ...styles.carouselPage,
+                      gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)',
+                    }}>
+                      {tourList.slice(pageIdx * visibleCount, (pageIdx + 1) * visibleCount).map((tour) => (
+                        <TourCard
+                          key={tour.id}
+                          id={tour.id}
+                          slug={tour.slug}
+                          title={tour.title}
+                          price={tour.price}
+                          rating={stats[String(tour.id)]?.avgRating ?? tour.rating}
+                          reviews={stats[String(tour.id)]?.count ?? tour.reviews}
+                          duration={tour.duration}
+                          groupSize={tour.groupSize}
+                          badge={tour.badge}
+                          hero={tour.hero}
+                          startingTimes={tour.startingTimes}
+                          languages={tour.languages}
+                        />
+                      ))}
+                    </div>
+                  ))}
+                </div>
+              </div>
 
-  badge={tour.badge}
-  hero={tour.hero}
-  startingTimes={tour.startingTimes}
-  languages={tour.languages}
-/>
+              {/* Carousel controls */}
+              {totalPages > 1 && (
+                <div style={styles.carouselControls}>
+                  <button
+                    style={{ ...styles.carouselNavBtn, opacity: tourPage === 0 ? 0.35 : 1 }}
+                    onClick={() => setTourPage((p) => Math.max(0, p - 1))}
+                    disabled={tourPage === 0}
+                    aria-label="Previous tours"
+                  >
+                    <ChevronLeft size={18} color="var(--color-forest-green)" />
+                  </button>
 
-  ))}
-</div>
+                  <div style={styles.carouselDots}>
+                    {Array.from({ length: totalPages }).map((_, i) => (
+                      <button
+                        key={i}
+                        onClick={() => setTourPage(i)}
+                        style={{
+                          ...styles.carouselDot,
+                          width: tourPage === i ? '24px' : '8px',
+                          backgroundColor: tourPage === i ? 'var(--color-forest-green)' : 'var(--color-n300)',
+                        }}
+                        aria-label={`Go to page ${i + 1}`}
+                      />
+                    ))}
+                  </div>
+
+                  <button
+                    style={{ ...styles.carouselNavBtn, opacity: tourPage === totalPages - 1 ? 0.35 : 1 }}
+                    onClick={() => setTourPage((p) => Math.min(totalPages - 1, p + 1))}
+                    disabled={tourPage === totalPages - 1}
+                    aria-label="Next tours"
+                  >
+                    <ChevronRight size={18} color="var(--color-forest-green)" />
+                  </button>
+                </div>
+              )}
+            </>
+          )
+        })()}
 
         {/* View all tours button */}
-        <div style={{ textAlign: 'center', marginTop: '48px' }}>
+        <div style={{ textAlign: 'center', marginTop: '40px' }}>
           <Link
             to="/tours"
             style={styles.viewAllBtn}
@@ -393,9 +465,9 @@ function Home() {
               <div style={blogStyles.header}>
                 <div>
                   <span style={blogStyles.eyebrow}>From the Guide</span>
-                  <h2 style={blogStyles.title}>Stories &amp; Insights</h2>
+                  <h2 style={blogStyles.title}>The Journal</h2>
                 </div>
-                <Link to="/blog" style={blogStyles.viewAll}>
+                <Link to="/journal" style={blogStyles.viewAll}>
                   View all posts →
                 </Link>
               </div>
@@ -424,7 +496,7 @@ function Home() {
                       gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)',
                     }}>
                       {blogPosts.slice(pageIdx * visibleCount, (pageIdx + 1) * visibleCount).map((post) => (
-                        <Link key={post.id} to={`/blog/${post.slug}`} style={blogStyles.card} className="card-lift">
+                        <Link key={post.id} to={`/journal/${post.slug}`} style={blogStyles.card} className="card-lift">
                           <div style={blogStyles.cardImageWrapper}>
                             {post.heroImage
                               ? <img src={post.heroImage} alt={post.title} loading="lazy" style={blogStyles.cardImage} />
@@ -561,6 +633,61 @@ const styles = {
     gap: '28px',
     maxWidth: '1100px',
     margin: '0 auto',
+  },
+
+  carouselWrapper: {
+    maxWidth: '1100px',
+    margin: '0 auto',
+    overflow: 'hidden',
+  },
+
+  carouselTrack: {
+    display: 'flex',
+    transition: 'transform 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+  },
+
+  carouselPage: {
+    display: 'grid',
+    gap: '28px',
+    minWidth: '100%',
+    alignItems: 'stretch',
+  },
+
+  carouselControls: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '16px',
+    marginTop: '32px',
+  },
+
+  carouselNavBtn: {
+    width: '40px',
+    height: '40px',
+    borderRadius: '50%',
+    border: '1.5px solid var(--color-n300)',
+    backgroundColor: 'var(--color-n000)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    cursor: 'pointer',
+    transition: 'opacity 0.2s ease',
+    flexShrink: 0,
+  },
+
+  carouselDots: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '6px',
+  },
+
+  carouselDot: {
+    height: '8px',
+    borderRadius: '4px',
+    border: 'none',
+    cursor: 'pointer',
+    padding: 0,
+    transition: 'width 0.3s ease, background-color 0.3s ease',
   },
 
   viewAllBtn: {
@@ -726,7 +853,7 @@ hero: {
   heroGradientMobile: {
     position: 'absolute',
     inset: 0,
-    background: 'linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.25) 50%, rgba(0,0,0,0.55) 100%)',
+    background: 'linear-gradient(to bottom, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.45) 40%, rgba(0,0,0,0.65) 100%)',
     zIndex: 1,
   },
 

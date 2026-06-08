@@ -37,7 +37,10 @@
   /* --- TYPOGRAPHY --- */
   --font-display: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-hero: 'Fraunces', Georgia, serif;
+  /* Editorial title face. Newsreader is a literary, optically-sized serif —
+     warmer and more characterful than the old Fraunces, and it carries the
+     long-form pages without the generic 'premium template' look. */
+  --font-hero: 'Newsreader', Georgia, serif;
 
   /* --- TYPE SCALE --- */
   --text-display: 48px;
@@ -358,6 +361,53 @@ a[href^="/tours/"]:hover .view-tour-pill {
   transform: scale(1.04);
 }
 
+/* Destinations: arrow nudges right when the region card is hovered */
+.explore-arrow {
+  transition: transform var(--t-base);
+}
+.region-card:hover .explore-arrow {
+  transform: translateX(4px);
+}
+
+/* Green outline button — fills with forest green on hover */
+.btn-outline-green {
+  transition: background-color var(--t-fast), color var(--t-fast), transform var(--t-fast);
+}
+.btn-outline-green:hover {
+  background-color: var(--color-forest-green);
+  color: #fff !important;
+  transform: translateY(-2px);
+}
+
+/* "Keep exploring" region chips — tint and lift slightly on hover */
+.region-chip {
+  transition: background-color var(--t-fast), border-color var(--t-fast), transform var(--t-fast);
+}
+.region-chip:hover {
+  background-color: var(--color-n100);
+  border-color: var(--color-forest-green);
+  transform: translateY(-1px);
+}
+
+/* Hero back-pill (e.g. "← All destinations") — darken on hover */
+.hero-back-pill {
+  transition: background-color var(--t-fast), border-color var(--t-fast);
+}
+.hero-back-pill:hover {
+  background-color: rgba(10,16,20,0.62) !important;
+  border-color: rgba(255,255,255,0.45) !important;
+}
+
+/* Destinations menu city quick-links — fill green on hover */
+.dest-city-chip {
+  transition: background-color var(--t-fast), color var(--t-fast), border-color var(--t-fast);
+}
+.dest-city-chip:hover {
+  background-color: var(--color-forest-green);
+  border-color: var(--color-forest-green);
+  color: #fff;
+}
+
 /* Contact form input focus ring */
 .contact-input:focus {
   outline: none;
@@ -522,3 +572,32 @@ a[href^="/tours/"]:hover .view-tour-pill {
   border-top: 1px solid var(--color-n300);
   margin: 2.5em 0;
 }
+/* Rich content output from the admin (TipTap HTML).
+   Inherits color/font from the wrapper's inline style. */
+.rich-content > *:first-child { margin-top: 0; }
+.rich-content > *:last-child { margin-bottom: 0; }
+.rich-content p { margin: 0 0 16px; }
+.rich-content h2 { font-size: 1.25em; font-weight: 700; margin: 1.2em 0 0.5em; }
+.rich-content h3 { font-size: 1.1em; font-weight: 700; margin: 1em 0 0.4em; }
+.rich-content ul, .rich-content ol { padding-left: 1.4em; margin: 0 0 16px; }
+.rich-content li { margin-bottom: 4px; }
+.rich-content blockquote {
+  border-left: 3px solid var(--color-forest-green);
+  padding: 4px 16px;
+  margin: 12px 0;
+  background: rgba(46,125,94,0.05);
+  font-style: italic;
+}
+.rich-content a {
+  color: var(--color-forest-green);
+  text-decoration: underline;
+}
+.rich-content a:hover { color: var(--color-mid-green); }
+.rich-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin: 12px 0;
+}
+.rich-content strong { font-weight: 700; }
+.rich-content em { font-style: italic; }

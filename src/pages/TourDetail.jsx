@@ -25,7 +25,27 @@ import tours from '../data/tours'
 import { getTourLanguages } from '../data/tourLanguages'
 import Gallery from '../components/Gallery'
 import TourReviews from '../components/TourReviews'
+import TourCard from '../components/TourCard'
+import RichContent from '../components/RichContent'
+import AccessibilitySection from '../components/AccessibilitySection'
 const RouteMap = lazy(() => import('../components/RouteMap'))
+
+// Mirror of AccessibilitySection's internal check so we can conditionally
+// show the in-page nav tab without importing internals.
+function hasAccessibilityContent(acc) {
+  if (!acc) return false
+  const numericKeys = [
+    'walkingDistanceKm', 'drivingDistanceKm',
+    'walkingDurationMin', 'drivingDurationMin', 'durationMin',
+    'elevationGainM',
+  ]
+  if (numericKeys.some((k) => typeof acc[k] === 'number' && acc[k] > 0)) return true
+  if (acc.effortLevel) return true
+  if (Array.isArray(acc.requirements) && acc.requirements.some((r) => (r?.label || '').trim())) return true
+  if ((acc.terrain || '').trim() || (acc.notes || '').trim()) return true
+  if (acc.suitability && Object.values(acc.suitability).some((v) => v === 'yes' || v === 'partial' || v === 'no')) return true
+  return false
+}
 import { useAvailability } from '../hooks/useAvailability'
 import { useBlockedDates } from '../hooks/useBlockedDates'
 import TourCalendar from '../components/TourCalendar'
@@ -470,33 +490,6 @@ function TourDetail() {
 
               <div style={styles.formDivider} />
 
-              {supportedLanguages.length > 0 && (
-                <div style={{ ...styles.formGroup, marginBottom: '8px' }}>
-                  <label style={styles.label}>Tour Language</label>
-                  <div style={styles.pillGroup}>
-                    {supportedLanguages.map((language) => (
-                      <button
-                        key={language.id}
-                        type="button"
-                        onClick={() => {
-                          setSelectedLanguage(language.id)
-                          const spots = getSpotsLeft(tour.slug, selectedDate, language.id, tour.groupSize)
-                          if (spots != null) setNumPeople((n) => Math.min(n, spots))
-                        }}
-                        style={{
-                          ...styles.pillOption,
-                          borderColor: selectedLanguage === language.id ? 'var(--color-forest-green)' : 'var(--color-n300)',
-                          backgroundColor: selectedLanguage === language.id ? 'rgba(46,125,94,0.08)' : 'var(--color-n000)',
-                          color: selectedLanguage === language.id ? 'var(--color-forest-green)' : 'var(--color-n700)',
-                          fontWeight: selectedLanguage === language.id ? '600' : '500',
-                        }}
-                      >
-                        {language.label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
 
               <div style={{ ...styles.formGroup, marginBottom: '8px', position: 'relative' }} ref={calendarWrapperRef}>
                 <label style={styles.label}>Select Date</label>
@@ -800,12 +793,17 @@ function TourDetail() {
   const visibleIncludes = includedExpanded ? includesItems : includesItems.slice(0, 4)
   const visibleExcludes = excludedExpanded ? excludesItems : excludesItems.slice(0, 4)
 
+  const relatedTours = tours
+    .filter((t) => t.slug !== tour.slug && t.category === tour.category)
+    .concat(tours.filter((t) => t.slug !== tour.slug && t.category !== tour.category))
+    .slice(0, 3)
+
   return (
     <div>
 
       <SEO
   title={tour.title}
-  description={`${tour.description.slice(0, 155)}...`}
+  description={`${(tour.description || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 155)}...`}
   url={`/tours/${tour.slug}`}
 />
 
@@ -839,6 +837,7 @@ function TourDetail() {
         { id: 'highlights', label: 'Highlights' },
         { id: 'included', label: "What's included" },
         ...(tour.rightFor || tour.notRightFor ? [{ id: 'suitability', label: 'Is this for you?' }] : []),
+        ...(hasAccessibilityContent(tour.accessibility) ? [{ id: 'accessibility', label: 'Accessibility' }] : []),
         { id: 'info', label: 'Important information' },
         { id: 'reviews', label: 'Reviews' },
       ]} />
@@ -925,17 +924,7 @@ function TourDetail() {
 
             {/* Tour description */}
 <div id="overview" style={styles.section}>
-  {tour.description.split('\n\n').map((paragraph, index) => (
-    <p
-      key={index}
-      style={{
-        ...styles.bodyText,
-        marginBottom: index === tour.description.split('\n\n').length - 1 ? 0 : '16px',
-      }}
-    >
-      {paragraph}
-    </p>
-  ))}
+  <RichContent value={tour.description} paragraphStyle={styles.bodyText} htmlStyle={styles.bodyText} />
 </div>
 
             {/* Route map — only if tour has waypoints */}
@@ -1170,6 +1159,59 @@ function TourDetail() {
               </div>
             )}
 
+            {/* Important information — meeting point, starting times, accessibility */}
+            <div id="info" style={styles.section}>
+              <h2 style={styles.sectionTitle}>
+                Important information
+              </h2>
+              <div style={styles.infoGrid}>
+
+                <div style={styles.infoItem}>
+                  <div style={styles.infoIconWrapper}>
+                    <MapPin size={16} color="var(--color-forest-green)" />
+                  </div>
+                  <div>
+                    <span style={styles.infoLabel}>Meeting point</span>
+                    <span style={styles.infoValue}>{tour.meetingPoint}</span>
+                  </div>
+                </div>
+
+                <div style={styles.infoItem}>
+                  <div style={styles.infoIconWrapper}>
+                    <Clock size={16} color="var(--color-forest-green)" />
+                  </div>
+                  <div>
+                    <span style={styles.infoLabel}>Starting times</span>
+                    <span style={styles.infoValue}>
+                      {Array.isArray(tour.startingTimes)
+                        ? tour.startingTimes.join(' / ')
+                        : tour.startingTimes}
+                    </span>
+                  </div>
+                </div>
+
+                {hasAccessibilityContent(tour.accessibility) && (
+                  <div style={styles.infoItem}>
+                    <div style={styles.infoIconWrapper}>
+                      <Accessibility size={16} color="var(--color-forest-green)" />
+                    </div>
+                    <div>
+                      <span style={styles.infoLabel}>Accessibility</span>
+                      <a
+                        href="#accessibility"
+                        style={{ ...styles.infoValue, color: 'var(--color-forest-green)', textDecoration: 'none', fontWeight: 600 }}
+                      >
+                        See full details ↓
+                      </a>
+                    </div>
+                  </div>
+                )}
+
+              </div>
+            </div>
+
+            <AccessibilitySection accessibility={tour.accessibility} />
+
             {/* FAQ section — only renders if tour has faqs */}
             {tour.faqs && tour.faqs.length > 0 && (
               <div style={styles.section}>
@@ -1211,7 +1253,7 @@ function TourDetail() {
                         </button>
                         {isOpen && (
                           <div style={styles.faqBody}>
-                            <p style={styles.faqAnswer}>{faq.answer}</p>
+                            <RichContent value={faq.answer} paragraphStyle={styles.faqAnswer} htmlStyle={styles.faqAnswer} />
                           </div>
                         )}
                       </div>
@@ -1220,52 +1262,6 @@ function TourDetail() {
                 </div>
               </div>
             )}
-
-            {/* Important information — meeting point, starting times, accessibility */}
-            <div id="info" style={styles.section}>
-              <h2 style={styles.sectionTitle}>
-                Important information
-              </h2>
-              <div style={styles.infoGrid}>
-
-                <div style={styles.infoItem}>
-                  <div style={styles.infoIconWrapper}>
-                    <MapPin size={16} color="var(--color-forest-green)" />
-                  </div>
-                  <div>
-                    <span style={styles.infoLabel}>Meeting point</span>
-                    <span style={styles.infoValue}>{tour.meetingPoint}</span>
-                  </div>
-                </div>
-
-                <div style={styles.infoItem}>
-                  <div style={styles.infoIconWrapper}>
-                    <Clock size={16} color="var(--color-forest-green)" />
-                  </div>
-                  <div>
-                    <span style={styles.infoLabel}>Starting times</span>
-                    <span style={styles.infoValue}>
-                      {Array.isArray(tour.startingTimes)
-                        ? tour.startingTimes.join(' / ')
-                        : tour.startingTimes}
-                    </span>
-                  </div>
-                </div>
-
-                {tour.accessibility && (
-                  <div style={styles.infoItem}>
-                    <div style={styles.infoIconWrapper}>
-                      <Accessibility size={16} color="var(--color-forest-green)" />
-                    </div>
-                    <div>
-                      <span style={styles.infoLabel}>Accessibility</span>
-                      <span style={styles.infoValue}>{tour.accessibility.notes}</span>
-                    </div>
-                  </div>
-                )}
-
-              </div>
-            </div>
 
             {/* Tour Reviews — approved reviews from Airtable + submission form */}
             <div id="reviews">
@@ -1278,7 +1274,7 @@ function TourDetail() {
           {!isMobile && (
             <div style={{
               position: 'sticky',
-              top: '124px',
+              top: '104px',
               alignSelf: 'start',
             }}>
               {bookingForm}
@@ -1287,6 +1283,84 @@ function TourDetail() {
 
         </div>
       </div>
+
+      {/* ── RELATED TOURS ──────────────────────────────── */}
+      {relatedTours.length > 0 && (
+        <div style={{
+          backgroundColor: 'var(--color-n100)',
+          padding: isMobile ? '40px 0' : '56px 40px',
+        }}>
+          <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
+            <div style={{
+              display: 'flex',
+              alignItems: 'baseline',
+              justifyContent: 'space-between',
+              marginBottom: '24px',
+              flexWrap: 'wrap',
+              gap: '8px',
+              padding: isMobile ? '0 20px' : '0',
+            }}>
+              <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: isMobile ? '22px' : '28px', color: 'var(--color-n900)', margin: 0 }}>
+                More tours you'll love
+              </h2>
+              <Link to="/tours" style={{ fontFamily: 'var(--font-body)', fontSize: '14px', color: 'var(--color-forest-green)', fontWeight: 600, textDecoration: 'none' }}>
+                View all tours →
+              </Link>
+            </div>
+            {isMobile ? (
+              <div style={{
+                display: 'flex',
+                gap: '16px',
+                overflowX: 'auto',
+                scrollSnapType: 'x mandatory',
+                WebkitOverflowScrolling: 'touch',
+                scrollbarWidth: 'none',
+                msOverflowStyle: 'none',
+                padding: '0 20px 8px',
+              }}>
+                {relatedTours.map((t) => (
+                  <div key={t.id} style={{ flex: '0 0 78vw', maxWidth: '320px', scrollSnapAlign: 'start' }}>
+                    <TourCard
+                      id={t.id}
+                      slug={t.slug}
+                      title={t.title}
+                      price={t.price}
+                      rating={t.rating}
+                      reviews={t.reviews}
+                      duration={t.duration}
+                      groupSize={t.groupSize}
+                      badge={t.badge}
+                      hero={t.hero}
+                      startingTimes={t.startingTimes}
+                      languages={t.languages}
+                    />
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px' }}>
+                {relatedTours.map((t) => (
+                  <TourCard
+                    key={t.id}
+                    id={t.id}
+                    slug={t.slug}
+                    title={t.title}
+                    price={t.price}
+                    rating={t.rating}
+                    reviews={t.reviews}
+                    duration={t.duration}
+                    groupSize={t.groupSize}
+                    badge={t.badge}
+                    hero={t.hero}
+                    startingTimes={t.startingTimes}
+                    languages={t.languages}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* ── MOBILE BOTTOM BAR ──────────────────────────── */}
       {isMobile && (

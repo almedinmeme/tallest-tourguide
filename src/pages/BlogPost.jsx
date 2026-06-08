@@ -7,37 +7,10 @@ import { BlogPostingSchema } from '../schema/SchemaMarkup'
 import { useBlog } from '../hooks/useBlog'
 import useWindowWidth from '../hooks/useWindowWidth'
 import tours from '../data/tours'
-import package1Hero from '../assets/package-1-hero.webp'
-import package2Hero from '../assets/package-2-hero.webp'
 
 // Minimal package data needed for the recommendation card.
 // Full data lives in PackageDetail.jsx.
-const packages = [
-  {
-    slug: 'sarajevo-essential',
-    name: '3-Day Complete Sarajevo Experience: Let us show you our home',
-    subtitle: 'Stories, Survival & Soul',
-    duration: '3 Days',
-    groupSize: 8,
-    price: 99,
-    rating: 5.0,
-    reviews: 1,
-    badge: 'Most Popular',
-    heroImage: package1Hero,
-  },
-  {
-    slug: 'bosnia-deep-dive',
-    name: 'Bosnia Deep Dive',
-    subtitle: 'Real Bosnia, Deeply Experienced',
-    duration: '5 Days',
-    groupSize: 8,
-    price: 480,
-    rating: 4.9,
-    reviews: 31,
-    badge: 'Best Value',
-    heroImage: package2Hero,
-  },
-]
+import { packages } from '../data/packages'
 
 function formatDate(dateStr) {
   if (!dateStr) return ''
@@ -64,6 +37,10 @@ function BlogPost() {
         ...posts.filter((p) => p.slug !== slug && p.category !== post.category),
       ].slice(0, 2)
     : []
+
+  const postIndex = posts.findIndex((p) => p.slug === slug)
+  const prevPost = postIndex > 0 ? posts[postIndex - 1] : null
+  const nextPost = postIndex !== -1 && postIndex < posts.length - 1 ? posts[postIndex + 1] : null
 
   const relatedTour = post?.relatedTourSlug
     ? tours.find((t) => t.slug === post.relatedTourSlug)
@@ -92,7 +69,7 @@ function BlogPost() {
     return (
       <div style={styles.stateWrapper}>
         <p style={styles.errorText}>Could not load this post.</p>
-        <Link to="/blog" style={styles.backLink}>← Back to Blog</Link>
+        <Link to="/journal" style={styles.backLink}>← Back to The Journal</Link>
       </div>
     )
   }
@@ -101,7 +78,7 @@ function BlogPost() {
     return (
       <div style={styles.stateWrapper}>
         <p style={styles.stateText}>Post not found.</p>
-        <Link to="/blog" style={styles.backLink}>← Back to Blog</Link>
+        <Link to="/journal" style={styles.backLink}>← Back to The Journal</Link>
       </div>
     )
   }
@@ -114,7 +91,7 @@ function BlogPost() {
         title={post.title}
         description={post.excerpt || post.title}
         image={post.heroImage || undefined}
-        url={`/blog/${post.slug}`}
+        url={`/journal/${post.slug}`}
         type="article"
         publishedDate={post.publishedDate}
       />
@@ -134,7 +111,7 @@ function BlogPost() {
         <div style={styles.heroGradient} />
         <div style={styles.heroGradientTop} />
         <div style={styles.heroBackLink}>
-          <Link to="/blog" style={styles.backLinkPill}>
+          <Link to="/journal" style={styles.backLinkPill}>
             ← All Posts
           </Link>
         </div>
@@ -232,7 +209,7 @@ function BlogPost() {
 
           {/* Back link */}
           <div style={styles.footer}>
-            <Link to="/blog" style={styles.backLinkBottom}>
+            <Link to="/journal" style={styles.backLinkBottom}>
               ← Back to all posts
             </Link>
           </div>
@@ -255,7 +232,7 @@ function BlogPost() {
                 {relatedPosts.map((p) => (
                   <Link
                     key={p.id}
-                    to={`/blog/${p.slug}`}
+                    to={`/journal/${p.slug}`}
                     style={styles.postRow}
                     className="blog-row"
                   >
@@ -382,8 +359,56 @@ function BlogPost() {
         </div>
       </div>
 
+      {/* ── PREV / NEXT NAVIGATION ──────────────────────── */}
+      {(prevPost || nextPost) && (
+        <div style={{ borderTop: '1px solid var(--color-n300)', backgroundColor: 'var(--color-n000)' }}>
+          <div style={{ maxWidth: '720px', margin: '0 auto', padding: isMobile ? '0 20px' : '0 40px', display: 'grid', gridTemplateColumns: '1fr 1fr' }}>
+            {prevPost ? (
+              <Link to={`/journal/${prevPost.slug}`} style={{ ...prevNextLink, borderRight: '1px solid var(--color-n200)', paddingRight: '24px' }}>
+                <span style={prevNextLabel}>← Previous</span>
+                <span style={prevNextTitle}>{prevPost.title}</span>
+              </Link>
+            ) : <div />}
+            {nextPost ? (
+              <Link to={`/journal/${nextPost.slug}`} style={{ ...prevNextLink, textAlign: 'right', paddingLeft: '24px' }}>
+                <span style={prevNextLabel}>Next →</span>
+                <span style={prevNextTitle}>{nextPost.title}</span>
+              </Link>
+            ) : <div />}
+          </div>
+        </div>
+      )}
+
     </div>
   )
+}
+
+const prevNextLink = {
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '4px',
+  padding: '24px 0',
+  textDecoration: 'none',
+  color: 'inherit',
+}
+const prevNextLabel = {
+  fontFamily: 'var(--font-body)',
+  fontSize: '11px',
+  fontWeight: 600,
+  textTransform: 'uppercase',
+  letterSpacing: '0.06em',
+  color: 'var(--color-n500)',
+}
+const prevNextTitle = {
+  fontFamily: 'var(--font-body)',
+  fontSize: '14px',
+  fontWeight: 600,
+  color: 'var(--color-n900)',
+  lineHeight: 1.4,
+  display: '-webkit-box',
+  WebkitLineClamp: 2,
+  WebkitBoxOrient: 'vertical',
+  overflow: 'hidden',
 }
 
 const styles = {

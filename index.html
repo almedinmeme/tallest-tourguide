@@ -10,27 +10,16 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <!-- Load fonts directly from HTML — avoids the render-blocking CSS @import -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;1,9..144,300;1,9..144,700&family=Plus+Jakarta+Sans:wght@400;600;700&family=Inter:wght@400;500&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,300;1,6..72,400&family=Plus+Jakarta+Sans:wght@400;600;700&family=Inter:wght@400;500&display=swap" />
 
     <!-- Preload the hero image — it's the LCP element on the homepage -->
     <link rel="preload" as="image" href="/hero-bg.webp" />
-    <title>Tallest Tourguide — Local Tours in Sarajevo, Bosnia</title>
-    <meta name="description" content="Small group guided tours in Sarajevo and Bosnia. War history, food experiences, Mostar day trips. Local guide, max 12 people. Book online." />
 
-    <!-- Open Graph fallbacks — overridden per-page by react-helmet-async -->
-    <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="Tallest Tourguide" />
-    <meta property="og:title" content="Tallest Tourguide — Local Tours in Sarajevo, Bosnia" />
-    <meta property="og:description" content="Small group guided tours in Sarajevo and Bosnia. War history, food experiences, Mostar day trips. Local guide, max 12 people. Book online." />
-    <meta property="og:image" content="https://tallesttourguide.com/og-image.jpg" />
-    <meta property="og:url" content="https://tallesttourguide.com/" />
-    <meta property="og:locale" content="en_US" />
-
-    <!-- Twitter Card fallbacks -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Tallest Tourguide — Local Tours in Sarajevo, Bosnia" />
-    <meta name="twitter:description" content="Small group guided tours in Sarajevo and Bosnia. War history, food experiences, Mostar day trips. Local guide, max 12 people. Book online." />
-    <meta name="twitter:image" content="https://tallesttourguide.com/og-image.jpg" />
+    <!-- Title + all SEO meta (description, canonical, Open Graph, Twitter) is
+         managed per-page by react-helmet-async (src/components/SEO.jsx) and
+         baked into each route's static HTML by the prerender step
+         (scripts/prerender.mjs). Kept out of the static shell so prerendered
+         pages have exactly one of each tag, with no stale fallbacks. -->
 
     <!-- Google Analytics 4 — replace G-XXXXXXXXXX with your Measurement ID -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-MZ2RNCEL8Y"></script>

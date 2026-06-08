@@ -1,1 +1,8 @@
+# The blog was rebranded to "The Journal". Permanently redirect old URLs
+# so existing search rankings and inbound links follow to the new path.
+# (Honoured by Netlify-style hosts; a client-side fallback also exists in App.jsx.)
+/blog              /journal            301
+/blog/*            /journal/:splat     301
+
+# SPA fallback — let the client router handle everything else.
 /*    /index.html    200

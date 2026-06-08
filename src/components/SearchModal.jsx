@@ -152,9 +152,9 @@ function SearchModal({ open, onClose }) {
               {blogResults.map((post) => (
                 <ResultItem
                   key={post.id}
-                  to={`/blog/${post.slug}`}
+                  to={`/journal/${post.slug}`}
                   title={post.title}
-                  meta={post.category || 'Blog'}
+                  meta={post.category || 'Journal'}
                   onClose={onClose}
                 />
               ))}

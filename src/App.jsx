@@ -1,11 +1,13 @@
 import { lazy, Suspense } from 'react'
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, useLocation, useParams, Navigate } from 'react-router-dom'
 import { LocalBusinessSchema } from './schema/SchemaMarkup'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import ScrollToTopButton from './components/ScrollToTopButton'
 import WhatsAppButton from './components/WhatsAppButton'
 import { Link } from 'react-router-dom'
+
+const AdminApp = lazy(() => import('./admin/AdminApp'))
 
 const Home           = lazy(() => import('./pages/Home'))
 const Tours          = lazy(() => import('./pages/Tours'))
@@ -22,6 +24,21 @@ const BookingConditions = lazy(() => import('./pages/BookingConditions'))
 const SafeTravels       = lazy(() => import('./pages/SafeTravels'))
 const PracticalInfo        = lazy(() => import('./pages/PracticalInfo'))
 const BosniaCulturalGuide  = lazy(() => import('./pages/BosniaCulturalGuide'))
+const Destinations         = lazy(() => import('./pages/Destinations'))
+const DestinationDetail    = lazy(() => import('./pages/DestinationDetail'))
+const Hospitality          = lazy(() => import('./pages/Hospitality'))
+const Signature            = lazy(() => import('./pages/Signature'))
+const Partners             = lazy(() => import('./pages/Partners'))
+const Consult              = lazy(() => import('./pages/Consult'))
+const WhereWeStay          = lazy(() => import('./pages/WhereWeStay'))
+
+// /blog has been rebranded to /journal. Redirect old post URLs to the
+// canonical /journal path so existing inbound links keep working.
+// (A host-level 301 also lives in public/_redirects.)
+function BlogSlugRedirect() {
+  const { slug } = useParams()
+  return <Navigate to={`/journal/${slug}`} replace />
+}
 
 function NotFound() {
   return (
@@ -80,6 +97,19 @@ function NotFound() {
 }
 
 function App() {
+  const location = useLocation()
+  const isAdmin = location.pathname.startsWith('/admin')
+
+  if (isAdmin) {
+    return (
+      <Suspense fallback={null}>
+        <Routes>
+          <Route path="/admin/*" element={<AdminApp />} />
+        </Routes>
+      </Suspense>
+    )
+  }
+
   return (
     <div>
       {/* LocalBusinessSchema renders a <script> tag in <head> on every page.
@@ -99,8 +129,17 @@ function App() {
           <Route path="/packages/:slug" element={<PackageDetail />} />
           <Route path="/personalised" element={<PersonalisedTour />} />
           <Route path="/about" element={<About />} />
-          <Route path="/blog" element={<Blog />} />
-          <Route path="/blog/:slug" element={<BlogPost />} />
+          <Route path="/destinations" element={<Destinations />} />
+          <Route path="/destinations/:slug" element={<DestinationDetail />} />
+          <Route path="/hospitality" element={<Hospitality />} />
+          <Route path="/signature" element={<Signature />} />
+          <Route path="/partners" element={<Partners />} />
+          <Route path="/consult" element={<Consult />} />
+          <Route path="/where-we-stay" element={<WhereWeStay />} />
+          <Route path="/journal" element={<Blog />} />
+          <Route path="/journal/:slug" element={<BlogPost />} />
+          <Route path="/blog" element={<Navigate to="/journal" replace />} />
+          <Route path="/blog/:slug" element={<BlogSlugRedirect />} />
           <Route path="/review/:slug" element={<LeaveReview />} />
           <Route path="/booking-conditions" element={<BookingConditions />} />
           <Route path="/safe-travels" element={<SafeTravels />} />

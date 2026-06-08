@@ -1,0 +1,257 @@
+[
+  {
+    "id": 1,
+    "slug": "bosnia-and-herzegovina",
+    "name": "Bosnia & Herzegovina",
+    "country": "Bosnia & Herzegovina",
+    "order": 1,
+    "hero": "/uploads/bosnia-and-herzegovina-mostar.webp",
+    "teaser": "Country where the Muslim call to prayer overlaps with church bells and the coffee takes an hour to drink properly. Bosnia and Herzegovina isn't on most European itineraries yet — which is exactly the point.",
+    "intro": "<p>You feel it on Ferhadija street in Sarajevo — one moment you're under an Ottoman archway with the smell of grilled meat and cardamom coffee; ten steps later you're standing in front of a Habsburg facade that could be in Vienna. Bosnia and Herzegovina doesn't blend its layers. It lets them sit beside each other and asks you to notice.</p>",
+    "distinct": "<p>Most European countries had one empire stamp them. Bosnia had three — Ottoman, Austro-Hungarian, Yugoslav — and the buildings still prove it on the same block. Add a Sufi lodge at the source of an emerald river, medieval tombs nobody fully understands, and coffee served as a small ceremony, and you have a country that rewards travelers who slow down.</p>",
+    "bestTime": "Late April to mid-June, then September through October. Mountains are walkable, the rivers run cold and clear, and you'll have Mostar's Old Bridge without the August crush. Winter (December–February) belongs to skiers heading for Bjelašnica and Jahorina, the 1984 Olympic peaks above Sarajevo.",
+    "featured": [
+      {
+        "name": "Sarajevo",
+        "blurb": "The capital where four faiths share a square kilometer: mosque, Orthodox and Catholic cathedrals, and synagogue, all within a ten-minute walk. Sit for a coffee in Baščaršija, then climb to the Yellow Fortress at sunset and watch the city light up, minaret by minaret.",
+        "image": "/uploads/bosnia-and-herzegovina-sarajevo.webp"
+      },
+      {
+        "name": "Mostar",
+        "blurb": "The Old Bridge, Stari Most, arcs over the green Neretva like it was always meant to be there. Locals still dive 24 meters off it in summer. Stay past the day-trippers; Mostar at 8 PM, when the bazaar empties and the bridge lights up, is the version worth remembering.",
+        "image": "/uploads/bosnia-and-herzegovina-old-bridge.webp"
+      },
+      {
+        "name": "Blagaj Tekke",
+        "blurb": "A 16th-century Dervish lodge built into a cliff at the exact spot where the Buna river bursts out of solid rock. The water is loud, cold, and almost unreasonably blue. Inside the tekke you remove your shoes; outside, you sit with coffee and stop talking for a while.",
+        "image": "/uploads/bosnia-and-herzegovina-blagaj.webp"
+      },
+      {
+        "name": "Una National Park",
+        "blurb": "In the country's northwest, the Una river runs through limestone canyons in shades of green you'll think were filtered. Štrbački Buk waterfall is the headline. Raft it, swim it, or just sit beside it — this is the wild, untouched Bosnia that exists an hour from any city.",
+        "image": "/uploads/bosnia-and-herzegovina-una.webp"
+      }
+    ],
+    "relatedTours": [
+      "sarajevo-walking-tour",
+      "lukomir-hike-bosnia",
+      "sarajevo-war-tour"
+    ],
+    "relatedPackages": [
+      "4-days-sarajevo-experience",
+      "bosnia-deep-dive"
+    ]
+  },
+  {
+    "id": 2,
+    "slug": "dalmatia",
+    "name": "Dalmatia",
+    "country": "Croatia",
+    "order": 2,
+    "hero": "/uploads/dalmatia-dubrovnik-walls.webp",
+    "teaser": "Where Roman emperors retired and people still live inside the walls.",
+    "intro": "<p>You step off the ferry in Hvar Town and the first thing you notice is the smell — pine resin, sea salt, and something herbal that turns out to be lavender drying on a wall. The stone underfoot has been polished by 700 years of footsteps. The Adriatic in front of you isn't blue. It's about six different blues at once.</p>",
+    "distinct": "<p>Other coasts have ruins, or islands, or great seafood. Dalmatia stacks all three — a Roman emperor's palace where people still live, a UNESCO old town across the bay, a fishing village 40 minutes by boat. Add Venetian architecture, klapa singing in stone courtyards, and a culture of <em>pomalo</em> (slowly), and the region rewards patience over checklists.</p>",
+    "bestTime": "Mid-May to late June, then September into early October. The sea is swimmable, the light turns golden, and you'll get a table in Split's old town without queueing. July and August are spectacular but punishing — heat, prices, and cruise ships peak together. Skip midsummer unless beach time is non-negotiable.",
+    "featured": [
+      {
+        "name": "Hvar ",
+        "blurb": "The most photographed island in Croatia, and the most misunderstood. Hvar Town has the yacht crowd; the rest of the island has lavender fields, hilltop hamlets like Velo Grablje, and ancient olive groves on UNESCO-listed dry stone terraces. Stay two nights and rent a scooter — one day for each Hvar.",
+        "image": "/uploads/dalmatia-hvar-fortress.webp"
+      },
+      {
+        "name": "Split ",
+        "blurb": "Diocletian's Palace isn't a museum; it's a neighbourhood. Built in 305 AD, the Roman emperor's retirement home now contains 200 buildings, cafes, apartments, and a cathedral wedged inside its walls. Walk the marble passages early, before the day-trippers arrive from the cruise ships — that's when Split is yours.",
+        "image": "/uploads/dalmatia-diocletian.webp"
+      },
+      {
+        "name": "Korčula",
+        "blurb": "A walled medieval town on a small island, allegedly the birthplace of Marco Polo. Streets fan off the main spine in a fishbone pattern, designed to catch the breeze and block the bura wind. Quieter than Hvar, less expensive than Dubrovnik, and the white wine — Pošip from nearby Smokvica — is among the best in the country.",
+        "image": "/uploads/herzegovina-fj6x53ii.webp"
+      },
+      {
+        "name": "Dubrovnik ",
+        "blurb": "The walled old town deserves the praise, but visit it at 7 AM or 9 PM, not at noon when the cruise ships unload. Walk the full 2-kilometre ring of city walls early in the day, then take the cable car up Mount Srđ at sunset. The view down onto the red roofs explains the whole place.",
+        "image": "/uploads/dalmatia-dubrovnik-panorama.webp"
+      },
+      {
+        "name": "Zadar",
+        "blurb": "Dalmatia's northern anchor, less polished than Split and all the better for it. The Sea Organ — an installation built into the harbour steps — plays music when waves push air through its pipes. Catch sunset there; Alfred Hitchcock once called it the most beautiful in the world.",
+        "image": "/uploads/dalmatia-zadar.webp"
+      }
+    ],
+    "relatedTours": [
+      "mostar-day-trip-from-sarajevo"
+    ],
+    "relatedPackages": [
+      "bosnia-deep-dive"
+    ]
+  },
+  {
+    "id": 3,
+    "slug": "montenegro",
+    "name": "Montenegro",
+    "country": "Montenegro",
+    "order": 3,
+    "hero": "",
+    "teaser": "A fjord that isn't a fjord, black mountains, and a coastline that stops conversation.",
+    "intro": "<p>[PLACEHOLDER] Montenegro packs an improbable amount into a small country — the Bay of Kotor, the peaks of Durmitor, and old royal capitals in between.</p>",
+    "distinct": "<p>[PLACEHOLDER] The drama is vertical here. You go from sea level to two thousand metres in an afternoon, and the food and feel of the country changes with the altitude.</p>",
+    "bestTime": "May, June, and September avoid the coastal crowds. The mountains open from late spring.",
+    "featured": [
+      {
+        "name": "Bay of Kotor",
+        "blurb": "[Placeholder] A drowned river canyon ringed with Venetian towns.",
+        "image": ""
+      },
+      {
+        "name": "Durmitor",
+        "blurb": "[Placeholder] Glacial lakes and the deepest canyon in Europe.",
+        "image": ""
+      },
+      {
+        "name": "Cetinje",
+        "blurb": "[Placeholder] The old royal capital, full of faded embassies.",
+        "image": ""
+      }
+    ],
+    "relatedTours": [],
+    "relatedPackages": [
+      "adriatic-crossings",
+      "mountains-of-the-balkans"
+    ]
+  },
+  {
+    "id": 4,
+    "slug": "albania",
+    "name": "Albania",
+    "country": "Albania",
+    "order": 4,
+    "hero": "",
+    "teaser": "The Balkans' last frontier — wild coast, stone villages, and famous hospitality.",
+    "intro": "<p>[PLACEHOLDER] Albania is the part of the region travellers still arrive at with few expectations and leave talking about. The Accursed Mountains in the north, the Riviera in the south, and a code of hospitality older than any border.</p>",
+    "distinct": "<p>[PLACEHOLDER] Besa — the Albanian word for keeping a promise to a guest — runs deep here. It is the clearest cousin of the hospitality we build our trips around.</p>",
+    "bestTime": "Late spring and early autumn. The coast is hot in July and August.",
+    "featured": [
+      {
+        "name": "Theth & Valbona",
+        "blurb": "[Placeholder] A legendary day's walk between two mountain valleys.",
+        "image": ""
+      },
+      {
+        "name": "Berat",
+        "blurb": "[Placeholder] The 'town of a thousand windows', stacked up a hillside.",
+        "image": ""
+      },
+      {
+        "name": "The Riviera",
+        "blurb": "[Placeholder] Empty coves between Vlorë and Sarandë.",
+        "image": ""
+      }
+    ],
+    "relatedTours": [],
+    "relatedPackages": [
+      "balkans-full-arc"
+    ]
+  },
+  {
+    "id": 5,
+    "slug": "serbia",
+    "name": "Serbia",
+    "country": "Serbia",
+    "order": 5,
+    "hero": "",
+    "teaser": "River cities, monastery valleys, and a capital that never quite sleeps.",
+    "intro": "<p>[PLACEHOLDER] Serbia is bigger and more varied than its reputation — Belgrade's nightlife, the painted monasteries of the south, and the slow rivers of Vojvodina to the north.</p>",
+    "distinct": "<p>[PLACEHOLDER] Few visitors get past Belgrade. The interior — the monasteries, the spa towns, the mountain railways — is where the country opens up.</p>",
+    "bestTime": "Spring and autumn. Belgrade is good year-round.",
+    "featured": [
+      {
+        "name": "Belgrade",
+        "blurb": "[Placeholder] A fortress city at the meeting of two great rivers.",
+        "image": ""
+      },
+      {
+        "name": "Šargan Eight",
+        "blurb": "[Placeholder] A narrow-gauge mountain railway that loops over itself.",
+        "image": ""
+      },
+      {
+        "name": "Studenica",
+        "blurb": "[Placeholder] A UNESCO monastery in a wooded river valley.",
+        "image": ""
+      }
+    ],
+    "relatedTours": [],
+    "relatedPackages": [
+      "balkans-full-arc",
+      "empires-and-edge"
+    ]
+  },
+  {
+    "id": 6,
+    "slug": "north-macedonia",
+    "name": "North Macedonia",
+    "country": "North Macedonia",
+    "order": 6,
+    "hero": "",
+    "teaser": "An ancient lake, mountain churches, and one of the oldest towns in Europe.",
+    "intro": "<p>[PLACEHOLDER] North Macedonia is built around Lake Ohrid — three million years old, ringed with frescoed churches and lakeside towns that have been lived in continuously for millennia.</p>",
+    "distinct": "<p>[PLACEHOLDER] Ohrid alone justifies the trip, but the country's mountains and its layered Ottoman and Orthodox heritage keep surprising people.</p>",
+    "bestTime": "May to October. The lake is at its best in early summer.",
+    "featured": [
+      {
+        "name": "Ohrid",
+        "blurb": "[Placeholder] A lake town of churches and a cliffside chapel.",
+        "image": ""
+      },
+      {
+        "name": "Skopje",
+        "blurb": "[Placeholder] An old bazaar beside a startling modern centre.",
+        "image": ""
+      },
+      {
+        "name": "Mavrovo",
+        "blurb": "[Placeholder] A national park of peaks and a half-sunken church.",
+        "image": ""
+      }
+    ],
+    "relatedTours": [],
+    "relatedPackages": [
+      "balkans-full-arc"
+    ]
+  },
+  {
+    "id": 7,
+    "slug": "kosovo",
+    "name": "Kosovo",
+    "country": "Kosovo",
+    "order": 7,
+    "hero": "",
+    "teaser": "Europe's youngest country — young, warm, and almost untouched by tourism.",
+    "intro": "<p>[PLACEHOLDER] Kosovo is the region's youngest country and one of its most welcoming. Ottoman towns, Serbian Orthodox monasteries, and the Sharr Mountains, all in a place most travellers have never considered.</p>",
+    "distinct": "<p>[PLACEHOLDER] The hospitality here is overwhelming and the prices are gentle. It is the closest thing left to travelling the Balkans before anyone else did.</p>",
+    "bestTime": "Late spring through autumn. The mountains hold snow into May.",
+    "featured": [
+      {
+        "name": "Prizren",
+        "blurb": "[Placeholder] A river running through the prettiest town in Kosovo.",
+        "image": ""
+      },
+      {
+        "name": "Pristina",
+        "blurb": "[Placeholder] A young, fast-changing capital with great coffee.",
+        "image": ""
+      },
+      {
+        "name": "Rugova Canyon",
+        "blurb": "[Placeholder] A dramatic gorge cut into the Accursed Mountains.",
+        "image": ""
+      }
+    ],
+    "relatedTours": [],
+    "relatedPackages": [
+      "balkans-full-arc"
+    ]
+  }
+]

@@ -1,11 +1,15 @@
 import { useState, useEffect } from 'react'
 
+const cache = {}
+
 export function usePackageDates(slug) {
   const [dates, setDates] = useState([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     if (!slug) return
+    if (import.meta.env.DEV) { setLoading(false); return }
+    if (cache[slug]) { setDates(cache[slug]); setLoading(false); return }
     const today = new Date().toISOString().slice(0, 10)
     const filter = encodeURIComponent(`AND({TourSlug}='${slug}',IS_AFTER({Date},'${today}'))`)
     fetch(
@@ -15,6 +19,7 @@ export function usePackageDates(slug) {
       .then((r) => r.json())
       .then((data) => {
         const ds = (data.records || []).map((r) => r.fields.Date).filter(Boolean)
+        cache[slug] = ds
         setDates(ds)
       })
       .catch(() => setDates([]))

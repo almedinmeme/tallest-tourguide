@@ -1,7 +1,12 @@
+import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import SEO from '../components/SEO'
 import { useBlog } from '../hooks/useBlog'
 import useWindowWidth from '../hooks/useWindowWidth'
+
+// The brief's editorial categories, in display order. We only show a chip
+// for a category that actually has posts (plus "All").
+const CATEGORY_ORDER = ['History', 'Culture', 'Routes', 'Food', 'Planning']
 
 function formatDate(dateStr) {
   if (!dateStr) return ''
@@ -17,23 +22,38 @@ function Blog() {
   const { posts, loading, error } = useBlog()
   const width = useWindowWidth()
   const isMobile = width <= 768
+  const [activeCategory, setActiveCategory] = useState('All')
+
+  // Build the chip list: "All" + brief categories present in the data,
+  // then any other categories the data contains.
+  const categories = useMemo(() => {
+    const present = new Set(posts.map((p) => p.category).filter(Boolean))
+    const ordered = CATEGORY_ORDER.filter((c) => present.has(c))
+    const extras = [...present].filter((c) => !CATEGORY_ORDER.includes(c))
+    return ['All', ...ordered, ...extras]
+  }, [posts])
+
+  const visiblePosts = useMemo(
+    () => (activeCategory === 'All' ? posts : posts.filter((p) => p.category === activeCategory)),
+    [posts, activeCategory],
+  )
 
   return (
     <div>
       <SEO
-        title="Blog"
-        description="Stories, tips, and local insights about Sarajevo and Bosnia from your tallest tourguide."
-        url="/blog"
+        title="The Journal"
+        description="Route guides, cultural explainers, and hidden corners of the Balkans — local knowledge that isn't on Google, from people who travel these roads year-round."
+        url="/journal"
       />
 
       {/* ── PAGE HEADER ─────────────────────────────────── */}
       <section style={styles.pageHeader}>
         <div style={styles.headerInner}>
           <span style={styles.eyebrow}>From the Guide</span>
-          <h1 style={styles.headline}>Stories & Insights</h1>
+          <h1 style={styles.headline}>The Journal</h1>
           <p style={styles.subheading}>
-            Local knowledge, travel tips, and stories from the streets
-            of Sarajevo and beyond.
+            We know things that aren't on Google. Route guides, cultural
+            explainers, and hidden corners of the Balkans — here's some of it, free.
           </p>
         </div>
       </section>
@@ -56,15 +76,32 @@ function Blog() {
             <p style={styles.stateText}>No posts yet — check back soon.</p>
           )}
 
+          {!loading && !error && posts.length > 0 && categories.length > 1 && (
+            <div style={styles.filterRow}>
+              {categories.map((cat) => {
+                const isActive = cat === activeCategory
+                return (
+                  <button
+                    key={cat}
+                    onClick={() => setActiveCategory(cat)}
+                    style={{ ...styles.filterChip, ...(isActive ? styles.filterChipActive : {}) }}
+                  >
+                    {cat}
+                  </button>
+                )
+              })}
+            </div>
+          )}
+
           {!loading && !error && posts.length > 0 && (
             <div style={{
               ...styles.grid,
               gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)',
             }}>
-              {posts.map((post) => (
+              {visiblePosts.map((post) => (
                 <Link
                   key={post.id}
-                  to={`/blog/${post.slug}`}
+                  to={`/journal/${post.slug}`}
                   style={styles.card}
                   className="card-lift"
                 >
@@ -156,6 +193,32 @@ const styles = {
   inner: {
     maxWidth: '1100px',
     margin: '0 auto',
+  },
+
+  filterRow: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: '8px',
+    marginBottom: '32px',
+  },
+
+  filterChip: {
+    fontFamily: 'var(--font-body)',
+    fontSize: '14px',
+    fontWeight: '600',
+    color: 'var(--color-n700)',
+    backgroundColor: 'var(--color-n000)',
+    border: '1px solid var(--color-n300)',
+    borderRadius: '100px',
+    padding: '8px 18px',
+    cursor: 'pointer',
+    transition: 'background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease',
+  },
+
+  filterChipActive: {
+    backgroundColor: 'var(--color-forest-green)',
+    color: 'var(--color-n000)',
+    borderColor: 'var(--color-forest-green)',
   },
 
   grid: {

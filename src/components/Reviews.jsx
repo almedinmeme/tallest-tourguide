@@ -21,7 +21,7 @@ const reviews = [
   {
     id: 1,
     name: 'Michael P.',
-    location: 'Cyprus',
+    location: 'Cyprus, Nicosia',
     rating: 5,
     tour: 'Sarajevo Siege Tour',
     quote: 'Meme has enough knowledge to write a library, delivered with stunning detail. He has a great sense of humour, a sunny disposition, and is generally a lovely guy. He even got us some mandarines from the market — from Cyprus with love.',
@@ -30,7 +30,7 @@ const reviews = [
   {
     id: 2,
     name: 'Marc J.',
-    location: 'England',
+    location: 'England, Manchester',
     rating: 5,
     tour: 'Sarajevo Walking Tour',
     quote: 'Almedin takes you off the main touristy routes and shows you streets and workshops that could be in Marrakech or Istanbul. His astonishing level of knowledge never failed to answer my questions. I have done walking tours from Berlin to Lisbon and Marrakech. This was, easily, the best.',
@@ -44,6 +44,24 @@ const reviews = [
     tour: 'Private Tour of Sarajevo',
     quote: 'There are some travel experiences that you treasure for life — that\'s what we had with Tallest Tourguide. Meme spent his Saturday evening helping plan my husband\'s 30th birthday, including a birthday cake in Bosnia\'s highest village. He came in on his day off to give us the best tour of our lives.',
     background: 'var(--color-n900)',
+  },
+  {
+    id: 4,
+    name: 'Emma L.',
+    location: 'Denmark, Aarhus',
+    rating: 5,
+    tour: 'Sarajevo & Mostar Tour',
+    quote: 'Knowledgeable and friendly guide. Showed us the best of Sarajevo and the sights along the way to Mostar. Attentive to the group and genuinely passionate about sharing his city and its history. Highly recommended!',
+    background: '#2C4A3E',
+  },
+  {
+    id: 5,
+    name: 'Mahmoud P.',
+    location: 'England, Crewe',
+    rating: 5,
+    tour: 'Sarajevo Siege Tour',
+    quote: 'We did the Siege Tour in March 2019. When I made a booking mistake, Meme was incredibly flexible — and more than made up for it with the tour itself. He explained the history of the Siege from all angles, making something deeply complex still understandable. This wasn\'t just a tour; it\'s something we\'ll carry with us.',
+    background: '#1C3040',
   },
 ]
 
