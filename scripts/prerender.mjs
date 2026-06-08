@@ -46,6 +46,13 @@ async function main() {
 
   const browser = await puppeteer.launch({ headless: true, args: ['--no-sandbox'] })
   const page = await browser.newPage()
+  // Prerender at a phone-width viewport so the static HTML is mobile-first.
+  // The site's layout is driven by window.innerWidth (useWindowWidth). A desktop
+  // prerender bakes a wide layout that overflows phones, which inflates
+  // innerWidth on load so the client stays stuck on the desktop layout. A
+  // mobile-first prerender fits phones (correct immediately) while desktop simply
+  // re-renders wider once JS runs.
+  await page.setViewport({ width: 390, height: 844, deviceScaleFactor: 1 })
 
   // Render everything into memory FIRST. If we wrote files during the crawl,
   // prerendering '/' would overwrite dist/index.html — the file vite preview
