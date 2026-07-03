@@ -10,6 +10,8 @@ import AccommodationsList from './pages/AccommodationsList'
 import AccommodationEditor from './pages/AccommodationEditor'
 import PagesList from './pages/PagesList'
 import PageEditor from './pages/PageEditor'
+import JournalList from './pages/JournalList'
+import JournalEditor from './pages/JournalEditor'
 import { s, colors, adminGlobalCSS } from './styles'
 
 function NavItem({ to, end, icon, children }) {
@@ -72,6 +74,12 @@ const Icon = {
       <path d="M14 3v5h5M9 13h6M9 17h6" />
     </svg>
   ),
+  journal: (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+      <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+    </svg>
+  ),
   external: (
     <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
       <path d="M7 17 17 7" />
@@ -112,6 +120,7 @@ export default function AdminApp() {
             <NavItem to="/admin/destinations" icon={Icon.destinations}>Destinations</NavItem>
             <NavItem to="/admin/accommodations" icon={Icon.accommodations}>Accommodations</NavItem>
             <NavItem to="/admin/pages" icon={Icon.pages}>Pages</NavItem>
+            <NavItem to="/admin/journal" icon={Icon.journal}>Journal</NavItem>
           </nav>
           <div style={{ marginTop: 'auto', borderTop: `1px solid rgba(255,255,255,0.06)`, paddingTop: 14, marginLeft: -2, marginRight: -2 }}>
             <a
@@ -150,6 +159,9 @@ export default function AdminApp() {
             <Route path="accommodations/:id" element={<AccommodationEditor />} />
             <Route path="pages" element={<PagesList />} />
             <Route path="pages/:id" element={<PageEditor />} />
+            <Route path="journal" element={<JournalList />} />
+            <Route path="journal/new" element={<JournalEditor />} />
+            <Route path="journal/:id" element={<JournalEditor />} />
             <Route path="*" element={<Navigate to="/admin" replace />} />
           </Routes>
         </main>

@@ -10,6 +10,7 @@ import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { MapPin, ArrowRight, Star, ChevronDown, ChevronLeft, ChevronRight, Users, UserCheck, ShieldCheck } from 'lucide-react'
 import TourCard from '../components/TourCard'
+import Button from '../components/Button'
 import tours from '../data/tours'
 import useWindowWidth from '../hooks/useWindowWidth'
 import hero2 from '../assets/tour-2-hero.webp'
@@ -154,28 +155,14 @@ function Home() {
             width: isMobile ? '100%' : 'auto',
           }}>
 
-            <Link
-              to="/tours"
-              style={{
-                ...styles.heroPrimaryBtn,
-                justifyContent: isMobile ? 'center' : undefined,
-              }}
-              className="btn-lift btn-glow-amber"
-            >
-              <span>Explore Tours</span>
+            <Button to="/tours" variant="primary" size="lg">
+              <span>Explore tours</span>
               <ArrowRight size={18} color="var(--color-n900)" />
-            </Link>
+            </Button>
 
-            <Link
-              to="/multi-day-tours"
-              style={{
-                ...styles.heroSecondaryBtn,
-                justifyContent: isMobile ? 'center' : undefined,
-              }}
-              className="btn-overlay"
-            >
-              <span>Plan a Full Trip</span>
-            </Link>
+            <Button to="/multi-day-tours" variant="secondary" size="lg" onDark>
+              Plan a full trip
+            </Button>
 
           </div>
 
@@ -885,7 +872,7 @@ hero: {
     backgroundColor: 'rgba(255,255,255,0.1)',
     backdropFilter: 'blur(8px)',
     border: '1px solid rgba(255,255,255,0.15)',
-    borderRadius: '100px',
+    borderRadius: 'var(--radius-pill)',
     padding: '6px 14px',
     width: 'fit-content',
   },
@@ -932,40 +919,6 @@ hero: {
   heroCtas: {
     display: 'flex',
     gap: '12px',
-  },
-
-  heroPrimaryBtn: {
-    display: 'inline-flex',
-    alignItems: 'center',
-    gap: '8px',
-    height: '52px',
-    padding: '0 28px',
-    backgroundColor: 'var(--color-amber)',
-    color: 'var(--color-n900)',
-    fontFamily: 'var(--font-body)',
-    fontWeight: '700',
-    fontSize: 'var(--text-body)',
-    borderRadius: 'var(--radius)',
-    textDecoration: 'none',
-    whiteSpace: 'nowrap',
-  },
-
-  heroSecondaryBtn: {
-    display: 'inline-flex',
-    alignItems: 'center',
-    gap: '8px',
-    height: '52px',
-    padding: '0 28px',
-    backgroundColor: 'rgba(255,255,255,0.1)',
-    backdropFilter: 'blur(8px)',
-    color: 'var(--color-n000)',
-    fontFamily: 'var(--font-body)',
-    fontWeight: '600',
-    fontSize: 'var(--text-body)',
-    borderRadius: 'var(--radius)',
-    textDecoration: 'none',
-    border: '1px solid rgba(255,255,255,0.2)',
-    whiteSpace: 'nowrap',
   },
 
   heroproof: {
@@ -1142,7 +1095,7 @@ const blogStyles = {
     textTransform: 'uppercase',
     letterSpacing: '0.8px',
     padding: '4px 10px',
-    borderRadius: '100px',
+    borderRadius: 'var(--radius-pill)',
   },
   cardBody: {
     padding: '20px 20px 24px',

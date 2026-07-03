@@ -5,6 +5,7 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { X, ChevronLeft, ChevronRight } from 'lucide-react'
+import Img from './Img'
 
 function normalise(images) {
   if (!images || images.length === 0) return []
@@ -163,11 +164,11 @@ function Gallery({ images = [], alt = 'Gallery image' }) {
                 e.currentTarget.style.boxShadow = '0 2px 12px rgba(0,0,0,0.10)'
               }}
             >
-              <img
+              <Img
                 src={item.src}
                 alt={item.caption || `${alt} ${index + 1}`}
+                sizes="(max-width: 768px) 80vw, 420px"
                 draggable={false}
-                loading="lazy"
                 style={{
                   width: '100%',
                   height: '100%',

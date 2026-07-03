@@ -15,6 +15,7 @@ const TourDetail     = lazy(() => import('./pages/TourDetail'))
 const Packages       = lazy(() => import('./pages/Packages'))
 const Contact        = lazy(() => import('./pages/Contact'))
 const PackageDetail  = lazy(() => import('./pages/PackageDetail'))
+const Checkout       = lazy(() => import('./pages/Checkout'))
 const PersonalisedTour = lazy(() => import('./pages/PersonalisedTour'))
 const About          = lazy(() => import('./pages/About'))
 const Blog           = lazy(() => import('./pages/Blog'))
@@ -99,6 +100,9 @@ function NotFound() {
 function App() {
   const location = useLocation()
   const isAdmin = location.pathname.startsWith('/admin')
+  // The checkout screen is a focused, distraction-free flow — hide the site
+  // navbar, footer and floating buttons there.
+  const isCheckout = location.pathname === '/checkout'
 
   if (isAdmin) {
     return (
@@ -117,7 +121,7 @@ function App() {
           Invisible to visitors — only read by search engines. */}
       <LocalBusinessSchema />
 
-      <Navbar />
+      {!isCheckout && <Navbar />}
 
       <Suspense fallback={null}>
         <Routes>
@@ -127,6 +131,7 @@ function App() {
           <Route path="/multi-day-tours" element={<Packages />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/packages/:slug" element={<PackageDetail />} />
+          <Route path="/checkout" element={<Checkout />} />
           <Route path="/personalised" element={<PersonalisedTour />} />
           <Route path="/about" element={<About />} />
           <Route path="/destinations" element={<Destinations />} />
@@ -149,10 +154,10 @@ function App() {
         </Routes>
       </Suspense>
 
-      <Footer />
+      {!isCheckout && <Footer />}
 
-      <ScrollToTopButton />
-      <WhatsAppButton />
+      {!isCheckout && <ScrollToTopButton />}
+      {!isCheckout && <WhatsAppButton />}
     </div>
   )
 }

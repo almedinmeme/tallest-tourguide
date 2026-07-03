@@ -6,6 +6,7 @@
 import { useState } from 'react'
 import { Star } from 'lucide-react'
 import countries from '../data/countries'
+import Button from './Button'
 
 const TOKEN = import.meta.env.VITE_AIRTABLE_TOKEN
 const BASE_ID = import.meta.env.VITE_AIRTABLE_BASE_ID
@@ -205,17 +206,15 @@ function ReviewForm({ tourId, tourName }) {
         </div>
       )}
 
-      <button
+      <Button
+        variant="primary"
+        full
+        style={{ marginTop: 8 }}
         onClick={handleSubmit}
         disabled={status === 'sending'}
-        style={{
-          ...styles.submitBtn,
-          opacity: status === 'sending' ? 0.7 : 1,
-          cursor: status === 'sending' ? 'not-allowed' : 'pointer',
-        }}
       >
-        {status === 'sending' ? 'Submitting…' : 'Submit Review'}
-      </button>
+        {status === 'sending' ? 'Submitting…' : 'Submit review'}
+      </Button>
     </div>
   )
 }
@@ -280,18 +279,6 @@ const styles = {
     resize: 'vertical',
     lineHeight: '1.6',
     outline: 'none',
-  },
-  submitBtn: {
-    width: '100%',
-    height: '44px',
-    backgroundColor: 'var(--color-forest-green)',
-    color: '#fff',
-    fontFamily: 'var(--font-body)',
-    fontWeight: '700',
-    fontSize: 'var(--text-body)',
-    borderRadius: 'var(--radius)',
-    border: 'none',
-    marginTop: '8px',
   },
   errorBox: {
     marginBottom: '8px',

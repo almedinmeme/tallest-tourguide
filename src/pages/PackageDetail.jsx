@@ -1,6 +1,6 @@
 import SEO from '../components/SEO'
 import { lazy, Suspense, useEffect, useRef, useState } from 'react'
-import { useParams, Link } from 'react-router-dom'
+import { useParams, Link, useNavigate } from 'react-router-dom'
 import { trackEvent } from '../utils/analytics'
 import {
   ChevronDown, ChevronUp,
@@ -20,11 +20,15 @@ import { useAvailability } from '../hooks/useAvailability'
 import { usePackageDates } from '../hooks/usePackageDates'
 import { useAllReviews } from '../hooks/useAllReviews'
 import Gallery from '../components/Gallery'
+import Button from '../components/Button'
 import TourReviews from '../components/TourReviews'
 import RichContent from '../components/RichContent'
 import AccessibilitySection from '../components/AccessibilitySection'
 const RouteMap = lazy(() => import('../components/RouteMap'))
-import { PackageSchema, PackageBreadcrumbSchema } from '../schema/SchemaMarkup'
+import { PackageSchema } from '../schema/SchemaMarkup'
+import Breadcrumbs from '../components/Breadcrumbs'
+import FromTheJournal from '../components/FromTheJournal'
+import Img from '../components/Img'
 
 function hasAccessibilityContent(acc) {
   if (!acc) return false
@@ -61,7 +65,7 @@ const showMoreBtnStyle = {
   margin: '12px auto 0',
   height: '34px',
   padding: '0 18px',
-  borderRadius: '100px',
+  borderRadius: 'var(--radius-pill)',
   border: '1.5px solid var(--color-n300)',
   backgroundColor: 'transparent',
   color: 'var(--color-n600)',
@@ -268,6 +272,7 @@ const DIFF_COLOR = {
 
 function PackageDetail() {
   const { slug } = useParams()
+  const navigate = useNavigate()
   const pkg = packages.find((p) => p.slug === slug)
   const width = useWindowWidth()
   const isMobile = width <= 768
@@ -307,18 +312,10 @@ function PackageDetail() {
   }, [calendarOpen])
 
   const [formMode, setFormMode] = useState('booking') // 'booking' | 'enquiry'
-  const [bookingStep, setBookingStep] = useState(1)
   const [selectedDate, setSelectedDate] = useState('')
   const [numPeople, setNumPeople] = useState(1)
   const [selectedLanguage, setSelectedLanguage] = useState('english')
   const [withAccommodation, setWithAccommodation] = useState('without')
-  const [guestName, setGuestName] = useState('')
-  const [guestEmail, setGuestEmail] = useState('')
-  const [guestPhone, setGuestPhone] = useState('')
-  const [discountCode, setDiscountCode] = useState('')
-  const [isSending, setIsSending] = useState(false)
-  const [isSuccess, setIsSuccess] = useState(false)
-  const [isError, setIsError] = useState(false)
   const [drawerOpen, setDrawerOpen] = useState(false)
   const [enquiryName, setEnquiryName] = useState('')
   const [enquiryEmail, setEnquiryEmail] = useState('')
@@ -396,13 +393,14 @@ function PackageDetail() {
     .catch(() => { setIsEnquirySending(false); setIsEnquiryError(true) })
   }
 
+  // Collect the package selection and hand off to the dedicated /checkout
+  // screen, where the customer enters their details and chooses to pay by card
+  // or reserve & pay later. The Airtable save + emails happen there.
   const handleBooking = () => {
-    if (!selectedDate || !guestName || !guestEmail) {
-      alert('Please fill in your name, email, and select a date.')
+    if (!selectedDate) {
+      alert('Please select a date for your trip.')
       return
     }
-    setIsSending(true)
-    setIsError(false)
 
     trackEvent('begin_checkout', {
       currency: 'EUR',
@@ -410,87 +408,73 @@ function PackageDetail() {
       items: [{ item_id: pkg.slug, item_name: pkg.name, item_category: 'package', price: pkg.price, quantity: numPeople }],
     })
 
+    const accommodationLabel = withAccommodation === 'with' ? 'With accommodation' : 'Without accommodation'
+    const [y, m, d] = selectedDate.split('-').map(Number)
+    const dateLabel = new Date(y, m - 1, d).toLocaleDateString('en-GB', {
+      weekday: 'short', day: 'numeric', month: 'long', year: 'numeric',
+    })
+    const languageLabel = selectedLanguage.charAt(0).toUpperCase() + selectedLanguage.slice(1)
+
+    // Base submission data — guest contact fields are added on the checkout screen.
     const templateParams = {
       type: 'Booking',
       tour_name: `${pkg.name} — ${pkg.subtitle}`,
       tour_date: selectedDate,
       num_people: numPeople,
       total_price: totalPrice,
-      guest_name: guestName,
-      guest_email: guestEmail,
-      guest_phone: guestPhone || 'Not provided',
-      discount_code: discountCode || 'None',
       language: selectedLanguage,
-      accommodation: withAccommodation === 'with' ? 'With accommodation' : 'Without accommodation',
+      accommodation: accommodationLabel,
     }
 
-    fetch(`https://api.airtable.com/v0/${import.meta.env.VITE_AIRTABLE_BASE_ID}/Bookings`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${import.meta.env.VITE_AIRTABLE_TOKEN}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        fields: {
-          TourSlug: pkg.slug || pkg.id || '',
-          TourName: `${pkg.name} — ${pkg.subtitle}`,
-          TourDate: selectedDate,
-          NumPeople: numPeople,
-          TourType: 'package',
-          TotalPrice: totalPrice,
-          GuestName: guestName,
-          GuestEmail: guestEmail,
-          GuestPhone: guestPhone || '',
-          DiscountCode: discountCode || '',
-          Language: selectedLanguage,
-          Accommodation: withAccommodation === 'with' ? 'With accommodation' : 'Without accommodation',
-          Status: 'Pending',
+    const airtableFields = {
+      TourSlug: pkg.slug || pkg.id || '',
+      TourName: `${pkg.name} — ${pkg.subtitle}`,
+      TourDate: selectedDate,
+      NumPeople: numPeople,
+      TourType: 'package',
+      TotalPrice: totalPrice,
+      Language: selectedLanguage,
+      Accommodation: accommodationLabel,
+      Status: 'Pending',
+    }
+
+    const analytics = {
+      transaction_id: `${pkg.slug}-${Date.now()}`,
+      currency: 'EUR',
+      value: totalPrice,
+      items: [{ item_id: pkg.slug, item_name: pkg.name, item_category: 'package', price: pkg.price, quantity: numPeople }],
+    }
+
+    navigate('/checkout', {
+      state: {
+        booking: {
+          kind: 'package',
+          title: `${pkg.name} — ${pkg.subtitle}`,
+          backLink: `/packages/${pkg.slug}`,
+          backLabel: 'Back to package',
+          isQuote: false,
+          deposit: true,
+          summary: {
+            date: dateLabel,
+            accommodation: accommodationLabel,
+            language: languageLabel,
+            numPeople,
+            unitPrice: activePrice,
+            total: totalPrice,
+          },
+          rating: pkg.rating,
+          reviews: pkg.reviews,
+          templateParams,
+          airtableFields,
+          analytics,
         },
-      }),
-    }).catch((err) => console.warn('Airtable booking save failed:', err))
-
-    emailjs.send(
-      import.meta.env.VITE_EMAILJS_SERVICE_ID,
-      import.meta.env.VITE_EMAILJS_CONFIRMATION_TEMPLATE_ID,
-      templateParams,
-      import.meta.env.VITE_EMAILJS_PUBLIC_KEY
-    ).catch(() => {})
-
-    emailjs.send(
-      import.meta.env.VITE_EMAILJS_SERVICE_ID,
-      import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
-      templateParams,
-      import.meta.env.VITE_EMAILJS_PUBLIC_KEY
-    )
-    .then(() => {
-      setIsSending(false)
-      setIsSuccess(true)
-      trackEvent('purchase', {
-        transaction_id: `${pkg.slug}-${Date.now()}`,
-        currency: 'EUR',
-        value: totalPrice,
-        items: [{ item_id: pkg.slug, item_name: pkg.name, item_category: 'package', price: pkg.price, quantity: numPeople }],
-      })
+      },
     })
-    .catch(() => { setIsSending(false); setIsError(true) })
   }
 
   const bookingForm = (
     <div style={styles.bookingCard}>
-      {isSuccess ? (
-        <div style={styles.successMessage}>
-          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '12px' }}>
-            <CheckCircle size={40} color="var(--color-success)" />
-          </div>
-          <h3 style={styles.successTitle}>Request Received!</h3>
-          <p style={styles.successText}>
-            Thanks {guestName}. Your request for{' '}
-            <strong>{pkg.name}</strong> on {selectedDate} for{' '}
-            {numPeople} {numPeople === 1 ? 'person' : 'people'} has been
-            received. You'll hear back within 24 hours.
-          </p>
-        </div>
-      ) : isEnquirySuccess ? (
+      {isEnquirySuccess ? (
         <div style={styles.successMessage}>
           <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '12px' }}>
             <CheckCircle size={40} color="var(--color-success)" />
@@ -562,18 +546,15 @@ function PackageDetail() {
                   onChange={(e) => setEnquiryText(e.target.value)}
                 />
               </div>
-              <button
-                style={{
-                  ...styles.bookBtn,
-                  opacity: isEnquirySending ? 0.7 : 1,
-                  cursor: isEnquirySending ? 'not-allowed' : 'pointer',
-                }}
+              <Button
+                variant="primary"
+                full
+                style={{ marginBottom: 10 }}
                 onClick={handleEnquiry}
                 disabled={isEnquirySending}
-                className="btn-lift btn-glow-amber"
               >
-                {isEnquirySending ? 'Sending...' : 'Send Enquiry'}
-              </button>
+                {isEnquirySending ? 'Sending…' : 'Send enquiry'}
+              </Button>
               {isEnquiryError && (
                 <p style={styles.errorMessage}>Something went wrong. Please try again or email us directly.</p>
               )}
@@ -585,13 +566,9 @@ function PackageDetail() {
             <span style={{ fontFamily: 'var(--font-body)', fontSize: '13px', fontWeight: '600', color: 'var(--color-n700)' }}>
               Book a package
             </span>
-            <span style={{ fontFamily: 'var(--font-body)', fontSize: '12px', fontWeight: '600', color: 'var(--color-n600)' }}>
-              Step {bookingStep} of 2
-            </span>
           </div>
 
-          {bookingStep === 1 ? (
-            <>
+          <>
               <div style={{ ...styles.formGroup, marginBottom: '12px' }}>
                 <div style={styles.accomGrid}>
                   <button
@@ -800,123 +777,15 @@ function PackageDetail() {
                 <span style={styles.totalPrice}>€{totalPrice}</span>
               </div>
 
-              <button
-                style={styles.bookBtn}
-                className="btn-lift btn-glow-amber"
-                onClick={() => {
-                  if (!selectedDate) { alert('Please select a date.'); return }
-                  setBookingStep(2)
-                }}
+              <Button
+                variant="primary"
+                full
+                style={{ marginBottom: 10 }}
+                onClick={handleBooking}
               >
-                Continue to Booking — €{totalPrice}
-              </button>
+                Continue to checkout — €{totalPrice}
+              </Button>
             </>
-          ) : (
-            <>
-              {/* Compact chip-style selection summary */}
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '12px' }}>
-                {[
-                  { label: 'Date', value: selectedDate },
-                  { label: 'Guests', value: `${numPeople} ${numPeople === 1 ? 'person' : 'people'}` },
-                  { label: 'Accommodation', value: withAccommodation === 'with' ? 'With' : 'Without' },
-                  { label: 'Language', value: selectedLanguage.charAt(0).toUpperCase() + selectedLanguage.slice(1) },
-                  { label: 'Total', value: `€${totalPrice}` },
-                ].map(({ label, value }) => (
-                  <div key={label} style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '5px',
-                    backgroundColor: 'rgba(46,125,94,0.07)',
-                    border: '1px solid rgba(46,125,94,0.18)',
-                    borderRadius: '100px',
-                    padding: '3px 10px',
-                  }}>
-                    <span style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: 'var(--color-n600)' }}>{label}:</span>
-                    <span style={{ fontFamily: 'var(--font-body)', fontWeight: '700', fontSize: '11px', color: 'var(--color-forest-green)' }}>{value}</span>
-                  </div>
-                ))}
-              </div>
-
-              <div style={styles.formGroup}>
-                <label style={styles.label}>Your Name</label>
-                <input
-                  type="text"
-                  placeholder="John Doe"
-                  style={styles.input}
-                  value={guestName}
-                  onChange={(e) => setGuestName(e.target.value)}
-                />
-              </div>
-
-              <div style={styles.formGroup}>
-                <label style={styles.label}>Email Address</label>
-                <input
-                  type="email"
-                  placeholder="john.doe@email.com"
-                  style={styles.input}
-                  value={guestEmail}
-                  onChange={(e) => setGuestEmail(e.target.value)}
-                />
-              </div>
-
-              <div style={styles.formGroup}>
-                <label style={styles.label}>Phone (optional)</label>
-                <input
-                  type="tel"
-                  placeholder="+1 234 567 8900"
-                  style={styles.input}
-                  value={guestPhone}
-                  onChange={(e) => setGuestPhone(e.target.value)}
-                />
-              </div>
-
-              <div style={{ ...styles.formGroup, marginBottom: '12px' }}>
-                <label style={styles.label}>
-                  Referral Code
-                  <span style={styles.optional}> — optional</span>
-                </label>
-                <input
-                  type="text"
-                  placeholder="e.g. HOTEL123"
-                  style={styles.input}
-                  value={discountCode}
-                  onChange={(e) => setDiscountCode(e.target.value)}
-                />
-              </div>
-
-              <div style={styles.buttonRow}>
-                <button
-                  type="button"
-                  style={styles.secondaryActionBtn}
-                  className="btn-lift"
-                  onClick={() => setBookingStep(1)}
-                >
-                  Back
-                </button>
-                <button
-                  style={{
-                    ...styles.bookBtn,
-                    flex: 1,
-                    marginBottom: 0,
-                    opacity: isSending ? 0.7 : 1,
-                    cursor: isSending ? 'not-allowed' : 'pointer',
-                  }}
-                  onClick={handleBooking}
-                  disabled={isSending}
-                  className="btn-lift btn-glow-amber"
-                >
-                  {isSending ? 'Sending...' : `Confirm & Book — €${totalPrice}`}
-                </button>
-              </div>
-            </>
-          )}
-
-          {isError && (
-            <p style={styles.errorMessage}>
-              Something went wrong. Please try again or email us directly.
-            </p>
-          )}
-
           </>
           )}
         </>
@@ -935,14 +804,16 @@ function PackageDetail() {
   url={`/packages/${pkg.slug}`}
 />
 <PackageSchema pkg={pkg} />
-<PackageBreadcrumbSchema pkg={pkg} />
 
       <div style={{ ...styles.heroWrapper, height: isMobile ? '56vh' : '70vh' }}>
-        <img src={pkg.heroImage} alt={pkg.name} style={styles.heroPhoto} />
+        <Img src={pkg.heroImage} alt={pkg.name} sizes="100vw" eager style={styles.heroPhoto} />
         <div style={styles.heroGradient} />
         <div style={styles.heroGradientTop} />
         <div style={styles.heroBackLink}>
-          <Link to="/multi-day-tours" style={styles.backLink}>← All Packages</Link>
+          <Breadcrumbs items={[
+            { name: 'Multi-day tours', path: '/multi-day-tours' },
+            { name: pkg.name, path: `/packages/${pkg.slug}` },
+          ]} />
         </div>
       </div>
 
@@ -1531,6 +1402,9 @@ function PackageDetail() {
         </div>
       </div>
 
+      {/* ── FROM THE JOURNAL ───────────────────────────── */}
+      <FromTheJournal packageSlug={pkg.slug} />
+
       {/* ── RELATED PACKAGES ───────────────────────────── */}
       {relatedPackages.length > 0 && (
         <div style={{
@@ -1566,24 +1440,24 @@ function PackageDetail() {
                         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(0,0,0,0.30) 0%, transparent 28%, transparent 40%, rgba(0,0,0,0.88) 100%)' }} />
                         <div style={{ position: 'absolute', top: '14px', left: '14px', right: '14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                           {badge && (
-                            <span style={{ fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: '10px', letterSpacing: '1px', textTransform: 'uppercase', padding: '4px 11px', borderRadius: '100px', backgroundColor: badgeStyle === 'amber' ? 'var(--color-amber)' : badgeStyle === 'green' ? 'var(--color-forest-green)' : 'rgba(0,0,0,0.55)', color: badgeStyle === 'amber' ? 'var(--color-n900)' : 'var(--color-n000)' }}>{badge}</span>
+                            <span style={{ fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: '10px', letterSpacing: '1px', textTransform: 'uppercase', padding: '4px 11px', borderRadius: 'var(--radius-pill)', backgroundColor: badgeStyle === 'amber' ? 'var(--color-amber)' : badgeStyle === 'green' ? 'var(--color-forest-green)' : 'rgba(0,0,0,0.55)', color: badgeStyle === 'amber' ? 'var(--color-n900)' : 'var(--color-n000)' }}>{badge}</span>
                           )}
-                          <span style={{ fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: '12px', color: 'var(--color-n000)', backgroundColor: 'rgba(0,0,0,0.40)', backdropFilter: 'blur(6px)', border: '1px solid rgba(255,255,255,0.18)', padding: '5px 12px', borderRadius: '100px', marginLeft: 'auto' }}>{p.duration}</span>
+                          <span style={{ fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: '12px', color: 'var(--color-n000)', backgroundColor: 'rgba(0,0,0,0.40)', backdropFilter: 'blur(6px)', border: '1px solid rgba(255,255,255,0.18)', padding: '5px 12px', borderRadius: 'var(--radius-pill)', marginLeft: 'auto' }}>{p.duration}</span>
                         </div>
                         <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '20px 18px 18px' }}>
                           <h3 style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '20px', color: 'var(--color-n000)', lineHeight: 1.2, letterSpacing: '-0.2px', margin: '0 0 4px' }}>{p.name}</h3>
                           {p.subtitle && <p style={{ fontFamily: 'var(--font-body)', fontSize: '12px', color: 'rgba(255,255,255,0.70)', margin: '0 0 10px', fontStyle: 'italic' }}>{p.subtitle}</p>}
                           <div style={{ display: 'flex', gap: '5px', flexWrap: 'wrap', marginBottom: '12px' }}>
-                            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '11px', color: 'rgba(255,255,255,0.92)', backgroundColor: 'rgba(0,0,0,0.42)', backdropFilter: 'blur(6px)', border: '1px solid rgba(255,255,255,0.16)', padding: '3px 9px', borderRadius: '100px' }}><Gauge size={11} />{p.difficulty}</span>
-                            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '11px', color: 'rgba(255,255,255,0.92)', backgroundColor: 'rgba(0,0,0,0.42)', backdropFilter: 'blur(6px)', border: '1px solid rgba(255,255,255,0.16)', padding: '3px 9px', borderRadius: '100px' }}><Users size={11} />Max {p.groupSize}</span>
+                            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '11px', color: 'rgba(255,255,255,0.92)', backgroundColor: 'rgba(0,0,0,0.42)', backdropFilter: 'blur(6px)', border: '1px solid rgba(255,255,255,0.16)', padding: '3px 9px', borderRadius: 'var(--radius-pill)' }}><Gauge size={11} />{p.difficulty}</span>
+                            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '11px', color: 'rgba(255,255,255,0.92)', backgroundColor: 'rgba(0,0,0,0.42)', backdropFilter: 'blur(6px)', border: '1px solid rgba(255,255,255,0.16)', padding: '3px 9px', borderRadius: 'var(--radius-pill)' }}><Users size={11} />Max {p.groupSize}</span>
                           </div>
                           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '10px' }}>
                             <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px' }}>
                               <span style={{ fontFamily: 'var(--font-body)', fontSize: '10px', color: 'rgba(255,255,255,0.60)', fontWeight: 500, letterSpacing: '0.3px' }}>from</span>
                               <span style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '28px', color: 'var(--color-n000)', lineHeight: 1 }}>€{p.priceWithout}</span>
                             </div>
-                            <button className="pkg-card-btn" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', height: '34px', padding: '0 14px', fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: '12px', letterSpacing: '0.3px', borderRadius: '100px', whiteSpace: 'nowrap', cursor: 'pointer', border: 'none' }}>
-                              View Package <ArrowRight size={13} />
+                            <button className="btn btn--sm pkg-card-btn">
+                              View package <ArrowRight size={13} />
                             </button>
                           </div>
                         </div>
@@ -1604,24 +1478,24 @@ function PackageDetail() {
                           <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(0,0,0,0.30) 0%, transparent 28%, transparent 40%, rgba(0,0,0,0.88) 100%)' }} />
                           <div style={{ position: 'absolute', top: '14px', left: '14px', right: '14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                             {badge && (
-                              <span style={{ fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: '10px', letterSpacing: '1px', textTransform: 'uppercase', padding: '4px 11px', borderRadius: '100px', backgroundColor: badgeStyle === 'amber' ? 'var(--color-amber)' : badgeStyle === 'green' ? 'var(--color-forest-green)' : 'rgba(0,0,0,0.55)', color: badgeStyle === 'amber' ? 'var(--color-n900)' : 'var(--color-n000)' }}>{badge}</span>
+                              <span style={{ fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: '10px', letterSpacing: '1px', textTransform: 'uppercase', padding: '4px 11px', borderRadius: 'var(--radius-pill)', backgroundColor: badgeStyle === 'amber' ? 'var(--color-amber)' : badgeStyle === 'green' ? 'var(--color-forest-green)' : 'rgba(0,0,0,0.55)', color: badgeStyle === 'amber' ? 'var(--color-n900)' : 'var(--color-n000)' }}>{badge}</span>
                             )}
-                            <span style={{ fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: '12px', color: 'var(--color-n000)', backgroundColor: 'rgba(0,0,0,0.40)', backdropFilter: 'blur(6px)', border: '1px solid rgba(255,255,255,0.18)', padding: '5px 12px', borderRadius: '100px', marginLeft: 'auto' }}>{p.duration}</span>
+                            <span style={{ fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: '12px', color: 'var(--color-n000)', backgroundColor: 'rgba(0,0,0,0.40)', backdropFilter: 'blur(6px)', border: '1px solid rgba(255,255,255,0.18)', padding: '5px 12px', borderRadius: 'var(--radius-pill)', marginLeft: 'auto' }}>{p.duration}</span>
                           </div>
                           <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '20px 18px 18px' }}>
                             <h3 style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '20px', color: 'var(--color-n000)', lineHeight: 1.2, letterSpacing: '-0.2px', margin: '0 0 4px' }}>{p.name}</h3>
                             {p.subtitle && <p style={{ fontFamily: 'var(--font-body)', fontSize: '12px', color: 'rgba(255,255,255,0.70)', margin: '0 0 10px', fontStyle: 'italic' }}>{p.subtitle}</p>}
                             <div style={{ display: 'flex', gap: '5px', flexWrap: 'wrap', marginBottom: '12px' }}>
-                              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '11px', color: 'rgba(255,255,255,0.92)', backgroundColor: 'rgba(0,0,0,0.42)', backdropFilter: 'blur(6px)', border: '1px solid rgba(255,255,255,0.16)', padding: '3px 9px', borderRadius: '100px' }}><Gauge size={11} />{p.difficulty}</span>
-                              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '11px', color: 'rgba(255,255,255,0.92)', backgroundColor: 'rgba(0,0,0,0.42)', backdropFilter: 'blur(6px)', border: '1px solid rgba(255,255,255,0.16)', padding: '3px 9px', borderRadius: '100px' }}><Users size={11} />Max {p.groupSize}</span>
+                              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '11px', color: 'rgba(255,255,255,0.92)', backgroundColor: 'rgba(0,0,0,0.42)', backdropFilter: 'blur(6px)', border: '1px solid rgba(255,255,255,0.16)', padding: '3px 9px', borderRadius: 'var(--radius-pill)' }}><Gauge size={11} />{p.difficulty}</span>
+                              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '11px', color: 'rgba(255,255,255,0.92)', backgroundColor: 'rgba(0,0,0,0.42)', backdropFilter: 'blur(6px)', border: '1px solid rgba(255,255,255,0.16)', padding: '3px 9px', borderRadius: 'var(--radius-pill)' }}><Users size={11} />Max {p.groupSize}</span>
                             </div>
                             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '10px' }}>
                               <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px' }}>
                                 <span style={{ fontFamily: 'var(--font-body)', fontSize: '10px', color: 'rgba(255,255,255,0.60)', fontWeight: 500, letterSpacing: '0.3px' }}>from</span>
                                 <span style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '28px', color: 'var(--color-n000)', lineHeight: 1 }}>€{p.priceWithout}</span>
                               </div>
-                              <button className="pkg-card-btn" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', height: '34px', padding: '0 14px', fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: '12px', letterSpacing: '0.3px', borderRadius: '100px', whiteSpace: 'nowrap', cursor: 'pointer', border: 'none' }}>
-                                View Package <ArrowRight size={13} />
+                              <button className="btn btn--sm pkg-card-btn">
+                                View package <ArrowRight size={13} />
                               </button>
                             </div>
                           </div>
@@ -1643,9 +1517,9 @@ function PackageDetail() {
             <span style={styles.mobilePrice}>From €{pkg.priceWithout}</span>
             <span style={styles.mobilePricePer}>per person</span>
           </div>
-          <button style={styles.mobileBookBtn} onClick={() => setDrawerOpen(true)} className="btn-lift btn-glow-amber">
-            Book Now
-          </button>
+          <Button variant="primary" size="sm" onClick={() => setDrawerOpen(true)}>
+            Book now
+          </Button>
         </div>
       )}
 
@@ -1725,7 +1599,7 @@ const styles = {
     backgroundColor: 'rgba(0,0,0,0.3)',
     backdropFilter: 'blur(4px)',
     padding: '6px 14px',
-    borderRadius: '100px',
+    borderRadius: 'var(--radius-pill)',
     border: '1px solid rgba(255,255,255,0.2)',
   },
 
@@ -1789,7 +1663,7 @@ const styles = {
     alignItems: 'center',
     gap: '6px',
     padding: '6px 14px',
-    borderRadius: '100px',
+    borderRadius: 'var(--radius-pill)',
     backgroundColor: 'var(--color-n100)',
     border: '1px solid var(--color-n300)',
     fontFamily: 'var(--font-body)',
@@ -1894,7 +1768,7 @@ const styles = {
     gap: '4px',
     backgroundColor: 'rgba(46,125,94,0.08)',
     padding: '3px 10px',
-    borderRadius: '100px',
+    borderRadius: 'var(--radius-pill)',
     flexShrink: 0,
   },
 
@@ -1917,7 +1791,7 @@ const styles = {
     alignItems: 'center',
     height: '22px',
     padding: '0 10px',
-    borderRadius: '100px',
+    borderRadius: 'var(--radius-pill)',
     backgroundColor: 'var(--color-forest-green)',
     fontFamily: 'var(--font-body)',
     fontWeight: '700',
@@ -2028,7 +1902,7 @@ const styles = {
     gap: '6px',
     backgroundColor: 'var(--color-n100)',
     border: '1px solid var(--color-n200)',
-    borderRadius: '100px',
+    borderRadius: 'var(--radius-pill)',
     padding: '4px 12px',
   },
 
@@ -2322,7 +2196,7 @@ const styles = {
   pillOption: {
     height: '36px',
     padding: '0 14px',
-    borderRadius: '100px',
+    borderRadius: 'var(--radius-pill)',
     border: '1.5px solid',
     fontFamily: 'var(--font-body)',
     fontSize: '13px',
@@ -2410,21 +2284,6 @@ const styles = {
     fontWeight: '700',
     fontSize: 'var(--text-h3)',
     color: 'var(--color-forest-green)',
-  },
-
-  bookBtn: {
-    width: '100%',
-    height: 'var(--touch-target)',
-    backgroundColor: 'var(--color-amber)',
-    color: 'var(--color-n900)',
-    fontFamily: 'var(--font-body)',
-    fontWeight: '700',
-    fontSize: 'var(--text-body)',
-    borderRadius: 'var(--radius)',
-    border: 'none',
-    marginBottom: '10px',
-    boxSizing: 'border-box',
-    cursor: 'pointer',
   },
 
   buttonRow: {
@@ -2516,19 +2375,6 @@ const styles = {
     fontSize: '11px',
     color: 'var(--color-n500)',
     lineHeight: 1,
-  },
-
-  mobileBookBtn: {
-    height: '44px',
-    padding: '0 24px',
-    backgroundColor: 'var(--color-amber)',
-    color: 'var(--color-n900)',
-    fontFamily: 'var(--font-body)',
-    fontWeight: '700',
-    fontSize: 'var(--text-body)',
-    borderRadius: 'var(--radius)',
-    border: 'none',
-    cursor: 'pointer',
   },
 
   drawerOverlay: {

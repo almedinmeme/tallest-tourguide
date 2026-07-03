@@ -1,10 +1,7 @@
 // Single source of truth for the site's routes.
-// Read by BOTH vite.config.js (sitemap `dynamicRoutes`) and
-// scripts/prerender.mjs, so adding content (a tour, a destination) flows
-// into the sitemap and the prerendered static HTML automatically.
-//
-// Note: /journal post pages come from Airtable at runtime, so they can't be
-// enumerated at build time and are intentionally omitted here.
+// Read by scripts/prerender.mjs (static HTML) and scripts/sitemap.mjs, so
+// adding content (a tour, a destination, a journal post) flows into the
+// sitemap and the prerendered static HTML automatically.
 
 import { readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
@@ -45,8 +42,11 @@ export function getRoutes() {
   const tours = readJson('src/data/tours.json').map((t) => `/tours/${t.slug}`)
   const packages = readJson('src/data/packages.json').map((p) => `/packages/${p.slug}`)
   const destinations = readJson('src/data/destinations.json').map((d) => `/destinations/${d.slug}`)
+  const journal = readJson('src/data/journal.json')
+    .filter((p) => p.published !== false && p.slug)
+    .map((p) => `/journal/${p.slug}`)
   // De-dupe while preserving order.
-  return [...new Set([...STATIC_ROUTES, ...tours, ...packages, ...destinations])]
+  return [...new Set([...STATIC_ROUTES, ...tours, ...packages, ...destinations, ...journal])]
 }
 
 export default getRoutes

@@ -1,6 +1,6 @@
 import SEO from '../components/SEO'
-import { Link } from 'react-router-dom'
 import useWindowWidth from '../hooks/useWindowWidth'
+import Button from '../components/Button'
 
 import guide2      from '../assets/guide-2.webp'
 import guide4      from '../assets/guide-4.webp'
@@ -58,8 +58,9 @@ function SafeTravels() {
   return (
     <div style={{ backgroundColor: 'var(--color-n100)', minHeight: '100vh' }}>
       <SEO
-        title="Safe Travels — Tallest Tourguide"
+        title="Safe Travels"
         description="How we keep guests safe on tours in Sarajevo and Bosnia. Travel insurance, fitness advisories, emotional preparedness, and our safety commitment."
+        url="/safe-travels"
       />
 
       {/* Header */}
@@ -108,9 +109,9 @@ function SafeTravels() {
               <p style={styles.ctaTitle}>Have a specific question?</p>
               <p style={styles.ctaSubtitle}>Ask us anything about fitness requirements, tour content, or local conditions before you book.</p>
             </div>
-            <Link to="/contact" style={styles.ctaBtn} className="btn-lift btn-glow-green">
-              Get in Touch
-            </Link>
+            <Button to="/contact" variant="secondary" style={{ flexShrink: 0 }}>
+              Get in touch
+            </Button>
           </div>
 
         </div>
@@ -188,7 +189,7 @@ const styles = {
     letterSpacing: '0.08em',
     textTransform: 'uppercase',
     padding: '4px 10px',
-    borderRadius: '100px',
+    borderRadius: 'var(--radius-pill)',
   },
   cardBody: {
     padding: '22px 24px 28px',
@@ -233,21 +234,6 @@ const styles = {
     color: 'var(--color-n600)',
     margin: 0,
     lineHeight: '1.6',
-  },
-  ctaBtn: {
-    display: 'inline-flex',
-    alignItems: 'center',
-    height: '44px',
-    padding: '0 24px',
-    backgroundColor: 'var(--color-forest-green)',
-    color: '#fff',
-    fontFamily: 'var(--font-body)',
-    fontWeight: '700',
-    fontSize: '15px',
-    borderRadius: 'var(--radius)',
-    textDecoration: 'none',
-    whiteSpace: 'nowrap',
-    flexShrink: 0,
   },
 }
 

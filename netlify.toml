@@ -1,0 +1,9 @@
+# Netlify build configuration.
+# The build MUST be `npm run build` (vite build + prerender): the prerender
+# step writes the per-route static HTML, sitemap.xml and the 200.html SPA
+# fallback. It exits non-zero if any route fails to prerender correctly, so a
+# broken build can never silently ship pages that serve the wrong meta tags.
+
+[build]
+  command = "npm run build"
+  publish = "dist"

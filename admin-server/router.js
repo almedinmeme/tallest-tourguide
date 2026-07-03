@@ -63,6 +63,7 @@ export function buildAdminRouter() {
   router.use('/destinations', buildCollectionRouter('destinations'))
   router.use('/accommodations', buildCollectionRouter('accommodations'))
   router.use('/pages', buildCollectionRouter('pages'))
+  router.use('/journal', buildCollectionRouter('journal'))
 
   router.post('/upload', upload.single('file'), asyncHandler(async (req, res) => {
     const result = await processUpload(req.file, { slug: req.body?.slug })

@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import SEO from '../components/SEO'
-import { Link } from 'react-router-dom'
 import useWindowWidth from '../hooks/useWindowWidth'
+import Button from '../components/Button'
 
 const NAVBAR_HEIGHT = 68
 
@@ -443,8 +443,8 @@ function BosniaCulturalGuide() {
               </p>
             </div>
             <div style={{ display: 'flex', gap: '12px', flexShrink: 0, flexWrap: 'wrap' }}>
-              <Link to="/tours" style={styles.ctaBtn} className="btn-lift btn-glow-green">Browse tours</Link>
-              <Link to="/contact" style={styles.ctaBtnSecondary} className="btn-lift">Ask a question</Link>
+              <Button to="/tours" variant="secondary">Browse tours</Button>
+              <Button to="/contact" variant="secondary">Ask a question</Button>
             </div>
           </div>
 
@@ -675,36 +675,6 @@ const styles = {
     lineHeight: '1.6',
   },
 
-  ctaBtn: {
-    display: 'inline-flex',
-    alignItems: 'center',
-    height: '44px',
-    padding: '0 24px',
-    backgroundColor: 'var(--color-forest-green)',
-    color: '#fff',
-    fontFamily: 'var(--font-body)',
-    fontWeight: '700',
-    fontSize: '15px',
-    borderRadius: 'var(--radius)',
-    textDecoration: 'none',
-    whiteSpace: 'nowrap',
-  },
-
-  ctaBtnSecondary: {
-    display: 'inline-flex',
-    alignItems: 'center',
-    height: '44px',
-    padding: '0 24px',
-    backgroundColor: 'transparent',
-    color: 'var(--color-forest-green)',
-    fontFamily: 'var(--font-body)',
-    fontWeight: '700',
-    fontSize: '15px',
-    borderRadius: 'var(--radius)',
-    textDecoration: 'none',
-    whiteSpace: 'nowrap',
-    border: '1.5px solid var(--color-forest-green)',
-  },
 }
 
 export default BosniaCulturalGuide

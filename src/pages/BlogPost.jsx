@@ -1,8 +1,9 @@
 import { useParams, Link } from 'react-router-dom'
 import { Star, Clock, Users, ArrowRight } from 'lucide-react'
 import { trackEvent } from '../utils/analytics'
-import { marked } from 'marked'
 import SEO from '../components/SEO'
+import Img from '../components/Img'
+import Breadcrumbs from '../components/Breadcrumbs'
 import { BlogPostingSchema } from '../schema/SchemaMarkup'
 import { useBlog } from '../hooks/useBlog'
 import useWindowWidth from '../hooks/useWindowWidth'
@@ -100,9 +101,11 @@ function BlogPost() {
       {/* ── HERO IMAGE ──────────────────────────────────── */}
       <div style={styles.heroWrapper}>
         {post.heroImage ? (
-          <img
+          <Img
             src={post.heroImage}
             alt={post.title}
+            sizes="100vw"
+            eager
             style={styles.heroPhoto}
           />
         ) : (
@@ -111,9 +114,10 @@ function BlogPost() {
         <div style={styles.heroGradient} />
         <div style={styles.heroGradientTop} />
         <div style={styles.heroBackLink}>
-          <Link to="/journal" style={styles.backLinkPill}>
-            ← All Posts
-          </Link>
+          <Breadcrumbs items={[
+            { name: 'The Journal', path: '/journal' },
+            { name: post.title, path: `/journal/${post.slug}` },
+          ]} />
         </div>
       </div>
 
@@ -151,24 +155,25 @@ function BlogPost() {
 
           <div style={styles.divider} />
 
-          {/* Body — alternating text blocks and images */}
+          {/* Body — alternating text blocks and images.
+              Content sections are stored as HTML (TipTap output). */}
           {post.content && (
-            <div className="blog-content" dangerouslySetInnerHTML={{ __html: marked(post.content) }} />
+            <div className="blog-content" dangerouslySetInnerHTML={{ __html: post.content }} />
           )}
           {post.inlineImage1 && (
             <figure style={styles.figure}>
-              <img src={post.inlineImage1} alt={post.inlineImage1Caption || post.title} loading="lazy" style={styles.inlineImage} />
+              <Img src={post.inlineImage1} alt={post.inlineImage1Caption || post.title} sizes="(max-width: 768px) 92vw, 720px" style={styles.inlineImage} />
               {post.inlineImage1Caption && (
                 <figcaption style={styles.figcaption}>{post.inlineImage1Caption}</figcaption>
               )}
             </figure>
           )}
           {post.content2 && (
-            <div className="blog-content" dangerouslySetInnerHTML={{ __html: marked(post.content2) }} />
+            <div className="blog-content" dangerouslySetInnerHTML={{ __html: post.content2 }} />
           )}
           {post.inlineImage2 && (
             <figure style={styles.figure}>
-              <img src={post.inlineImage2} alt={post.inlineImage2Caption || post.title} loading="lazy" style={styles.inlineImage} />
+              <Img src={post.inlineImage2} alt={post.inlineImage2Caption || post.title} sizes="(max-width: 768px) 92vw, 720px" style={styles.inlineImage} />
               {post.inlineImage2Caption && (
                 <figcaption style={styles.figcaption}>{post.inlineImage2Caption}</figcaption>
               )}
@@ -182,29 +187,29 @@ function BlogPost() {
             />
           )}
           {post.content3 && (
-            <div className="blog-content" dangerouslySetInnerHTML={{ __html: marked(post.content3) }} />
+            <div className="blog-content" dangerouslySetInnerHTML={{ __html: post.content3 }} />
           )}
           {post.inlineImage3 && (
             <figure style={styles.figure}>
-              <img src={post.inlineImage3} alt={post.inlineImage3Caption || post.title} loading="lazy" style={styles.inlineImage} />
+              <Img src={post.inlineImage3} alt={post.inlineImage3Caption || post.title} sizes="(max-width: 768px) 92vw, 720px" style={styles.inlineImage} />
               {post.inlineImage3Caption && (
                 <figcaption style={styles.figcaption}>{post.inlineImage3Caption}</figcaption>
               )}
             </figure>
           )}
           {post.content4 && (
-            <div className="blog-content" dangerouslySetInnerHTML={{ __html: marked(post.content4) }} />
+            <div className="blog-content" dangerouslySetInnerHTML={{ __html: post.content4 }} />
           )}
           {post.inlineImage4 && (
             <figure style={styles.figure}>
-              <img src={post.inlineImage4} alt={post.inlineImage4Caption || post.title} loading="lazy" style={styles.inlineImage} />
+              <Img src={post.inlineImage4} alt={post.inlineImage4Caption || post.title} sizes="(max-width: 768px) 92vw, 720px" style={styles.inlineImage} />
               {post.inlineImage4Caption && (
                 <figcaption style={styles.figcaption}>{post.inlineImage4Caption}</figcaption>
               )}
             </figure>
           )}
           {post.content5 && (
-            <div className="blog-content" dangerouslySetInnerHTML={{ __html: marked(post.content5) }} />
+            <div className="blog-content" dangerouslySetInnerHTML={{ __html: post.content5 }} />
           )}
 
           {/* Back link */}
@@ -498,7 +503,7 @@ const styles = {
     backgroundColor: 'rgba(0,0,0,0.3)',
     backdropFilter: 'blur(4px)',
     padding: '6px 14px',
-    borderRadius: '100px',
+    borderRadius: 'var(--radius-pill)',
     border: '1px solid rgba(255,255,255,0.2)',
   },
 
@@ -532,7 +537,7 @@ const styles = {
     textTransform: 'uppercase',
     letterSpacing: '0.8px',
     padding: '4px 12px',
-    borderRadius: '100px',
+    borderRadius: 'var(--radius-pill)',
   },
 
   dateMeta: {
@@ -882,7 +887,7 @@ const styles = {
     textTransform: 'uppercase',
     letterSpacing: '0.6px',
     padding: '3px 8px',
-    borderRadius: '100px',
+    borderRadius: 'var(--radius-pill)',
   },
 
   experienceTypeTag: {
@@ -898,7 +903,7 @@ const styles = {
     textTransform: 'uppercase',
     letterSpacing: '0.8px',
     padding: '3px 8px',
-    borderRadius: '100px',
+    borderRadius: 'var(--radius-pill)',
   },
 
   experienceBody: {
@@ -990,7 +995,6 @@ function InlinePromoCard({ card, isPackage, isMobile }) {
   const title = isPackage ? card.name : card.title
   const image = isPackage ? card.heroImage : card.hero
   const typeLabel = isPackage ? 'Package' : 'Tour'
-  const ctaLabel = isPackage ? 'View Package' : 'View Tour'
 
   return (
     <Link

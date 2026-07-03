@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import SEO from '../components/SEO'
+import Img from '../components/Img'
 import { useBlog } from '../hooks/useBlog'
 import useWindowWidth from '../hooks/useWindowWidth'
 
@@ -108,9 +109,10 @@ function Blog() {
                   {/* Hero image */}
                   <div style={styles.cardImageWrapper}>
                     {post.heroImage ? (
-                      <img
+                      <Img
                         src={post.heroImage}
                         alt={post.title}
+                        sizes="(max-width: 768px) 92vw, 400px"
                         style={styles.cardImage}
                       />
                     ) : (
@@ -209,7 +211,7 @@ const styles = {
     color: 'var(--color-n700)',
     backgroundColor: 'var(--color-n000)',
     border: '1px solid var(--color-n300)',
-    borderRadius: '100px',
+    borderRadius: 'var(--radius-pill)',
     padding: '8px 18px',
     cursor: 'pointer',
     transition: 'background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease',
@@ -270,7 +272,7 @@ const styles = {
     textTransform: 'uppercase',
     letterSpacing: '0.8px',
     padding: '4px 10px',
-    borderRadius: '100px',
+    borderRadius: 'var(--radius-pill)',
   },
 
   cardBody: {

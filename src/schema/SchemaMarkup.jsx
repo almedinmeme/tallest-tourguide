@@ -3,15 +3,22 @@
 // Tells Google exactly what type of business this is,
 // what each tour offers, and how to display it in search.
 //
-// Three components used across the site:
+// Components used across the site:
 //   LocalBusinessSchema  → App.jsx (once, site-wide)
-//   TourActivitySchema   → TourDetail.jsx (per tour)
-//   BreadcrumbSchema     → TourDetail.jsx (per tour)
+//   TourActivitySchema   → TourDetail.jsx (TouristAttraction + Product/offers)
+//   PackageSchema        → PackageDetail.jsx (TouristTrip + Product/offers)
 //   FAQSchema            → TourDetail.jsx (per tour, auto-skips if no faqs)
+//   BlogPostingSchema    → BlogPost.jsx (per post)
+//
+// Product + offers is what Google's price/review rich results actually
+// consume — TouristAttraction/TouristTrip alone earn no rich result.
+// Breadcrumb JSON-LD lives in src/components/Breadcrumbs.jsx, emitted
+// together with the visible trail so the two can never disagree.
 //
 // All use react-helmet-async (already installed in your project).
 
 import { Helmet } from 'react-helmet-async'
+import { siteUrl, SITE_ORIGIN } from '../utils/seo'
 
 // ----------------------------------------------------------
 // 1. LOCAL BUSINESS SCHEMA
@@ -24,9 +31,9 @@ export function LocalBusinessSchema() {
     '@context': 'https://schema.org',
     '@type': 'TouristInformationCenter',
     name: 'Tallest Tourguide',
-    url: 'https://tallesttourguide.com',
-    logo: 'https://tallesttourguide.com/logo.svg',
-    image: 'https://tallesttourguide.com/og-image.jpg',
+    url: siteUrl('/'),
+    logo: `${SITE_ORIGIN}/logo.svg`,
+    image: `${SITE_ORIGIN}/og-image.jpg`,
     description:
       'Small group guided tours in Sarajevo and Bosnia. War history, food experiences, Mostar day trips. Local guide with 14 years experience. Max 12 guests.',
     address: {
@@ -80,7 +87,7 @@ export function TourActivitySchema({ tour }) {
     '@type': 'TouristAttraction',
     name: tour.title,
     description: tour.description.slice(0, 300),
-    url: `https://tallesttourguide.com/tours/${tour.slug}`,
+    url: siteUrl(`/tours/${tour.slug}`),
     touristType: [
       'History Enthusiast',
       'Culture Seeker',
@@ -95,12 +102,12 @@ export function TourActivitySchema({ tour }) {
       price: tour.price,
       priceCurrency: 'EUR',
       availability: 'https://schema.org/InStock',
-      url: `https://tallesttourguide.com/tours/${tour.slug}`,
+      url: siteUrl(`/tours/${tour.slug}`),
     },
     provider: {
       '@type': 'LocalBusiness',
       name: 'Tallest Tourguide',
-      url: 'https://tallesttourguide.com',
+      url: siteUrl('/'),
     },
     location: {
       '@type': 'Place',
@@ -122,53 +129,41 @@ export function TourActivitySchema({ tour }) {
       : undefined,
   }
 
-  return (
-    <Helmet>
-      <script type="application/ld+json">
-        {JSON.stringify(schema)}
-      </script>
-    </Helmet>
-  )
-}
-
-// ----------------------------------------------------------
-// 3. BREADCRUMB SCHEMA
-//    Adds the breadcrumb trail in Google search results:
-//    tallesttourguide.com > Tours > Sarajevo Grand Walking Tour
-//    Used in TourDetail.jsx — one per tour page.
-//
-//    Props: tour — the full tour object from tours.js
-// ----------------------------------------------------------
-export function BreadcrumbSchema({ tour }) {
-  const schema = {
+  // Product + offers earns the price/rating rich result in search;
+  // TouristAttraction alone does not.
+  const product = {
     '@context': 'https://schema.org',
-    '@type': 'BreadcrumbList',
-    itemListElement: [
-      {
-        '@type': 'ListItem',
-        position: 1,
-        name: 'Home',
-        item: 'https://tallesttourguide.com',
-      },
-      {
-        '@type': 'ListItem',
-        position: 2,
-        name: 'Tours',
-        item: 'https://tallesttourguide.com/tours',
-      },
-      {
-        '@type': 'ListItem',
-        position: 3,
-        name: tour.title,
-        item: `https://tallesttourguide.com/tours/${tour.slug}`,
-      },
-    ],
+    '@type': 'Product',
+    name: tour.title,
+    description: tour.description.slice(0, 300),
+    image: [tour.hero, ...(tour.gallery || []).map((g) => g.src || g)].filter(Boolean).slice(0, 5),
+    url: siteUrl(`/tours/${tour.slug}`),
+    sku: tour.slug,
+    brand: { '@type': 'Brand', name: 'Tallest Tourguide' },
+    offers: {
+      '@type': 'Offer',
+      price: tour.price,
+      priceCurrency: 'EUR',
+      availability: 'https://schema.org/InStock',
+      url: siteUrl(`/tours/${tour.slug}`),
+    },
+    aggregateRating: tour.rating
+      ? {
+          '@type': 'AggregateRating',
+          ratingValue: tour.rating,
+          reviewCount: tour.reviews,
+          bestRating: '5',
+        }
+      : undefined,
   }
 
   return (
     <Helmet>
       <script type="application/ld+json">
         {JSON.stringify(schema)}
+      </script>
+      <script type="application/ld+json">
+        {JSON.stringify(product)}
       </script>
     </Helmet>
   )
@@ -209,41 +204,78 @@ export function FAQSchema({ tour }) {
 
 // ----------------------------------------------------------
 // 5. PACKAGE SCHEMA
-//    Tells Google: this is a multi-day tour package with pricing.
-//    Used in PackageDetail.jsx — one per package page.
+//    TouristTrip (the schema.org type for multi-day tours, with the
+//    day-by-day itinerary) + Product (what earns the price/rating
+//    rich result). Used in PackageDetail.jsx — one per package page.
 // ----------------------------------------------------------
 export function PackageSchema({ pkg }) {
-  const schema = {
+  const url = siteUrl(`/packages/${pkg.slug}`)
+  const price = pkg.price ?? pkg.priceWithout
+  const description = pkg.description || 'A multi-day guided tour package in Bosnia and Herzegovina.'
+
+  const offers = {
+    '@type': 'Offer',
+    price,
+    priceCurrency: 'EUR',
+    availability: 'https://schema.org/InStock',
+    url,
+  }
+
+  const trip = {
     '@context': 'https://schema.org',
-    '@type': 'TouristAttraction',
+    '@type': 'TouristTrip',
     name: `${pkg.name} — ${pkg.subtitle}`,
-    description: pkg.description || 'A multi-day guided tour package in Bosnia and Herzegovina.',
-    url: `https://tallesttourguide.com/packages/${pkg.slug}`,
+    description,
+    url,
     touristType: ['History Enthusiast', 'Culture Seeker', 'Independent Traveler'],
-    offers: {
-      '@type': 'Offer',
-      price: pkg.price,
-      priceCurrency: 'EUR',
-      availability: 'https://schema.org/InStock',
-      url: `https://tallesttourguide.com/packages/${pkg.slug}`,
-    },
+    itinerary: pkg.days?.length
+      ? {
+          '@type': 'ItemList',
+          numberOfItems: pkg.days.length,
+          itemListElement: pkg.days.map((day, i) => ({
+            '@type': 'ListItem',
+            position: i + 1,
+            name: `Day ${i + 1}: ${day.title}`,
+            ...(day.summary ? { description: day.summary } : {}),
+          })),
+        }
+      : undefined,
+    offers,
     provider: {
       '@type': 'LocalBusiness',
       name: 'Tallest Tourguide',
-      url: 'https://tallesttourguide.com',
-    },
-    location: {
-      '@type': 'Place',
-      name: 'Sarajevo, Bosnia and Herzegovina',
-      address: { '@type': 'PostalAddress', addressLocality: 'Sarajevo', addressCountry: 'BA' },
+      url: siteUrl('/'),
     },
     maximumAttendeeCapacity: pkg.groupSize || 8,
+  }
+
+  const product = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: `${pkg.name} — ${pkg.subtitle}`,
+    description,
+    image: [pkg.heroImage || pkg.hero].filter(Boolean),
+    url,
+    sku: pkg.slug,
+    brand: { '@type': 'Brand', name: 'Tallest Tourguide' },
+    offers,
+    aggregateRating: pkg.rating
+      ? {
+          '@type': 'AggregateRating',
+          ratingValue: pkg.rating,
+          reviewCount: pkg.reviews,
+          bestRating: '5',
+        }
+      : undefined,
   }
 
   return (
     <Helmet>
       <script type="application/ld+json">
-        {JSON.stringify(schema)}
+        {JSON.stringify(trip)}
+      </script>
+      <script type="application/ld+json">
+        {JSON.stringify(product)}
       </script>
     </Helmet>
   )
@@ -265,9 +297,9 @@ export function BlogPostingSchema({ post }) {
     '@type': 'BlogPosting',
     headline: post.title,
     description: post.excerpt || post.title,
-    image: post.heroImage || 'https://tallesttourguide.com/og-image.jpg',
+    image: post.heroImage || `${SITE_ORIGIN}/og-image.jpg`,
     datePublished: post.publishedDate,
-    url: `https://tallesttourguide.com/journal/${post.slug}`,
+    url: siteUrl(`/journal/${post.slug}`),
     author: {
       '@type': 'Person',
       name: 'Almedin Omerović',
@@ -277,33 +309,9 @@ export function BlogPostingSchema({ post }) {
       name: 'Tallest Tourguide',
       logo: {
         '@type': 'ImageObject',
-        url: 'https://tallesttourguide.com/og-image.jpg',
+        url: `${SITE_ORIGIN}/og-image.jpg`,
       },
     },
-  }
-
-  return (
-    <Helmet>
-      <script type="application/ld+json">
-        {JSON.stringify(schema)}
-      </script>
-    </Helmet>
-  )
-}
-
-// ----------------------------------------------------------
-// 7. PACKAGE BREADCRUMB SCHEMA
-//    Home > Packages > Package Name
-// ----------------------------------------------------------
-export function PackageBreadcrumbSchema({ pkg }) {
-  const schema = {
-    '@context': 'https://schema.org',
-    '@type': 'BreadcrumbList',
-    itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://tallesttourguide.com' },
-      { '@type': 'ListItem', position: 2, name: 'Multi-day tours', item: 'https://tallesttourguide.com/packages' },
-      { '@type': 'ListItem', position: 3, name: pkg.name, item: `https://tallesttourguide.com/packages/${pkg.slug}` },
-    ],
   }
 
   return (

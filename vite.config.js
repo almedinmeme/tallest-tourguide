@@ -1,22 +1,16 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import sitemap from 'vite-plugin-sitemap'
 import adminServer from './admin-server/index.js'
-import { getRoutes } from './scripts/routes.mjs'
 
-// Routes are derived from the JSON data files (tours, packages, destinations)
-// plus the static/editorial pages — see scripts/routes.mjs. The same list
-// feeds the prerender step so the sitemap and static HTML never drift apart.
-const routes = getRoutes()
+// The sitemap is written by scripts/sitemap.mjs during the prerender step
+// (scripts/prerender.mjs), from the same route list that drives prerendering.
+// vite-plugin-sitemap was dropped: it normalized away the trailing slashes
+// that Netlify's directory-based prerender output requires.
 
 export default defineConfig({
   plugins: [
     adminServer(),
     react(),
-    sitemap({
-      hostname: 'https://tallesttourguide.com',
-      dynamicRoutes: routes,
-    }),
   ],
   build: {
     rollupOptions: {

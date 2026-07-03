@@ -35,6 +35,7 @@ export const packages = makeCollection('packages')
 export const destinations = makeCollection('destinations')
 export const accommodations = makeCollection('accommodations')
 export const pages = makeCollection('pages')
+export const journal = makeCollection('journal')
 
 export async function uploadImage(file, slug) {
   const fd = new FormData()

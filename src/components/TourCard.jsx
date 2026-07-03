@@ -9,6 +9,7 @@ import { useState } from 'react'
 import { Star, Clock, Users, ArrowRight, Watch } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { getTourLanguages } from '../data/tourLanguages'
+import Img from './Img'
 
 function TourCard({ id, slug, title, price, rating, reviews, duration, groupSize, badge, hero, startingTimes, languages }) {
   const supportedLanguages = getTourLanguages(languages)
@@ -31,10 +32,10 @@ function TourCard({ id, slug, title, price, rating, reviews, duration, groupSize
         {/* ── PHOTO ───────────────────────────────────── */}
         <div style={styles.photoContainer}>
           {hero ? (
-            <img
+            <Img
               src={hero}
               alt={title}
-              loading="lazy"
+              sizes="(max-width: 768px) 92vw, 380px"
               style={styles.photo}
             />
           ) : (
@@ -101,18 +102,13 @@ function TourCard({ id, slug, title, price, rating, reviews, duration, groupSize
               this is an invitation to explore, not a demand to commit. */}
           {/* Footer — View Tour CTA */}
           <div style={styles.footer}>
+            {/* div, not a Button/Link — the whole card is the anchor; the fill
+                follows the card's hover state rather than the button's own */}
             <div
-              style={{
-                ...styles.viewTourBtn,
-                backgroundColor: cardHovered ? 'var(--color-forest-green)' : 'transparent',
-                transition: 'background-color 0.2s ease',
-              }}
+              className="btn btn--secondary btn--sm"
+              style={cardHovered ? { backgroundColor: 'var(--color-forest-green)', color: '#fff' } : undefined}
             >
-              <span style={{
-                ...styles.viewTour,
-                color: cardHovered ? '#ffffff' : 'var(--color-forest-green)',
-                transition: 'color 0.2s ease',
-              }}>View Tour</span>
+              <span>View tour</span>
               <ArrowRight size={14} color={cardHovered ? '#ffffff' : 'var(--color-forest-green)'} />
             </div>
 
@@ -324,25 +320,6 @@ cardLink: {
     boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
   },
 
-  viewTourBtn: {
-    display: 'inline-flex',
-    alignItems: 'center',
-    gap: '6px',
-    height: '34px',
-    padding: '0 14px',
-    border: '1.5px solid var(--color-forest-green)',
-    borderRadius: '100px',   // Full pill shape
-    backgroundColor: 'transparent',
-    transition: 'background-color 0.2s ease',
-  },
-
-  viewTour: {
-    fontFamily: 'var(--font-body)',
-    fontWeight: '700',
-    fontSize: '12px',
-    color: 'var(--color-forest-green)',
-    letterSpacing: '0.3px',
-  },
 }
 
 export default TourCard

@@ -1,9 +1,14 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Check } from 'lucide-react'
+import { Check, ChevronDown, ArrowRight, Compass, Map as MapIcon } from 'lucide-react'
 import SEO from '../components/SEO'
 import RichContent from '../components/RichContent'
+import Img from '../components/Img'
+import { Placeholder } from '../components/Editorial'
 import { getPage } from '../data/pages'
 import useWindowWidth from '../hooks/useWindowWidth'
+import useInView from '../hooks/useInView'
+import Button from '../components/Button'
 
 // Short trust signals for the hero — all true to the offer / FAQ.
 const TRUST_CHIPS = ['60-min video call', 'Written summary included', 'Reschedule free up to 24h', 'Fee credited to a tour']
@@ -19,6 +24,16 @@ export default function Consult() {
   const width = useWindowWidth()
   const isMobile = width <= 768
   const price = extra.price || '€90'
+  const [openFaq, setOpenFaq] = useState(null)
+
+  // People book people: the host block is CMS-editable (extra.hostName etc.)
+  // and falls back to grounded copy until a portrait is uploaded in /admin.
+  const hostName = extra.hostName || 'Almedin'
+  const hostRole = extra.hostRole || 'The guide behind Tallest Tourguide'
+  const hostBio = extra.hostBio || 'The person on the call is the person who runs these trips — on Balkan roads year-round, recommending only routes and places he has driven himself. No script, no call centre; just recent, first-hand knowledge and a plan built around you.'
+
+  // Sticky mobile book bar hides itself while the booking widget is on screen.
+  const [bookRef, bookInView] = useInView('-40px')
 
   const steps = [
     { title: 'Book your slot', detail: `Pick a time that suits you and pay the ${price} fee — that’s the whole commitment.` },
@@ -27,7 +42,7 @@ export default function Consult() {
   ]
 
   return (
-    <main style={{ backgroundColor: 'var(--color-n000)' }}>
+    <main style={{ backgroundColor: 'var(--color-n000)', paddingBottom: isMobile ? 72 : 0 }}>
       <SEO
         title={page.seo?.title || 'Plan Your Trip — A Balkans Consultation'}
         description={page.seo?.description || '60 minutes with someone who has been on these roads recently. Leave with a plan you can trust.'}
@@ -57,6 +72,11 @@ export default function Consult() {
               <span style={styles.bookPrice}>{price}</span>
               {extra.priceNote && <span style={styles.bookPriceNote}>{extra.priceNote}</span>}
             </div>
+            {/* The risk-reversal, front and centre: book a tour and the fee costs nothing */}
+            <div style={styles.creditNote}>
+              <Check size={15} color="var(--color-warning)" style={{ flexShrink: 0, marginTop: 2 }} />
+              <span><strong>Credited in full</strong> toward any tour you book with us.</span>
+            </div>
             {includes.length > 0 && (
               <>
                 <div style={styles.bookDivider} />
@@ -70,7 +90,7 @@ export default function Consult() {
                 </ul>
               </>
             )}
-            <a href="#book" style={styles.bookCta} className="btn-lift">Book a consultation →</a>
+            <Button href="#book" variant="primary" size="lg" full arrow style={{ marginTop: 24 }}>Book a consultation</Button>
           </div>
         </div>
       </section>
@@ -88,6 +108,30 @@ export default function Consult() {
                 <p style={styles.stepDetail}>{s.detail}</p>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Who you'll talk to — a €90 one-to-one is bought on trust in a person */}
+      <section style={{ padding: isMobile ? '52px 24px 0' : '76px 24px 0' }}>
+        <div style={{ maxWidth: 880, margin: '0 auto', display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '280px 1fr', gap: isMobile ? 28 : 56, alignItems: 'center' }}>
+          <div style={{ maxWidth: isMobile ? 300 : undefined }}>
+            {extra.hostImage ? (
+              <Img
+                src={extra.hostImage}
+                alt={hostName}
+                sizes="(max-width: 768px) 300px, 280px"
+                style={{ width: '100%', aspectRatio: '4/5', objectFit: 'cover', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-sm)', display: 'block' }}
+              />
+            ) : (
+              <Placeholder ratio="4/5" label="Portrait" note="A real photo of the person on the call" />
+            )}
+          </div>
+          <div>
+            <span style={styles.eyebrow}>Who you'll talk to</span>
+            <h2 style={styles.h2}>{hostName}</h2>
+            <p style={styles.hostRole}>{hostRole}</p>
+            <p style={styles.hostBio}>{hostBio}</p>
           </div>
         </div>
       </section>
@@ -142,7 +186,7 @@ export default function Consult() {
       )}
 
       {/* Booking widget */}
-      <section id="book" style={{ padding: isMobile ? '48px 24px 56px' : '72px 24px', scrollMarginTop: 80, backgroundColor: 'var(--color-n100)', borderTop: '1px solid var(--color-n200)' }}>
+      <section id="book" ref={bookRef} style={{ padding: isMobile ? '48px 24px 56px' : '72px 24px', scrollMarginTop: 80, backgroundColor: 'var(--color-n100)', borderTop: '1px solid var(--color-n200)' }}>
         <div style={{ maxWidth: 820, margin: '0 auto' }}>
           <h2 style={{ ...styles.h2, textAlign: 'center', marginBottom: 24 }}>Book your slot</h2>
           {extra.calendlyUrl ? (
@@ -164,29 +208,84 @@ export default function Consult() {
         </div>
       </section>
 
-      {/* FAQ */}
+      {/* Good to know — card accordion */}
       {faqs.length > 0 && (
-        <section style={{ padding: isMobile ? '52px 24px 16px' : '72px 24px 24px' }}>
+        <section style={{ padding: isMobile ? '52px 24px' : '72px 24px' }}>
           <div style={{ maxWidth: 760, margin: '0 auto' }}>
-            <h2 style={{ ...styles.h2, marginBottom: 8 }}>Good to know</h2>
-            {faqs.map((f, i) => (
-              <details key={i} style={styles.faq}>
-                <summary style={styles.faqQ}>{f.q}</summary>
-                <p style={styles.faqA}>{f.a}</p>
-              </details>
-            ))}
+            <span style={styles.eyebrow}>Before you book</span>
+            <h2 style={{ ...styles.h2, marginBottom: 24 }}>Good to know</h2>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+              {faqs.map((f, i) => {
+                const open = openFaq === i
+                return (
+                  <div
+                    key={i}
+                    style={{
+                      ...styles.faqCard,
+                      borderColor: open ? 'rgba(46,125,94,0.35)' : 'var(--color-n200)',
+                      backgroundColor: open ? 'rgba(46,125,94,0.04)' : 'var(--color-n000)',
+                    }}
+                  >
+                    <button
+                      type="button"
+                      onClick={() => setOpenFaq(open ? null : i)}
+                      style={styles.faqQRow}
+                      aria-expanded={open}
+                    >
+                      <span style={styles.faqQ}>{f.q}</span>
+                      <ChevronDown
+                        size={18}
+                        color={open ? 'var(--color-forest-green)' : 'var(--color-n500)'}
+                        style={{ flexShrink: 0, marginLeft: 16, transition: 'transform 0.22s', transform: open ? 'rotate(180deg)' : 'none' }}
+                      />
+                    </button>
+                    {open && <p style={styles.faqA}>{f.a}</p>}
+                  </div>
+                )
+              })}
+            </div>
           </div>
         </section>
       )}
 
-      {/* Cross-link — not a dead end */}
-      <section style={{ padding: isMobile ? '32px 24px 72px' : '40px 24px 96px', textAlign: 'center' }}>
-        <p style={{ fontFamily: 'var(--font-body)', fontSize: 16, color: 'var(--color-n600)' }}>
-          Ready for more than advice?{' '}
-          <Link to="/personalised" style={styles.inlineLink}>Request a personalised tour</Link>{' '}or{' '}
-          <Link to="/destinations" style={styles.inlineLink}>explore the regions</Link>.
-        </p>
+      {/* Where to next — real options, not a one-line dead end */}
+      <section style={{ padding: isMobile ? '52px 24px 64px' : '80px 24px 96px', backgroundColor: 'var(--color-n100)', borderTop: '1px solid var(--color-n200)' }}>
+        <div style={{ maxWidth: 1040, margin: '0 auto' }}>
+          <div style={{ textAlign: 'center', marginBottom: isMobile ? 28 : 40 }}>
+            <span style={styles.eyebrow}>Keep planning</span>
+            <h2 style={styles.h2}>Want more than advice?</h2>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? 16 : 24 }}>
+            <Link to="/personalised" style={styles.nextCard} className="btn-lift">
+              <span style={{ ...styles.nextIcon, backgroundColor: 'rgba(46,125,94,0.1)' }}>
+                <Compass size={22} color="var(--color-forest-green)" />
+              </span>
+              <h3 style={styles.nextTitle}>Request a personalised tour</h3>
+              <p style={styles.nextText}>Hand us your dates and interests and we’ll build a complete, custom itinerary — start to finish.</p>
+              <span style={styles.nextCta}>Start your request <ArrowRight size={16} /></span>
+            </Link>
+            <Link to="/destinations" style={styles.nextCard} className="btn-lift">
+              <span style={{ ...styles.nextIcon, backgroundColor: 'rgba(244,161,48,0.14)' }}>
+                <MapIcon size={22} color="var(--color-amber)" />
+              </span>
+              <h3 style={styles.nextTitle}>Explore the regions</h3>
+              <p style={styles.nextText}>Browse Bosnia, Herzegovina and the wider Balkans to see where your trip could take you.</p>
+              <span style={styles.nextCta}>Browse destinations <ArrowRight size={16} /></span>
+            </Link>
+          </div>
+        </div>
       </section>
+
+      {/* Sticky mobile book bar — the widget lives far down the page */}
+      {isMobile && !bookInView && (
+        <div style={styles.stickyBar}>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <span style={styles.stickyPrice}>{price}</span>
+            <span style={styles.stickyNote}>60 min · credited to a tour</span>
+          </div>
+          <Button href="#book" variant="primary" size="sm">Book a consultation</Button>
+        </div>
+      )}
     </main>
   )
 }
@@ -206,10 +305,18 @@ const styles = {
   bookDivider: { height: 1, backgroundColor: 'var(--color-n200)', margin: '20px 0' },
   bookList: { listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 11 },
   bookListItem: { display: 'flex', gap: 10, fontFamily: 'var(--font-body)', fontSize: 14.5, lineHeight: 1.5, color: 'var(--color-n800)' },
-  bookCta: { display: 'flex', alignItems: 'center', justifyContent: 'center', height: 52, marginTop: 24, backgroundColor: 'var(--color-forest-green)', color: '#fff', fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: 16, borderRadius: 'var(--radius)', textDecoration: 'none' },
 
   eyebrow: { display: 'block', fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: 11, color: 'var(--color-forest-green)', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 14 },
   h2: { fontFamily: 'var(--font-hero)', fontWeight: 400, fontSize: 'clamp(24px, 3.2vw, 32px)', color: 'var(--color-n900)', margin: 0, letterSpacing: '-0.015em', lineHeight: 1.15 },
+
+  creditNote: { display: 'flex', alignItems: 'flex-start', gap: 8, marginTop: 14, padding: '10px 12px', borderRadius: 'var(--radius)', backgroundColor: 'var(--color-amber-light)', fontFamily: 'var(--font-body)', fontSize: 13.5, lineHeight: 1.5, color: 'var(--color-n800)' },
+
+  hostRole: { fontFamily: 'var(--font-body)', fontSize: 13, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--color-warning)', margin: '10px 0 0' },
+  hostBio: { fontFamily: 'var(--font-body)', fontSize: 16.5, lineHeight: 1.75, color: 'var(--color-n700)', margin: '14px 0 0', maxWidth: 520 },
+
+  stickyBar: { position: 'fixed', left: 0, right: 0, bottom: 0, zIndex: 40, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, padding: '10px 16px calc(10px + env(safe-area-inset-bottom))', backgroundColor: 'var(--color-n000)', borderTop: '1px solid var(--color-n200)', boxShadow: '0 -4px 24px rgba(0,0,0,0.08)' },
+  stickyPrice: { fontFamily: 'var(--font-hero)', fontWeight: 500, fontSize: 22, color: 'var(--color-n900)', lineHeight: 1.1 },
+  stickyNote: { fontFamily: 'var(--font-body)', fontSize: 11.5, color: 'var(--color-n600)', marginTop: 2 },
 
   step: { paddingTop: 4 },
   stepNum: { fontFamily: 'var(--font-hero)', fontSize: 30, fontWeight: 500, color: 'var(--color-amber)', lineHeight: 1 },
@@ -228,8 +335,15 @@ const styles = {
   testimonialName: { fontFamily: 'var(--font-body)', fontStyle: 'normal', fontSize: 13, fontWeight: 700, letterSpacing: '0.02em', color: 'var(--color-forest-green)' },
 
   calendlyPlaceholder: { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10, textAlign: 'center', padding: '56px 24px', border: '1px dashed rgba(46,125,94,0.4)', borderRadius: 'var(--radius-lg)', backgroundColor: 'var(--color-amber-light)' },
-  faq: { borderBottom: '1px solid var(--color-n200)', padding: '16px 0' },
-  faqQ: { fontFamily: 'var(--font-display)', fontWeight: 600, fontSize: 16, color: 'var(--color-n900)', cursor: 'pointer' },
-  faqA: { fontFamily: 'var(--font-body)', fontSize: 15, lineHeight: 1.7, color: 'var(--color-n600)', margin: '10px 0 0' },
-  inlineLink: { color: 'var(--color-forest-green)', fontWeight: 700, textDecoration: 'none' },
+
+  faqCard: { border: '1px solid var(--color-n200)', borderRadius: 'var(--radius-lg)', overflow: 'hidden', transition: 'border-color 0.2s, background-color 0.2s' },
+  faqQRow: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, width: '100%', textAlign: 'left', background: 'none', border: 'none', cursor: 'pointer', padding: '18px 20px' },
+  faqQ: { fontFamily: 'var(--font-display)', fontWeight: 600, fontSize: 16, color: 'var(--color-n900)', lineHeight: 1.4 },
+  faqA: { fontFamily: 'var(--font-body)', fontSize: 15, lineHeight: 1.7, color: 'var(--color-n700)', margin: 0, padding: '0 20px 20px' },
+
+  nextCard: { display: 'flex', flexDirection: 'column', alignItems: 'flex-start', backgroundColor: 'var(--color-n000)', border: '1px solid var(--color-n200)', borderRadius: 'var(--radius-lg)', padding: 28, textDecoration: 'none', boxShadow: 'var(--shadow-sm)' },
+  nextIcon: { display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 48, height: 48, borderRadius: 14, marginBottom: 18 },
+  nextTitle: { fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 19, color: 'var(--color-n900)', margin: '0 0 8px' },
+  nextText: { fontFamily: 'var(--font-body)', fontSize: 15, lineHeight: 1.6, color: 'var(--color-n600)', margin: '0 0 20px' },
+  nextCta: { display: 'inline-flex', alignItems: 'center', gap: 7, fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: 15, color: 'var(--color-forest-green)', marginTop: 'auto' },
 }

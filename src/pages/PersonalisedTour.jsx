@@ -9,13 +9,13 @@
 // forms convert at significantly higher rates than single long forms.
 import SEO from '../components/SEO'
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
 import {
   ArrowRight, ArrowLeft, CheckCircle,
   Sparkles, Users, Calendar, Heart,
 } from 'lucide-react'
 import emailjs from '@emailjs/browser'
 import useWindowWidth from '../hooks/useWindowWidth'
+import Button from '../components/Button'
 
 // ─────────────────────────────────────────────────────────
 // QUESTIONNAIRE DATA
@@ -280,9 +280,9 @@ function PersonalisedTour() {
                 <strong>{formData.email}</strong> within 24 hours
                 with a personalised proposal.
               </p>
-              <Link to="/" style={styles.successBtn}>
-                Back to Homepage
-              </Link>
+              <Button to="/" variant="secondary">
+                Back to homepage
+              </Button>
             </div>
 
           ) : (
@@ -820,13 +820,11 @@ function PersonalisedTour() {
                 )}
 
                 {step < TOTAL_STEPS ? (
-                  <button
+                  <Button
+                    variant="primary"
                     style={{
-                      ...styles.nextBtn,
                       opacity: canProceed() ? 1 : 0.5,
-                      cursor: canProceed()
-                        ? 'pointer'
-                        : 'not-allowed',
+                      cursor: canProceed() ? 'pointer' : 'not-allowed',
                     }}
                     onClick={() => {
                       if (canProceed()) setStep((s) => s + 1)
@@ -837,24 +835,18 @@ function PersonalisedTour() {
                       size={16}
                       color="var(--color-n900)"
                     />
-                  </button>
+                  </Button>
                 ) : (
-                  <button
-                    style={{
-                      ...styles.submitBtn,
-                      opacity: isSending ? 0.7 : 1,
-                      cursor: isSending
-                        ? 'not-allowed'
-                        : 'pointer',
-                    }}
+                  <Button
+                    variant="primary"
                     onClick={handleSubmit}
                     disabled={isSending}
                   >
                     {isSending
-                      ? 'Sending...'
-                      : 'Submit & Get My Proposal'
+                      ? 'Sending…'
+                      : 'Submit & get my proposal'
                     }
-                  </button>
+                  </Button>
                 )}
 
               </div>
@@ -1276,38 +1268,6 @@ const styles = {
     cursor: 'pointer',
   },
 
-  nextBtn: {
-    display: 'inline-flex',
-    alignItems: 'center',
-    gap: '8px',
-    height: '44px',
-    padding: '0 28px',
-    backgroundColor: 'var(--color-amber)',
-    color: 'var(--color-n900)',
-    fontFamily: 'var(--font-body)',
-    fontWeight: '700',
-    fontSize: 'var(--text-body)',
-    borderRadius: 'var(--radius)',
-    border: 'none',
-    transition: 'opacity 0.15s ease',
-  },
-
-  submitBtn: {
-    display: 'inline-flex',
-    alignItems: 'center',
-    gap: '8px',
-    height: '44px',
-    padding: '0 28px',
-    backgroundColor: 'var(--color-forest-green)',
-    color: 'var(--color-n000)',
-    fontFamily: 'var(--font-body)',
-    fontWeight: '700',
-    fontSize: 'var(--text-body)',
-    borderRadius: 'var(--radius)',
-    border: 'none',
-    transition: 'opacity 0.15s ease',
-  },
-
   errorMessage: {
     fontFamily: 'var(--font-body)',
     fontSize: 'var(--text-small)',
@@ -1346,20 +1306,6 @@ const styles = {
     margin: 0,
   },
 
-  successBtn: {
-    display: 'inline-flex',
-    alignItems: 'center',
-    height: '48px',
-    padding: '0 28px',
-    backgroundColor: 'var(--color-forest-green)',
-    color: 'var(--color-n000)',
-    fontFamily: 'var(--font-body)',
-    fontWeight: '700',
-    fontSize: 'var(--text-body)',
-    borderRadius: 'var(--radius)',
-    textDecoration: 'none',
-    marginTop: '8px',
-  },
 }
 
 export default PersonalisedTour

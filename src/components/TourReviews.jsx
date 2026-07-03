@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Star, ArrowRight } from 'lucide-react'
-import { Link } from 'react-router-dom'
 import { useReviews } from '../hooks/useReviews'
+import Button from './Button'
 
 const cardBgs = [
   'var(--color-n000)',
@@ -106,10 +106,10 @@ function TourReviews({ tourId, tourName, tourSlug }) {
           )}
         </div>
         {tourSlug && (
-          <Link to={`/review/${tourSlug}`} style={styles.leaveBtn} className="btn-lift btn-glow-amber">
+          <Button to={`/review/${tourSlug}`} variant="secondary" size="sm" style={{ flexShrink: 0 }}>
             Leave a review
             <ArrowRight size={14} />
-          </Link>
+          </Button>
         )}
       </div>
 
@@ -204,22 +204,6 @@ const styles = {
     fontFamily: 'var(--font-body)',
     fontSize: 'var(--text-small)',
     color: 'var(--color-n600)',
-  },
-  leaveBtn: {
-    display: 'inline-flex',
-    alignItems: 'center',
-    gap: '6px',
-    height: '40px',
-    padding: '0 20px',
-    backgroundColor: 'var(--color-amber)',
-    color: 'var(--color-n900)',
-    fontFamily: 'var(--font-body)',
-    fontWeight: '700',
-    fontSize: 'var(--text-small)',
-    borderRadius: 'var(--radius-pill)',
-    textDecoration: 'none',
-    whiteSpace: 'nowrap',
-    flexShrink: 0,
   },
   cardList: {
     display: 'flex',

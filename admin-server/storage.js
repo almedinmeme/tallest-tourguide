@@ -11,6 +11,7 @@ export const PATHS = {
   destinations: path.join(ROOT, 'src/data/destinations.json'),
   accommodations: path.join(ROOT, 'src/data/accommodations.json'),
   pages: path.join(ROOT, 'src/data/pages.json'),
+  journal: path.join(ROOT, 'src/data/journal.json'),
   uploads: path.join(ROOT, 'public/uploads'),
 }
 

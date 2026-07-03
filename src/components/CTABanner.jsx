@@ -1,5 +1,5 @@
-import { Link } from 'react-router-dom'
 import { ArrowRight, Mail } from 'lucide-react'
+import Button from './Button'
 import useWindowWidth from '../hooks/useWindowWidth'
 
 function CTABanner() {
@@ -70,25 +70,15 @@ function CTABanner() {
             width: '100%',
           }}>
 
-            <Link to="/tours" style={{
-              ...styles.primaryBtn,
-              justifyContent: 'center',
-              flex: isMobile ? 'none' : 1,
-              width: isMobile ? '100%' : 'auto',
-            }} className="btn-lift btn-glow-green">
-              <span>Book a Tour</span>
-              <ArrowRight size={16} color="var(--color-n000)" />
-            </Link>
+            <Button to="/tours" variant="primary" style={{ flex: isMobile ? 'none' : 1, width: isMobile ? '100%' : 'auto' }}>
+              <span>Book a tour</span>
+              <ArrowRight size={16} color="var(--color-n900)" />
+            </Button>
 
-            <Link to="/contact" style={{
-              ...styles.secondaryBtn,
-              justifyContent: 'center',
-              flex: isMobile ? 'none' : 1,
-              width: isMobile ? '100%' : 'auto',
-            }} className="btn-lift">
-              <Mail size={15} color="var(--color-forest-green)" />
-              <span>Contact Us</span>
-            </Link>
+            <Button to="/contact" variant="secondary" style={{ flex: isMobile ? 'none' : 1, width: isMobile ? '100%' : 'auto' }}>
+              <Mail size={15} />
+              <span>Contact us</span>
+            </Button>
 
           </div>
 
@@ -185,39 +175,6 @@ eyebrow: {
     backgroundColor: 'var(--color-n300)',  // Light grey on light bg
     alignSelf: 'stretch',
     flexShrink: 0,
-  },
-
-  primaryBtn: {
-    display: 'inline-flex',
-    alignItems: 'center',
-    gap: '8px',
-    height: '44px',
-    padding: '0 24px',
-    backgroundColor: 'var(--color-forest-green)',  // Green on light bg
-    color: 'var(--color-n000)',
-    fontFamily: 'var(--font-body)',
-    fontWeight: '700',
-    fontSize: 'var(--text-small)',
-    borderRadius: 'var(--radius)',
-    textDecoration: 'none',
-    whiteSpace: 'nowrap',
-  },
-
-  secondaryBtn: {
-    display: 'inline-flex',
-    alignItems: 'center',
-    gap: '8px',
-    height: '44px',
-    padding: '0 24px',
-    backgroundColor: 'transparent',
-    color: 'var(--color-forest-green)',
-    fontFamily: 'var(--font-body)',
-    fontWeight: '600',
-    fontSize: 'var(--text-small)',
-    borderRadius: 'var(--radius)',
-    textDecoration: 'none',
-    border: '1.5px solid var(--color-forest-green)',
-    whiteSpace: 'nowrap',
   },
 
   trustStack: {

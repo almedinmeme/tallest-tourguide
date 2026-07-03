@@ -6,6 +6,7 @@ import {
   ChevronDown, ArrowUpDown, X, Check,
 } from 'lucide-react'
 import useWindowWidth from '../hooks/useWindowWidth'
+import Button from '../components/Button'
 
 const DURATION_OPTIONS = [
   { value: 'all',      label: 'All' },
@@ -316,8 +317,8 @@ function Packages() {
                           <span style={styles.priceFrom}>from</span>
                           <span style={styles.price}>€{pkg.price}</span>
                         </div>
-                        <button className="pkg-card-btn" style={styles.ctaBtn}>
-                          View Package
+                        <button className="btn btn--sm pkg-card-btn">
+                          View package
                           <ArrowRight size={13} />
                         </button>
                       </div>
@@ -377,10 +378,10 @@ function Packages() {
                 </div>
               ))}
             </div>
-            <Link to="/personalised" style={styles.personalisedBtn} className="btn-lift btn-glow-amber">
-              <span>Start Your Questionnaire</span>
+            <Button to="/personalised" variant="primary" style={{ marginTop: 'auto' }}>
+              <span>Start your questionnaire</span>
               <ArrowRight size={16} color="var(--color-n900)" />
-            </Link>
+            </Button>
             <p style={styles.personalisedNote}>No commitment — just a conversation starter.</p>
           </div>
 
@@ -398,10 +399,10 @@ function Packages() {
             Send a message and we'll recommend the best option
             based on your travel dates, group size, and interests.
           </p>
-          <Link to="/contact" style={styles.ctaBannerBtn} className="btn-lift btn-glow-amber">
-            Get a Recommendation
+          <Button to="/contact" variant="primary">
+            Get a recommendation
             <ArrowRight size={16} color="var(--color-n900)" />
-          </Link>
+          </Button>
         </div>
       </section>
 
@@ -653,7 +654,7 @@ const styles = {
     letterSpacing: '1px',
     textTransform: 'uppercase',
     padding: '4px 11px',
-    borderRadius: '100px',
+    borderRadius: 'var(--radius-pill)',
   },
 
   daysPill: {
@@ -665,7 +666,7 @@ const styles = {
     backdropFilter: 'blur(6px)',
     border: '1px solid rgba(255,255,255,0.18)',
     padding: '5px 12px',
-    borderRadius: '100px',
+    borderRadius: 'var(--radius-pill)',
     letterSpacing: '0.2px',
   },
 
@@ -696,7 +697,7 @@ const styles = {
     backdropFilter: 'blur(6px)',
     border: '1px solid rgba(255,255,255,0.16)',
     padding: '3px 9px',
-    borderRadius: '100px',
+    borderRadius: 'var(--radius-pill)',
     whiteSpace: 'nowrap',
   },
 
@@ -747,20 +748,6 @@ const styles = {
     lineHeight: 1,
   },
 
-  ctaBtn: {
-    display: 'inline-flex',
-    alignItems: 'center',
-    gap: '6px',
-    height: '34px',
-    padding: '0 14px',
-    fontFamily: 'var(--font-body)',
-    fontWeight: '700',
-    fontSize: '12px',
-    letterSpacing: '0.3px',
-    borderRadius: '100px',
-    whiteSpace: 'nowrap',
-    cursor: 'pointer',
-  },
 
   // Personalised card — dark background, two column layout.
   // Visually distinct from the standard package cards above —
@@ -859,23 +846,6 @@ const styles = {
     lineHeight: '1.4',
   },
 
-  personalisedBtn: {
-    display: 'inline-flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: '8px',
-    height: '44px',
-    padding: '0 24px',
-    backgroundColor: 'var(--color-amber)',
-    color: 'var(--color-n900)',
-    fontFamily: 'var(--font-body)',
-    fontWeight: '700',
-    fontSize: 'var(--text-body)',
-    borderRadius: 'var(--radius)',
-    textDecoration: 'none',
-    marginTop: 'auto',
-  },
-
    personalisedNote: {
     fontFamily: 'var(--font-body)',
     fontSize: 'var(--text-small)',
@@ -911,27 +881,13 @@ const styles = {
     marginBottom: '32px',
   },
 
-  ctaBannerBtn: {
-    display: 'inline-flex',
-    alignItems: 'center',
-    gap: '8px',
-    height: '44px',
-    padding: '0 28px',
-    backgroundColor: 'var(--color-amber)',
-    color: 'var(--color-n900)',
-    fontFamily: 'var(--font-body)',
-    fontWeight: '700',
-    fontSize: 'var(--text-body)',
-    borderRadius: 'var(--radius)',
-    textDecoration: 'none',
-  },
 }
 
 function countryChipStyle(active, compact = false) {
   return {
     height: compact ? '26px' : '28px',
     padding: compact ? '0 10px' : '0 12px',
-    borderRadius: '100px',
+    borderRadius: 'var(--radius-pill)',
     border: active ? 'none' : '1.5px solid var(--color-n200)',
     backgroundColor: active ? 'var(--color-forest-green)' : 'var(--color-n100)',
     color: active ? 'var(--color-n000)' : 'var(--color-n700)',
@@ -949,7 +905,7 @@ function catPillStyle(active, compact = false) {
   return {
     height: compact ? '30px' : '34px',
     padding: compact ? '0 13px' : '0 16px',
-    borderRadius: '100px',
+    borderRadius: 'var(--radius-pill)',
     border: active ? 'none' : '1.5px solid var(--color-n200)',
     backgroundColor: active ? 'var(--color-forest-green)' : 'var(--color-n100)',
     color: active ? 'var(--color-n000)' : 'var(--color-n700)',
@@ -966,7 +922,7 @@ function chipStyle(active, compact = false) {
   return {
     height: compact ? '26px' : '28px',
     padding: compact ? '0 10px' : '0 12px',
-    borderRadius: '100px',
+    borderRadius: 'var(--radius-pill)',
     border: 'none',
     backgroundColor: active ? 'var(--color-n900)' : 'transparent',
     color: active ? 'var(--color-n000)' : 'var(--color-n500)',
@@ -987,7 +943,7 @@ function sortBtnStyle(active, compact = false) {
     gap: compact ? '4px' : '6px',
     height: compact ? '30px' : '34px',
     padding: compact ? '0 10px' : '0 14px',
-    borderRadius: '100px',
+    borderRadius: 'var(--radius-pill)',
     border: active ? '1.5px solid var(--color-n900)' : '1.5px solid var(--color-n300)',
     backgroundColor: active ? 'var(--color-n900)' : 'var(--color-n000)',
     color: active ? 'var(--color-n000)' : 'var(--color-n600)',

@@ -1,0 +1,28 @@
+# Safety-net weekly rebuild.
+# Deploys normally happen on git push (Netlify ↔ GitHub link). This weekly
+# trigger catches anything that slipped through and keeps the deploy fresh.
+#
+# One-time setup:
+#   1. Netlify → Site configuration → Build & deploy → Build hooks → Add hook.
+#   2. GitHub repo → Settings → Secrets and variables → Actions →
+#      add secret NETLIFY_BUILD_HOOK_URL with the hook URL.
+
+name: Weekly site rebuild
+
+on:
+  schedule:
+    - cron: '0 4 * * 1' # Mondays 04:00 UTC
+  workflow_dispatch: {} # allow manual runs from the Actions tab
+
+jobs:
+  trigger-netlify-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: POST the Netlify build hook
+        run: |
+          if [ -z "${{ secrets.NETLIFY_BUILD_HOOK_URL }}" ]; then
+            echo "NETLIFY_BUILD_HOOK_URL secret is not set — skipping."
+            exit 0
+          fi
+          curl -sf -X POST "${{ secrets.NETLIFY_BUILD_HOOK_URL }}"
+          echo "Build hook triggered."

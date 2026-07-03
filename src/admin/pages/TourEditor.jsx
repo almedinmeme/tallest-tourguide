@@ -8,6 +8,7 @@ import ImageUpload from '../components/ImageUpload'
 import ImageGalleryEditor from '../components/ImageGalleryEditor'
 import ListEditor from '../components/ListEditor'
 import HighlightsEditor from '../components/HighlightsEditor'
+import ExtrasEditor from '../components/ExtrasEditor'
 import FAQEditor from '../components/FAQEditor'
 import WaypointEditor from '../components/WaypointEditor'
 import JsonField from '../components/JsonField'
@@ -20,6 +21,7 @@ const SECTIONS = [
   { id: 'media', label: 'Hero & gallery' },
   { id: 'description', label: 'Description' },
   { id: 'lists', label: 'Highlights & lists' },
+  { id: 'extras', label: 'Booking extras' },
   { id: 'logistics', label: 'Logistics' },
   { id: 'accessibility', label: 'Accessibility' },
   { id: 'fitness', label: 'Fitness note' },
@@ -47,6 +49,7 @@ const EMPTY = {
   excludes: [],
   rightFor: [],
   notRightFor: [],
+  extras: [],
   faqs: [],
   meetingPoint: '',
   startingTimes: [],
@@ -90,6 +93,14 @@ export default function TourEditor() {
         rating: Number(tour.rating) || 0,
         reviews: Number(tour.reviews) || 0,
         groupSize: Number(tour.groupSize) || 0,
+        extras: (tour.extras || [])
+          .filter((e) => (e.label || '').trim())
+          .map((e) => ({
+            label: e.label.trim(),
+            description: (e.description || '').trim(),
+            price: Number(e.price) || 0,
+            perPerson: !!e.perPerson,
+          })),
       }
       if (isNew) {
         const created = await api.tours.create(cleaned)
@@ -247,6 +258,20 @@ export default function TourEditor() {
             onChange={(v) => set({ notRightFor: v })}
           />
         </div>
+      </section>
+
+      <section id="extras" style={{ ...s.card, scrollMarginTop: 100 }}>
+        <h2 style={{ ...s.h2, marginTop: 0 }}>Booking extras</h2>
+        <p style={{ ...s.subheadingHint, marginTop: -6, marginBottom: 22 }}>
+          Optional add-ons guests can select while booking — pick-up, tickets, tastings.
+          Each selected extra is added to the booking total.
+        </p>
+        <ExtrasEditor
+          label="Extras"
+          hint="Tick “per person” to multiply the price by the number of guests (e.g. museum tickets). Leave it off for a flat charge (e.g. one private pick-up)."
+          value={tour.extras}
+          onChange={(v) => set({ extras: v })}
+        />
       </section>
 
       <section id="logistics" style={{ ...s.card, scrollMarginTop: 100 }}>

@@ -5,4 +5,8 @@
 /blog/*            /journal/:splat     301
 
 # SPA fallback — let the client router handle everything else.
-/*    /index.html    200
+# 200.html is the pristine tag-free shell captured by scripts/prerender.mjs;
+# falling back to index.html would serve the prerendered HOMEPAGE (its title,
+# meta and canonical) for every non-prerendered URL — Google then indexes
+# those pages as homepage duplicates.
+/*    /200.html    200

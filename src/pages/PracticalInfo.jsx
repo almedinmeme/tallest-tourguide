@@ -1,6 +1,6 @@
 import SEO from '../components/SEO'
-import { Link } from 'react-router-dom'
 import useWindowWidth from '../hooks/useWindowWidth'
+import Button from '../components/Button'
 import {
   Banknote, CreditCard, Coffee, Car,
   Smartphone, MessageSquare, BookOpen, Phone,
@@ -58,8 +58,9 @@ function PracticalInfo() {
   return (
     <div style={{ backgroundColor: 'var(--color-n100)', minHeight: '100vh' }}>
       <SEO
-        title="Practical Info — Tallest Tourguide"
+        title="Practical Info"
         description="Currency, ATMs, tipping, getting around, SIM cards, language basics, religious customs, and emergency numbers for Sarajevo and Bosnia."
+        url="/practical-info"
       />
 
       {/* Header */}
@@ -102,9 +103,9 @@ function PracticalInfo() {
               <p style={styles.ctaTitle}>Have a question we didn't cover?</p>
               <p style={styles.ctaSubtitle}>Ask us anything before you arrive — we know Sarajevo inside out.</p>
             </div>
-            <Link to="/contact" style={styles.ctaBtn} className="btn-lift btn-glow-green">
-              Get in Touch
-            </Link>
+            <Button to="/contact" variant="secondary" style={{ flexShrink: 0 }}>
+              Get in touch
+            </Button>
           </div>
 
         </div>
@@ -199,21 +200,6 @@ const styles = {
     color: 'var(--color-n600)',
     margin: 0,
     lineHeight: '1.6',
-  },
-  ctaBtn: {
-    display: 'inline-flex',
-    alignItems: 'center',
-    height: '44px',
-    padding: '0 24px',
-    backgroundColor: 'var(--color-forest-green)',
-    color: '#fff',
-    fontFamily: 'var(--font-body)',
-    fontWeight: '700',
-    fontSize: '15px',
-    borderRadius: 'var(--radius)',
-    textDecoration: 'none',
-    whiteSpace: 'nowrap',
-    flexShrink: 0,
   },
 }
 

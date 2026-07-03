@@ -405,7 +405,7 @@ function catPillStyle(active, compact = false) {
   return {
     height: compact ? '30px' : '34px',
     padding: compact ? '0 13px' : '0 16px',
-    borderRadius: '100px',
+    borderRadius: 'var(--radius-pill)',
     border: active ? 'none' : '1.5px solid var(--color-n200)',
     backgroundColor: active ? 'var(--color-forest-green)' : 'var(--color-n100)',
     color: active ? 'var(--color-n000)' : 'var(--color-n700)',
@@ -422,7 +422,7 @@ function chipStyle(active, compact = false) {
   return {
     height: compact ? '26px' : '28px',
     padding: compact ? '0 10px' : '0 12px',
-    borderRadius: '100px',
+    borderRadius: 'var(--radius-pill)',
     border: 'none',
     backgroundColor: active ? 'var(--color-n900)' : 'transparent',
     color: active ? 'var(--color-n000)' : 'var(--color-n500)',
@@ -443,7 +443,7 @@ function sortBtnStyle(active, compact = false) {
     gap: compact ? '4px' : '6px',
     height: compact ? '30px' : '34px',
     padding: compact ? '0 10px' : '0 14px',
-    borderRadius: '100px',
+    borderRadius: 'var(--radius-pill)',
     border: active ? '1.5px solid var(--color-n900)' : '1.5px solid var(--color-n300)',
     backgroundColor: active ? 'var(--color-n900)' : 'var(--color-n000)',
     color: active ? 'var(--color-n000)' : 'var(--color-n600)',

@@ -43,8 +43,17 @@ export default function DestinationDetail() {
         description={d.teaser || `Travel ${d.name} with people who know its roads year-round.`}
         url={`/destinations/${d.slug}`}
       />
-
-      <EditorialHero kicker={kicker} heading={d.name} subheading={d.teaser} image={d.hero} imageNote="[Hero image slot — 16/9 landscape]" backLink={{ to: '/destinations', label: 'All destinations' }} />
+      <EditorialHero
+        kicker={kicker}
+        heading={d.name}
+        subheading={d.teaser}
+        image={d.hero}
+        imageNote="[Hero image slot — 16/9 landscape]"
+        breadcrumbs={[
+          { name: 'Destinations', path: '/destinations' },
+          { name: d.name, path: `/destinations/${d.slug}` },
+        ]}
+      />
 
       {/* Intro + what makes it distinct — one continuous read */}
       <section style={{ padding: isMobile ? '36px 0 8px' : '52px 0 8px' }}>

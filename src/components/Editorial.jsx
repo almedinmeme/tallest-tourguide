@@ -6,6 +6,8 @@
 
 import { Link } from 'react-router-dom'
 import RichContent from './RichContent'
+import Button from './Button'
+import Breadcrumbs from './Breadcrumbs'
 import useWindowWidth from '../hooks/useWindowWidth'
 
 const MAX = 1180
@@ -43,9 +45,39 @@ export function Placeholder({ ratio = '16/9', label = 'Image', note, rounded = t
   )
 }
 
-export function EditorialHero({ kicker, heading, subheading, image, variant = 'default', imageNote, backLink }) {
+export function EditorialHero({ kicker, heading, subheading, image, variant = 'default', imageNote, backLink, breadcrumbs, scarcity }) {
   const width = useWindowWidth()
   const isMobile = width <= 768
+
+  // Full-bleed cinematic hero — edge to edge, type sits bottom-left on the
+  // photo itself. The grade only darkens the base, never the whole frame.
+  if (variant === 'cinematic') {
+    return (
+      <header style={{ position: 'relative', height: isMobile ? 'clamp(420px, 70vh, 560px)' : 'clamp(520px, 78vh, 760px)', overflow: 'hidden', backgroundColor: 'var(--color-n900)' }}>
+        {image ? (
+          <img src={image} alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
+        ) : (
+          <div aria-hidden style={{ position: 'absolute', inset: 0, background: 'radial-gradient(120% 120% at 22% 0%, #2f7d5e 0%, var(--color-n900) 72%)' }} />
+        )}
+        <div aria-hidden style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(10,16,20,0) 45%, rgba(10,16,20,0.55) 100%)' }} />
+        <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, padding: isMobile ? '0 24px 36px' : '0 24px 64px' }}>
+          <div style={{ maxWidth: MAX, margin: '0 auto' }}>
+            {kicker && (
+              <span style={{ fontFamily: 'var(--font-body)', fontSize: 12, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase', color: 'var(--color-amber)' }}>{kicker}</span>
+            )}
+            <div aria-hidden style={{ width: 40, height: 2, backgroundColor: 'var(--color-amber)', margin: '14px 0 18px' }} />
+            <h1 style={{ fontFamily: 'var(--font-hero)', fontWeight: 300, color: '#fff', margin: 0, lineHeight: 1.05, fontSize: 'clamp(36px, 6vw, 72px)', letterSpacing: '-0.02em', maxWidth: 760 }}>{heading}</h1>
+            {subheading && (
+              <p style={{ fontFamily: 'var(--font-body)', fontSize: 'clamp(16px, 1.9vw, 19px)', color: 'rgba(255,255,255,0.85)', maxWidth: 560, margin: '18px 0 0', lineHeight: 1.6 }}>{subheading}</p>
+            )}
+            {scarcity && (
+              <p style={{ fontFamily: 'var(--font-body)', fontSize: 12.5, fontWeight: 600, letterSpacing: 1.2, textTransform: 'uppercase', color: 'rgba(255,255,255,0.72)', margin: '22px 0 0' }}>{scarcity}</p>
+            )}
+          </div>
+        </div>
+      </header>
+    )
+  }
 
   // Big lowercase "word" hero — kept as-is for pages that use it.
   if (variant === 'word') {
@@ -86,7 +118,11 @@ export function EditorialHero({ kicker, heading, subheading, image, variant = 'd
           <div aria-hidden style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(10,16,20,0) 58%, rgba(10,16,20,0.26) 100%)' }} />
           {/* thin inner frame line */}
           <div aria-hidden style={{ position: 'absolute', inset: 0, borderRadius: 'var(--radius-xl)', boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.14)', pointerEvents: 'none' }} />
-          {backLink && (
+          {breadcrumbs ? (
+            <div style={{ position: 'absolute', top: 14, left: 14 }}>
+              <Breadcrumbs items={breadcrumbs} />
+            </div>
+          ) : backLink && (
             <Link to={backLink.to} className="hero-back-pill" style={{ position: 'absolute', top: 14, left: 14, display: 'inline-flex', alignItems: 'center', gap: 6, padding: '7px 14px', borderRadius: 999, backgroundColor: 'rgba(10,16,20,0.42)', backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)', color: '#fff', fontFamily: 'var(--font-body)', fontSize: 13, fontWeight: 600, textDecoration: 'none', border: '1px solid rgba(255,255,255,0.25)' }}>
               <span aria-hidden>←</span> {backLink.label}
             </Link>
@@ -207,26 +243,23 @@ export function PullQuote({ quote, attribution }) {
   )
 }
 
-export function EndCTA({ label, href, note, outlined = false }) {
+// `outlined` is a deprecated alias kept for older call sites — the canonical
+// prop is `variant` ('secondary' by default; pass 'primary' only for the one
+// conversion action a page ends on).
+export function EndCTA({ label, href, note, variant }) {
   if (!label || !href) return null
-  const isHash = href.startsWith('#')
-  const isExternal = href.startsWith('http')
-  const style = outlined
-    ? { ...styles.cta, backgroundColor: 'transparent', color: 'var(--color-forest-green)', border: '1.5px solid var(--color-forest-green)' }
-    : styles.cta
-  const content = (
-    <>
-      <span>{label}</span>
-      <span aria-hidden style={{ fontSize: 18, lineHeight: 1 }}>→</span>
-    </>
-  )
+  const isRoute = !href.startsWith('#') && !href.startsWith('http')
+  const resolved = variant || 'secondary'
   return (
     <section style={{ padding: '24px 24px 96px', textAlign: 'center' }}>
-      {isHash || isExternal ? (
-        <a href={href} style={style} {...(isExternal ? { target: '_blank', rel: 'noreferrer' } : {})}>{content}</a>
-      ) : (
-        <Link to={href} style={style}>{content}</Link>
-      )}
+      <Button
+        {...(isRoute ? { to: href } : { href })}
+        variant={resolved}
+        size="lg"
+        arrow
+      >
+        {label}
+      </Button>
       {note && <p style={{ fontFamily: 'var(--font-body)', fontSize: 14, color: 'var(--color-n500)', marginTop: 16, maxWidth: 420, marginLeft: 'auto', marginRight: 'auto' }}>{note}</p>}
     </section>
   )
@@ -260,20 +293,5 @@ const styles = {
     color: 'var(--color-n500)',
     margin: '10px 0 0',
     fontStyle: 'italic',
-  },
-  cta: {
-    display: 'inline-flex',
-    alignItems: 'center',
-    gap: 10,
-    height: 54,
-    padding: '0 32px',
-    backgroundColor: 'var(--color-forest-green)',
-    color: '#fff',
-    fontFamily: 'var(--font-body)',
-    fontWeight: 700,
-    fontSize: 16,
-    borderRadius: 'var(--radius)',
-    textDecoration: 'none',
-    transition: 'transform 0.2s ease, box-shadow 0.2s ease',
   },
 }

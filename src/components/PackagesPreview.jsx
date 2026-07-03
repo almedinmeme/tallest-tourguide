@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { ArrowRight, Gauge, MapPin, Globe, ChevronLeft, ChevronRight } from 'lucide-react'
 import useWindowWidth from '../hooks/useWindowWidth'
 import { useAllReviews } from '../hooks/useAllReviews'
+import Img from './Img'
 
 import { packages } from '../data/packages'
 
@@ -66,7 +67,7 @@ function PackagesPreview() {
                   <Link key={pkg.id} to={`/packages/${pkg.slug}`} style={styles.cardLink}>
                     <div style={styles.card} className="pkg-card">
                       <div style={styles.imageWrapper}>
-                        <img src={pkg.hero} alt={pkg.name} style={styles.photo} className="pkg-card-img" />
+                        <Img src={pkg.hero} alt={pkg.name} sizes="(max-width: 768px) 92vw, 420px" style={styles.photo} className="pkg-card-img" />
                         <div style={styles.imageGradient} />
 
                         <div style={styles.imageTop}>
@@ -107,8 +108,8 @@ function PackagesPreview() {
                               <span style={styles.priceFrom}>from</span>
                               <span style={styles.price}>€{pkg.price}</span>
                             </div>
-                            <button className="pkg-card-btn" style={styles.ctaBtn}>
-                              View Package
+                            <button className="btn btn--sm pkg-card-btn">
+                              View package
                               <ArrowRight size={13} />
                             </button>
                           </div>
@@ -317,7 +318,7 @@ const styles = {
     backdropFilter: 'blur(6px)',
     border: '1px solid rgba(255,255,255,0.18)',
     padding: '5px 12px',
-    borderRadius: '100px',
+    borderRadius: 'var(--radius-pill)',
     letterSpacing: '0.2px',
   },
 
@@ -328,7 +329,7 @@ const styles = {
     letterSpacing: '1px',
     textTransform: 'uppercase',
     padding: '4px 11px',
-    borderRadius: '100px',
+    borderRadius: 'var(--radius-pill)',
   },
 
   imageBottom: {
@@ -358,7 +359,7 @@ const styles = {
     backdropFilter: 'blur(6px)',
     border: '1px solid rgba(255,255,255,0.16)',
     padding: '3px 9px',
-    borderRadius: '100px',
+    borderRadius: 'var(--radius-pill)',
     whiteSpace: 'nowrap',
   },
 
@@ -407,21 +408,6 @@ const styles = {
     fontSize: '28px',
     color: 'var(--color-n000)',
     lineHeight: 1,
-  },
-
-  ctaBtn: {
-    display: 'inline-flex',
-    alignItems: 'center',
-    gap: '6px',
-    height: '34px',
-    padding: '0 14px',
-    fontFamily: 'var(--font-body)',
-    fontWeight: '700',
-    fontSize: '12px',
-    letterSpacing: '0.3px',
-    borderRadius: '100px',
-    whiteSpace: 'nowrap',
-    cursor: 'pointer',
   },
 
   bottomRow: {

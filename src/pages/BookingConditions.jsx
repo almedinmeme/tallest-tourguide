@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import SEO from '../components/SEO'
-import { Link } from 'react-router-dom'
 import useWindowWidth from '../hooks/useWindowWidth'
+import Button from '../components/Button'
 
 const NAVBAR_HEIGHT = 68
 
@@ -269,8 +269,9 @@ function BookingConditions() {
   return (
     <div style={{ backgroundColor: 'var(--color-n100)', minHeight: '100vh' }}>
       <SEO
-        title="Booking Conditions — Tallest Tourguide"
+        title="Booking Conditions"
         description="Cancellation policy, payment terms, liability, and booking conditions for Tallest Tourguide tours and packages in Sarajevo, Bosnia."
+        url="/booking-conditions"
       />
 
       {/* Header */}
@@ -365,9 +366,9 @@ function BookingConditions() {
               <p style={styles.ctaTitle}>Questions about these conditions?</p>
               <p style={styles.ctaSubtitle}>We're happy to clarify anything before you book.</p>
             </div>
-            <Link to="/contact" style={styles.ctaBtn} className="btn-lift btn-glow-green">
+            <Button to="/contact" variant="secondary" style={{ flexShrink: 0 }}>
               Get in touch
-            </Link>
+            </Button>
           </div>
 
         </article>
@@ -559,21 +560,6 @@ const styles = {
     lineHeight: '1.6',
   },
 
-  ctaBtn: {
-    display: 'inline-flex',
-    alignItems: 'center',
-    height: '44px',
-    padding: '0 24px',
-    backgroundColor: 'var(--color-forest-green)',
-    color: '#fff',
-    fontFamily: 'var(--font-body)',
-    fontWeight: '700',
-    fontSize: '15px',
-    borderRadius: 'var(--radius)',
-    textDecoration: 'none',
-    whiteSpace: 'nowrap',
-    flexShrink: 0,
-  },
 }
 
 export default BookingConditions

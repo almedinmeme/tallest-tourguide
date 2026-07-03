@@ -31,11 +31,17 @@ const PAGE_CONFIG = {
   signature: {
     sections: true, quotes: false, cta: true,
     extra: [
-      { key: 'scarcity', type: 'text', label: 'Scarcity line', hint: 'Small amber line above the journeys (optional).' },
+      { key: 'scarcity', type: 'text', label: 'Scarcity line', hint: 'Small caps line inside the hero (optional).' },
+      { key: 'forWho', type: 'list', label: 'This is for you if', hint: 'Shown as a quiet two-column strip under the intro.' },
+      { key: 'notFor', type: 'list', label: 'Probably not for you if' },
       { key: 'journeys', type: 'objectList', label: 'Signature journeys', fields: [
         { key: 'title', type: 'text', label: 'Title' },
         { key: 'blurb', type: 'textarea', label: 'Blurb' },
         { key: 'image', type: 'image', label: 'Photo' },
+        { key: 'secondImage', type: 'image', label: 'Second photo', hint: 'Smaller portrait photo, overlaps the main one.' },
+        { key: 'route', type: 'text', label: 'Route', hint: 'Stops separated by → arrows.' },
+        { key: 'rhythm', type: 'text', label: 'Rhythm', hint: 'One sentence on pacing, shown in italics.' },
+        { key: 'expertNote', type: 'textarea', label: 'About the expert', hint: 'One or two sentences on who leads it and why.' },
         { key: 'duration', type: 'text', label: 'Length' },
         { key: 'maxGuests', type: 'text', label: 'Group size' },
         { key: 'expert', type: 'text', label: 'Led by' },
@@ -48,7 +54,7 @@ const PAGE_CONFIG = {
     ],
   },
   partners: {
-    sections: false, quotes: false, cta: true,
+    sections: true, quotes: false, cta: true,
     extra: [
       { key: 'stats', type: 'objectList', label: 'Trust stats', fields: [
         { key: 'value', type: 'text', label: 'Value' },
@@ -71,6 +77,10 @@ const PAGE_CONFIG = {
       { key: 'price', type: 'text', label: 'Price', hint: 'e.g. €90' },
       { key: 'priceNote', type: 'text', label: 'Price note' },
       { key: 'calendlyUrl', type: 'text', label: 'Calendly URL', hint: 'Paste your Calendly embed URL; the scheduler appears on the page.' },
+      { key: 'hostName', type: 'text', label: 'Host — name', hint: 'The “Who you\'ll talk to” block. Leave blank for the default.' },
+      { key: 'hostRole', type: 'text', label: 'Host — role line' },
+      { key: 'hostBio', type: 'textarea', label: 'Host — short bio' },
+      { key: 'hostImage', type: 'image', label: 'Host — portrait', hint: 'Portrait crop (4:5). A placeholder shows on the page until this is set.' },
       { key: 'includes', type: 'list', label: 'What the session includes' },
       { key: 'forWho', type: 'list', label: "Who it's for" },
       { key: 'worthIt', type: 'richtext', label: 'Why it’s worth it' },
@@ -85,7 +95,7 @@ const PAGE_CONFIG = {
     ],
   },
   'where-we-stay': {
-    sections: false, quotes: false, cta: false,
+    sections: false, quotes: false, cta: true,
     extra: [
       { key: 'types', type: 'objectList', label: 'Accommodation types', hint: 'The kinds of places — each shown with a photo on the page.', fields: [
         { key: 'tag', type: 'text', label: 'Tag', hint: 'e.g. The authentic end' },
@@ -93,6 +103,8 @@ const PAGE_CONFIG = {
         { key: 'image', type: 'image', label: 'Photo' },
         { key: 'body', type: 'textarea', label: 'Description' },
       ] },
+      { key: 'lookFor', type: 'list', label: 'We look for', hint: 'The “Our standard” section — left column. Leave empty for the defaults.' },
+      { key: 'neverBook', type: 'list', label: 'We never book', hint: 'Right column of the same section.' },
     ],
   },
 }

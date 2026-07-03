@@ -93,29 +93,31 @@
     "name": "Montenegro",
     "country": "Montenegro",
     "order": 3,
-    "hero": "",
+    "hero": "/uploads/montenegro-4h70casq.webp",
     "teaser": "A fjord that isn't a fjord, black mountains, and a coastline that stops conversation.",
-    "intro": "<p>[PLACEHOLDER] Montenegro packs an improbable amount into a small country — the Bay of Kotor, the peaks of Durmitor, and old royal capitals in between.</p>",
+    "intro": "<p>Montenegro packs an improbable amount into a small country — the Bay of Kotor, the peaks of Durmitor, and old royal capitals in between.</p>",
     "distinct": "<p>[PLACEHOLDER] The drama is vertical here. You go from sea level to two thousand metres in an afternoon, and the food and feel of the country changes with the altitude.</p>",
     "bestTime": "May, June, and September avoid the coastal crowds. The mountains open from late spring.",
     "featured": [
       {
         "name": "Bay of Kotor",
-        "blurb": "[Placeholder] A drowned river canyon ringed with Venetian towns.",
-        "image": ""
+        "blurb": "A drowned river canyon ringed with Venetian towns.",
+        "image": "/uploads/montenegro-8h5m0alz.webp"
       },
       {
         "name": "Durmitor",
-        "blurb": "[Placeholder] Glacial lakes and the deepest canyon in Europe.",
-        "image": ""
+        "blurb": "Glacial lakes and the deepest canyon in Europe.",
+        "image": "/uploads/montenegro-ni5h0wlr.webp"
       },
       {
-        "name": "Cetinje",
-        "blurb": "[Placeholder] The old royal capital, full of faded embassies.",
-        "image": ""
+        "name": "Ulcinj",
+        "blurb": "The old royal capital, full of faded embassies and breathtaking monastery.",
+        "image": "/uploads/montenegro-0sh8w698.webp"
       }
     ],
-    "relatedTours": [],
+    "relatedTours": [
+      "sarajevo-walking-tour"
+    ],
     "relatedPackages": [
       "adriatic-crossings",
       "mountains-of-the-balkans"
@@ -253,5 +255,20 @@
     "relatedPackages": [
       "balkans-full-arc"
     ]
+  },
+  {
+    "slug": "slovenia",
+    "name": "Slovenia",
+    "country": "Slovenia",
+    "order": 8,
+    "hero": "",
+    "teaser": "",
+    "intro": "",
+    "distinct": "",
+    "bestTime": "",
+    "featured": [],
+    "relatedTours": [],
+    "relatedPackages": [],
+    "id": 8
   }
 ]

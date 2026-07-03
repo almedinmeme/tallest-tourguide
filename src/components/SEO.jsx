@@ -9,11 +9,12 @@
 // Open Graph tags control previews on social and messaging apps.
 
 import { Helmet } from 'react-helmet-async'
+import { siteUrl, SITE_ORIGIN } from '../utils/seo'
 
 function SEO({
   title,
   description,
-  image = 'https://tallesttourguide.com/og-image.jpg',
+  image = `${SITE_ORIGIN}/og-image.jpg`,
   url,
   type = 'website',
   publishedDate,
@@ -22,9 +23,9 @@ function SEO({
     ? `${title} | Tallest Tourguide Sarajevo`
     : 'Tallest Tourguide — Local Tours in Sarajevo, Bosnia'
 
-  const fullUrl = url
-    ? `https://tallesttourguide.com${url}`
-    : 'https://tallesttourguide.com'
+  // Trailing-slash form — matches the URL Netlify actually serves
+  // (directory prerender output), so the canonical never points at a 301.
+  const fullUrl = siteUrl(url || '/')
 
   return (
     <Helmet>

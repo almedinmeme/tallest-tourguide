@@ -235,7 +235,15 @@
       }
     ],
     "mapProfile": "foot-walking",
-    "fitnessNote": null
+    "fitnessNote": null,
+    "extras": [
+      {
+        "label": "Accomodation Pick Up",
+        "description": "",
+        "price": 10,
+        "perPerson": true
+      }
+    ]
   },
   {
     "id": 2,
@@ -244,7 +252,7 @@
     "city": "Mostar",
     "region": "Bosnia & Herzegovina",
     "title": "Mostar Day Trip from Sarajevo: Old Bridge, Kravice & Herzegovina",
-    "price": 75,
+    "price": 85,
     "rating": 5,
     "reviews": 18,
     "duration": "Full day",
@@ -378,7 +386,27 @@
         "label": "Mostar Old Bridge"
       }
     ],
-    "mapProfile": "driving-car"
+    "mapProfile": "driving-car",
+    "extras": [
+      {
+        "label": "Hotel pick-up & drop-off",
+        "description": "Door-to-door from your Sarajevo accommodation.",
+        "price": 15,
+        "perPerson": false
+      },
+      {
+        "label": "Kravice Waterfalls entry ticket",
+        "description": "Skip the queue at the falls.",
+        "price": 5,
+        "perPerson": true
+      },
+      {
+        "label": "Traditional Herzegovinian lunch",
+        "description": "Three courses at a local family restaurant.",
+        "price": 18,
+        "perPerson": true
+      }
+    ]
   },
   {
     "id": 8,
@@ -387,7 +415,7 @@
     "city": "Lukomir",
     "region": "Bosnia & Herzegovina",
     "title": "Lukomir Hike: Full Day Trek to Bosnia's Highest Mountain Village",
-    "price": 80,
+    "price": 85,
     "rating": 5,
     "reviews": 4,
     "duration": "Full day",
@@ -654,7 +682,7 @@
     "city": "Jajce",
     "region": "Bosnia & Herzegovina",
     "title": "Jajce & Travnik Day Trip from Sarajevo: Medieval Bosnia Full Day Tour",
-    "price": 75,
+    "price": 85,
     "rating": 5,
     "reviews": 12,
     "duration": "Full day",
@@ -795,7 +823,7 @@
     "city": "Sarajevo",
     "region": "Bosnia & Herzegovina",
     "title": "Sarajevo Morning Walk Tour: Sarajevo Before the Crowds",
-    "price": 15,
+    "price": 20,
     "rating": 5,
     "reviews": 8,
     "duration": "1.5 hours",
@@ -1223,7 +1251,7 @@
     "city": "Srebrenica",
     "region": "Bosnia & Herzegovina",
     "title": "Srebrenica Day Trip from Sarajevo | Genocide Memorial & Museum Tour",
-    "price": 70,
+    "price": 85,
     "rating": 5,
     "reviews": 2,
     "duration": "Full day",
@@ -1339,5 +1367,104 @@
       }
     ],
     "mapProfile": "driving-car"
+  },
+  {
+    "slug": "home-hosted-dinner",
+    "title": "At the Family Table: Home-Hosted Dinner in Sarajevo",
+    "subtitle": "The Best Meal in Sarajevo Isn't in a Restaurant. It's in Someone's Home.",
+    "category": "authentic",
+    "badge": "Traditional",
+    "price": 35,
+    "rating": 5,
+    "reviews": 4,
+    "duration": "2 hours",
+    "groupSize": 8,
+    "hero": "/uploads/home-hosted-dinner-qh56pmb2.webp",
+    "detailHero": "/uploads/home-hosted-dinner-zrcxo1ew.webp",
+    "description": "<p>There is a version of travel where you eat well but never really connect. This is not that. This evening opens a genuine Sarajevo home for a dinner built around food, conversation, and the kind of hospitality Bosnia has always been quietly known for. No restaurant can recreate it, because it was never designed to be replicated — only shared.</p><p>Your host shapes the menu around the season and your preferences, but two dishes anchor every table: burek, the hand-stretched meat pastry that defines Bosnian baking, and klepe, delicate dumplings served with garlic yogurt. Around them, expect slow-cooked dishes, homemade preserves, and a dessert that closes the evening properly. You leave the way guests in Bosnia always leave — full, welcomed, and already telling someone about it.</p>",
+    "highlights": [
+      "A Genuine Local Home — Not a restaurant, not a staged setting. A real Sarajevo household opens its doors for the evening.",
+      "Burek, Made by our Mothers — A recipe passed down through generations, baked the way it has always been done in Bosnian homes.",
+      "Klepe Dumplings — Delicate meat-filled dumplings served with garlic yogurt — one of Bosnia's most loved comfort dishes.",
+      "A Seasonal Home-Cooked Menu — Shaped around what's fresh and your preferences, never a fixed tourist menu.",
+      "Homemade Drinks & Dessert — The evening closes with traditional Bosnian sweets and drinks made the same way they always have been."
+    ],
+    "includes": [
+      "Home-cooked three-course dinner",
+      "Burek and klepe as the centerpiece dishes",
+      "Homemade drinks",
+      "Seasonal dishes shaped around your preferences",
+      "Local family host",
+      "Small group, max 8"
+    ],
+    "excludes": [
+      "Transport to and from the home (unless booked as part of a package)",
+      "Alcoholic beverages",
+      "Gratuities"
+    ],
+    "rightFor": [
+      "Couples and cultural travelers who want a genuine, unscripted evening",
+      "Food lovers seeking real Bosnian home cooking, not a tourist menu",
+      "Travelers who want to connect with a local family, not just observe one",
+      "Anyone who values warmth and hospitality over polish and performance"
+    ],
+    "notRightFor": [
+      "Guests expecting a cooking class or hands-on instruction",
+      "Large groups looking for a formal, restaurant-style setting",
+      "Travelers with very rigid dietary restrictions not communicated in advance",
+      "Those seeking a quiet, low-interaction dining experience"
+    ],
+    "faqs": [
+      {
+        "question": "Can dietary requirements or preferences be accommodated?",
+        "answer": "<p>Yes. Vegetarian fillings for burek and klepe are available, and your host shapes the wider menu around any dietary needs communicated at booking.</p>"
+      },
+      {
+        "question": "How many guests share the dinner?",
+        "answer": "<p>The evening is kept intimate, typically for small groups of two to 8, inside a private Sarajevo home rather than a restaurant or event space.</p>"
+      },
+      {
+        "question": "Is this a cooking class, or purely a dining experience?",
+        "answer": "<p>This is a dining experience, not a class. The focus is on sharing the meal and the evening. If you would rather cook alongside your host, our Authentic Bosnian Cooking Experience is the better fit.</p>"
+      }
+    ],
+    "meetingPoint": "Latin Bridge, Sarajevo, Old Town",
+    "startingTimes": [
+      "6 PM"
+    ],
+    "languages": [
+      "English"
+    ],
+    "accessibility": {
+      "walkingDistanceKm": null,
+      "drivingDistanceKm": null,
+      "walkingDurationMin": null,
+      "drivingDurationMin": null,
+      "durationMin": null,
+      "elevationGainM": null,
+      "effortLevel": null,
+      "suitability": {
+        "wheelchair": null,
+        "stroller": null,
+        "smallChildren": null,
+        "children": "yes",
+        "pregnancy": "yes",
+        "seniors": "yes",
+        "pets": null
+      },
+      "requirements": [],
+      "terrain": "",
+      "notes": "We need your food restrictions to be announced at least a day in advance so we can prepare accordingly. "
+    },
+    "fitnessNote": null,
+    "gallery": [
+      "/uploads/home-hosted-dinner-ni5ri4l6.webp",
+      "/uploads/home-hosted-dinner-tgj2w1ce.webp",
+      "/uploads/home-hosted-dinner-lc2mgl7t.webp",
+      "/uploads/home-hosted-dinner-prf3e7wc.webp"
+    ],
+    "mapWaypoints": [],
+    "mapProfile": "foot-walking",
+    "id": 10
   }
 ]

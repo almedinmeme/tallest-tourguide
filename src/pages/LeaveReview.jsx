@@ -4,6 +4,7 @@ import { Star, CheckCircle, ArrowLeft } from 'lucide-react'
 import tours from '../data/tours'
 import countries from '../data/countries'
 import useWindowWidth from '../hooks/useWindowWidth'
+import Button from '../components/Button'
 
 const TOKEN = import.meta.env.VITE_AIRTABLE_TOKEN
 const BASE_ID = import.meta.env.VITE_AIRTABLE_BASE_ID
@@ -212,18 +213,15 @@ function LeaveReview() {
                 </div>
               )}
 
-              <button
+              <Button
+                variant="primary"
+                full
+                style={{ marginTop: 4 }}
                 onClick={handleSubmit}
                 disabled={status === 'sending'}
-                style={{
-                  ...styles.submitBtn,
-                  opacity: status === 'sending' ? 0.7 : 1,
-                  cursor: status === 'sending' ? 'not-allowed' : 'pointer',
-                }}
-                className="btn-lift btn-glow-amber"
               >
-                {status === 'sending' ? 'Submitting…' : 'Submit My Review'}
-              </button>
+                {status === 'sending' ? 'Submitting…' : 'Submit your review'}
+              </Button>
 
             </>
           )}
@@ -335,18 +333,6 @@ const styles = {
     resize: 'vertical',
     lineHeight: '1.6',
     outline: 'none',
-  },
-  submitBtn: {
-    width: '100%',
-    height: '48px',
-    backgroundColor: 'var(--color-amber)',
-    color: 'var(--color-n900)',
-    fontFamily: 'var(--font-body)',
-    fontWeight: '700',
-    fontSize: 'var(--text-body)',
-    borderRadius: 'var(--radius)',
-    border: 'none',
-    marginTop: '4px',
   },
   disclaimer: {
     fontFamily: 'var(--font-body)',

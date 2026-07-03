@@ -8,22 +8,24 @@
 import SEO from '../components/SEO'
 import {
   TourActivitySchema,
-  BreadcrumbSchema,
   FAQSchema,
 } from '../schema/SchemaMarkup'
+import Breadcrumbs from '../components/Breadcrumbs'
+import FromTheJournal from '../components/FromTheJournal'
+import Img from '../components/Img'
 import { lazy, Suspense, useCallback, useEffect, useRef, useState } from 'react'
-import { useParams, Link } from 'react-router-dom'
+import { useParams, Link, useNavigate } from 'react-router-dom'
 import { trackEvent } from '../utils/analytics'
 import {
   Star, Clock, Users, MapPin, CheckCircle,
   XCircle, ShieldCheck, ChevronDown, ChevronUp,
   X, Globe, Timer, AlertTriangle, Accessibility
 } from 'lucide-react'
-import emailjs from '@emailjs/browser'
 import useWindowWidth from '../hooks/useWindowWidth'
 import tours from '../data/tours'
 import { getTourLanguages } from '../data/tourLanguages'
 import Gallery from '../components/Gallery'
+import Button from '../components/Button'
 import TourReviews from '../components/TourReviews'
 import TourCard from '../components/TourCard'
 import RichContent from '../components/RichContent'
@@ -159,7 +161,7 @@ function formatSelectedDate(dateStr) {
   if (!dateStr) return 'Select a date'
   const [y, m, d] = dateStr.split('-').map(Number)
   return new Date(y, m - 1, d).toLocaleDateString('en-GB', {
-    weekday: 'short', day: 'numeric', month: 'long', year: 'numeric',
+    weekday: 'short', day: 'numeric', month: 'short', year: 'numeric',
   })
 }
 
@@ -168,7 +170,7 @@ const showMoreBtnStyle = {
   margin: '12px auto 0',
   height: '34px',
   padding: '0 18px',
-  borderRadius: '100px',
+  borderRadius: 'var(--radius-pill)',
   border: '1.5px solid var(--color-n300)',
   backgroundColor: 'transparent',
   color: 'var(--color-n600)',
@@ -180,6 +182,7 @@ const showMoreBtnStyle = {
 
 function TourDetail() {
   const { slug } = useParams()
+  const navigate = useNavigate()
   const tour = tours.find((t) => t.slug === slug)
   const width = useWindowWidth()
   const isMobile = width <= 768
@@ -193,16 +196,8 @@ function TourDetail() {
   const [selectedLanguage, setSelectedLanguage] = useState(
     supportedLanguages[0]?.id ?? 'english'
   )
-  const [bookingStep, setBookingStep] = useState(1)
   const [numPeople, setNumPeople] = useState(1)
-  const [guestName, setGuestName] = useState('')
-  const [guestEmail, setGuestEmail] = useState('')
-  const [guestPhone, setGuestPhone] = useState('')
-  const [discountCode, setDiscountCode] = useState('')
   const [tourType, setTourType] = useState('shared')
-  const [isSending, setIsSending] = useState(false)
-  const [isSuccess, setIsSuccess] = useState(false)
-  const [isError, setIsError] = useState(false)
 
   // Calendar dropdown state
   const [calendarOpen, setCalendarOpen] = useState(false)
@@ -234,7 +229,6 @@ function TourDetail() {
 
   useEffect(() => {
     setSelectedLanguage(supportedLanguages[0]?.id ?? 'english')
-    setBookingStep(1)
     setSelectedDate(getTomorrow())
     setStartTime(tour?.startingTimes?.[0] ?? '')
   }, [tour?.id])
@@ -273,11 +267,14 @@ function TourDetail() {
       ?? supportedLanguages[0]?.label
       ?? 'English'
 
-  const totalPrice = tour
-    ? tourType === 'private'
-      ? 0
-      : tour.price * numPeople
-    : 0
+  // Optional booking add-ons (pick-up, tickets, …) defined per tour in the admin.
+  // Guests now choose them on the /checkout screen; here we just compute the
+  // amount each would cost for the selected party size and pass them along.
+  const tourExtras = tour?.extras || []
+  const extraAmount = (ex) =>
+    ex?.perPerson ? (Number(ex.price) || 0) * numPeople : (Number(ex?.price) || 0)
+
+  const totalPrice = tour ? (tourType === 'private' ? 0 : tour.price * numPeople) : 0
   const bookingPriceLabel = tourType === 'private' ? 'Quote' : `€${totalPrice}`
   const spotsLeft = tour ? getSpotsLeft(tour.slug, selectedDate, selectedLanguage, tour.groupSize) : null
   const maxPeople = tourType === 'private'
@@ -295,89 +292,27 @@ function TourDetail() {
     )
   }
 
+  // Collect the tour selection and hand off to the dedicated /checkout screen,
+  // where the customer enters their details and chooses to pay by card or
+  // reserve & pay later. The Airtable save + emails happen there.
   const handleBooking = () => {
-    if (!selectedDate || !guestName || !guestEmail) {
-      alert('Please fill in your name, email, and select a date.')
-      return
-    }
-    setIsSending(true)
-    setIsError(false)
-
-    const templateParams = {
-      type: 'Booking',
-      tour_name: tour.title,
-      tour_date: selectedDate,
-      tour_start_time: startTime || 'Not specified',
-      num_people: numPeople,
-      total_price: tourType === 'private'
-        ? 'Private tour — quote requested'
-        : `€${totalPrice}`,
-      guest_name: guestName,
-      guest_email: guestEmail,
-      guest_phone: guestPhone || 'Not provided',
-      discount_code: discountCode || 'None',
-      tour_type: tourType === 'private'
-        ? 'Private Tour'
-        : 'Shared Tour',
-      tour_language: selectedLanguageLabel,
-    }
-
-    fetch(`https://api.airtable.com/v0/${import.meta.env.VITE_AIRTABLE_BASE_ID}/Bookings`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${import.meta.env.VITE_AIRTABLE_TOKEN}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        fields: {
-          TourSlug: tour.slug,
-          TourName: tour.title,
-          TourDate: selectedDate,
-          StartTime: startTime || '',
-          NumPeople: numPeople,
-          TourType: tourType,
-          Language: selectedLanguageLabel,
-          TotalPrice: tourType === 'private' ? 0 : totalPrice,
-          GuestName: guestName,
-          GuestEmail: guestEmail,
-          GuestPhone: guestPhone || '',
-          DiscountCode: discountCode || '',
-          Status: 'Pending',
-        },
-      }),
-    }).catch((err) => console.warn('Airtable booking save failed:', err))
-
-    emailjs.send(
-      import.meta.env.VITE_EMAILJS_SERVICE_ID,
-      import.meta.env.VITE_EMAILJS_CONFIRMATION_TEMPLATE_ID,
-      templateParams,
-      import.meta.env.VITE_EMAILJS_PUBLIC_KEY
-    ).catch(() => {})
-
-    emailjs.send(
-      import.meta.env.VITE_EMAILJS_SERVICE_ID,
-      import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
-      templateParams,
-      import.meta.env.VITE_EMAILJS_PUBLIC_KEY
-    )
-    .then(() => {
-      setIsSending(false)
-      setIsSuccess(true)
-      trackEvent('purchase', {
-        transaction_id: `${tour.slug}-${Date.now()}`,
-        currency: 'EUR',
-        value: totalPrice,
-        items: [{ item_id: tour.slug, item_name: tour.title, item_category: tour.category, price: tour.price, quantity: numPeople }],
-      })
-    })
-    .catch(() => { setIsSending(false); setIsError(true) })
-  }
-
-  const handleContinueToBooking = () => {
     if (!selectedDate) {
-      alert('Please select a date before continuing.')
+      alert('Please select a date for your tour.')
       return
     }
+
+    const isQuote = tourType === 'private'
+
+    // Available add-ons, with the amount each costs for this party size. The
+    // guest selects/deselects them on the /checkout screen.
+    const availableExtras = isQuote
+      ? []
+      : tourExtras.map((ex) => ({
+          label: ex.label,
+          description: ex.description || '',
+          amount: extraAmount(ex),
+          perPerson: !!ex.perPerson,
+        }))
 
     trackEvent('begin_checkout', {
       currency: 'EUR',
@@ -385,42 +320,75 @@ function TourDetail() {
       items: [{ item_id: tour.slug, item_name: tour.title, item_category: tour.category, price: tour.price, quantity: numPeople }],
     })
 
-    setBookingStep(2)
-    setIsError(false)
+    // Base submission data — guest contact, chosen extras and the final total
+    // are filled in on the checkout screen.
+    const templateParams = {
+      type: 'Booking',
+      tour_name: tour.title,
+      tour_date: selectedDate,
+      tour_start_time: startTime || 'Not specified',
+      num_people: numPeople,
+      total_price: isQuote ? 'Private tour — quote requested' : `€${totalPrice}`,
+      tour_type: isQuote ? 'Private Tour' : 'Shared Tour',
+      tour_language: selectedLanguageLabel,
+    }
+
+    const airtableFields = {
+      TourSlug: tour.slug,
+      TourName: tour.title,
+      TourDate: selectedDate,
+      StartTime: startTime || '',
+      NumPeople: numPeople,
+      TourType: tourType,
+      Language: selectedLanguageLabel,
+      TotalPrice: isQuote ? 0 : totalPrice,
+      Status: 'Pending',
+    }
+
+    const analytics = {
+      transaction_id: `${tour.slug}-${Date.now()}`,
+      currency: 'EUR',
+      value: totalPrice,
+      items: [{ item_id: tour.slug, item_name: tour.title, item_category: tour.category, price: tour.price, quantity: numPeople }],
+    }
+
+    navigate('/checkout', {
+      state: {
+        booking: {
+          kind: 'tour',
+          title: tour.title,
+          backLink: `/tours/${tour.slug}`,
+          backLabel: 'Back to tour',
+          isQuote,
+          summary: {
+            date: formatSelectedDate(selectedDate),
+            startTime: startTime || null,
+            tourType: isQuote ? 'Private tour' : 'Shared tour',
+            language: selectedLanguageLabel,
+            numPeople,
+            unitPrice: isQuote ? null : tour.price,
+            total: totalPrice,
+          },
+          availableExtras,
+          rating: tour.rating,
+          reviews: tour.reviews,
+          templateParams,
+          airtableFields,
+          analytics,
+        },
+      },
+    })
   }
 
   const bookingForm = (
     <div style={{ ...styles.bookingCard, padding: '16px' }}>
-      {isSuccess ? (
-        <div style={styles.successMessage}>
-          <div style={styles.successIcon}>
-            <CheckCircle size={40} color="var(--color-success)" />
-          </div>
-          <h3 style={styles.successTitle}>Request Received!</h3>
-          <p style={styles.successText}>
-            Thanks {guestName}. Your{' '}
-            {tourType === 'private' ? 'private tour' : ''} booking
-            request for <strong>{tour.title}</strong> on {selectedDate}
-            {' '}in <strong>{selectedLanguageLabel}</strong>
-            {tourType === 'shared'
-              ? ` for ${numPeople} ${numPeople === 1 ? 'person' : 'people'}`
-              : ''
-            } has been received. You'll hear back within 24 hours.
-          </p>
-        </div>
-      ) : (
-        <>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
-            <h3 style={{ fontFamily: 'var(--font-display)', fontWeight: '700', fontSize: '17px', color: 'var(--color-n900)', margin: 0 }}>
-              {bookingStep === 1 ? 'Tour details' : 'Your details'}
-            </h3>
-            <span style={{ fontFamily: 'var(--font-body)', fontSize: '12px', fontWeight: '600', color: 'var(--color-n600)' }}>
-              Step {bookingStep} of 2
-            </span>
-          </div>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
+        <h3 style={{ fontFamily: 'var(--font-display)', fontWeight: '700', fontSize: '17px', color: 'var(--color-n900)', margin: 0 }}>
+          Tour details
+        </h3>
+      </div>
 
-          {bookingStep === 1 ? (
-            <>
+          <>
               {/* Tour type toggle */}
               <div style={styles.tourTypeSection}>
                 <span style={styles.toggleLabel}>Tour Type</span>
@@ -490,8 +458,8 @@ function TourDetail() {
 
               <div style={styles.formDivider} />
 
-
-              <div style={{ ...styles.formGroup, marginBottom: '8px', position: 'relative' }} ref={calendarWrapperRef}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1.3fr 0.7fr', gap: '10px', alignItems: 'start' }}>
+              <div style={{ ...styles.formGroup, marginBottom: 0, position: 'relative' }} ref={calendarWrapperRef}>
                 <label style={styles.label}>Select Date</label>
                 <button
                   type="button"
@@ -578,31 +546,38 @@ function TourDetail() {
                 )}
               </div>
 
-              <div style={{ ...styles.formGroup, marginBottom: '8px' }}>
-                <label style={styles.label}>Preferred Start Time</label>
-                <div style={styles.pillGroup}>
-                  {tour.startingTimes.map((time) => (
-                    <button
-                      key={time}
-                      type="button"
-                      onClick={() => setStartTime(time)}
-                      style={{
-                        ...styles.pillOption,
-                        borderColor: startTime === time ? 'var(--color-forest-green)' : 'var(--color-n300)',
-                        backgroundColor: startTime === time ? 'rgba(46,125,94,0.08)' : 'var(--color-n000)',
-                        color: startTime === time ? 'var(--color-forest-green)' : 'var(--color-n700)',
-                        fontWeight: startTime === time ? '600' : '500',
-                      }}
-                    >
-                      {time}
-                    </button>
-                  ))}
+              <div style={{ ...styles.formGroup, marginBottom: 0 }}>
+                <label style={styles.label}>Start Time</label>
+                <div style={{ position: 'relative' }}>
+                  <select
+                    value={startTime}
+                    onChange={(e) => setStartTime(e.target.value)}
+                    style={{
+                      ...styles.input,
+                      appearance: 'none',
+                      WebkitAppearance: 'none',
+                      MozAppearance: 'none',
+                      paddingRight: '32px',
+                      cursor: 'pointer',
+                      color: 'var(--color-n800)',
+                    }}
+                  >
+                    {tour.startingTimes.map((time) => (
+                      <option key={time} value={time}>{time}</option>
+                    ))}
+                  </select>
+                  <ChevronDown
+                    size={14}
+                    color="var(--color-n500)"
+                    style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }}
+                  />
                 </div>
               </div>
+              </div>
 
-              <div style={{ ...styles.formGroup, marginBottom: '8px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px', marginTop: '16px', marginBottom: '8px' }}>
                 <label style={styles.label}>Number of People</label>
-                <div style={styles.stepper}>
+                <div style={{ ...styles.stepper, width: '160px' }}>
                   <button
                     type="button"
                     disabled={numPeople <= 1}
@@ -641,134 +616,15 @@ function TourDetail() {
               )}
 
 
-              <button
-                style={styles.bookBtn}
-                className="btn-lift btn-glow-amber"
-                onClick={handleContinueToBooking}
+              <Button
+                variant="primary"
+                full
+                style={{ marginBottom: 10 }}
+                onClick={handleBooking}
               >
-                {`Continue to Booking - ${bookingPriceLabel}`}
-              </button>
-            </>
-          ) : (
-            <>
-              {/* Chip-style selection summary */}
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '12px' }}>
-                {[
-                  ['Type', tourType === 'private' ? 'Private' : 'Shared'],
-                  ['Date', selectedDate],
-                  ['Time', startTime || 'Any'],
-                  ['Language', selectedLanguageLabel],
-                  ['Guests', `${numPeople} ${numPeople === 1 ? 'person' : 'people'}`],
-                  ...(tourType === 'shared' ? [['Total', `€${totalPrice}`]] : []),
-                ].map(([label, value]) => (
-                  <div key={label} style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '5px',
-                    backgroundColor: 'rgba(46,125,94,0.07)',
-                    border: '1px solid rgba(46,125,94,0.18)',
-                    borderRadius: '100px',
-                    padding: '3px 10px',
-                  }}>
-                    <span style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: 'var(--color-n600)' }}>{label}:</span>
-                    <span style={{ fontFamily: 'var(--font-body)', fontWeight: '700', fontSize: '11px', color: 'var(--color-forest-green)' }}>{value}</span>
-                  </div>
-                ))}
-              </div>
-
-              <div style={{ ...styles.formGroup, marginBottom: '8px' }}>
-                <label style={styles.label}>Your Name</label>
-                <input
-                  type="text"
-                  placeholder="John Doe"
-                  style={styles.input}
-                  value={guestName}
-                  onChange={(e) => setGuestName(e.target.value)}
-                />
-              </div>
-
-              <div style={{ ...styles.formGroup, marginBottom: '8px' }}>
-                <label style={styles.label}>Email Address</label>
-                <input
-                  type="email"
-                  placeholder="john.doe@email.com"
-                  style={styles.input}
-                  value={guestEmail}
-                  onChange={(e) => setGuestEmail(e.target.value)}
-                />
-              </div>
-
-              <div style={{ ...styles.formGroup, marginBottom: '8px' }}>
-                <label style={styles.label}>Phone (optional)</label>
-                <input
-                  type="tel"
-                  placeholder="+1 234 567 8900"
-                  style={styles.input}
-                  value={guestPhone}
-                  onChange={(e) => setGuestPhone(e.target.value)}
-                />
-              </div>
-
-              <div style={{ ...styles.formGroup, marginBottom: '8px' }}>
-                <label style={styles.label}>
-                  Referral Code
-                  <span style={styles.optional}> — optional</span>
-                </label>
-                <input
-                  type="text"
-                  placeholder="e.g. HOTEL123"
-                  style={styles.input}
-                  value={discountCode}
-                  onChange={(e) => setDiscountCode(e.target.value)}
-                />
-              </div>
-
-              {tourType === 'shared' && (
-                <div style={styles.totalRow}>
-                  <span style={styles.totalLabel}>Total</span>
-                  <span style={styles.totalPrice}>€{totalPrice}</span>
-                </div>
-              )}
-
-              <div style={styles.buttonRow}>
-                <button
-                  type="button"
-                  style={styles.secondaryActionBtn}
-                  className="btn-lift"
-                  onClick={() => setBookingStep(1)}
-                >
-                  Back
-                </button>
-
-                <button
-                  style={{
-                    ...styles.bookBtn,
-                    flex: 1,
-                    marginBottom: 0,
-                    opacity: isSending ? 0.7 : 1,
-                    cursor: isSending ? 'not-allowed' : 'pointer',
-                  }}
-                  className="btn-lift btn-glow-amber"
-                  onClick={handleBooking}
-                  disabled={isSending}
-                >
-                  {isSending
-                    ? 'Sending...'
-                    : `Confirm & Book - ${bookingPriceLabel}`
-                  }
-                </button>
-              </div>
-            </>
-          )}
-
-          {isError && (
-            <p style={styles.errorMessage}>
-              Something went wrong. Please try again or
-              email us directly.
-            </p>
-          )}
-        </>
-      )}
+                {`Continue to checkout — ${bookingPriceLabel}`}
+              </Button>
+          </>
     </div>
   )
 
@@ -808,15 +664,16 @@ function TourDetail() {
 />
 
       <TourActivitySchema tour={tour} />
-      <BreadcrumbSchema tour={tour} />
       <FAQSchema tour={tour} />
 
       {/* ── HERO PHOTO ──────────────────────────────────── */}
       <div style={{ ...styles.heroWrapper, height: isMobile ? '52vh' : '65vh' }}>
         {tour.detailHero ? (
-          <img
+          <Img
             src={tour.detailHero}
             alt={tour.title}
+            sizes="100vw"
+            eager
             style={styles.heroPhoto}
           />
         ) : (
@@ -825,9 +682,10 @@ function TourDetail() {
         <div style={styles.heroGradient} />
         <div style={styles.heroGradientTop} />
         <div style={styles.heroBackLink}>
-          <Link to="/tours" style={styles.backLink}>
-            ← All Tours
-          </Link>
+          <Breadcrumbs items={[
+            { name: 'Tours', path: '/tours' },
+            { name: tour.title, path: `/tours/${tour.slug}` },
+          ]} />
         </div>
       </div>
 
@@ -1068,7 +926,7 @@ function TourDetail() {
                   <div style={styles.inclusionsList}>
                     {visibleIncludes.map((item, i) => (
                       <div key={i} style={styles.inclusionItem}>
-                        <CheckCircle size={15} color="var(--color-success)" />
+                        <CheckCircle size={15} color="var(--color-success)" style={{ flexShrink: 0, marginTop: '2px' }} />
                         <span style={styles.inclusionText}>{item}</span>
                       </div>
                     ))}
@@ -1085,7 +943,7 @@ function TourDetail() {
                   <div style={styles.inclusionsList}>
                     {visibleExcludes.map((item, i) => (
                       <div key={i} style={styles.inclusionItem}>
-                        <XCircle size={15} color="var(--color-n300)" />
+                        <XCircle size={15} color="var(--color-n300)" style={{ flexShrink: 0, marginTop: '2px' }} />
                         <span style={{ ...styles.inclusionText, color: 'var(--color-n600)' }}>
                           {item}
                         </span>
@@ -1284,6 +1142,9 @@ function TourDetail() {
         </div>
       </div>
 
+      {/* ── FROM THE JOURNAL ───────────────────────────── */}
+      <FromTheJournal tourSlug={tour.slug} />
+
       {/* ── RELATED TOURS ──────────────────────────────── */}
       {relatedTours.length > 0 && (
         <div style={{
@@ -1369,13 +1230,9 @@ function TourDetail() {
             <span style={styles.mobilePrice}>€{tour.price}</span>
             <span style={styles.mobilePricePer}>per person</span>
           </div>
-          <button
-            style={styles.mobileBookBtn}
-            className="btn-lift btn-glow-amber"
-            onClick={() => setDrawerOpen(true)}
-          >
-            Book Now
-          </button>
+          <Button variant="primary" size="sm" onClick={() => setDrawerOpen(true)}>
+            Book now
+          </Button>
         </div>
       )}
 
@@ -1490,7 +1347,7 @@ const styles = {
     backgroundColor: 'rgba(0,0,0,0.3)',
     backdropFilter: 'blur(4px)',
     padding: '6px 14px',
-    borderRadius: '100px',
+    borderRadius: 'var(--radius-pill)',
     border: '1px solid rgba(255,255,255,0.2)',
   },
 
@@ -1553,7 +1410,7 @@ const styles = {
     alignItems: 'center',
     gap: '6px',
     padding: '6px 14px',
-    borderRadius: '100px',
+    borderRadius: 'var(--radius-pill)',
     backgroundColor: 'var(--color-n000)',
     border: '1.5px solid var(--color-forest-green)',
     fontFamily: 'var(--font-body)',
@@ -1574,7 +1431,7 @@ const styles = {
     alignItems: 'center',
     gap: '6px',
     padding: '6px 14px',
-    borderRadius: '100px',
+    borderRadius: 'var(--radius-pill)',
     backgroundColor: 'var(--color-n100)',
     border: '1px solid var(--color-n300)',
     fontFamily: 'var(--font-body)',
@@ -1949,7 +1806,7 @@ const styles = {
   pillOption: {
     height: '36px',
     padding: '0 14px',
-    borderRadius: '100px',
+    borderRadius: 'var(--radius-pill)',
     border: '1.5px solid',
     fontFamily: 'var(--font-body)',
     fontSize: '13px',
@@ -2010,21 +1867,6 @@ const styles = {
     fontWeight: '700',
     fontSize: 'var(--text-h3)',
     color: 'var(--color-forest-green)',
-  },
-
-  bookBtn: {
-    width: '100%',
-    height: 'var(--touch-target)',
-    backgroundColor: 'var(--color-amber)',
-    color: 'var(--color-n900)',
-    fontFamily: 'var(--font-body)',
-    fontWeight: '700',
-    fontSize: 'var(--text-body)',
-    borderRadius: 'var(--radius)',
-    border: 'none',
-    marginBottom: '10px',
-    boxSizing: 'border-box',
-    cursor: 'pointer',
   },
 
   buttonRow: {
@@ -2113,19 +1955,6 @@ const styles = {
     fontFamily: 'var(--font-body)',
     fontSize: 'var(--text-small)',
     color: 'var(--color-n600)',
-  },
-
-  mobileBookBtn: {
-    height: '44px',
-    padding: '0 24px',
-    backgroundColor: 'var(--color-amber)',
-    color: 'var(--color-n900)',
-    fontFamily: 'var(--font-body)',
-    fontWeight: '700',
-    fontSize: 'var(--text-body)',
-    borderRadius: 'var(--radius)',
-    border: 'none',
-    cursor: 'pointer',
   },
 
   drawerOverlay: {

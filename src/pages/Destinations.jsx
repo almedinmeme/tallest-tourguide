@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import SEO from '../components/SEO'
+import Button from '../components/Button'
 import { sortedDestinations } from '../data/destinations'
 import useWindowWidth from '../hooks/useWindowWidth'
 
@@ -76,7 +77,8 @@ export default function Destinations() {
               {placeNames(featured).length > 0 && (
                 <p style={styles.places}>{placeNames(featured).join('   ·   ')}</p>
               )}
-              <span className="btn-lift btn-glow-green" style={styles.featureCta}>
+              {/* span, not a Button/Link — the whole card is already an anchor */}
+              <span className="btn btn--secondary" style={{ marginTop: 26 }}>
                 Explore {featured.name}
                 <span aria-hidden style={{ fontSize: 17, lineHeight: 1 }}>→</span>
               </span>
@@ -132,8 +134,8 @@ export default function Destinations() {
         <div style={styles.closer}>
           <p style={styles.closerText}>Not sure where to start? Tell us how you like to travel, or see the trips already on the calendar.</p>
           <div style={styles.closerBtns}>
-            <Link to="/tours" className="btn-outline-green" style={styles.closerBtn}>Browse our tours</Link>
-            <Link to="/about" className="btn-outline-green" style={styles.closerBtn}>Why we travel this way</Link>
+            <Button to="/tours" variant="secondary" size="sm">Browse our tours</Button>
+            <Button to="/about" variant="secondary" size="sm">Why we travel this way</Button>
           </div>
         </div>
       </section>
@@ -143,7 +145,7 @@ export default function Destinations() {
 
 const styles = {
   kicker: { fontFamily: 'var(--font-body)', fontSize: 13, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase', color: 'var(--color-amber)' },
-  h1: { fontFamily: 'var(--font-hero)', fontWeight: 400, fontSize: 'clamp(32px, 5vw, 56px)', lineHeight: 1.1, margin: '14px 0 0', letterSpacing: '-0.01em' },
+  h1: { fontFamily: 'var(--font-hero)', fontWeight: 400, fontSize: 'clamp(32px, 5vw, 56px)', lineHeight: 1.1, margin: '14px 0 0', letterSpacing: '-0.01em', color: '#fff' },
   lede: { fontFamily: 'var(--font-body)', fontSize: 'clamp(16px, 2vw, 19px)', color: 'rgba(255,255,255,0.82)', maxWidth: 620, margin: '20px 0 0', lineHeight: 1.6 },
   stats: { listStyle: 'none', display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 18, margin: '28px 0 0', padding: 0 },
   stat: { display: 'inline-flex', alignItems: 'center', gap: 18, fontFamily: 'var(--font-body)', fontSize: 13, fontWeight: 600, letterSpacing: 0.4, textTransform: 'uppercase', color: 'rgba(255,255,255,0.7)' },
@@ -156,7 +158,6 @@ const styles = {
   featureKicker: { fontFamily: 'var(--font-body)', fontSize: 12, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase', color: 'var(--color-amber)' },
   featureName: { fontFamily: 'var(--font-hero)', fontWeight: 400, fontSize: 'clamp(28px, 3.6vw, 42px)', lineHeight: 1.1, color: 'var(--color-n900)', margin: '12px 0 0', letterSpacing: '-0.01em' },
   featureTeaser: { fontFamily: 'var(--font-body)', fontSize: 16, lineHeight: 1.65, color: 'var(--color-n600)', margin: '16px 0 0', maxWidth: 520 },
-  featureCta: { display: 'inline-flex', alignItems: 'center', gap: 9, height: 50, padding: '0 26px', marginTop: 26, backgroundColor: 'var(--color-forest-green)', color: '#fff', fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: 15, borderRadius: 'var(--radius)' },
 
   // Grid header
   gridHead: { marginBottom: 24 },
@@ -181,5 +182,4 @@ const styles = {
   closer: { maxWidth: 760, margin: '0 auto', textAlign: 'center', padding: '40px 28px', backgroundColor: 'var(--color-n000)', border: '1px solid var(--color-n200)', borderRadius: 'var(--radius-lg)' },
   closerText: { fontFamily: 'var(--font-body)', fontSize: 17, lineHeight: 1.6, color: 'var(--color-n600)', margin: 0 },
   closerBtns: { display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 12, marginTop: 22 },
-  closerBtn: { display: 'inline-flex', alignItems: 'center', height: 46, padding: '0 22px', fontFamily: 'var(--font-body)', fontSize: 14, fontWeight: 700, color: 'var(--color-forest-green)', textDecoration: 'none', border: '1.5px solid var(--color-forest-green)', borderRadius: 'var(--radius)' },
 }

@@ -2,7 +2,8 @@ import { useState } from 'react'
 import emailjs from '@emailjs/browser'
 import { Check } from 'lucide-react'
 import SEO from '../components/SEO'
-import { EditorialHero } from '../components/Editorial'
+import { EditorialHero, ProseSection } from '../components/Editorial'
+import Button from '../components/Button'
 import { getPage } from '../data/pages'
 import useWindowWidth from '../hooks/useWindowWidth'
 
@@ -18,6 +19,7 @@ const REASSURANCES = [
 export default function Partners() {
   const page = getPage('partners') || {}
   const hero = page.hero || {}
+  const sections = Array.isArray(page.sections) ? page.sections : []
   const extra = page.extra || {}
   const services = Array.isArray(extra.services) ? extra.services : []
   const tiers = Array.isArray(extra.tiers) ? extra.tiers : []
@@ -34,6 +36,8 @@ export default function Partners() {
       />
 
       <EditorialHero kicker={hero.kicker} heading={hero.heading} subheading={hero.subheading} image={hero.image} imageNote="[Operational image slot — roads, maps, logistics]" />
+
+      {sections.map((sec, i) => <ProseSection key={sec.id || i} section={sec} />)}
 
       {/* Trust stats — credibility at a glance */}
       {stats.length > 0 && (
@@ -89,10 +93,10 @@ export default function Partners() {
             </div>
             <div style={{ marginTop: 44 }}>
               {extra.pdfUrl ? (
-                <a href={extra.pdfUrl} target="_blank" rel="noreferrer" className="btn-lift" style={styles.pdfBtn}>
+                <Button href={extra.pdfUrl} variant="secondary">
                   Download our capability document (PDF)
                   <span aria-hidden style={{ fontSize: 17 }}>↓</span>
-                </a>
+                </Button>
               ) : (
                 <p style={styles.pdfPlaceholder}>[Capability PDF slot — link a one-page DMC capability document here via the Pages editor.]</p>
               )}
@@ -203,9 +207,9 @@ function PartnerEnquiry({ isMobile, ctaNote }) {
               <Field label="Message">
                 <textarea className="booking-input" style={styles.textarea} value={form.message} onChange={set('message')} placeholder="Tell us about the programme you're planning." />
               </Field>
-              <button style={{ ...styles.submit, opacity: isSending ? 0.7 : 1 }} className="btn-lift" onClick={handleSubmit} disabled={isSending}>
-                {isSending ? 'Sending…' : 'Start a conversation'}
-              </button>
+              <Button variant="primary" full onClick={handleSubmit} disabled={isSending}>
+                {isSending ? 'Sending…' : 'Send enquiry'}
+              </Button>
               {isError && <p style={{ fontFamily: 'var(--font-body)', fontSize: 14, color: 'var(--color-error)', marginTop: 10 }}>Something went wrong. Please email hello@tallesttourguide.com directly.</p>}
             </div>
           )}
@@ -244,7 +248,6 @@ const styles = {
   tierNum: { fontFamily: 'var(--font-hero)', fontSize: 30, fontWeight: 500, color: 'var(--color-amber)', lineHeight: 1 },
   tierName: { fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 18, color: 'var(--color-n900)', margin: '12px 0 8px' },
 
-  pdfBtn: { display: 'inline-flex', alignItems: 'center', gap: 10, height: 52, padding: '0 28px', backgroundColor: 'var(--color-forest-green)', color: '#fff', fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: 15, borderRadius: 'var(--radius)', textDecoration: 'none' },
   pdfPlaceholder: { fontFamily: 'var(--font-body)', fontSize: 13, color: 'var(--color-n500)', fontStyle: 'italic', margin: 0 },
 
   reassureList: { listStyle: 'none', padding: 0, margin: '28px 0 0', display: 'flex', flexDirection: 'column', gap: 16 },
@@ -253,6 +256,5 @@ const styles = {
   formCard: { backgroundColor: 'var(--color-n000)', border: '1px solid var(--color-n300)', borderRadius: 16, padding: 'clamp(22px, 4vw, 32px)', boxShadow: 'var(--shadow-sm)' },
   input: { height: 48, borderRadius: 'var(--radius)', border: '1.5px solid var(--color-n300)', padding: '0 12px', fontFamily: 'var(--font-body)', fontSize: 16, color: 'var(--color-n900)', backgroundColor: 'var(--color-n000)', width: '100%' },
   textarea: { minHeight: 130, borderRadius: 'var(--radius)', border: '1.5px solid var(--color-n300)', padding: 12, fontFamily: 'var(--font-body)', fontSize: 16, color: 'var(--color-n900)', backgroundColor: 'var(--color-n000)', width: '100%', resize: 'vertical', lineHeight: 1.6 },
-  submit: { width: '100%', height: 52, backgroundColor: 'var(--color-forest-green)', color: '#fff', fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: 16, borderRadius: 'var(--radius)', border: 'none', cursor: 'pointer' },
   success: { textAlign: 'center', padding: '48px 24px', border: '1px solid var(--color-n300)', borderRadius: 16, backgroundColor: 'var(--color-n000)' },
 }
