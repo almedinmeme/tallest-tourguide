@@ -5,5 +5,14 @@
 # broken build can never silently ship pages that serve the wrong meta tags.
 
 [build]
-  command = "npm run build"
+  # `npx puppeteer browsers install chrome` first: Netlify restores
+  # node_modules from cache, so puppeteer's postinstall (which downloads
+  # Chrome) doesn't run — without this the prerender fails with "Could not
+  # find Chrome". It's a fast no-op once the browser is in the cache below.
+  command = "npx puppeteer browsers install chrome && npm run build"
   publish = "dist"
+
+[build.environment]
+  # Keep the browser inside node_modules so Netlify's dependency cache
+  # persists it between builds (the default ~/.cache/puppeteer is not cached).
+  PUPPETEER_CACHE_DIR = "/opt/build/repo/node_modules/.cache/puppeteer"
