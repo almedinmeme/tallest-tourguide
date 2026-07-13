@@ -132,7 +132,7 @@ export const journeyNavLinks = packages.map((p) => ({
   href: `/packages/${p.slug}`,
 }))
 
-export const NAV_TRUST = '5.0 ★ rating · Small groups, max 12 · Year-round'
+export const NAV_TRUST = '5.0 ★ rating · Genuinely small groups · Year-round'
 
 // Package entries for the search dropdowns (desktop bar + mobile sheet).
 export const searchPackageLinks = [

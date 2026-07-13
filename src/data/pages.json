@@ -77,7 +77,7 @@
           "body": "English (fluent) · Bosnian / Croatian / Serbian (native) · Spanish (conversational). Local context is never lost in translation."
         },
         {
-          "title": "Maximum twelwe guests",
+          "title": "Genuinely small groups",
           "body": "A deliberate limit, not a marketing line. Small groups move differently — through crowds, through conversations, through moments a bus tour can't reach."
         }
       ],
@@ -160,7 +160,7 @@
     "title": "Signature Experiences",
     "seo": {
       "title": "Signature Experiences — Private, Expert-Led Balkan Journeys",
-      "description": "Not a tour. A private, expert-led journey designed around you — boutique stays, custom routes, a maximum of six guests."
+      "description": "Not a tour. A private, expert-led journey designed around you — boutique stays, custom routes, an intimately small group."
     },
     "hero": {
       "kicker": "Signature",
@@ -172,7 +172,7 @@
       {
         "id": "intro",
         "heading": "",
-        "body": "<p>Most of our guests meet us on a day tour. Some come back for something slower — a week built around one table, one question, one family history. These are our signature journeys: private, led by people who have spent their lives inside the subject, and limited to six guests so nobody travels at the back of a group. We run only two of them a month, because they take time to do properly.</p>",
+        "body": "<p>Most of our guests meet us on a day tour. Some come back for something slower — a week built around one table, one question, one family history. These are our signature journeys: private, led by people who have spent their lives inside the subject, and kept small enough that nobody travels at the back of the group. We run only two of them a month, because they take time to do properly.</p>",
         "image": "",
         "imageCaption": "",
         "layout": "text"
@@ -185,7 +185,7 @@
       "note": "These journeys begin with a conversation, not a booking form."
     },
     "extra": {
-      "scarcity": "Limited to 6 guests per departure · 2 signature journeys available per month",
+      "scarcity": "Intimately small departures · 2 signature journeys per month",
       "forWho": [
         "You've done the big trips and you're after depth this time, not coverage.",
         "You'd rather spend a whole evening at one family's table than an hour at three viewpoints.",
@@ -203,7 +203,7 @@
           "blurb": "A 7-day study-group-style journey with a resident historian, from Sarajevo to the southern monasteries.",
           "fromPrice": "4,200",
           "duration": "7 days",
-          "maxGuests": "6 guests",
+          "maxGuests": "Kept small",
           "expert": "With a historian",
           "image": "/uploads/signature-029rntc7.webp",
           "secondImage": "/uploads/signature-02473nlu.webp",
@@ -216,7 +216,7 @@
           "blurb": "A private circuit through family estates and boutique stays, led by a food anthropologist.",
           "fromPrice": "3,800",
           "duration": "6 days",
-          "maxGuests": "6 guests",
+          "maxGuests": "Kept small",
           "expert": "With a food anthropologist",
           "image": "/uploads/signature-jibhs5ua.webp",
           "secondImage": "/uploads/signature-0bxf9zdv.webp",
@@ -454,6 +454,94 @@
           "body": "Locally owned three- and four-star hotels with genuine character. Never an international chain; always run by people from the place — comfort without losing the sense of where you are."
         }
       ]
+    }
+  },
+  {
+    "id": 7,
+    "slug": "home",
+    "title": "Homepage",
+    "seo": {
+      "title": "Guided Tours in Sarajevo",
+      "description": "Small group tours in Sarajevo and Bosnia led by a local guide. War history, food tours, day trips to Mostar and more. Genuinely small groups. Book online."
+    },
+    "extra": {
+      "heroImages": [
+        {
+          "image": "/uploads/home-zkv51pud.webp"
+        },
+        {
+          "image": "/uploads/home-ie4wtxek.webp"
+        },
+        {
+          "image": "/uploads/home-cjbqeow8.webp"
+        },
+        {
+          "image": "/uploads/home-00216qwg.webp"
+        },
+        {
+          "image": "/uploads/home-x4l18kzj.webp"
+        },
+        {
+          "image": "/uploads/home-d7vds8tt.webp"
+        },
+        {
+          "image": "/uploads/home-ixa2ad8c.webp"
+        }
+      ],
+      "favouriteTours": [
+        "mostar-day-trip-from-sarajevo",
+        "bosnian-cooking-class-sarajevo"
+      ]
+    }
+  },
+  {
+    "id": 8,
+    "slug": "personalised",
+    "title": "Personalised Tour",
+    "seo": {
+      "title": "Personalised Tour Package",
+      "description": "Build a custom Bosnia itinerary around your interests. Private guide, flexible dates, accommodation arranged on request. Fill in our short questionnaire."
+    },
+    "extra": {
+      "cities": [
+        "Sarajevo",
+        "Mostar",
+        "Srebrenica",
+        "Jajce",
+        "Lukomir",
+        "Konjic",
+        "Stolac",
+        "Banja Luka",
+        "Travnik",
+        "Blagaj",
+        "Trebinje",
+        "Bihać",
+        "Livno"
+      ]
+    }
+  },
+  {
+    "id": 9,
+    "slug": "tours",
+    "title": "All Tours (listing)",
+    "extra": {
+      "heroImage": "/uploads/bosnia-and-herzegovina-sarajevo.webp"
+    }
+  },
+  {
+    "id": 10,
+    "slug": "journal",
+    "title": "The Journal (listing)",
+    "extra": {
+      "heroImage": "/uploads/4-days-sarajevo-experience-coppersmith.webp"
+    }
+  },
+  {
+    "id": 11,
+    "slug": "journeys",
+    "title": "Journeys (listing)",
+    "extra": {
+      "heroImage": "/uploads/balkans-full-arc-803ecks8.webp"
     }
   }
 ]

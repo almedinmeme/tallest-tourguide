@@ -2,8 +2,8 @@
   {
     "id": 1,
     "slug": "4-days-sarajevo-experience",
-    "name": "4-Days Complete Sarajevo Experience: Let us show you our home",
-    "subtitle": "Stories, Survival & Soul",
+    "name": "4-Days Complete Sarajevo Experience",
+    "subtitle": "Let us show you our home",
     "duration": "4 Days",
     "groupSize": 12,
     "difficulty": "Easy",
@@ -124,7 +124,7 @@
     "inclusions": [
       "Private transfer on arrival and departure",
       "Bosnian coffee ceremony",
-      "Small group — maximum 12 people"
+      "Small group throughout"
     ],
     "exclusions": [
       "Flights and international transport",
@@ -192,7 +192,7 @@
     "importantInfo": [
       {
         "title": "Things to Consider Before Booking",
-        "content": "Free cancellation up to 72 hours before the start date. Cancellations within 72 hours are non-refundable. \nSend a booking request, and you will hear back within 24 hours to confirm availability and arrange all details."
+        "content": "Cancel more than 30 days before departure for a full refund of everything paid; 15–30 days before, 50%; within 15 days, no refund. One free date change if requested more than 30 days out. If we cancel, you always get a full refund or a free rebooking — full details under Booking Conditions.\nSend a booking request, and you will hear back within 24 hours to confirm availability and arrange all details."
       },
       {
         "title": "Accommodation",
@@ -303,7 +303,7 @@
         "First-time visitors to Bosnia",
         "History and culture enthusiasts",
         "Travelers who want depth over breadth",
-        "Small group fans — maximum 8 people",
+        "Small-group fans — never a coach tour",
         "Those curious about the Bosnian War and the Siege"
       ],
       "thinkTwice": [
@@ -332,8 +332,8 @@
     "includes": [
       "Private transfer on arrival and departure",
       "Welcome meal with a local family",
-      "Small group — maximum 8 people",
-      "Free cancellation up to 48 hours before"
+      "Small group throughout",
+      "Full refund if cancelled 30+ days before departure"
     ],
     "hero": "/uploads/4-day-sarajevo-experience-hero.webp",
     "price": 250,
@@ -383,200 +383,193 @@
     }
   },
   {
-    "id": 2,
-    "slug": "bosnia-deep-dive",
-    "name": "Bosnia Deep Dive",
-    "gallery": [
-      "/uploads/package-2-hero.webp"
-    ],
-    "subtitle": "Real Bosnia, Deeply Experienced",
+    "id": 5,
+    "slug": "empires-and-edge",
+    "name": "Empires & The Edge",
+    "subtitle": "Sarajevo, Višegrad & Belgrade in 5 Days",
     "duration": "5 Days",
     "groupSize": 8,
     "difficulty": "Easy",
-    "priceWithout": 480,
-    "priceWith": 850,
-    "rating": 4.9,
-    "reviews": 31,
-    "heroImage": "/uploads/package-2-hero.webp",
-    "about": "Bosnia is not a small country — it is a layered one. Five days is the minimum time needed to begin understanding it properly. This itinerary moves through three distinct worlds: the Ottoman and Austro-Hungarian complexity of Sarajevo, the raw natural beauty of Herzegovina with its waterfalls and ancient villages, and the surreal Yugoslav legacy of a dictator who built a nuclear bunker in a mountain and thought it would save him.\n\nYou will swim in a waterfall, raft a river, taste wine in a medieval cellar, and sit in the bunker of a man who ruled 200 million people. You will eat with a local family on your first night and share a farewell dinner with the same guide on your last. What happens in between is Bosnia — complicated, generous, and impossible to forget.\n\nFive days. Four cities. One country that will permanently change your frame of reference.",
+    "priceWithout": 1490,
+    "priceWith": 1890,
+    "rating": 5,
+    "reviews": 0,
+    "heroImage": "/uploads/package-5-hero.webp",
+    "gallery": [
+      "/uploads/package-5-hero.webp"
+    ],
+    "about": "From the Ottoman bazaars of Sarajevo to the Habsburg boulevards a hundred metres away, this 5-day journey is built around one question: how does a place hold so many empires at once? You will walk Sarajevo's civilizations corridor, taste Bosnian coffee the way it is meant to be tasted, and hear the siege explained by someone who lived it.\n\nThen east — across the Drina to Andrić's UNESCO bridge, into Serbia, and up to Belgrade where two great rivers meet at a fortress that has been fought over for 2,300 years. The Sava and the Danube. The Balkans literally begin here.\n\nFive days. Two countries. One coherent story about the edge between worlds.",
     "days": [
       {
         "id": 1,
         "title": "First Contact",
         "city": "Sarajevo",
-        "summary": "Arrival, welcome lunch with a local family, golden hour walk.",
-        "photo": "/photos/bosnia-deep-dive-day-1.jpg",
+        "summary": "Arrival in Sarajevo with welcome dinner.",
+        "photo": "/photos/empires-and-edge-day-1.jpg",
         "accommodation": "Hotel Hecco Deluxe, Sarajevo",
         "meals": [
           "Welcome dinner"
         ],
         "includedActivities": [
           "Private arrival transfer",
-          "Sarajevo Sunset Walking Tour",
-          "Welcome dinner with local family"
+          "Welcome dinner with the group",
+          "Tour leader briefing"
         ],
         "optionalActivities": [
-          "Evening Baščaršija stroll"
+          "Evening Baščaršija walk"
         ],
-        "morning": "Arrival to Sarajevo with a private transfer directly to your accommodation. Time to settle in, freshen up, and get your bearings in a city that immediately feels unlike anywhere else.",
-        "afternoon": "Your first real introduction to Sarajevo — a welcome lunch or dinner hosted by a local family, followed by the Sarajevo Sunset Walking Tour. There is no better way to meet a city than during the golden hour, when the light turns the old town amber and the call to prayer drifts across the valley.",
+        "morning": "Private airport transfers to your hotel in the Old Town. Time to settle in and orient yourself in the city at your own pace.",
+        "afternoon": "Free afternoon to walk the Baščaršija and find your bearings. Optional coffee at a historic coffeehouse. Welcome dinner with the group at 19:30.",
         "highlights": [
-          "Home-hosted meal with a local family",
-          "First cultural immersion into Bosnian hospitality",
-          "Golden hour walking experience through the old town"
-        ]
+          "Welcome dinner with the group",
+          "First evening in the Baščaršija old town",
+          "Tour leader briefing"
+        ],
+        "note": "Welcome dinner at 19:30 — the only fixed point on Day 1."
       },
       {
         "id": 2,
-        "title": "Feel the Energy, Learn the History, Enjoy the Food",
+        "title": "Between Empires",
         "city": "Sarajevo",
-        "summary": "Morning coffee ritual, walking tour, siege history, local lunch.",
-        "photo": "/photos/bosnia-deep-dive-day-2.jpg",
+        "summary": "Coffee ritual and the civilizations walking tour.",
+        "photo": "/photos/empires-and-edge-day-2.jpg",
         "accommodation": "Hotel Hecco Deluxe, Sarajevo",
-        "meals": [
-          "Breakfast",
-          "Lunch"
-        ],
-        "includedActivities": [
-          "Bosnian coffee ceremony",
-          "Between Empires Walking Tour",
-          "Siege of Sarajevo Tour",
-          "Local neighbourhood lunch"
-        ],
-        "optionalActivities": [
-          "Tunnel of Hope Museum — €15",
-          "War Childhood Museum"
-        ],
-        "morning": "The day begins the right way — with a Bosnian coffee ceremony. Then straight into the Between Empires Walking Tour and the Siege of Sarajevo: Survival and Resistance — two tours that together tell the complete story of this city, from its Ottoman foundation to the war that defined a generation.",
-        "afternoon": "Lunch at a local favourite — a place your guide knows rather than a place that knows tourists. The afternoon is yours. Walk, explore, buy copper coffee sets in the bazaar, or simply sit and watch Sarajevo happen around you.",
-        "highlights": [
-          "Bosnian coffee ritual — the correct way",
-          "War history told through real personal stories",
-          "Authentic local lunch in a neighbourhood eatery"
-        ]
-      },
-      {
-        "id": 3,
-        "title": "Real Herzegovina — Waterfalls, Wine and Ancient Villages",
-        "city": "Mostar",
-        "summary": "Kravice Waterfalls, Počitelj, wine cellars, Stolac, Blagaj, Mostar.",
-        "photo": "/photos/bosnia-deep-dive-day-3.jpg",
-        "accommodation": "Hotel Bristol, Mostar",
-        "meals": [
-          "Wine cellar lunch"
-        ],
-        "includedActivities": [
-          "Kravice Waterfalls",
-          "Počitelj fortress village",
-          "Wine cellar tasting & lunch",
-          "Blagaj Tekke",
-          "Mostar orientation walk"
-        ],
-        "optionalActivities": [
-          "Swimming at Kravice (seasonal)"
-        ],
-        "morning": "Departure from Sarajevo into Herzegovina. The landscape changes within an hour — limestone karst, fig trees, the Mediterranean pushing north. Morning at Kravice Waterfalls, where you can swim in a lake fed by sixteen separate cascades. Then Počitelj — a perfectly preserved Ottoman fortress village that looks like it was painted rather than built.",
-        "afternoon": "Visit to a Herzegovina wine cellar for tasting and lunch. Then Stolac — one of the oldest inhabited places in the Balkans — and Blagaj, where a 600-year-old dervish monastery sits at the mouth of a river that emerges fully-formed from a cliff. Arrival in Mostar around 5pm, hotel check-in, and an orientational walk across the Old Bridge with free time to explore.",
-        "highlights": [
-          "Swimming in Kravice Waterfalls",
-          "Wine tasting in a Herzegovina cellar",
-          "Počitelj, Stolac and Blagaj — three UNESCO-listed sites in one afternoon",
-          "First crossing of Stari Most at sunset"
-        ],
-        "note": "Lunch will be organised within the group by the tour guide and is not included in the package price — you pay directly at the cellar."
-      },
-      {
-        "id": 4,
-        "title": "Dictator Tito and Rafting — Wait, What?",
-        "city": "Konjic & Jablanica",
-        "summary": "Tito's Nuclear Bunker, UNESCO Woodcarving Museum, white water rafting.",
-        "photo": "/photos/bosnia-deep-dive-day-4.jpg",
-        "accommodation": "Hotel Hecco Deluxe, Sarajevo",
-        "meals": [
-          "Riverbank lunch",
-          "Farewell dinner"
-        ],
-        "includedActivities": [
-          "Tito's Nuclear Bunker tour",
-          "UNESCO Woodcarving Museum",
-          "Neretva white water rafting",
-          "Farewell dinner in Sarajevo"
-        ],
-        "optionalActivities": [
-          "Extra time in Konjic old town"
-        ],
-        "morning": "Drive to Jablanica, where your guide will introduce the story of Josip Broz Tito before you enter Konjic — a town that somehow contains both a UNESCO-protected woodcarving tradition and a Cold War nuclear bunker built for 350 people that was kept completely secret until 1992. The bunker is one of the most genuinely strange places in Europe.",
-        "afternoon": "White water rafting on the Neretva River — Bosnia's most popular rafting experience, through a canyon that gets progressively more dramatic. Lunch on the riverbank. Then the drive back to Sarajevo and a farewell dinner with your guide — the best ending to five days that went by far too quickly.",
-        "highlights": [
-          "Tito's Nuclear Bunker — Cold War history at its most surreal",
-          "UNESCO Woodcarving Museum in Konjic",
-          "White water rafting on the Neretva River",
-          "Farewell dinner in Sarajevo"
-        ]
-      },
-      {
-        "id": 5,
-        "title": "Ready to Say \"See You Again\"?",
-        "city": "Sarajevo",
-        "summary": "Flexible departure — optional activity based on your schedule.",
-        "photo": "/photos/bosnia-deep-dive-day-5.jpg",
         "meals": [
           "Breakfast"
         ],
         "includedActivities": [
-          "Private departure transfer"
+          "Bosnian coffee ceremony",
+          "Between Empires Walking Tour",
+          "City Hall (Vijećnica)"
         ],
         "optionalActivities": [
-          "Vrelo Bosne nature walk",
-          "Copper bazaar shopping"
+          "Tunnel of Hope Museum — €15",
+          "Yellow Fortress walk"
         ],
-        "morning": "This day belongs to your departure time. Whether you leave early or late, your guide will work around your schedule. If time allows, there is always one more thing worth seeing in Sarajevo. Just ask.",
-        "afternoon": "Private transfer to the airport or onward destination.",
+        "morning": "Bosnian coffee ritual at a Baščaršija coffeehouse — explained as ceremony, not caffeine. Walking tour through the 200-metre civilizations corridor: Sebilj fountain to Gazi Husrev-beg mosque to Sacred Heart Cathedral. Latin Bridge — the assassination that ended the 19th century.",
+        "afternoon": "Lunch break (own arrangement). City Hall (Vijećnica) — burned 1992, rebuilt 2014 — and the Sarajevo Haggadah story.",
         "highlights": [
-          "Flexible schedule built around your departure",
-          "Optional add-on activity on request",
-          "Private transfer included"
+          "Bosnian coffee ceremony",
+          "Ottoman to Austro-Hungarian in 200 metres",
+          "Latin Bridge and the assassination of 1914",
+          "City Hall and the Sarajevo Haggadah"
         ],
-        "note": "This day revolves around your departure time. Message your guide before arrival to discuss possible activities that fit your schedule."
+        "note": "Long walking day on cobblestones — wear proper shoes."
+      },
+      {
+        "id": 3,
+        "title": "The Siege & The Mountain",
+        "city": "Sarajevo",
+        "summary": "Tunnel of Hope and Trebević mountain — the hardest emotional day.",
+        "photo": "/photos/empires-and-edge-day-3.jpg",
+        "accommodation": "Hotel Hecco Deluxe, Sarajevo",
+        "meals": [
+          "Breakfast"
+        ],
+        "includedActivities": [
+          "Tunnel of Hope guided tour",
+          "Trebević mountain",
+          "Olympic bobsled track"
+        ],
+        "optionalActivities": [
+          "Gallery 11/07/95 (Srebrenica)",
+          "Copper workshop in Kazandžiluk"
+        ],
+        "morning": "Tunnel of Hope guided by a former defender. The 800-metre wartime lifeline that kept Sarajevo alive 1992–95.",
+        "afternoon": "Drive up Trebević mountain to the Olympic bobsled track — now a graffiti corridor through the forest. Cable car back down. Free time for Gallery 11/07/95 (Srebrenica content — emotionally heavy, optional) or copper workshops in Kazandžiluk.",
+        "highlights": [
+          "Tunnel of Hope guided by someone who lived it",
+          "Trebević Olympic bobsled track",
+          "Optional Srebrenica gallery (emotionally heavy)"
+        ],
+        "note": "Most emotionally demanding day. Opt-out available for any segment."
+      },
+      {
+        "id": 4,
+        "title": "Across the Drina",
+        "city": "Belgrade",
+        "summary": "Cross into Serbia via the UNESCO bridge from Andrić's novel.",
+        "photo": "/photos/empires-and-edge-day-4.jpg",
+        "accommodation": "Hotel Moskva, Belgrade",
+        "meals": [
+          "Breakfast",
+          "Višegrad lunch"
+        ],
+        "includedActivities": [
+          "Andrić's Bridge at Višegrad",
+          "Reading from the novel on site",
+          "Andrićgrad walk"
+        ],
+        "optionalActivities": [
+          "Skadarlija evening (own arrangement)"
+        ],
+        "morning": "08:00 departure east through the Drina valley. 11:00 arrival at Višegrad — the Mehmed Paša Sokolović Bridge (UNESCO 1577). Reading aloud from Ivo Andrić's The Bridge on the Drina on the bridge itself.",
+        "afternoon": "Lunch in Višegrad. 14:00 cross into Serbia. 17:30 arrive Belgrade. Walk to Skadarlija — the bohemian quarter — for dinner (own arrangement).",
+        "highlights": [
+          "Andrić's bridge at Višegrad",
+          "Reading from the novel on site",
+          "Border crossing into Serbia",
+          "Skadarlija bohemian quarter"
+        ],
+        "note": "Long transit day. Border crossing can add 30–60 minutes in summer."
+      },
+      {
+        "id": 5,
+        "title": "Belgrade & Departure",
+        "city": "Belgrade",
+        "summary": "Kalemegdan fortress and choice afternoon, then airport.",
+        "photo": "/photos/empires-and-edge-day-5.jpg",
+        "meals": [
+          "Breakfast"
+        ],
+        "includedActivities": [
+          "Kalemegdan fortress walk",
+          "Stari Grad tour",
+          "Private transfer to BEG airport"
+        ],
+        "optionalActivities": [
+          "Museum of Yugoslavia & Tito's mausoleum",
+          "Nikola Tesla Museum"
+        ],
+        "morning": "Kalemegdan fortress and walking tour of Stari Grad. The confluence of Sava and Danube — where the Balkans literally begin.",
+        "afternoon": "Choice: Museum of Yugoslavia and Tito's mausoleum, or Nikola Tesla Museum, or free time. Private transfer to Belgrade Nikola Tesla Airport (BEG) for evening flights.",
+        "highlights": [
+          "Kalemegdan and the Sava–Danube confluence",
+          "Choice afternoon — Tito or Tesla",
+          "Private transfer to BEG"
+        ],
+        "note": "Departure flights from 18:00 onward recommended."
       }
     ],
     "inclusions": [
-      "Private transfer on arrival and departure",
-      "Welcome lunch or dinner with a local family",
-      "Sarajevo Sunset Walking Tour",
-      "Between Empires: Sarajevo Walking Tour",
-      "Siege of Sarajevo: Survival & Resistance Tour",
+      "4 nights accommodation (twin share)",
+      "Private vehicle and driver throughout",
+      "English-speaking tour leader",
+      "Daily breakfast",
+      "Welcome dinner in Sarajevo",
+      "Tunnel of Hope private slot",
       "Bosnian coffee ceremony",
-      "True Herzegovina Day Tour",
-      "Entry to Tito's Nuclear Bunker",
-      "Entry to UNESCO Woodcarving Museum",
-      "White water rafting on the Neretva",
-      "Farewell dinner in Sarajevo",
-      "Private transport throughout",
-      "Small group — maximum 8 people",
-      "Free cancellation up to 72 hours before"
+      "Reading at the Andrić bridge",
+      "Local specialist guides in Sarajevo and Belgrade",
+      "Small group throughout",
+      "Full refund if cancelled 30+ days before departure"
     ],
     "exclusions": [
-      "Flights and international transport",
-      "Accommodation",
-      "Some lunches — pay as you go like a local",
-      "Herzegovina wine cellar lunch — paid directly",
-      "Gratuities — appreciated but never expected",
-      "Personal expenses and souvenirs",
-      "Travel insurance"
+      "International flights",
+      "Travel insurance — mandatory",
+      "Lunches and dinners except where specified",
+      "Personal expenses",
+      "Gratuities"
     ],
     "breakdown": {
       "accommodation": [
-        "Hotel Hecco Deluxe, Sarajevo (Days 1–2)",
-        "Hotel Bristol, Mostar (Day 3)",
-        "Hotel Hecco Deluxe, Sarajevo (Days 4–5)"
+        "Hotel Hecco Deluxe, Sarajevo (Days 1–3)",
+        "Hotel Moskva, Belgrade (Days 4–5)"
       ],
       "meals": [
-        "Welcome dinner with local family (Day 1)",
-        "Breakfast & lunch (Day 2)",
-        "Wine cellar tasting (Day 3)",
-        "Riverbank lunch & farewell dinner (Day 4)",
-        "Breakfast (Day 5)"
+        "Welcome dinner (Day 1)",
+        "Daily breakfast",
+        "Višegrad lunch (Day 4)"
       ],
       "transport": [
         "Private vehicle and driver throughout",
@@ -584,239 +577,682 @@
       ],
       "destinations": [
         "Sarajevo",
-        "Kravice Waterfalls",
-        "Počitelj",
-        "Blagaj",
-        "Mostar",
-        "Konjic",
-        "Jablanica"
+        "Tunnel of Hope",
+        "Višegrad (UNESCO Bridge)",
+        "Andrićgrad",
+        "Belgrade"
       ],
       "activities": [
-        "Sarajevo Sunset Walking Tour",
-        "Welcome dinner with local family",
         "Bosnian coffee ceremony",
         "Between Empires Walking Tour",
-        "Siege of Sarajevo Tour",
-        "Kravice Waterfalls",
-        "Počitelj fortress village",
-        "Blagaj Tekke",
-        "Tito's Nuclear Bunker (ARK D-0)",
-        "UNESCO Woodcarving Museum, Konjic",
-        "White water rafting on the Neretva",
-        "Farewell dinner in Sarajevo"
+        "City Hall (Vijećnica)",
+        "Tunnel of Hope guided tour",
+        "Trebević mountain & Olympic bobsled track",
+        "Andrić's Bridge at Višegrad",
+        "Andrićgrad walk",
+        "Kalemegdan fortress walk",
+        "Stari Grad Belgrade tour"
       ],
       "optional": [
-        "Swimming at Kravice (seasonal)",
-        "Tunnel of Hope Museum — €15",
-        "War Childhood Museum"
+        "Yellow Fortress walk",
+        "Gallery 11/07/95 (Srebrenica)",
+        "Museum of Yugoslavia & Tito's mausoleum",
+        "Nikola Tesla Museum"
       ]
     },
     "activities": [
       {
-        "icon": "sunset",
-        "name": "Sarajevo Sunset Walking Tour",
-        "description": "Meet Sarajevo during the golden hour when the city is at its most beautiful."
+        "icon": "coffee",
+        "name": "Bosnian Coffee Ritual",
+        "description": "The morning ceremony that defines daily life in Bosnia."
       },
       {
         "icon": "history",
-        "name": "Between Empires Walking Tour",
-        "description": "Walk through centuries of Ottoman and Austro-Hungarian history in one district."
+        "name": "Sarajevo Civilizations Walk",
+        "description": "Ottoman bazaar to Austro-Hungarian boulevard in 200 metres."
       },
       {
         "icon": "war",
-        "name": "Siege of Sarajevo Tour",
-        "description": "The siege explained through real stories by someone who lived through it."
+        "name": "Tunnel of Hope",
+        "description": "The wartime lifeline guided by a former defender."
       },
       {
-        "icon": "waterfall",
-        "name": "Kravice Waterfalls",
-        "description": "Swim in a lake fed by sixteen cascades — Herzegovina's most spectacular natural site."
+        "icon": "history",
+        "name": "Andrić's Bridge",
+        "description": "Read aloud from The Bridge on the Drina at Višegrad."
       },
       {
-        "icon": "wine",
-        "name": "Herzegovina Wine Cellar",
-        "description": "Taste local wines in an ancient cellar in one of Europe's lesser-known wine regions."
+        "icon": "history",
+        "name": "Kalemegdan Fortress",
+        "description": "Where the Sava meets the Danube — and the Balkans literally begin."
       },
       {
-        "icon": "bunker",
-        "name": "Tito's Nuclear Bunker",
-        "description": "Cold War paranoia made concrete — a bunker built for 350 people and kept secret for decades."
-      },
-      {
-        "icon": "rafting",
-        "name": "White Water Rafting",
-        "description": "The Neretva canyon gets more dramatic with every bend — Bosnia's best rafting experience."
-      },
-      {
-        "icon": "family",
-        "name": "Home-Hosted Meals",
-        "description": "Welcome dinner with a local family on night one, farewell dinner with your guide on night four."
+        "icon": "history",
+        "name": "Museum of Yugoslavia",
+        "description": "The country that ended in 1991, told through Tito's mausoleum."
       }
     ],
     "importantInfo": [
       {
-        "title": "Things to Consider Before Booking",
-        "content": "Free cancellation up to 72 hours before the start date. Cancellations within 72 hours are non-refundable. Send a booking request and you will hear back within 24 hours to confirm availability and arrange all details."
+        "title": "Cancellation & refunds",
+        "content": "Cancel more than 30 days before departure for a full refund of everything paid; 15–30 days before, 50%; within 15 days, no refund. One free date change if requested more than 30 days out. If we cancel, you always get a full refund or a free rebooking — full details under Booking Conditions."
       },
       {
-        "title": "Accommodation",
-        "content": "Accommodation is not included in this package. Your guide can recommend hotels in Sarajevo and Mostar at different price points — just ask when you send your booking request."
+        "title": "Group Size",
+        "content": "Genuinely small group — seats are limited on every departure."
       },
       {
-        "title": "What to Wear",
-        "content": "Casual comfortable clothing. Avoid shorts and sleeveless shirts for city days as some visits may include places of worship. Bring swimwear for Kravice Waterfalls and the rafting day. A light jacket for evenings — Herzegovina can be warm during the day and cool at night."
-      },
-      {
-        "title": "Joining Point",
-        "content": "To be confirmed via message before your arrival. Your guide will coordinate directly with you and provide all meeting point details in advance."
+        "title": "Border Crossings",
+        "content": "This tour crosses one international border (Bosnia to Serbia). Passport with 6 months validity required."
       },
       {
         "title": "Visas",
-        "content": "Bosnia and Herzegovina is not a member of the European Union. Citizens of most EU, US, UK, and Australian passports do not require a visa for stays up to 90 days. Please check with your local embassy if you are unsure."
+        "content": "Bosnia and Serbia are not in the EU. Most US, UK, and EU passports do not require visas."
+      },
+      {
+        "title": "What to Wear",
+        "content": "Comfortable walking shoes essential. Modest dress for places of worship."
+      },
+      {
+        "title": "Joining Point",
+        "content": "Sarajevo International Airport (SJJ) or central hotel. Confirmed 14 days before departure."
       }
     ],
     "dates": [
       {
         "id": 1,
-        "date": "April 14–18, 2026",
-        "spots": 6,
+        "date": "April 25–29, 2026",
+        "spots": 8,
         "total": 8
       },
       {
         "id": 2,
-        "date": "April 28 – May 2, 2026",
-        "spots": 4,
+        "date": "May 2–6, 2026",
+        "spots": 8,
         "total": 8
       },
       {
         "id": 3,
-        "date": "May 12–16, 2026",
+        "date": "May 16–20, 2026",
         "spots": 8,
         "total": 8
       },
       {
         "id": 4,
-        "date": "May 26–30, 2026",
-        "spots": 2,
+        "date": "June 6–10, 2026",
+        "spots": 8,
         "total": 8
       },
       {
         "id": 5,
-        "date": "June 9–13, 2026",
+        "date": "September 5–9, 2026",
         "spots": 8,
         "total": 8
       }
     ],
     "mapWaypoints": [
       {
-        "lat": 43.8563,
-        "lng": 18.4132,
-        "label": "Sarajevo"
+        "lat": 43.8582,
+        "lng": 18.4313,
+        "label": "Sarajevo Latin Bridge"
       },
       {
-        "lat": 43.6579,
-        "lng": 17.9621,
-        "label": "Konjic"
+        "lat": 43.8195,
+        "lng": 18.3367,
+        "label": "Tunnel of Hope"
       },
       {
-        "lat": 43.6632,
-        "lng": 17.7586,
-        "label": "Jablanica"
+        "lat": 43.7822,
+        "lng": 19.2867,
+        "label": "Višegrad Bridge"
       },
       {
-        "lat": 43.139,
-        "lng": 17.6055,
-        "label": "Kravice Waterfalls"
+        "lat": 44.823,
+        "lng": 20.4495,
+        "label": "Kalemegdan Belgrade"
+      }
+    ],
+    "mapProfile": "driving-car",
+    "fitnessNotes": [
+      {
+        "type": "emotional",
+        "level": "Contains emotionally heavy history",
+        "detail": "This package includes the Siege of Sarajevo and Tunnel of Hope, covering wartime trauma and survival stories. Optional content covers the Srebrenica genocide. Opt-out available for any segment."
+      }
+    ],
+    "suitability": {
+      "goodFor": [
+        "Cultural travellers and history readers",
+        "First-time visitors to the region",
+        "Travellers who prefer depth over breadth",
+        "Small-group fans — never a coach tour"
+      ],
+      "thinkTwice": [
+        "If wartime history is emotionally too heavy",
+        "If you prefer beach or resort travel",
+        "If 5 days feels too short to settle in"
+      ]
+    },
+    "badge": "New",
+    "badgeColor": "var(--color-amber)",
+    "badgeTextColor": "var(--color-n900)",
+    "locations": 6,
+    "countries": 2,
+    "countryList": [
+      "Bosnia",
+      "Montenegro"
+    ],
+    "originalPrice": null,
+    "description": "Five days from Sarajevo through Herzegovina and into Montenegro — the nuclear bunker, Mostar's old bridge, Kotor's bay, and Lovćen's panoramic peak.",
+    "highlights": [
+      "Tito's Nuclear Bunker (ARK D-0)",
+      "Mostar Old Bridge & Stari Grad",
+      "Bay of Kotor from the water"
+    ],
+    "includes": [
+      "Private transport throughout",
+      "Guide for all 5 days",
+      "Welcome dinner included",
+      "Full refund if cancelled 30+ days before departure"
+    ],
+    "hero": "/uploads/package-5-hero.webp",
+    "price": 1490,
+    "accessibility": {
+      "walkingDistanceKm": null,
+      "drivingDistanceKm": null,
+      "durationMin": null,
+      "elevationGainM": null,
+      "effortLevel": null,
+      "suitability": {
+        "wheelchair": null,
+        "stroller": null,
+        "smallChildren": null,
+        "children": null,
+        "pregnancy": null,
+        "seniors": null,
+        "pets": null
+      },
+      "requirements": [],
+      "terrain": "",
+      "notes": ""
+    }
+  },
+  {
+    "id": 7,
+    "slug": "adriatic-crossings",
+    "name": "Adriatic Crossings",
+    "subtitle": "Kotor to Sarajevo Along the Coast in 6 Days",
+    "duration": "6 Days",
+    "groupSize": 8,
+    "difficulty": "Easy",
+    "priceWithout": 1990,
+    "priceWith": 2590,
+    "rating": 5,
+    "reviews": 0,
+    "heroImage": "/uploads/package-7-hero.webp",
+    "gallery": [
+      "/uploads/package-7-hero.webp"
+    ],
+    "about": "Six days, four old towns, three countries, and one of the most beautiful drives in Europe. This journey starts in the walled bay of Kotor, crosses Lovćen to the Croatian coast, walks Dubrovnik at first light, tastes the parent grape of Zinfandel on Pelješac, and ends at the rebuilt Mostar bridge lit up at the farewell dinner.\n\nYou will climb 1,355 steps above Kotor, sail to Our Lady of the Rocks, hear Diocletian's Roman palace explained by someone whose family has lived inside it for generations, and stand at Blagaj where a river emerges from a cliff face at the foot of a Sufi tekija.\n\nSix days. The Adriatic, the way it should be done — slowly, before the cruise ships arrive.",
+    "days": [
+      {
+        "id": 1,
+        "title": "Arrival in Kotor",
+        "city": "Kotor",
+        "summary": "Arrival in Kotor and welcome dinner in the old town.",
+        "photo": "/photos/adriatic-crossings-day-1.jpg",
+        "accommodation": "Hotel Vardar, Kotor",
+        "meals": [
+          "Welcome dinner"
+        ],
+        "includedActivities": [
+          "Private transfer from Tivat Airport",
+          "Welcome dinner inside the walls",
+          "Tour leader briefing"
+        ],
+        "optionalActivities": [
+          "Evening stroll in Stari Grad"
+        ],
+        "morning": "Private transfer from Tivat Airport (TIV) to your hotel inside or just outside the walled old town.",
+        "afternoon": "Free time to walk the Stari Grad and orient yourself. Welcome dinner inside the walls at 19:30.",
+        "highlights": [
+          "Welcome dinner inside the walls",
+          "First evening in Kotor old town",
+          "Tour leader briefing"
+        ],
+        "note": "Welcome dinner at 19:30."
       },
       {
-        "lat": 43.337,
-        "lng": 17.8156,
-        "label": "Mostar"
+        "id": 2,
+        "title": "Walls & The Bay",
+        "city": "Kotor",
+        "summary": "The fortress climb at first light then a boat tour of the bay.",
+        "photo": "/photos/adriatic-crossings-day-2.jpg",
+        "accommodation": "Hotel Vardar, Kotor",
+        "meals": [
+          "Breakfast",
+          "Light lunch in Perast"
+        ],
+        "includedActivities": [
+          "Saint John's fortress climb",
+          "Bay of Kotor boat tour",
+          "Our Lady of the Rocks",
+          "Cathedral of Saint Tryphon tour"
+        ],
+        "optionalActivities": [],
+        "morning": "08:30 climb the city walls to Saint John's fortress — 1,355 steps, 260m elevation. Best done early before heat.",
+        "afternoon": "11:00 boat tour of the Bay of Kotor — Perast and Our Lady of the Rocks. Light lunch in Perast. Afternoon walking tour: Cathedral of Saint Tryphon (1166), Maritime Museum, the Venetian lions on every gate.",
+        "highlights": [
+          "Saint John's fortress climb",
+          "Bay of Kotor boat tour",
+          "Our Lady of the Rocks",
+          "Cathedral of Saint Tryphon"
+        ],
+        "note": "Wall climb in heat is dangerous — early start non-negotiable in summer."
+      },
+      {
+        "id": 3,
+        "title": "Lovćen to Dubrovnik",
+        "city": "Dubrovnik",
+        "summary": "Twenty-five serpentines to the Njegoš mausoleum then north to Dubrovnik.",
+        "photo": "/photos/adriatic-crossings-day-3.jpg",
+        "accommodation": "Hotel Adriatic, Dubrovnik",
+        "meals": [
+          "Breakfast",
+          "Lunch in Cetinje"
+        ],
+        "includedActivities": [
+          "Lovćen 25 serpentines",
+          "Njegoš Mausoleum (1,657m)",
+          "Sveti Stefan photo stop"
+        ],
+        "optionalActivities": [
+          "Budva beach stop"
+        ],
+        "morning": "09:00 drive the 25 hairpin serpentines up to Lovćen National Park. 10:30 Njegoš Mausoleum at 1,657m. Panoramic view across to Albania.",
+        "afternoon": "13:00 lunch in Cetinje. 15:00 photo stop at Sveti Stefan and Budva. 17:30 cross into Croatia. 19:00 arrive Dubrovnik.",
+        "highlights": [
+          "Lovćen 25 serpentines",
+          "Njegoš Mausoleum at 1,657m",
+          "Sveti Stefan photo stop",
+          "Border into Croatia"
+        ],
+        "note": "Serpentines plus motion sickness — sit forward, ginger candy onboard."
+      },
+      {
+        "id": 4,
+        "title": "Dubrovnik",
+        "city": "Dubrovnik",
+        "summary": "Walls at first light and a free afternoon for Lokrum or Srđ.",
+        "photo": "/photos/adriatic-crossings-day-4.jpg",
+        "accommodation": "Hotel Adriatic, Dubrovnik",
+        "meals": [
+          "Breakfast"
+        ],
+        "includedActivities": [
+          "City walls walk (1.94 km)",
+          "Old town guided tour"
+        ],
+        "optionalActivities": [
+          "Lokrum island ferry",
+          "Mount Srđ cable car"
+        ],
+        "morning": "08:00 walk the city walls — 1.94 km loop. Early start mandatory in summer.",
+        "afternoon": "10:30 old town walking tour — Stradun, Onofrio's fountains, Rector's Palace, Franciscan monastery. Free afternoon: ferry to Lokrum island or cable car up Srđ for sunset.",
+        "highlights": [
+          "Dubrovnik walls at first light",
+          "Stradun and Rector's Palace",
+          "Free afternoon — Lokrum or Srđ"
+        ],
+        "note": "Walls in summer heat — early start essential. Bring water."
+      },
+      {
+        "id": 5,
+        "title": "Pelješac to Split",
+        "city": "Split",
+        "summary": "Ston walls, oysters, and Plavac Mali wine then Diocletian's Palace.",
+        "photo": "/photos/adriatic-crossings-day-5.jpg",
+        "accommodation": "Hotel Split, Split",
+        "meals": [
+          "Breakfast",
+          "Wine tasting & food pairing",
+          "Ston oysters"
+        ],
+        "includedActivities": [
+          "Ston defensive walls",
+          "Pelješac Plavac Mali wine tasting",
+          "Diocletian's Palace guided tour"
+        ],
+        "optionalActivities": [
+          "Split Riva evening walk"
+        ],
+        "morning": "09:00 departure north. 10:30 Ston — the 5.5 km of medieval defensive walls and oysters from the bay below.",
+        "afternoon": "12:30 Pelješac peninsula wine tasting — Plavac Mali, the Croatian parent grape of Zinfandel and Primitivo. 18:00 arrive Split. Guided walk through Diocletian's Palace.",
+        "highlights": [
+          "Ston defensive walls and oysters",
+          "Pelješac Plavac Mali tasting",
+          "Diocletian's Palace"
+        ],
+        "note": "Wine tasting includes food pairing."
+      },
+      {
+        "id": 6,
+        "title": "Mostar & Departure",
+        "city": "Mostar",
+        "summary": "Počitelj fortress, Blagaj tekija, Mostar bridge — and onward to Sarajevo.",
+        "photo": "/photos/adriatic-crossings-day-6.jpg",
+        "meals": [
+          "Breakfast",
+          "Farewell dinner"
+        ],
+        "includedActivities": [
+          "Počitelj cliff fortress",
+          "Blagaj Tekija",
+          "Stari Most tour",
+          "Farewell dinner over the lit bridge"
+        ],
+        "optionalActivities": [
+          "Bridge diver watch — €25",
+          "Late transfer to Sarajevo (2.5 hrs)"
+        ],
+        "morning": "09:30 departure south. Cross back into Bosnia. 12:00 Počitelj cliff fortress.",
+        "afternoon": "14:30 Blagaj Tekija — the 16th-century Sufi dervish house at the source of the Buna river. 16:30 arrive Mostar. Walking tour of Stari Most — built 1566, destroyed 1993, rebuilt 2004. Farewell dinner overlooking the lit bridge. Late evening transfer to Sarajevo (130 km, 2.5 hrs) for next-day morning flights.",
+        "highlights": [
+          "Počitelj cliff fortress",
+          "Blagaj Sufi tekija",
+          "Stari Most",
+          "Farewell dinner over the lit bridge"
+        ],
+        "note": "Sarajevo transfer late evening Day 6, or extend in Mostar by one night — €140 supplement."
+      }
+    ],
+    "inclusions": [
+      "5 nights accommodation (twin share)",
+      "Private vehicle and driver throughout",
+      "English-speaking tour leader",
+      "Daily breakfast",
+      "Welcome dinner in Kotor and farewell dinner in Mostar",
+      "Lunch in Perast",
+      "Pelješac winery tasting with food pairing",
+      "Boat tour of the Bay of Kotor",
+      "Kotor and Dubrovnik wall tickets",
+      "All entry fees per itinerary",
+      "Local specialist guides in Kotor, Dubrovnik, Split, and Mostar",
+      "Small group throughout",
+      "Full refund if cancelled 30+ days before departure"
+    ],
+    "exclusions": [
+      "International flights",
+      "Travel insurance — mandatory",
+      "Lunches except where specified",
+      "Personal expenses",
+      "Gratuities"
+    ],
+    "breakdown": {
+      "accommodation": [
+        "Hotel Vardar, Kotor (Days 1–2)",
+        "Hotel Adriatic, Dubrovnik (Days 3–4)",
+        "Hotel Split, Split (Day 5)",
+        "Mostar (optional extension — €140)"
+      ],
+      "meals": [
+        "Welcome dinner inside the walls, Kotor (Day 1)",
+        "Daily breakfast",
+        "Light lunch in Perast (Day 2)",
+        "Lunch in Cetinje (Day 3)",
+        "Wine tasting & food pairing, Ston oysters (Day 5)",
+        "Farewell dinner over the lit bridge, Mostar (Day 6)"
+      ],
+      "transport": [
+        "Private vehicle and driver throughout",
+        "Transfer from Tivat Airport on arrival"
+      ],
+      "destinations": [
+        "Kotor & Bay of Kotor",
+        "Lovćen & Cetinje",
+        "Dubrovnik",
+        "Ston & Pelješac",
+        "Split",
+        "Počitelj",
+        "Blagaj",
+        "Mostar"
+      ],
+      "activities": [
+        "Saint John's fortress climb (1,355 steps)",
+        "Bay of Kotor boat tour",
+        "Our Lady of the Rocks",
+        "Cathedral of Saint Tryphon tour",
+        "Lovćen 25 serpentines",
+        "Njegoš Mausoleum (1,657m)",
+        "Sveti Stefan photo stop",
+        "Dubrovnik city walls walk (1.94 km)",
+        "Old town guided tour",
+        "Ston defensive walls",
+        "Pelješac Plavac Mali wine tasting",
+        "Diocletian's Palace guided tour",
+        "Počitelj cliff fortress",
+        "Blagaj Tekija",
+        "Stari Most Mostar tour",
+        "Farewell dinner over the lit bridge"
+      ],
+      "optional": [
+        "Lokrum island ferry",
+        "Mount Srđ cable car",
+        "Bridge diver watch — €25",
+        "Budva beach stop"
+      ]
+    },
+    "activities": [
+      {
+        "icon": "sunset",
+        "name": "Kotor Walls Climb",
+        "description": "1,355 steps above the bay at first light."
+      },
+      {
+        "icon": "history",
+        "name": "Bay of Kotor Boat Tour",
+        "description": "Perast and Our Lady of the Rocks story."
+      },
+      {
+        "icon": "history",
+        "name": "Lovćen & Njegoš",
+        "description": "25 serpentines to the mausoleum at 1,657m."
+      },
+      {
+        "icon": "history",
+        "name": "Dubrovnik City Walls",
+        "description": "The 1.94 km loop walked at first light."
+      },
+      {
+        "icon": "wine",
+        "name": "Pelješac Wine Tasting",
+        "description": "Plavac Mali — parent grape of Zinfandel and Primitivo."
+      },
+      {
+        "icon": "history",
+        "name": "Diocletian's Palace",
+        "description": "Where 3,000 people still live inside Roman walls."
+      },
+      {
+        "icon": "waterfall",
+        "name": "Blagaj Tekija",
+        "description": "Where the Buna river emerges at 43 m³/sec at the foot of a Sufi tekija."
+      },
+      {
+        "icon": "history",
+        "name": "Stari Most Mostar",
+        "description": "The rebuilt 1566 bridge — destroyed 1993, restored 2004."
+      }
+    ],
+    "importantInfo": [
+      {
+        "title": "Cancellation & refunds",
+        "content": "Cancel more than 30 days before departure for a full refund of everything paid; 15–30 days before, 50%; within 15 days, no refund. One free date change if requested more than 30 days out. If we cancel, you always get a full refund or a free rebooking — full details under Booking Conditions."
+      },
+      {
+        "title": "Group Size",
+        "content": "Genuinely small group — seats are limited on every departure."
+      },
+      {
+        "title": "Border Crossings",
+        "content": "Crosses Montenegro to Croatia and Croatia to Bosnia. Croatia is in the EU and Schengen."
+      },
+      {
+        "title": "Visas",
+        "content": "Croatia: Schengen rules apply. Bosnia and Montenegro: most passports visa-free."
+      },
+      {
+        "title": "What to Wear",
+        "content": "Comfortable walking shoes essential. Stairs and cobblestones throughout. Sun hat and water for the wall walks."
+      },
+      {
+        "title": "Joining Point",
+        "content": "Tivat Airport (TIV) is 8 km from Kotor old town. Pickups can also be arranged from Dubrovnik or Podgorica with notice."
+      },
+      {
+        "title": "Departure",
+        "content": "Day 6 ends in Mostar with optional late transfer to Sarajevo (130 km, 2.5 hrs). Sarajevo SJJ flights from 11:00 next day recommended, or extend in Mostar — €140 supplement."
+      }
+    ],
+    "dates": [
+      {
+        "id": 1,
+        "date": "May 10–15, 2026",
+        "spots": 8,
+        "total": 8
+      },
+      {
+        "id": 2,
+        "date": "May 24–29, 2026",
+        "spots": 8,
+        "total": 8
+      },
+      {
+        "id": 3,
+        "date": "June 14–19, 2026",
+        "spots": 8,
+        "total": 8
+      },
+      {
+        "id": 4,
+        "date": "September 13–18, 2026",
+        "spots": 8,
+        "total": 8
+      }
+    ],
+    "mapWaypoints": [
+      {
+        "lat": 42.4247,
+        "lng": 18.7712,
+        "label": "Kotor"
+      },
+      {
+        "lat": 42.3994,
+        "lng": 18.8389,
+        "label": "Lovćen Njegoš"
+      },
+      {
+        "lat": 42.2553,
+        "lng": 18.8919,
+        "label": "Sveti Stefan"
+      },
+      {
+        "lat": 42.6507,
+        "lng": 18.0944,
+        "label": "Dubrovnik"
+      },
+      {
+        "lat": 42.8367,
+        "lng": 17.6963,
+        "label": "Ston"
+      },
+      {
+        "lat": 42.9217,
+        "lng": 17.4378,
+        "label": "Pelješac"
+      },
+      {
+        "lat": 43.5081,
+        "lng": 16.4402,
+        "label": "Split Diocletian"
+      },
+      {
+        "lat": 43.0833,
+        "lng": 17.7333,
+        "label": "Počitelj"
+      },
+      {
+        "lat": 43.2542,
+        "lng": 17.8819,
+        "label": "Blagaj Tekija"
+      },
+      {
+        "lat": 43.3375,
+        "lng": 17.815,
+        "label": "Mostar Stari Most"
       }
     ],
     "mapProfile": "driving-car",
     "fitnessNotes": [
       {
         "type": "physical",
-        "level": "Moderate physical activity",
-        "detail": "Day 4 includes white water rafting on the Neretva River — a physically active experience requiring reasonable fitness, the ability to swim, and comfort in moving water. Guests with back injuries or heart conditions should consult their doctor before booking. The rafting operator provides safety briefings, equipment, and guides throughout."
-      },
-      {
-        "type": "emotional",
-        "level": "Contains emotionally heavy history",
-        "detail": "This package includes the Siege of Sarajevo tour, covering wartime trauma, survival stories, and the human cost of the 1992–1995 siege. The content is delivered with full care and respect, but it is emotionally demanding. Guests sensitive to war and trauma-related material should consider this before booking."
+        "level": "Moderate — stairs and cobblestones",
+        "detail": "Includes 1,355 steps up Kotor walls (half-way option available) and the 1.94 km Dubrovnik wall loop. Cobblestones, hills, and stairs throughout the old towns. Guests with mobility issues should review the daily plan before booking."
       }
     ],
     "suitability": {
       "goodFor": [
-        "Active travelers comfortable with moderate physical activity",
-        "Those wanting a complete Bosnia experience — cities, nature, history",
-        "Travelers happy to mix culture with outdoor adventure",
-        "Groups wanting a private, flexible itinerary",
-        "Anyone curious about the Balkans beyond the tourist trail"
+        "First-time visitors to the Adriatic",
+        "Wine and food enthusiasts",
+        "History readers and slow-travel fans",
+        "Travellers who want depth on the coast, not just photos",
+        "Small-group fans — never a coach tour"
       ],
       "thinkTwice": [
-        "If rafting or swimming in moving water is not for you — Day 4 includes white water rafting on the Neretva",
-        "If you have back injuries or heart conditions — consult your doctor before booking",
-        "If emotionally heavy wartime content is difficult — Siege of Sarajevo and Srebrenica are both included",
-        "If five days away feels too long to be away from home comforts"
+        "If you cannot manage stairs and cobblestones",
+        "If you prefer beach-resort travel over walking",
+        "If 6 days feels too short to settle into each city"
       ]
     },
-    "badge": "Best Value",
-    "badgeColor": "var(--color-forest-green)",
-    "badgeTextColor": "var(--color-n000)",
-    "locations": 7,
-    "countries": 1,
+    "badge": "New",
+    "badgeColor": "var(--color-amber)",
+    "badgeTextColor": "var(--color-n900)",
+    "locations": 6,
+    "countries": 2,
     "countryList": [
-      "Bosnia"
+      "Serbia"
     ],
-    "originalPrice": 850,
-    "description": "Five days through Sarajevo, Herzegovina, and Yugoslavia's strangest legacy. Waterfalls, wine cellars, a nuclear bunker, and white water rafting.",
+    "originalPrice": null,
+    "description": "Six days across Kosovo and Serbia — from Pristina's new nation energy through Novi Sad's Danube culture to Belgrade's nightlife, Nikola Tesla Museum, and Cold War relics.",
     "highlights": [
-      "Kravice Waterfalls & Swimming",
-      "Tito's Nuclear Bunker",
-      "White Water Rafting"
+      "Pristina — the world's newest capital",
+      "Novi Sad & Petrovaradin Fortress",
+      "Belgrade: Tesla Museum & Communist-era sites"
     ],
     "includes": [
       "Private transport throughout",
-      "Welcome and farewell meals included",
-      "All tour entries and activities",
-      "Free cancellation up to 72 hours before"
+      "Guide for all 6 days",
+      "Welcome dinner included",
+      "Full refund if cancelled 30+ days before departure"
     ],
-    "hero": "/uploads/package-2-hero.webp",
-    "price": 759,
+    "hero": "/uploads/package-7-hero.webp",
+    "price": 1990,
     "accessibility": {
-      "walkingDistanceKm": 3,
-      "drivingDistanceKm": 146.2,
+      "walkingDistanceKm": null,
+      "drivingDistanceKm": null,
       "durationMin": null,
       "elevationGainM": null,
-      "effortLevel": "moderate",
+      "effortLevel": null,
       "suitability": {
         "wheelchair": null,
         "stroller": null,
-        "smallChildren": "no",
-        "children": "yes",
-        "pregnancy": "yes",
-        "seniors": "yes",
-        "pets": "no"
+        "smallChildren": null,
+        "children": null,
+        "pregnancy": null,
+        "seniors": null,
+        "pets": null
       },
-      "requirements": [
-        {
-          "key": "stairs",
-          "label": "Climb a flight of stairs",
-          "detail": ""
-        },
-        {
-          "key": "walkingKm",
-          "label": "Walk a minimum distance on uneven ground",
-          "detail": "We have at least 5 km of uneven ground on the day 4"
-        },
-        {
-          "key": "luggage",
-          "label": "Carry own luggage",
-          "detail": ""
-        }
-      ],
+      "requirements": [],
       "terrain": "",
       "notes": ""
     }
@@ -1065,8 +1501,8 @@
       "Mali Ston oyster tasting (Day 5)",
       "Dubrovnik city walls entry fee (Day 6)",
       "Farewell breakfast (Day 7)",
-      "Small group — maximum 10 people",
-      "Free cancellation up to 72 hours before departure"
+      "Small group throughout",
+      "Full refund if cancelled 30+ days before departure"
     ],
     "exclusions": [
       "Flights and international transport",
@@ -1176,8 +1612,8 @@
     ],
     "importantInfo": [
       {
-        "title": "Free Cancellation",
-        "content": "Free cancellation up to 72 hours before departure. Cancellations within 72 hours are non-refundable."
+        "title": "Cancellation & refunds",
+        "content": "Cancel more than 30 days before departure for a full refund of everything paid; 15–30 days before, 50%; within 15 days, no refund. One free date change if requested more than 30 days out. If we cancel, you always get a full refund or a free rebooking — full details under Booking Conditions."
       },
       {
         "title": "Accommodation",
@@ -1322,7 +1758,7 @@
       "Private minibus transport throughout",
       "Guide for all 7 days",
       "Welcome dinner & farewell breakfast",
-      "Free cancellation up to 72 hours before"
+      "Full refund if cancelled 30+ days before departure"
     ],
     "hero": "/uploads/package-3-hero.webp",
     "price": 890,
@@ -1342,6 +1778,445 @@
         "pets": null
       },
       "requirements": [],
+      "terrain": "",
+      "notes": ""
+    }
+  },
+  {
+    "id": 2,
+    "slug": "bosnia-deep-dive",
+    "name": "Bosnia Deep Dive",
+    "gallery": [
+      "/uploads/package-2-hero.webp"
+    ],
+    "subtitle": "Real Bosnia, Deeply Experienced",
+    "duration": "5 Days",
+    "groupSize": 8,
+    "difficulty": "Easy",
+    "priceWithout": 480,
+    "priceWith": 850,
+    "rating": 4.9,
+    "reviews": 31,
+    "heroImage": "/uploads/package-2-hero.webp",
+    "about": "Bosnia is not a small country — it is a layered one. Five days is the minimum time needed to begin understanding it properly. This itinerary moves through three distinct worlds: the Ottoman and Austro-Hungarian complexity of Sarajevo, the raw natural beauty of Herzegovina with its waterfalls and ancient villages, and the surreal Yugoslav legacy of a dictator who built a nuclear bunker in a mountain and thought it would save him.\n\nYou will swim in a waterfall, raft a river, taste wine in a medieval cellar, and sit in the bunker of a man who ruled 200 million people. You will eat with a local family on your first night and share a farewell dinner with the same guide on your last. What happens in between is Bosnia — complicated, generous, and impossible to forget.\n\nFive days. Four cities. One country that will permanently change your frame of reference.",
+    "days": [
+      {
+        "id": 1,
+        "title": "First Contact",
+        "city": "Sarajevo",
+        "summary": "Arrival, welcome lunch with a local family, golden hour walk.",
+        "photo": "/photos/bosnia-deep-dive-day-1.jpg",
+        "accommodation": "Hotel Hecco Deluxe, Sarajevo",
+        "meals": [
+          "Welcome dinner"
+        ],
+        "includedActivities": [
+          "Private arrival transfer",
+          "Sarajevo Sunset Walking Tour",
+          "Welcome dinner with local family"
+        ],
+        "optionalActivities": [
+          "Evening Baščaršija stroll"
+        ],
+        "morning": "Arrival to Sarajevo with a private transfer directly to your accommodation. Time to settle in, freshen up, and get your bearings in a city that immediately feels unlike anywhere else.",
+        "afternoon": "Your first real introduction to Sarajevo — a welcome lunch or dinner hosted by a local family, followed by the Sarajevo Sunset Walking Tour. There is no better way to meet a city than during the golden hour, when the light turns the old town amber and the call to prayer drifts across the valley.",
+        "highlights": [
+          "Home-hosted meal with a local family",
+          "First cultural immersion into Bosnian hospitality",
+          "Golden hour walking experience through the old town"
+        ]
+      },
+      {
+        "id": 2,
+        "title": "Feel the Energy, Learn the History, Enjoy the Food",
+        "city": "Sarajevo",
+        "summary": "Morning coffee ritual, walking tour, siege history, local lunch.",
+        "photo": "/photos/bosnia-deep-dive-day-2.jpg",
+        "accommodation": "Hotel Hecco Deluxe, Sarajevo",
+        "meals": [
+          "Breakfast",
+          "Lunch"
+        ],
+        "includedActivities": [
+          "Bosnian coffee ceremony",
+          "Between Empires Walking Tour",
+          "Siege of Sarajevo Tour",
+          "Local neighbourhood lunch"
+        ],
+        "optionalActivities": [
+          "Tunnel of Hope Museum — €15",
+          "War Childhood Museum"
+        ],
+        "morning": "The day begins the right way — with a Bosnian coffee ceremony. Then straight into the Between Empires Walking Tour and the Siege of Sarajevo: Survival and Resistance — two tours that together tell the complete story of this city, from its Ottoman foundation to the war that defined a generation.",
+        "afternoon": "Lunch at a local favourite — a place your guide knows rather than a place that knows tourists. The afternoon is yours. Walk, explore, buy copper coffee sets in the bazaar, or simply sit and watch Sarajevo happen around you.",
+        "highlights": [
+          "Bosnian coffee ritual — the correct way",
+          "War history told through real personal stories",
+          "Authentic local lunch in a neighbourhood eatery"
+        ]
+      },
+      {
+        "id": 3,
+        "title": "Real Herzegovina — Waterfalls, Wine and Ancient Villages",
+        "city": "Mostar",
+        "summary": "Kravice Waterfalls, Počitelj, wine cellars, Stolac, Blagaj, Mostar.",
+        "photo": "/photos/bosnia-deep-dive-day-3.jpg",
+        "accommodation": "Hotel Bristol, Mostar",
+        "meals": [
+          "Wine cellar lunch"
+        ],
+        "includedActivities": [
+          "Kravice Waterfalls",
+          "Počitelj fortress village",
+          "Wine cellar tasting & lunch",
+          "Blagaj Tekke",
+          "Mostar orientation walk"
+        ],
+        "optionalActivities": [
+          "Swimming at Kravice (seasonal)"
+        ],
+        "morning": "Departure from Sarajevo into Herzegovina. The landscape changes within an hour — limestone karst, fig trees, the Mediterranean pushing north. Morning at Kravice Waterfalls, where you can swim in a lake fed by sixteen separate cascades. Then Počitelj — a perfectly preserved Ottoman fortress village that looks like it was painted rather than built.",
+        "afternoon": "Visit to a Herzegovina wine cellar for tasting and lunch. Then Stolac — one of the oldest inhabited places in the Balkans — and Blagaj, where a 600-year-old dervish monastery sits at the mouth of a river that emerges fully-formed from a cliff. Arrival in Mostar around 5pm, hotel check-in, and an orientational walk across the Old Bridge with free time to explore.",
+        "highlights": [
+          "Swimming in Kravice Waterfalls",
+          "Wine tasting in a Herzegovina cellar",
+          "Počitelj, Stolac and Blagaj — three UNESCO-listed sites in one afternoon",
+          "First crossing of Stari Most at sunset"
+        ],
+        "note": "Lunch will be organised within the group by the tour guide and is not included in the package price — you pay directly at the cellar."
+      },
+      {
+        "id": 4,
+        "title": "Dictator Tito and Rafting — Wait, What?",
+        "city": "Konjic & Jablanica",
+        "summary": "Tito's Nuclear Bunker, UNESCO Woodcarving Museum, white water rafting.",
+        "photo": "/photos/bosnia-deep-dive-day-4.jpg",
+        "accommodation": "Hotel Hecco Deluxe, Sarajevo",
+        "meals": [
+          "Riverbank lunch",
+          "Farewell dinner"
+        ],
+        "includedActivities": [
+          "Tito's Nuclear Bunker tour",
+          "UNESCO Woodcarving Museum",
+          "Neretva white water rafting",
+          "Farewell dinner in Sarajevo"
+        ],
+        "optionalActivities": [
+          "Extra time in Konjic old town"
+        ],
+        "morning": "Drive to Jablanica, where your guide will introduce the story of Josip Broz Tito before you enter Konjic — a town that somehow contains both a UNESCO-protected woodcarving tradition and a Cold War nuclear bunker built for 350 people that was kept completely secret until 1992. The bunker is one of the most genuinely strange places in Europe.",
+        "afternoon": "White water rafting on the Neretva River — Bosnia's most popular rafting experience, through a canyon that gets progressively more dramatic. Lunch on the riverbank. Then the drive back to Sarajevo and a farewell dinner with your guide — the best ending to five days that went by far too quickly.",
+        "highlights": [
+          "Tito's Nuclear Bunker — Cold War history at its most surreal",
+          "UNESCO Woodcarving Museum in Konjic",
+          "White water rafting on the Neretva River",
+          "Farewell dinner in Sarajevo"
+        ]
+      },
+      {
+        "id": 5,
+        "title": "Ready to Say \"See You Again\"?",
+        "city": "Sarajevo",
+        "summary": "Flexible departure — optional activity based on your schedule.",
+        "photo": "/photos/bosnia-deep-dive-day-5.jpg",
+        "meals": [
+          "Breakfast"
+        ],
+        "includedActivities": [
+          "Private departure transfer"
+        ],
+        "optionalActivities": [
+          "Vrelo Bosne nature walk",
+          "Copper bazaar shopping"
+        ],
+        "morning": "This day belongs to your departure time. Whether you leave early or late, your guide will work around your schedule. If time allows, there is always one more thing worth seeing in Sarajevo. Just ask.",
+        "afternoon": "Private transfer to the airport or onward destination.",
+        "highlights": [
+          "Flexible schedule built around your departure",
+          "Optional add-on activity on request",
+          "Private transfer included"
+        ],
+        "note": "This day revolves around your departure time. Message your guide before arrival to discuss possible activities that fit your schedule."
+      }
+    ],
+    "inclusions": [
+      "Private transfer on arrival and departure",
+      "Welcome lunch or dinner with a local family",
+      "Sarajevo Sunset Walking Tour",
+      "Between Empires: Sarajevo Walking Tour",
+      "Siege of Sarajevo: Survival & Resistance Tour",
+      "Bosnian coffee ceremony",
+      "True Herzegovina Day Tour",
+      "Entry to Tito's Nuclear Bunker",
+      "Entry to UNESCO Woodcarving Museum",
+      "White water rafting on the Neretva",
+      "Farewell dinner in Sarajevo",
+      "Private transport throughout",
+      "Small group throughout",
+      "Full refund if cancelled 30+ days before departure"
+    ],
+    "exclusions": [
+      "Flights and international transport",
+      "Accommodation",
+      "Some lunches — pay as you go like a local",
+      "Herzegovina wine cellar lunch — paid directly",
+      "Gratuities — appreciated but never expected",
+      "Personal expenses and souvenirs",
+      "Travel insurance"
+    ],
+    "breakdown": {
+      "accommodation": [
+        "Hotel Hecco Deluxe, Sarajevo (Days 1–2)",
+        "Hotel Bristol, Mostar (Day 3)",
+        "Hotel Hecco Deluxe, Sarajevo (Days 4–5)"
+      ],
+      "meals": [
+        "Welcome dinner with local family (Day 1)",
+        "Breakfast & lunch (Day 2)",
+        "Wine cellar tasting (Day 3)",
+        "Riverbank lunch & farewell dinner (Day 4)",
+        "Breakfast (Day 5)"
+      ],
+      "transport": [
+        "Private vehicle and driver throughout",
+        "Arrival and departure private transfers"
+      ],
+      "destinations": [
+        "Sarajevo",
+        "Kravice Waterfalls",
+        "Počitelj",
+        "Blagaj",
+        "Mostar",
+        "Konjic",
+        "Jablanica"
+      ],
+      "activities": [
+        "Sarajevo Sunset Walking Tour",
+        "Welcome dinner with local family",
+        "Bosnian coffee ceremony",
+        "Between Empires Walking Tour",
+        "Siege of Sarajevo Tour",
+        "Kravice Waterfalls",
+        "Počitelj fortress village",
+        "Blagaj Tekke",
+        "Tito's Nuclear Bunker (ARK D-0)",
+        "UNESCO Woodcarving Museum, Konjic",
+        "White water rafting on the Neretva",
+        "Farewell dinner in Sarajevo"
+      ],
+      "optional": [
+        "Swimming at Kravice (seasonal)",
+        "Tunnel of Hope Museum — €15",
+        "War Childhood Museum"
+      ]
+    },
+    "activities": [
+      {
+        "icon": "sunset",
+        "name": "Sarajevo Sunset Walking Tour",
+        "description": "Meet Sarajevo during the golden hour when the city is at its most beautiful."
+      },
+      {
+        "icon": "history",
+        "name": "Between Empires Walking Tour",
+        "description": "Walk through centuries of Ottoman and Austro-Hungarian history in one district."
+      },
+      {
+        "icon": "war",
+        "name": "Siege of Sarajevo Tour",
+        "description": "The siege explained through real stories by someone who lived through it."
+      },
+      {
+        "icon": "waterfall",
+        "name": "Kravice Waterfalls",
+        "description": "Swim in a lake fed by sixteen cascades — Herzegovina's most spectacular natural site."
+      },
+      {
+        "icon": "wine",
+        "name": "Herzegovina Wine Cellar",
+        "description": "Taste local wines in an ancient cellar in one of Europe's lesser-known wine regions."
+      },
+      {
+        "icon": "bunker",
+        "name": "Tito's Nuclear Bunker",
+        "description": "Cold War paranoia made concrete — a bunker built for 350 people and kept secret for decades."
+      },
+      {
+        "icon": "rafting",
+        "name": "White Water Rafting",
+        "description": "The Neretva canyon gets more dramatic with every bend — Bosnia's best rafting experience."
+      },
+      {
+        "icon": "family",
+        "name": "Home-Hosted Meals",
+        "description": "Welcome dinner with a local family on night one, farewell dinner with your guide on night four."
+      }
+    ],
+    "importantInfo": [
+      {
+        "title": "Things to Consider Before Booking",
+        "content": "Cancel more than 30 days before departure for a full refund of everything paid; 15–30 days before, 50%; within 15 days, no refund. One free date change if requested more than 30 days out. If we cancel, you always get a full refund or a free rebooking — full details under Booking Conditions. Send a booking request and you will hear back within 24 hours to confirm availability and arrange all details."
+      },
+      {
+        "title": "Accommodation",
+        "content": "Accommodation is not included in this package. Your guide can recommend hotels in Sarajevo and Mostar at different price points — just ask when you send your booking request."
+      },
+      {
+        "title": "What to Wear",
+        "content": "Casual comfortable clothing. Avoid shorts and sleeveless shirts for city days as some visits may include places of worship. Bring swimwear for Kravice Waterfalls and the rafting day. A light jacket for evenings — Herzegovina can be warm during the day and cool at night."
+      },
+      {
+        "title": "Joining Point",
+        "content": "To be confirmed via message before your arrival. Your guide will coordinate directly with you and provide all meeting point details in advance."
+      },
+      {
+        "title": "Visas",
+        "content": "Bosnia and Herzegovina is not a member of the European Union. Citizens of most EU, US, UK, and Australian passports do not require a visa for stays up to 90 days. Please check with your local embassy if you are unsure."
+      }
+    ],
+    "dates": [
+      {
+        "id": 1,
+        "date": "April 14–18, 2026",
+        "spots": 6,
+        "total": 8
+      },
+      {
+        "id": 2,
+        "date": "April 28 – May 2, 2026",
+        "spots": 4,
+        "total": 8
+      },
+      {
+        "id": 3,
+        "date": "May 12–16, 2026",
+        "spots": 8,
+        "total": 8
+      },
+      {
+        "id": 4,
+        "date": "May 26–30, 2026",
+        "spots": 2,
+        "total": 8
+      },
+      {
+        "id": 5,
+        "date": "June 9–13, 2026",
+        "spots": 8,
+        "total": 8
+      }
+    ],
+    "mapWaypoints": [
+      {
+        "lat": 43.8563,
+        "lng": 18.4132,
+        "label": "Sarajevo"
+      },
+      {
+        "lat": 43.6579,
+        "lng": 17.9621,
+        "label": "Konjic"
+      },
+      {
+        "lat": 43.6632,
+        "lng": 17.7586,
+        "label": "Jablanica"
+      },
+      {
+        "lat": 43.139,
+        "lng": 17.6055,
+        "label": "Kravice Waterfalls"
+      },
+      {
+        "lat": 43.337,
+        "lng": 17.8156,
+        "label": "Mostar"
+      }
+    ],
+    "mapProfile": "driving-car",
+    "fitnessNotes": [
+      {
+        "type": "physical",
+        "level": "Moderate physical activity",
+        "detail": "Day 4 includes white water rafting on the Neretva River — a physically active experience requiring reasonable fitness, the ability to swim, and comfort in moving water. Guests with back injuries or heart conditions should consult their doctor before booking. The rafting operator provides safety briefings, equipment, and guides throughout."
+      },
+      {
+        "type": "emotional",
+        "level": "Contains emotionally heavy history",
+        "detail": "This package includes the Siege of Sarajevo tour, covering wartime trauma, survival stories, and the human cost of the 1992–1995 siege. The content is delivered with full care and respect, but it is emotionally demanding. Guests sensitive to war and trauma-related material should consider this before booking."
+      }
+    ],
+    "suitability": {
+      "goodFor": [
+        "Active travelers comfortable with moderate physical activity",
+        "Those wanting a complete Bosnia experience — cities, nature, history",
+        "Travelers happy to mix culture with outdoor adventure",
+        "Groups wanting a private, flexible itinerary",
+        "Anyone curious about the Balkans beyond the tourist trail"
+      ],
+      "thinkTwice": [
+        "If rafting or swimming in moving water is not for you — Day 4 includes white water rafting on the Neretva",
+        "If you have back injuries or heart conditions — consult your doctor before booking",
+        "If emotionally heavy wartime content is difficult — Siege of Sarajevo and Srebrenica are both included",
+        "If five days away feels too long to be away from home comforts"
+      ]
+    },
+    "badge": "Best Value",
+    "badgeColor": "var(--color-forest-green)",
+    "badgeTextColor": "var(--color-n000)",
+    "locations": 7,
+    "countries": 1,
+    "countryList": [
+      "Bosnia"
+    ],
+    "originalPrice": 850,
+    "description": "Five days through Sarajevo, Herzegovina, and Yugoslavia's strangest legacy. Waterfalls, wine cellars, a nuclear bunker, and white water rafting.",
+    "highlights": [
+      "Kravice Waterfalls & Swimming",
+      "Tito's Nuclear Bunker",
+      "White Water Rafting"
+    ],
+    "includes": [
+      "Private transport throughout",
+      "Welcome and farewell meals included",
+      "All tour entries and activities",
+      "Full refund if cancelled 30+ days before departure"
+    ],
+    "hero": "/uploads/package-2-hero.webp",
+    "price": 759,
+    "accessibility": {
+      "walkingDistanceKm": 3,
+      "drivingDistanceKm": 146.2,
+      "durationMin": null,
+      "elevationGainM": null,
+      "effortLevel": "moderate",
+      "suitability": {
+        "wheelchair": null,
+        "stroller": null,
+        "smallChildren": "no",
+        "children": "yes",
+        "pregnancy": "yes",
+        "seniors": "yes",
+        "pets": "no"
+      },
+      "requirements": [
+        {
+          "key": "stairs",
+          "label": "Climb a flight of stairs",
+          "detail": ""
+        },
+        {
+          "key": "walkingKm",
+          "label": "Walk a minimum distance on uneven ground",
+          "detail": "We have at least 5 km of uneven ground on the day 4"
+        },
+        {
+          "key": "luggage",
+          "label": "Carry own luggage",
+          "detail": ""
+        }
+      ],
       "terrain": "",
       "notes": ""
     }
@@ -1811,8 +2686,8 @@
       "Blagaj Tekija guided visit (Day 14)",
       "Farewell dinner in Mostar (Day 14)",
       "Local specialist guides in Belgrade, Kotor, Dubrovnik, Split, and Mostar",
-      "Maximum 8 guests",
-      "Free cancellation up to 60 days before departure"
+      "Small group throughout",
+      "Full refund if cancelled 30+ days before departure"
     ],
     "exclusions": [
       "International flights",
@@ -1937,8 +2812,8 @@
     ],
     "importantInfo": [
       {
-        "title": "Free Cancellation",
-        "content": "Free cancellation up to 60 days before departure. Cancellations 30–60 days before lose 50% of the total. Within 30 days non-refundable."
+        "title": "Cancellation & refunds",
+        "content": "Cancel more than 30 days before departure for a full refund of everything paid; 15–30 days before, 50%; within 15 days, no refund. One free date change if requested more than 30 days out. If we cancel, you always get a full refund or a free rebooking — full details under Booking Conditions."
       },
       {
         "title": "Available in Three Segments",
@@ -2075,7 +2950,7 @@
       "goodFor": [
         "Travellers with two or more weeks who want the complete Balkans story",
         "History readers and slow travellers who prefer depth over speed",
-        "Small group fans — maximum 8 guests throughout",
+        "Small-group fans — never a coach tour",
         "Anyone combining the Balkans with a Dubrovnik trip",
         "Those curious about the 1990s wars, Yugoslav history, and the Ottoman legacy",
         "Wine, food, and mountain enthusiasts who want all three"
@@ -2109,405 +2984,10 @@
       "Private minibus transport throughout",
       "Guide for all 15 days",
       "Welcome and farewell meals included",
-      "Free cancellation up to 72 hours before"
+      "Full refund if cancelled 30+ days before departure"
     ],
     "hero": "/uploads/package-4-hero.webp",
     "price": 4490,
-    "accessibility": {
-      "walkingDistanceKm": null,
-      "drivingDistanceKm": null,
-      "durationMin": null,
-      "elevationGainM": null,
-      "effortLevel": null,
-      "suitability": {
-        "wheelchair": null,
-        "stroller": null,
-        "smallChildren": null,
-        "children": null,
-        "pregnancy": null,
-        "seniors": null,
-        "pets": null
-      },
-      "requirements": [],
-      "terrain": "",
-      "notes": ""
-    }
-  },
-  {
-    "id": 5,
-    "slug": "empires-and-edge",
-    "name": "Empires & The Edge",
-    "subtitle": "Sarajevo, Višegrad & Belgrade in 5 Days",
-    "duration": "5 Days",
-    "groupSize": 8,
-    "difficulty": "Easy",
-    "priceWithout": 1490,
-    "priceWith": 1890,
-    "rating": 5,
-    "reviews": 0,
-    "heroImage": "/uploads/package-5-hero.webp",
-    "gallery": [
-      "/uploads/package-5-hero.webp"
-    ],
-    "about": "From the Ottoman bazaars of Sarajevo to the Habsburg boulevards a hundred metres away, this 5-day journey is built around one question: how does a place hold so many empires at once? You will walk Sarajevo's civilizations corridor, taste Bosnian coffee the way it is meant to be tasted, and hear the siege explained by someone who lived it.\n\nThen east — across the Drina to Andrić's UNESCO bridge, into Serbia, and up to Belgrade where two great rivers meet at a fortress that has been fought over for 2,300 years. The Sava and the Danube. The Balkans literally begin here.\n\nFive days. Two countries. One coherent story about the edge between worlds.",
-    "days": [
-      {
-        "id": 1,
-        "title": "First Contact",
-        "city": "Sarajevo",
-        "summary": "Arrival in Sarajevo with welcome dinner.",
-        "photo": "/photos/empires-and-edge-day-1.jpg",
-        "accommodation": "Hotel Hecco Deluxe, Sarajevo",
-        "meals": [
-          "Welcome dinner"
-        ],
-        "includedActivities": [
-          "Private arrival transfer",
-          "Welcome dinner with the group",
-          "Tour leader briefing"
-        ],
-        "optionalActivities": [
-          "Evening Baščaršija walk"
-        ],
-        "morning": "Private airport transfers to your hotel in the Old Town. Time to settle in and orient yourself in the city at your own pace.",
-        "afternoon": "Free afternoon to walk the Baščaršija and find your bearings. Optional coffee at a historic coffeehouse. Welcome dinner with the group at 19:30.",
-        "highlights": [
-          "Welcome dinner with the group",
-          "First evening in the Baščaršija old town",
-          "Tour leader briefing"
-        ],
-        "note": "Welcome dinner at 19:30 — the only fixed point on Day 1."
-      },
-      {
-        "id": 2,
-        "title": "Between Empires",
-        "city": "Sarajevo",
-        "summary": "Coffee ritual and the civilizations walking tour.",
-        "photo": "/photos/empires-and-edge-day-2.jpg",
-        "accommodation": "Hotel Hecco Deluxe, Sarajevo",
-        "meals": [
-          "Breakfast"
-        ],
-        "includedActivities": [
-          "Bosnian coffee ceremony",
-          "Between Empires Walking Tour",
-          "City Hall (Vijećnica)"
-        ],
-        "optionalActivities": [
-          "Tunnel of Hope Museum — €15",
-          "Yellow Fortress walk"
-        ],
-        "morning": "Bosnian coffee ritual at a Baščaršija coffeehouse — explained as ceremony, not caffeine. Walking tour through the 200-metre civilizations corridor: Sebilj fountain to Gazi Husrev-beg mosque to Sacred Heart Cathedral. Latin Bridge — the assassination that ended the 19th century.",
-        "afternoon": "Lunch break (own arrangement). City Hall (Vijećnica) — burned 1992, rebuilt 2014 — and the Sarajevo Haggadah story.",
-        "highlights": [
-          "Bosnian coffee ceremony",
-          "Ottoman to Austro-Hungarian in 200 metres",
-          "Latin Bridge and the assassination of 1914",
-          "City Hall and the Sarajevo Haggadah"
-        ],
-        "note": "Long walking day on cobblestones — wear proper shoes."
-      },
-      {
-        "id": 3,
-        "title": "The Siege & The Mountain",
-        "city": "Sarajevo",
-        "summary": "Tunnel of Hope and Trebević mountain — the hardest emotional day.",
-        "photo": "/photos/empires-and-edge-day-3.jpg",
-        "accommodation": "Hotel Hecco Deluxe, Sarajevo",
-        "meals": [
-          "Breakfast"
-        ],
-        "includedActivities": [
-          "Tunnel of Hope guided tour",
-          "Trebević mountain",
-          "Olympic bobsled track"
-        ],
-        "optionalActivities": [
-          "Gallery 11/07/95 (Srebrenica)",
-          "Copper workshop in Kazandžiluk"
-        ],
-        "morning": "Tunnel of Hope guided by a former defender. The 800-metre wartime lifeline that kept Sarajevo alive 1992–95.",
-        "afternoon": "Drive up Trebević mountain to the Olympic bobsled track — now a graffiti corridor through the forest. Cable car back down. Free time for Gallery 11/07/95 (Srebrenica content — emotionally heavy, optional) or copper workshops in Kazandžiluk.",
-        "highlights": [
-          "Tunnel of Hope guided by someone who lived it",
-          "Trebević Olympic bobsled track",
-          "Optional Srebrenica gallery (emotionally heavy)"
-        ],
-        "note": "Most emotionally demanding day. Opt-out available for any segment."
-      },
-      {
-        "id": 4,
-        "title": "Across the Drina",
-        "city": "Belgrade",
-        "summary": "Cross into Serbia via the UNESCO bridge from Andrić's novel.",
-        "photo": "/photos/empires-and-edge-day-4.jpg",
-        "accommodation": "Hotel Moskva, Belgrade",
-        "meals": [
-          "Breakfast",
-          "Višegrad lunch"
-        ],
-        "includedActivities": [
-          "Andrić's Bridge at Višegrad",
-          "Reading from the novel on site",
-          "Andrićgrad walk"
-        ],
-        "optionalActivities": [
-          "Skadarlija evening (own arrangement)"
-        ],
-        "morning": "08:00 departure east through the Drina valley. 11:00 arrival at Višegrad — the Mehmed Paša Sokolović Bridge (UNESCO 1577). Reading aloud from Ivo Andrić's The Bridge on the Drina on the bridge itself.",
-        "afternoon": "Lunch in Višegrad. 14:00 cross into Serbia. 17:30 arrive Belgrade. Walk to Skadarlija — the bohemian quarter — for dinner (own arrangement).",
-        "highlights": [
-          "Andrić's bridge at Višegrad",
-          "Reading from the novel on site",
-          "Border crossing into Serbia",
-          "Skadarlija bohemian quarter"
-        ],
-        "note": "Long transit day. Border crossing can add 30–60 minutes in summer."
-      },
-      {
-        "id": 5,
-        "title": "Belgrade & Departure",
-        "city": "Belgrade",
-        "summary": "Kalemegdan fortress and choice afternoon, then airport.",
-        "photo": "/photos/empires-and-edge-day-5.jpg",
-        "meals": [
-          "Breakfast"
-        ],
-        "includedActivities": [
-          "Kalemegdan fortress walk",
-          "Stari Grad tour",
-          "Private transfer to BEG airport"
-        ],
-        "optionalActivities": [
-          "Museum of Yugoslavia & Tito's mausoleum",
-          "Nikola Tesla Museum"
-        ],
-        "morning": "Kalemegdan fortress and walking tour of Stari Grad. The confluence of Sava and Danube — where the Balkans literally begin.",
-        "afternoon": "Choice: Museum of Yugoslavia and Tito's mausoleum, or Nikola Tesla Museum, or free time. Private transfer to Belgrade Nikola Tesla Airport (BEG) for evening flights.",
-        "highlights": [
-          "Kalemegdan and the Sava–Danube confluence",
-          "Choice afternoon — Tito or Tesla",
-          "Private transfer to BEG"
-        ],
-        "note": "Departure flights from 18:00 onward recommended."
-      }
-    ],
-    "inclusions": [
-      "4 nights accommodation (twin share)",
-      "Private vehicle and driver throughout",
-      "English-speaking tour leader",
-      "Daily breakfast",
-      "Welcome dinner in Sarajevo",
-      "Tunnel of Hope private slot",
-      "Bosnian coffee ceremony",
-      "Reading at the Andrić bridge",
-      "Local specialist guides in Sarajevo and Belgrade",
-      "Maximum 8 guests",
-      "Free cancellation up to 60 days before"
-    ],
-    "exclusions": [
-      "International flights",
-      "Travel insurance — mandatory",
-      "Lunches and dinners except where specified",
-      "Personal expenses",
-      "Gratuities"
-    ],
-    "breakdown": {
-      "accommodation": [
-        "Hotel Hecco Deluxe, Sarajevo (Days 1–3)",
-        "Hotel Moskva, Belgrade (Days 4–5)"
-      ],
-      "meals": [
-        "Welcome dinner (Day 1)",
-        "Daily breakfast",
-        "Višegrad lunch (Day 4)"
-      ],
-      "transport": [
-        "Private vehicle and driver throughout",
-        "Arrival and departure private transfers"
-      ],
-      "destinations": [
-        "Sarajevo",
-        "Tunnel of Hope",
-        "Višegrad (UNESCO Bridge)",
-        "Andrićgrad",
-        "Belgrade"
-      ],
-      "activities": [
-        "Bosnian coffee ceremony",
-        "Between Empires Walking Tour",
-        "City Hall (Vijećnica)",
-        "Tunnel of Hope guided tour",
-        "Trebević mountain & Olympic bobsled track",
-        "Andrić's Bridge at Višegrad",
-        "Andrićgrad walk",
-        "Kalemegdan fortress walk",
-        "Stari Grad Belgrade tour"
-      ],
-      "optional": [
-        "Yellow Fortress walk",
-        "Gallery 11/07/95 (Srebrenica)",
-        "Museum of Yugoslavia & Tito's mausoleum",
-        "Nikola Tesla Museum"
-      ]
-    },
-    "activities": [
-      {
-        "icon": "coffee",
-        "name": "Bosnian Coffee Ritual",
-        "description": "The morning ceremony that defines daily life in Bosnia."
-      },
-      {
-        "icon": "history",
-        "name": "Sarajevo Civilizations Walk",
-        "description": "Ottoman bazaar to Austro-Hungarian boulevard in 200 metres."
-      },
-      {
-        "icon": "war",
-        "name": "Tunnel of Hope",
-        "description": "The wartime lifeline guided by a former defender."
-      },
-      {
-        "icon": "history",
-        "name": "Andrić's Bridge",
-        "description": "Read aloud from The Bridge on the Drina at Višegrad."
-      },
-      {
-        "icon": "history",
-        "name": "Kalemegdan Fortress",
-        "description": "Where the Sava meets the Danube — and the Balkans literally begin."
-      },
-      {
-        "icon": "history",
-        "name": "Museum of Yugoslavia",
-        "description": "The country that ended in 1991, told through Tito's mausoleum."
-      }
-    ],
-    "importantInfo": [
-      {
-        "title": "Free Cancellation",
-        "content": "Free cancellation up to 60 days before departure. Cancellations 30–60 days lose 50%. Within 30 days non-refundable."
-      },
-      {
-        "title": "Group Size",
-        "content": "Maximum 8 guests."
-      },
-      {
-        "title": "Border Crossings",
-        "content": "This tour crosses one international border (Bosnia to Serbia). Passport with 6 months validity required."
-      },
-      {
-        "title": "Visas",
-        "content": "Bosnia and Serbia are not in the EU. Most US, UK, and EU passports do not require visas."
-      },
-      {
-        "title": "What to Wear",
-        "content": "Comfortable walking shoes essential. Modest dress for places of worship."
-      },
-      {
-        "title": "Joining Point",
-        "content": "Sarajevo International Airport (SJJ) or central hotel. Confirmed 14 days before departure."
-      }
-    ],
-    "dates": [
-      {
-        "id": 1,
-        "date": "April 25–29, 2026",
-        "spots": 8,
-        "total": 8
-      },
-      {
-        "id": 2,
-        "date": "May 2–6, 2026",
-        "spots": 8,
-        "total": 8
-      },
-      {
-        "id": 3,
-        "date": "May 16–20, 2026",
-        "spots": 8,
-        "total": 8
-      },
-      {
-        "id": 4,
-        "date": "June 6–10, 2026",
-        "spots": 8,
-        "total": 8
-      },
-      {
-        "id": 5,
-        "date": "September 5–9, 2026",
-        "spots": 8,
-        "total": 8
-      }
-    ],
-    "mapWaypoints": [
-      {
-        "lat": 43.8582,
-        "lng": 18.4313,
-        "label": "Sarajevo Latin Bridge"
-      },
-      {
-        "lat": 43.8195,
-        "lng": 18.3367,
-        "label": "Tunnel of Hope"
-      },
-      {
-        "lat": 43.7822,
-        "lng": 19.2867,
-        "label": "Višegrad Bridge"
-      },
-      {
-        "lat": 44.823,
-        "lng": 20.4495,
-        "label": "Kalemegdan Belgrade"
-      }
-    ],
-    "mapProfile": "driving-car",
-    "fitnessNotes": [
-      {
-        "type": "emotional",
-        "level": "Contains emotionally heavy history",
-        "detail": "This package includes the Siege of Sarajevo and Tunnel of Hope, covering wartime trauma and survival stories. Optional content covers the Srebrenica genocide. Opt-out available for any segment."
-      }
-    ],
-    "suitability": {
-      "goodFor": [
-        "Cultural travellers and history readers",
-        "First-time visitors to the region",
-        "Travellers who prefer depth over breadth",
-        "Small group fans — maximum 8"
-      ],
-      "thinkTwice": [
-        "If wartime history is emotionally too heavy",
-        "If you prefer beach or resort travel",
-        "If 5 days feels too short to settle in"
-      ]
-    },
-    "badge": "New",
-    "badgeColor": "var(--color-amber)",
-    "badgeTextColor": "var(--color-n900)",
-    "locations": 6,
-    "countries": 2,
-    "countryList": [
-      "Bosnia",
-      "Montenegro"
-    ],
-    "originalPrice": null,
-    "description": "Five days from Sarajevo through Herzegovina and into Montenegro — the nuclear bunker, Mostar's old bridge, Kotor's bay, and Lovćen's panoramic peak.",
-    "highlights": [
-      "Tito's Nuclear Bunker (ARK D-0)",
-      "Mostar Old Bridge & Stari Grad",
-      "Bay of Kotor from the water"
-    ],
-    "includes": [
-      "Private transport throughout",
-      "Guide for all 5 days",
-      "Welcome dinner included",
-      "Free cancellation up to 72 hours before"
-    ],
-    "hero": "/uploads/package-5-hero.webp",
-    "price": 1490,
     "accessibility": {
       "walkingDistanceKm": null,
       "drivingDistanceKm": null,
@@ -2690,8 +3170,8 @@
       "Šargan 8 railway ticket",
       "All entry fees per itinerary",
       "Local specialist guide in Belgrade",
-      "Maximum 8 guests",
-      "Free cancellation up to 60 days before"
+      "Small group throughout",
+      "Full refund if cancelled 30+ days before departure"
     ],
     "exclusions": [
       "International flights",
@@ -2778,12 +3258,12 @@
     ],
     "importantInfo": [
       {
-        "title": "Free Cancellation",
-        "content": "Free cancellation up to 60 days before departure."
+        "title": "Cancellation & refunds",
+        "content": "Cancel more than 30 days before departure for a full refund of everything paid; 15–30 days before, 50%; within 15 days, no refund. One free date change if requested more than 30 days out. If we cancel, you always get a full refund or a free rebooking — full details under Booking Conditions."
       },
       {
         "title": "Group Size",
-        "content": "Maximum 8 guests."
+        "content": "Genuinely small group — seats are limited on every departure."
       },
       {
         "title": "Border Crossings",
@@ -2878,7 +3358,7 @@
         "Active travellers in mid-fitness",
         "Mountain and nature lovers",
         "Travellers who want the road less driven",
-        "Small group fans — maximum 8"
+        "Small-group fans — never a coach tour"
       ],
       "thinkTwice": [
         "If altitude or moderate hiking is a concern",
@@ -2906,490 +3386,10 @@
       "Private transport throughout",
       "Guide for all 5 days",
       "Ferry crossing Komani Lake to Valbona",
-      "Free cancellation up to 72 hours before"
+      "Full refund if cancelled 30+ days before departure"
     ],
     "hero": "/uploads/package-6-hero.webp",
     "price": 1690,
-    "accessibility": {
-      "walkingDistanceKm": null,
-      "drivingDistanceKm": null,
-      "durationMin": null,
-      "elevationGainM": null,
-      "effortLevel": null,
-      "suitability": {
-        "wheelchair": null,
-        "stroller": null,
-        "smallChildren": null,
-        "children": null,
-        "pregnancy": null,
-        "seniors": null,
-        "pets": null
-      },
-      "requirements": [],
-      "terrain": "",
-      "notes": ""
-    }
-  },
-  {
-    "id": 7,
-    "slug": "adriatic-crossings",
-    "name": "Adriatic Crossings",
-    "subtitle": "Kotor to Sarajevo Along the Coast in 6 Days",
-    "duration": "6 Days",
-    "groupSize": 8,
-    "difficulty": "Easy",
-    "priceWithout": 1990,
-    "priceWith": 2590,
-    "rating": 5,
-    "reviews": 0,
-    "heroImage": "/uploads/package-7-hero.webp",
-    "gallery": [
-      "/uploads/package-7-hero.webp"
-    ],
-    "about": "Six days, four old towns, three countries, and one of the most beautiful drives in Europe. This journey starts in the walled bay of Kotor, crosses Lovćen to the Croatian coast, walks Dubrovnik at first light, tastes the parent grape of Zinfandel on Pelješac, and ends at the rebuilt Mostar bridge lit up at the farewell dinner.\n\nYou will climb 1,355 steps above Kotor, sail to Our Lady of the Rocks, hear Diocletian's Roman palace explained by someone whose family has lived inside it for generations, and stand at Blagaj where a river emerges from a cliff face at the foot of a Sufi tekija.\n\nSix days. The Adriatic, the way it should be done — slowly, before the cruise ships arrive.",
-    "days": [
-      {
-        "id": 1,
-        "title": "Arrival in Kotor",
-        "city": "Kotor",
-        "summary": "Arrival in Kotor and welcome dinner in the old town.",
-        "photo": "/photos/adriatic-crossings-day-1.jpg",
-        "accommodation": "Hotel Vardar, Kotor",
-        "meals": [
-          "Welcome dinner"
-        ],
-        "includedActivities": [
-          "Private transfer from Tivat Airport",
-          "Welcome dinner inside the walls",
-          "Tour leader briefing"
-        ],
-        "optionalActivities": [
-          "Evening stroll in Stari Grad"
-        ],
-        "morning": "Private transfer from Tivat Airport (TIV) to your hotel inside or just outside the walled old town.",
-        "afternoon": "Free time to walk the Stari Grad and orient yourself. Welcome dinner inside the walls at 19:30.",
-        "highlights": [
-          "Welcome dinner inside the walls",
-          "First evening in Kotor old town",
-          "Tour leader briefing"
-        ],
-        "note": "Welcome dinner at 19:30."
-      },
-      {
-        "id": 2,
-        "title": "Walls & The Bay",
-        "city": "Kotor",
-        "summary": "The fortress climb at first light then a boat tour of the bay.",
-        "photo": "/photos/adriatic-crossings-day-2.jpg",
-        "accommodation": "Hotel Vardar, Kotor",
-        "meals": [
-          "Breakfast",
-          "Light lunch in Perast"
-        ],
-        "includedActivities": [
-          "Saint John's fortress climb",
-          "Bay of Kotor boat tour",
-          "Our Lady of the Rocks",
-          "Cathedral of Saint Tryphon tour"
-        ],
-        "optionalActivities": [],
-        "morning": "08:30 climb the city walls to Saint John's fortress — 1,355 steps, 260m elevation. Best done early before heat.",
-        "afternoon": "11:00 boat tour of the Bay of Kotor — Perast and Our Lady of the Rocks. Light lunch in Perast. Afternoon walking tour: Cathedral of Saint Tryphon (1166), Maritime Museum, the Venetian lions on every gate.",
-        "highlights": [
-          "Saint John's fortress climb",
-          "Bay of Kotor boat tour",
-          "Our Lady of the Rocks",
-          "Cathedral of Saint Tryphon"
-        ],
-        "note": "Wall climb in heat is dangerous — early start non-negotiable in summer."
-      },
-      {
-        "id": 3,
-        "title": "Lovćen to Dubrovnik",
-        "city": "Dubrovnik",
-        "summary": "Twenty-five serpentines to the Njegoš mausoleum then north to Dubrovnik.",
-        "photo": "/photos/adriatic-crossings-day-3.jpg",
-        "accommodation": "Hotel Adriatic, Dubrovnik",
-        "meals": [
-          "Breakfast",
-          "Lunch in Cetinje"
-        ],
-        "includedActivities": [
-          "Lovćen 25 serpentines",
-          "Njegoš Mausoleum (1,657m)",
-          "Sveti Stefan photo stop"
-        ],
-        "optionalActivities": [
-          "Budva beach stop"
-        ],
-        "morning": "09:00 drive the 25 hairpin serpentines up to Lovćen National Park. 10:30 Njegoš Mausoleum at 1,657m. Panoramic view across to Albania.",
-        "afternoon": "13:00 lunch in Cetinje. 15:00 photo stop at Sveti Stefan and Budva. 17:30 cross into Croatia. 19:00 arrive Dubrovnik.",
-        "highlights": [
-          "Lovćen 25 serpentines",
-          "Njegoš Mausoleum at 1,657m",
-          "Sveti Stefan photo stop",
-          "Border into Croatia"
-        ],
-        "note": "Serpentines plus motion sickness — sit forward, ginger candy onboard."
-      },
-      {
-        "id": 4,
-        "title": "Dubrovnik",
-        "city": "Dubrovnik",
-        "summary": "Walls at first light and a free afternoon for Lokrum or Srđ.",
-        "photo": "/photos/adriatic-crossings-day-4.jpg",
-        "accommodation": "Hotel Adriatic, Dubrovnik",
-        "meals": [
-          "Breakfast"
-        ],
-        "includedActivities": [
-          "City walls walk (1.94 km)",
-          "Old town guided tour"
-        ],
-        "optionalActivities": [
-          "Lokrum island ferry",
-          "Mount Srđ cable car"
-        ],
-        "morning": "08:00 walk the city walls — 1.94 km loop. Early start mandatory in summer.",
-        "afternoon": "10:30 old town walking tour — Stradun, Onofrio's fountains, Rector's Palace, Franciscan monastery. Free afternoon: ferry to Lokrum island or cable car up Srđ for sunset.",
-        "highlights": [
-          "Dubrovnik walls at first light",
-          "Stradun and Rector's Palace",
-          "Free afternoon — Lokrum or Srđ"
-        ],
-        "note": "Walls in summer heat — early start essential. Bring water."
-      },
-      {
-        "id": 5,
-        "title": "Pelješac to Split",
-        "city": "Split",
-        "summary": "Ston walls, oysters, and Plavac Mali wine then Diocletian's Palace.",
-        "photo": "/photos/adriatic-crossings-day-5.jpg",
-        "accommodation": "Hotel Split, Split",
-        "meals": [
-          "Breakfast",
-          "Wine tasting & food pairing",
-          "Ston oysters"
-        ],
-        "includedActivities": [
-          "Ston defensive walls",
-          "Pelješac Plavac Mali wine tasting",
-          "Diocletian's Palace guided tour"
-        ],
-        "optionalActivities": [
-          "Split Riva evening walk"
-        ],
-        "morning": "09:00 departure north. 10:30 Ston — the 5.5 km of medieval defensive walls and oysters from the bay below.",
-        "afternoon": "12:30 Pelješac peninsula wine tasting — Plavac Mali, the Croatian parent grape of Zinfandel and Primitivo. 18:00 arrive Split. Guided walk through Diocletian's Palace.",
-        "highlights": [
-          "Ston defensive walls and oysters",
-          "Pelješac Plavac Mali tasting",
-          "Diocletian's Palace"
-        ],
-        "note": "Wine tasting includes food pairing."
-      },
-      {
-        "id": 6,
-        "title": "Mostar & Departure",
-        "city": "Mostar",
-        "summary": "Počitelj fortress, Blagaj tekija, Mostar bridge — and onward to Sarajevo.",
-        "photo": "/photos/adriatic-crossings-day-6.jpg",
-        "meals": [
-          "Breakfast",
-          "Farewell dinner"
-        ],
-        "includedActivities": [
-          "Počitelj cliff fortress",
-          "Blagaj Tekija",
-          "Stari Most tour",
-          "Farewell dinner over the lit bridge"
-        ],
-        "optionalActivities": [
-          "Bridge diver watch — €25",
-          "Late transfer to Sarajevo (2.5 hrs)"
-        ],
-        "morning": "09:30 departure south. Cross back into Bosnia. 12:00 Počitelj cliff fortress.",
-        "afternoon": "14:30 Blagaj Tekija — the 16th-century Sufi dervish house at the source of the Buna river. 16:30 arrive Mostar. Walking tour of Stari Most — built 1566, destroyed 1993, rebuilt 2004. Farewell dinner overlooking the lit bridge. Late evening transfer to Sarajevo (130 km, 2.5 hrs) for next-day morning flights.",
-        "highlights": [
-          "Počitelj cliff fortress",
-          "Blagaj Sufi tekija",
-          "Stari Most",
-          "Farewell dinner over the lit bridge"
-        ],
-        "note": "Sarajevo transfer late evening Day 6, or extend in Mostar by one night — €140 supplement."
-      }
-    ],
-    "inclusions": [
-      "5 nights accommodation (twin share)",
-      "Private vehicle and driver throughout",
-      "English-speaking tour leader",
-      "Daily breakfast",
-      "Welcome dinner in Kotor and farewell dinner in Mostar",
-      "Lunch in Perast",
-      "Pelješac winery tasting with food pairing",
-      "Boat tour of the Bay of Kotor",
-      "Kotor and Dubrovnik wall tickets",
-      "All entry fees per itinerary",
-      "Local specialist guides in Kotor, Dubrovnik, Split, and Mostar",
-      "Maximum 8 guests",
-      "Free cancellation up to 60 days before"
-    ],
-    "exclusions": [
-      "International flights",
-      "Travel insurance — mandatory",
-      "Lunches except where specified",
-      "Personal expenses",
-      "Gratuities"
-    ],
-    "breakdown": {
-      "accommodation": [
-        "Hotel Vardar, Kotor (Days 1–2)",
-        "Hotel Adriatic, Dubrovnik (Days 3–4)",
-        "Hotel Split, Split (Day 5)",
-        "Mostar (optional extension — €140)"
-      ],
-      "meals": [
-        "Welcome dinner inside the walls, Kotor (Day 1)",
-        "Daily breakfast",
-        "Light lunch in Perast (Day 2)",
-        "Lunch in Cetinje (Day 3)",
-        "Wine tasting & food pairing, Ston oysters (Day 5)",
-        "Farewell dinner over the lit bridge, Mostar (Day 6)"
-      ],
-      "transport": [
-        "Private vehicle and driver throughout",
-        "Transfer from Tivat Airport on arrival"
-      ],
-      "destinations": [
-        "Kotor & Bay of Kotor",
-        "Lovćen & Cetinje",
-        "Dubrovnik",
-        "Ston & Pelješac",
-        "Split",
-        "Počitelj",
-        "Blagaj",
-        "Mostar"
-      ],
-      "activities": [
-        "Saint John's fortress climb (1,355 steps)",
-        "Bay of Kotor boat tour",
-        "Our Lady of the Rocks",
-        "Cathedral of Saint Tryphon tour",
-        "Lovćen 25 serpentines",
-        "Njegoš Mausoleum (1,657m)",
-        "Sveti Stefan photo stop",
-        "Dubrovnik city walls walk (1.94 km)",
-        "Old town guided tour",
-        "Ston defensive walls",
-        "Pelješac Plavac Mali wine tasting",
-        "Diocletian's Palace guided tour",
-        "Počitelj cliff fortress",
-        "Blagaj Tekija",
-        "Stari Most Mostar tour",
-        "Farewell dinner over the lit bridge"
-      ],
-      "optional": [
-        "Lokrum island ferry",
-        "Mount Srđ cable car",
-        "Bridge diver watch — €25",
-        "Budva beach stop"
-      ]
-    },
-    "activities": [
-      {
-        "icon": "sunset",
-        "name": "Kotor Walls Climb",
-        "description": "1,355 steps above the bay at first light."
-      },
-      {
-        "icon": "history",
-        "name": "Bay of Kotor Boat Tour",
-        "description": "Perast and Our Lady of the Rocks story."
-      },
-      {
-        "icon": "history",
-        "name": "Lovćen & Njegoš",
-        "description": "25 serpentines to the mausoleum at 1,657m."
-      },
-      {
-        "icon": "history",
-        "name": "Dubrovnik City Walls",
-        "description": "The 1.94 km loop walked at first light."
-      },
-      {
-        "icon": "wine",
-        "name": "Pelješac Wine Tasting",
-        "description": "Plavac Mali — parent grape of Zinfandel and Primitivo."
-      },
-      {
-        "icon": "history",
-        "name": "Diocletian's Palace",
-        "description": "Where 3,000 people still live inside Roman walls."
-      },
-      {
-        "icon": "waterfall",
-        "name": "Blagaj Tekija",
-        "description": "Where the Buna river emerges at 43 m³/sec at the foot of a Sufi tekija."
-      },
-      {
-        "icon": "history",
-        "name": "Stari Most Mostar",
-        "description": "The rebuilt 1566 bridge — destroyed 1993, restored 2004."
-      }
-    ],
-    "importantInfo": [
-      {
-        "title": "Free Cancellation",
-        "content": "Free cancellation up to 60 days before departure."
-      },
-      {
-        "title": "Group Size",
-        "content": "Maximum 8 guests."
-      },
-      {
-        "title": "Border Crossings",
-        "content": "Crosses Montenegro to Croatia and Croatia to Bosnia. Croatia is in the EU and Schengen."
-      },
-      {
-        "title": "Visas",
-        "content": "Croatia: Schengen rules apply. Bosnia and Montenegro: most passports visa-free."
-      },
-      {
-        "title": "What to Wear",
-        "content": "Comfortable walking shoes essential. Stairs and cobblestones throughout. Sun hat and water for the wall walks."
-      },
-      {
-        "title": "Joining Point",
-        "content": "Tivat Airport (TIV) is 8 km from Kotor old town. Pickups can also be arranged from Dubrovnik or Podgorica with notice."
-      },
-      {
-        "title": "Departure",
-        "content": "Day 6 ends in Mostar with optional late transfer to Sarajevo (130 km, 2.5 hrs). Sarajevo SJJ flights from 11:00 next day recommended, or extend in Mostar — €140 supplement."
-      }
-    ],
-    "dates": [
-      {
-        "id": 1,
-        "date": "May 10–15, 2026",
-        "spots": 8,
-        "total": 8
-      },
-      {
-        "id": 2,
-        "date": "May 24–29, 2026",
-        "spots": 8,
-        "total": 8
-      },
-      {
-        "id": 3,
-        "date": "June 14–19, 2026",
-        "spots": 8,
-        "total": 8
-      },
-      {
-        "id": 4,
-        "date": "September 13–18, 2026",
-        "spots": 8,
-        "total": 8
-      }
-    ],
-    "mapWaypoints": [
-      {
-        "lat": 42.4247,
-        "lng": 18.7712,
-        "label": "Kotor"
-      },
-      {
-        "lat": 42.3994,
-        "lng": 18.8389,
-        "label": "Lovćen Njegoš"
-      },
-      {
-        "lat": 42.2553,
-        "lng": 18.8919,
-        "label": "Sveti Stefan"
-      },
-      {
-        "lat": 42.6507,
-        "lng": 18.0944,
-        "label": "Dubrovnik"
-      },
-      {
-        "lat": 42.8367,
-        "lng": 17.6963,
-        "label": "Ston"
-      },
-      {
-        "lat": 42.9217,
-        "lng": 17.4378,
-        "label": "Pelješac"
-      },
-      {
-        "lat": 43.5081,
-        "lng": 16.4402,
-        "label": "Split Diocletian"
-      },
-      {
-        "lat": 43.0833,
-        "lng": 17.7333,
-        "label": "Počitelj"
-      },
-      {
-        "lat": 43.2542,
-        "lng": 17.8819,
-        "label": "Blagaj Tekija"
-      },
-      {
-        "lat": 43.3375,
-        "lng": 17.815,
-        "label": "Mostar Stari Most"
-      }
-    ],
-    "mapProfile": "driving-car",
-    "fitnessNotes": [
-      {
-        "type": "physical",
-        "level": "Moderate — stairs and cobblestones",
-        "detail": "Includes 1,355 steps up Kotor walls (half-way option available) and the 1.94 km Dubrovnik wall loop. Cobblestones, hills, and stairs throughout the old towns. Guests with mobility issues should review the daily plan before booking."
-      }
-    ],
-    "suitability": {
-      "goodFor": [
-        "First-time visitors to the Adriatic",
-        "Wine and food enthusiasts",
-        "History readers and slow-travel fans",
-        "Travellers who want depth on the coast, not just photos",
-        "Small group fans — maximum 8"
-      ],
-      "thinkTwice": [
-        "If you cannot manage stairs and cobblestones",
-        "If you prefer beach-resort travel over walking",
-        "If 6 days feels too short to settle into each city"
-      ]
-    },
-    "badge": "New",
-    "badgeColor": "var(--color-amber)",
-    "badgeTextColor": "var(--color-n900)",
-    "locations": 6,
-    "countries": 2,
-    "countryList": [
-      "Serbia"
-    ],
-    "originalPrice": null,
-    "description": "Six days across Kosovo and Serbia — from Pristina's new nation energy through Novi Sad's Danube culture to Belgrade's nightlife, Nikola Tesla Museum, and Cold War relics.",
-    "highlights": [
-      "Pristina — the world's newest capital",
-      "Novi Sad & Petrovaradin Fortress",
-      "Belgrade: Tesla Museum & Communist-era sites"
-    ],
-    "includes": [
-      "Private transport throughout",
-      "Guide for all 6 days",
-      "Welcome dinner included",
-      "Free cancellation up to 72 hours before"
-    ],
-    "hero": "/uploads/package-7-hero.webp",
-    "price": 1990,
     "accessibility": {
       "walkingDistanceKm": null,
       "drivingDistanceKm": null,

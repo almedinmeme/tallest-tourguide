@@ -30,16 +30,31 @@
         "name": "Una National Park",
         "blurb": "In the country's northwest, the Una river runs through limestone canyons in shades of green you'll think were filtered. Štrbački Buk waterfall is the headline. Raft it, swim it, or just sit beside it — this is the wild, untouched Bosnia that exists an hour from any city.",
         "image": "/uploads/bosnia-and-herzegovina-una.webp"
+      },
+      {
+        "name": "Jajce",
+        "blurb": "",
+        "image": "/uploads/bosnia-and-herzegovina-bhjceql2.webp"
       }
     ],
     "relatedTours": [
       "sarajevo-walking-tour",
       "lukomir-hike-bosnia",
-      "sarajevo-war-tour"
+      "sarajevo-war-tour",
+      "bosnian-cooking-class-sarajevo",
+      "jajce-travnik-day-trip-sarajevo",
+      "sarajevo-jewish-heritage-tour",
+      "home-hosted-dinner",
+      "srebrenica-day-trip-from-sarajevo",
+      "sarajevo-morning-walk-tour",
+      "mostar-day-trip-from-sarajevo"
     ],
     "relatedPackages": [
       "4-days-sarajevo-experience",
-      "bosnia-deep-dive"
+      "bosnia-deep-dive",
+      "sarajevo-to-dubrovnik",
+      "balkans-full-arc",
+      "adriatic-crossings"
     ]
   },
   {
@@ -129,7 +144,7 @@
     "name": "Albania",
     "country": "Albania",
     "order": 4,
-    "hero": "",
+    "hero": "/uploads/albania-u5syulot.webp",
     "teaser": "The Balkans' last frontier — wild coast, stone villages, and famous hospitality.",
     "intro": "<p>[PLACEHOLDER] Albania is the part of the region travellers still arrive at with few expectations and leave talking about. The Accursed Mountains in the north, the Riviera in the south, and a code of hospitality older than any border.</p>",
     "distinct": "<p>[PLACEHOLDER] Besa — the Albanian word for keeping a promise to a guest — runs deep here. It is the clearest cousin of the hospitality we build our trips around.</p>",
@@ -138,7 +153,7 @@
       {
         "name": "Theth & Valbona",
         "blurb": "[Placeholder] A legendary day's walk between two mountain valleys.",
-        "image": ""
+        "image": "/uploads/albania-v1f4uuqz.webp"
       },
       {
         "name": "Berat",

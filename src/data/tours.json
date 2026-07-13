@@ -1,12 +1,439 @@
 [
   {
+    "id": 2,
+    "slug": "mostar-day-trip-from-sarajevo",
+    "category": "day-trips",
+    "city": "Mostar",
+    "region": "Bosnia & Herzegovina",
+    "title": "Mostar Day Trip from Sarajevo: Old Bridge, Kravice & Herzegovina",
+    "price": 79,
+    "rating": 5,
+    "reviews": 18,
+    "duration": "Full day",
+    "groupSize": 12,
+    "badge": "Bestseller",
+    "hero": "/uploads/tour-5-hero.webp",
+    "detailHero": "/uploads/tour-5-hero.webp",
+    "description": "Most first-time visitors to Bosnia come expecting history. They leave talking about the water. This full-day tour from Sarajevo takes you deep into Herzegovina — a landscape of impossible turquoise rivers, medieval fortresses, and a bridge so beautiful it was rebuilt from memory after war destroyed it. Every stop earns its place on this route.\n\nDeparting Sarajevo in the morning, you travel south through changing terrain, stopping at Konjic's old bridge and Jablanica's open-air war museum, before the route opens into Herzegovina. Počitelj's hilltop fortress, the spring at Blagaj Buna rising from a cliff face, the cascading waterfalls at Kravice, and finally Mostar — its Old Bridge, its bazaar, its divers — all within a single, full day. This is Bosnia at its most visually stunning.",
+    "highlights": [
+      "Konjic — A charming riverside town with its own restored Ottoman bridge, a perfect first taste of what Herzegovina has in store.",
+      "Jablanica — Home to the legendary WWII battle site where Tito's partisans crossed the Neretva. The destroyed bridge still stands as a monument.",
+      "Počitelj — A fortified medieval village frozen in time, climbing up a limestone hill with panoramic views over the Neretva river valley.",
+      "Blagaj Buna — A 16th-century Dervish monastery built into a cliff above one of Europe's largest freshwater springs. Quietly breathtaking.",
+      "Kravice Waterfalls — A series of cascading falls spilling into a vivid emerald pool. One of Bosnia's most spectacular natural sights.",
+      "Mostar Old Bridge (Stari Most) — The iconic 16th-century bridge, rebuilt after its 1993 destruction, arching over the Neretva."
+    ],
+    "includes": [
+      "Local guide",
+      "Small group, personally guided",
+      "Transport in AC Vehicle",
+      "Free cancellation up to 24h before"
+    ],
+    "excludes": [
+      "Entrance fees to Kravice Waterfalls (20 BAM/10 EUR)",
+      "Lunch",
+      "Gratuities (optional but appreciated)",
+      "Personal expenses"
+    ],
+    "faqs": [
+      {
+        "question": "How long is the full day tour and what time does it return to Sarajevo?",
+        "answer": "The tour departs Sarajevo in the morning and returns in the early evening, typically around 10-12 hours in total. Exact timing will be confirmed at booking."
+      },
+      {
+        "question": "Is swimming at Kravice Waterfalls included or optional?",
+        "answer": "Swimming at Kravice is possible during warmer months and is entirely optional. Bringing a swimsuit and a small towel is recommended if you'd like to take a dip."
+      },
+      {
+        "question": "Is this tour suitable for first-time visitors who don't know much about Bosnian history?",
+        "answer": "It is designed exactly for them. The guide provides context at every stop — history, culture, and local stories — without overwhelming. You leave with a genuine feel for the country, not just photographs of it."
+      }
+    ],
+    "meetingPoint": "In front of the Tallest Tourguide & Friends office, Hamdije Kresevljakovica 61, Sarajevo. Right next to the Viking Pub.",
+    "startingTimes": [
+      "08 AM"
+    ],
+    "languages": [
+      "english",
+      "bosnian"
+    ],
+    "rightFor": [
+      "First-time visitors wanting to see Herzegovina in a single day",
+      "Nature lovers drawn to turquoise rivers and waterfalls",
+      "Those with one full day to experience Bosnia beyond Sarajevo",
+      "Anyone curious about Ottoman history and architecture"
+    ],
+    "notRightFor": [
+      "Guests who prefer slow, deep single-location experiences",
+      "Those prone to motion sickness (mountain road driving)",
+      "Travelers who have already visited Mostar and Kravice"
+    ],
+    "accessibility": {
+      "walkingDistanceKm": 2,
+      "drivingDistanceKm": 340,
+      "walkingDurationMin": null,
+      "drivingDurationMin": null,
+      "durationMin": 360,
+      "elevationGainM": null,
+      "effortLevel": "moderate",
+      "suitability": {
+        "wheelchair": "no",
+        "stroller": "partial",
+        "smallChildren": "yes",
+        "children": "yes",
+        "pregnancy": "yes",
+        "seniors": "yes",
+        "pets": "partial"
+      },
+      "requirements": [
+        {
+          "key": "stairs",
+          "label": "Climb a flight of stairs",
+          "detail": "We have small climb to Pocitelj fortress and flight of stairs when going to Kravice Waterfalls"
+        }
+      ],
+      "terrain": "Steep cobblestone streets in Počitelj and Mostar; flatter terrain at Kravice",
+      "notes": "Walking: Moderate walking at each stop (1–2 km per location)\nSeveral sites involve uneven terrain and steep paths. Not suitable for guests with significant mobility limitations."
+    },
+    "subtitle": "Rivers, Ruins & the Old Bridge: A Full Day Through the Heart of Herzegovina",
+    "gallery": [
+      "/uploads/mostar-day-trip-from-sarajevo-konjic.webp",
+      "/uploads/tour-5-hero.webp",
+      "/uploads/mostar-2.webp",
+      "/uploads/mostar-day-trip-from-sarajevo-pocitelj-old-town.webp",
+      "/uploads/mostar-3.webp",
+      "/uploads/mostar-day-trip-from-sarajevo-kravice-waterfalls-group.webp",
+      "/uploads/mostar-day-trip-from-sarajevo-blagaj-buna.webp",
+      "/uploads/mostar-day-trip-from-sarajevo-buna-chanel.webp",
+      "/uploads/mostar-day-trip-from-sarajevo-pocitelj.webp",
+      "/uploads/mostar-day-trip-from-sarajevo-pocitelj-group.webp"
+    ],
+    "mapWaypoints": [
+      {
+        "lat": 43.8563,
+        "lng": 18.4132,
+        "label": "Sarajevo"
+      },
+      {
+        "lat": 43.6579,
+        "lng": 17.9621,
+        "label": "Konjic"
+      },
+      {
+        "lat": 43.1219,
+        "lng": 17.7315,
+        "label": "Počitelj"
+      },
+      {
+        "lat": 43.1367,
+        "lng": 17.6017,
+        "label": "Kravice Waterfalls"
+      },
+      {
+        "lat": 43.2534,
+        "lng": 17.9052,
+        "label": "Blagaj"
+      },
+      {
+        "lat": 43.337,
+        "lng": 17.8156,
+        "label": "Mostar Old Bridge"
+      }
+    ],
+    "mapProfile": "driving-car",
+    "extras": [
+      {
+        "label": "Hotel pick-up & drop-off",
+        "description": "Door-to-door from your Sarajevo accommodation.",
+        "price": 15,
+        "perPerson": false
+      },
+      {
+        "label": "Kravice Waterfalls entry ticket",
+        "description": "Skip the queue at the falls.",
+        "price": 5,
+        "perPerson": true
+      },
+      {
+        "label": "Traditional Herzegovinian lunch",
+        "description": "Three courses at a local family restaurant.",
+        "price": 18,
+        "perPerson": true
+      }
+    ],
+    "oldPrice": 85
+  },
+  {
+    "id": 4,
+    "slug": "bosnian-cooking-class-sarajevo",
+    "category": "food-culture",
+    "city": "Sarajevo",
+    "region": "Bosnia & Herzegovina",
+    "title": "Bosnian Cooking Class in Sarajevo: Burek, Klepe & Local Home Dining",
+    "price": 55,
+    "rating": 5,
+    "reviews": 8,
+    "duration": "3 hours",
+    "groupSize": 4,
+    "badge": "Authentic",
+    "hero": "/uploads/cooking-4-class.webp",
+    "detailHero": "/uploads/tour-7-hero.webp",
+    "description": "There is a version of travel where you eat at the right places, see the right things, and still feel like an outsider. This is not that. In a warm Sarajevo home, your host welcomes you with traditional Bosnian coffee and the kind of unhurried hospitality that cannot be staged.\n\nWhat follows is three to four hours of cooking, storytelling, and sitting down together over a meal you made with your own hands. You will learn to stretch burek dough the way it has been done for generations, fold klepe dumplings by hand, and prepare a seasonal dish — stuffed peppers, Begova čorba, or sataraš — chosen by your host based on what is fresh. Everything bakes, simmers, and comes together while conversation flows naturally. You finish with sutlijaš or hurmašice, homemade juice, and the particular satisfaction of a meal that meant something.",
+    "highlights": [
+      "Seasonal Starter Dish — Cook a traditional recipe chosen by your host — stuffed peppers, sataraš, or Begova čorba — based on the season.",
+      "Handmade Burek or Bosnian Pita — Learn to stretch and fill dough entirely by hand, mastering a technique passed down through generations.",
+      "Klepe Dumplings from Scratch — Fold and cook delicate meat or vegetable dumplings — one of Bosnia's most beloved comfort foods.",
+      "Three-Course Shared Meal — Sit down and enjoy everything you prepared together, paired with homemade juices.",
+      "Traditional Bosnian Coffee — The experience is closed in the Bosnian way — slowly, warmly, with coffee prepared in a džezva and stories already beginning.",
+      "Traditional Desserts — End with sutlijaš or hurmašice, sweet, simple, and the kind of finish that makes the whole experience linger."
+    ],
+    "includes": [
+      "Family home hosted",
+      "Intimate small group",
+      "AC transportation"
+    ],
+    "excludes": [
+      "Gratuities (optional but appreciated)",
+      "Personal expenses"
+    ],
+    "faqs": [
+      {
+        "question": "Do I need any cooking experience to join this experience?",
+        "answer": "None at all. Your host guides every step with patience and warmth. The focus is on connection and enjoyment — not technique. If you can stretch dough and laugh at the same time, you are fully qualified."
+      },
+      {
+        "question": "Can dietary requirements or preferences be accommodated?",
+        "answer": "Yes. Vegetarian fillings for burek and klepe are available. Please mention any dietary needs at the time of booking so your host can prepare accordingly."
+      },
+      {
+        "question": "How many people participate in the cooking experience?",
+        "answer": "This is an intimate experience, kept deliberately small — never a crowd. It takes place in a private Sarajevo home, so the atmosphere stays personal and unhurried throughout."
+      }
+    ],
+    "meetingPoint": "In front of the Tallest Tourguide & Friends office, Hamdije Kresevljakovica 61, Sarajevo. Right next to the Viking Pub.",
+    "startingTimes": [
+      "04 PM"
+    ],
+    "languages": [
+      "english",
+      "bosnian"
+    ],
+    "rightFor": [
+      "Food lovers wanting a genuine local kitchen experience",
+      "Couples and small groups seeking intimate cultural immersion",
+      "Families with children who enjoy hands-on activities",
+      "Anyone who believes the best way into a culture is through its food"
+    ],
+    "notRightFor": [
+      "Guests expecting restaurant-style dining rather than home cooking",
+      "Those with severe allergies to dairy or meat (vegetarian options available, but the kitchen works with animal products)",
+      "Anyone looking for outdoor sightseeing rather than an indoor experience"
+    ],
+    "accessibility": {
+      "walkingDistanceKm": null,
+      "drivingDistanceKm": null,
+      "walkingDurationMin": null,
+      "drivingDurationMin": null,
+      "durationMin": null,
+      "elevationGainM": null,
+      "effortLevel": null,
+      "suitability": {
+        "wheelchair": null,
+        "stroller": null,
+        "smallChildren": null,
+        "children": null,
+        "pregnancy": "yes",
+        "seniors": "yes",
+        "pets": null
+      },
+      "requirements": [],
+      "terrain": "Indoor, first floor",
+      "notes": "Walking: None — the experience takes place in a private home\n\nPlease mention any mobility or dietary requirements at the time of booking."
+    },
+    "subtitle": "The Best Meal in Sarajevo Isn't in a Restaurant. It's in Someone's Home.",
+    "gallery": [
+      "/uploads/cooking-1-class.webp",
+      "/uploads/cooking-3-class.webp",
+      "/uploads/bosnian-cooking-class-sarajevo-3ey4vvqm.webp",
+      "/uploads/cooking-4-class.webp",
+      "/uploads/cooking-2-class.webp",
+      "/uploads/bosnian-cooking-class-sarajevo-gshn6b9l.webp",
+      "/uploads/bosnian-cooking-class-sarajevo-rpqy1024.webp",
+      "/uploads/cooking-7-class.webp"
+    ],
+    "mapWaypoints": [
+      {
+        "lat": 43.85696584469741,
+        "lng": 18.427094566825225,
+        "label": "Tallest Tourguide & Friends Office"
+      },
+      {
+        "lat": 43.8595,
+        "lng": 18.4257,
+        "label": "Markale Market"
+      },
+      {
+        "lat": 43.84827609898238,
+        "lng": 18.43277373538746,
+        "label": "Guide's Home "
+      }
+    ],
+    "mapProfile": "foot-walking",
+    "oldPrice": 60,
+    "extras": [],
+    "journalPosts": [
+      "bosnian-food-guide-cuisine"
+    ]
+  },
+  {
+    "id": 5,
+    "slug": "jajce-travnik-day-trip-sarajevo",
+    "category": "day-trips",
+    "city": "Jajce",
+    "region": "Bosnia & Herzegovina",
+    "title": "Jajce & Travnik Day Trip from Sarajevo: Medieval Bosnia Full Day Tour",
+    "price": 85,
+    "rating": 5,
+    "reviews": 12,
+    "duration": "Full day",
+    "groupSize": 12,
+    "badge": null,
+    "hero": "/uploads/jajce-1.webp",
+    "detailHero": "/uploads/jajce-5.webp",
+    "description": "Long before modern borders were drawn, Bosnia had its own medieval kingdom — with royal cities, fortress towns, and a landscape that made it nearly unconquerable. This full-day tour from Sarajevo takes you to two of its most remarkable survivors: Jajce, the last capital of the Bosnian kingdom, and Travnik, the seat of Ottoman viziers for over a century. Two towns, two eras, one extraordinary day.\n\nThe route winds through central Bosnia with a stop at Visoko — home to the controversial Bosnian pyramids — before arriving at Jajce, where a waterfall tumbles directly into the town center and the Pliva lakes mirror the sky just minutes away. Travnik follows, with its colourful bazaar, the birthplace of Nobel laureate Ivo Andrić, and a fortress that has watched over the valley for 600 years. This is Bosnia that most visitors never reach — and never stop thinking about.",
+    "highlights": [
+      "Visoko (optional) — A thought-provoking stop at the site of the so-called Bosnian Pyramids, one of the most debated archaeological mysteries in Europe.",
+      "Jajce Old Town — The royal capital of the last Bosnian kingdom, a walled hilltop town where medieval streets and Ottoman layers exist side by side.",
+      "Jajce Waterfall — One of the rarest sights in Europe — a full river waterfall crashing into the heart of a living town.",
+      "Pliva Lakes — Two glacial lakes just outside Jajce, calm and mirror-flat, surrounded by old watermills that still stand at the water's edge.",
+      "Travnik Castle — A commanding 15th-century fortress rising above Travnik, offering sweeping views over the valley and the old bazaar below.",
+      "Travnik Old Town — Birthplace of Ivo Andrić, Nobel Prize winner, and a town rich with Ottoman architecture and living tradition."
+    ],
+    "includes": [
+      "Local guide",
+      "Small group, personally guided",
+      "Transport in AC Vehicle",
+      "Free cancellation up to 24h before"
+    ],
+    "excludes": [
+      "Museums and castle entrances",
+      "Lunch",
+      "Gratuities (optional but appreciated)",
+      "Personal expenses"
+    ],
+    "faqs": [
+      {
+        "question": "Is prior knowledge of Bosnian medieval history needed to enjoy this tour?",
+        "answer": "Not at all. The guide builds the story from the ground up — connecting the kingdoms, the Ottoman era, and the landscape in a way that makes everything click, even for first-time visitors."
+      },
+      {
+        "question": "Is the Visoko pyramid stop confirmed or truly optional?",
+        "answer": "It is an optional addition depending on group interest and timing. If included, your guide will present the site honestly — covering both the archaeological debate and what is definitively known — so you can form your own view."
+      },
+      {
+        "question": "Is this tour physically demanding?",
+        "answer": "There is moderate walking involved, including some uphill paths at Jajce and Travnik Castle. The pace is relaxed and manageable for most fitness levels. Comfortable walking shoes are strongly recommended."
+      }
+    ],
+    "meetingPoint": "In front of the Tallest Tourguide & Friends office, Hamdije Kresevljakovica 61, Sarajevo. Right next to the Viking Pub.",
+    "startingTimes": [
+      "08 AM"
+    ],
+    "languages": [
+      "english",
+      "bosnian"
+    ],
+    "rightFor": [
+      "History enthusiasts curious about medieval Bosnia and the Ottoman era",
+      "Travelers on longer Bosnia trips wanting to see central Bosnia",
+      "Those drawn to dramatic landscapes and fortified hilltop towns",
+      "Anyone who prefers layered historical storytelling over beach or nightlife"
+    ],
+    "notRightFor": [
+      "Guests who have already visited both Jajce and Travnik",
+      "Those prone to motion sickness on winding mountain roads",
+      "Visitors expecting mostly flat, easy walking throughout"
+    ],
+    "accessibility": {
+      "walkingDistanceKm": null,
+      "drivingDistanceKm": null,
+      "walkingDurationMin": null,
+      "drivingDurationMin": null,
+      "durationMin": null,
+      "elevationGainM": null,
+      "effortLevel": null,
+      "suitability": {
+        "wheelchair": "no",
+        "stroller": "partial",
+        "smallChildren": null,
+        "children": "yes",
+        "pregnancy": "yes",
+        "seniors": "yes",
+        "pets": "yes"
+      },
+      "requirements": [],
+      "terrain": "Cobblestone and uneven paths; steep climb to Travnik Castle",
+      "notes": "Walking: Moderate walking with uphill climbs at castle sites\n\nThe castle climbs involve steps and uneven ground. Comfortable walking shoes are essential."
+    },
+    "subtitle": "Kings, Castles & Waterfalls: A Full Day in Medieval Bosnia",
+    "gallery": [
+      "/uploads/jajce-1.webp",
+      "/uploads/jajce-2.webp",
+      "/uploads/jajce-3.webp",
+      "/uploads/jajce-4.webp",
+      "/uploads/jajce-5.webp",
+      "/uploads/jajce-6.webp",
+      "/uploads/jajce-7.webp",
+      "/uploads/jajce-8.webp",
+      "/uploads/tour-6-hero.webp"
+    ],
+    "mapWaypoints": [
+      {
+        "lat": 43.85678126021869,
+        "lng": 18.403531029387583,
+        "label": "Sarajevo"
+      },
+      {
+        "lat": 43.99260181048281,
+        "lng": 18.17739356711044,
+        "label": "Visoko"
+      },
+      {
+        "lat": 44.22610896578288,
+        "lng": 17.665149338101614,
+        "label": "Travnik"
+      },
+      {
+        "lat": 44.14501771809758,
+        "lng": 17.394726262684454,
+        "label": "Donji Vakuf"
+      },
+      {
+        "lat": 44.33746502572596,
+        "lng": 17.269794398579894,
+        "label": "Pliva Waterfall in Jajce"
+      },
+      {
+        "lat": 44.34845595729735,
+        "lng": 17.239768622581238,
+        "label": "Lover’s Bridge"
+      },
+      {
+        "lat": 44.347383633072965,
+        "lng": 17.22566739695896,
+        "label": "Plivski Mlinčići -  Pliva's Watermill's"
+      }
+    ],
+    "mapProfile": "driving-car"
+  },
+  {
     "id": 1,
     "slug": "sarajevo-walking-tour",
     "category": "city-walks",
     "city": "Sarajevo",
     "region": "Bosnia & Herzegovina",
     "title": "Essential Sarajevo Walking Tour: History, Culture & the Full Story",
-    "price": 30,
+    "price": 25,
     "rating": 5,
     "reviews": 12,
     "duration": "3 hours",
@@ -40,9 +467,9 @@
     ],
     "includes": [
       "Local guide",
-      "Small group max 12",
+      "Small group, personally guided",
       "Walking tour",
-      "Free cancellation 24h"
+      "Free cancellation up to 24h before"
     ],
     "excludes": [
       "Entrance fees to religious sites",
@@ -241,172 +668,11 @@
         "label": "Accomodation Pick Up",
         "description": "",
         "price": 10,
-        "perPerson": true
-      }
-    ]
-  },
-  {
-    "id": 2,
-    "slug": "mostar-day-trip-from-sarajevo",
-    "category": "day-trips",
-    "city": "Mostar",
-    "region": "Bosnia & Herzegovina",
-    "title": "Mostar Day Trip from Sarajevo: Old Bridge, Kravice & Herzegovina",
-    "price": 85,
-    "rating": 5,
-    "reviews": 18,
-    "duration": "Full day",
-    "groupSize": 12,
-    "badge": "Bestseller",
-    "hero": "/uploads/tour-5-hero.webp",
-    "detailHero": "/uploads/tour-5-hero.webp",
-    "description": "Most first-time visitors to Bosnia come expecting history. They leave talking about the water. This full-day tour from Sarajevo takes you deep into Herzegovina — a landscape of impossible turquoise rivers, medieval fortresses, and a bridge so beautiful it was rebuilt from memory after war destroyed it. Every stop earns its place on this route.\n\nDeparting Sarajevo in the morning, you travel south through changing terrain, stopping at Konjic's old bridge and Jablanica's open-air war museum, before the route opens into Herzegovina. Počitelj's hilltop fortress, the spring at Blagaj Buna rising from a cliff face, the cascading waterfalls at Kravice, and finally Mostar — its Old Bridge, its bazaar, its divers — all within a single, full day. This is Bosnia at its most visually stunning.",
-    "highlights": [
-      "Konjic — A charming riverside town with its own restored Ottoman bridge, a perfect first taste of what Herzegovina has in store.",
-      "Jablanica — Home to the legendary WWII battle site where Tito's partisans crossed the Neretva. The destroyed bridge still stands as a monument.",
-      "Počitelj — A fortified medieval village frozen in time, climbing up a limestone hill with panoramic views over the Neretva river valley.",
-      "Blagaj Buna — A 16th-century Dervish monastery built into a cliff above one of Europe's largest freshwater springs. Quietly breathtaking.",
-      "Kravice Waterfalls — A series of cascading falls spilling into a vivid emerald pool. One of Bosnia's most spectacular natural sights.",
-      "Mostar Old Bridge (Stari Most) — The iconic 16th-century bridge, rebuilt after its 1993 destruction, arching over the Neretva."
-    ],
-    "includes": [
-      "Local guide",
-      "Small group max 12",
-      "Transport in AC Vehicle",
-      "Free cancellation 24h"
-    ],
-    "excludes": [
-      "Entrance fees to Kravice Waterfalls (20 BAM/10 EUR)",
-      "Lunch",
-      "Gratuities (optional but appreciated)",
-      "Personal expenses"
-    ],
-    "faqs": [
-      {
-        "question": "How long is the full day tour and what time does it return to Sarajevo?",
-        "answer": "The tour departs Sarajevo in the morning and returns in the early evening, typically around 10-12 hours in total. Exact timing will be confirmed at booking."
-      },
-      {
-        "question": "Is swimming at Kravice Waterfalls included or optional?",
-        "answer": "Swimming at Kravice is possible during warmer months and is entirely optional. Bringing a swimsuit and a small towel is recommended if you'd like to take a dip."
-      },
-      {
-        "question": "Is this tour suitable for first-time visitors who don't know much about Bosnian history?",
-        "answer": "It is designed exactly for them. The guide provides context at every stop — history, culture, and local stories — without overwhelming. You leave with a genuine feel for the country, not just photographs of it."
-      }
-    ],
-    "meetingPoint": "In front of the Tallest Tourguide & Friends office, Hamdije Kresevljakovica 61, Sarajevo. Right next to the Viking Pub.",
-    "startingTimes": [
-      "08 AM"
-    ],
-    "languages": [
-      "english",
-      "bosnian"
-    ],
-    "rightFor": [
-      "First-time visitors wanting to see Herzegovina in a single day",
-      "Nature lovers drawn to turquoise rivers and waterfalls",
-      "Those with one full day to experience Bosnia beyond Sarajevo",
-      "Anyone curious about Ottoman history and architecture"
-    ],
-    "notRightFor": [
-      "Guests who prefer slow, deep single-location experiences",
-      "Those prone to motion sickness (mountain road driving)",
-      "Travelers who have already visited Mostar and Kravice"
-    ],
-    "accessibility": {
-      "walkingDistanceKm": 2,
-      "drivingDistanceKm": 340,
-      "walkingDurationMin": null,
-      "drivingDurationMin": null,
-      "durationMin": 360,
-      "elevationGainM": null,
-      "effortLevel": "moderate",
-      "suitability": {
-        "wheelchair": "no",
-        "stroller": "partial",
-        "smallChildren": "yes",
-        "children": "yes",
-        "pregnancy": "yes",
-        "seniors": "yes",
-        "pets": "partial"
-      },
-      "requirements": [
-        {
-          "key": "stairs",
-          "label": "Climb a flight of stairs",
-          "detail": "We have small climb to Pocitelj fortress and flight of stairs when going to Kravice Waterfalls"
-        }
-      ],
-      "terrain": "Steep cobblestone streets in Počitelj and Mostar; flatter terrain at Kravice",
-      "notes": "Walking: Moderate walking at each stop (1–2 km per location)\nSeveral sites involve uneven terrain and steep paths. Not suitable for guests with significant mobility limitations."
-    },
-    "subtitle": "Rivers, Ruins & the Old Bridge: A Full Day Through the Heart of Herzegovina",
-    "gallery": [
-      "/uploads/mostar-day-trip-from-sarajevo-konjic.webp",
-      "/uploads/tour-5-hero.webp",
-      "/uploads/mostar-2.webp",
-      "/uploads/mostar-day-trip-from-sarajevo-pocitelj-old-town.webp",
-      "/uploads/mostar-3.webp",
-      "/uploads/mostar-day-trip-from-sarajevo-kravice-waterfalls-group.webp",
-      "/uploads/mostar-day-trip-from-sarajevo-blagaj-buna.webp",
-      "/uploads/mostar-day-trip-from-sarajevo-buna-chanel.webp",
-      "/uploads/mostar-day-trip-from-sarajevo-pocitelj.webp",
-      "/uploads/mostar-day-trip-from-sarajevo-pocitelj-group.webp"
-    ],
-    "mapWaypoints": [
-      {
-        "lat": 43.8563,
-        "lng": 18.4132,
-        "label": "Sarajevo"
-      },
-      {
-        "lat": 43.6579,
-        "lng": 17.9621,
-        "label": "Konjic"
-      },
-      {
-        "lat": 43.1219,
-        "lng": 17.7315,
-        "label": "Počitelj"
-      },
-      {
-        "lat": 43.1367,
-        "lng": 17.6017,
-        "label": "Kravice Waterfalls"
-      },
-      {
-        "lat": 43.2534,
-        "lng": 17.9052,
-        "label": "Blagaj"
-      },
-      {
-        "lat": 43.337,
-        "lng": 17.8156,
-        "label": "Mostar Old Bridge"
-      }
-    ],
-    "mapProfile": "driving-car",
-    "extras": [
-      {
-        "label": "Hotel pick-up & drop-off",
-        "description": "Door-to-door from your Sarajevo accommodation.",
-        "price": 15,
         "perPerson": false
-      },
-      {
-        "label": "Kravice Waterfalls entry ticket",
-        "description": "Skip the queue at the falls.",
-        "price": 5,
-        "perPerson": true
-      },
-      {
-        "label": "Traditional Herzegovinian lunch",
-        "description": "Three courses at a local family restaurant.",
-        "price": 18,
-        "perPerson": true
       }
-    ]
+    ],
+    "oldPrice": 30,
+    "journalPosts": []
   },
   {
     "id": 8,
@@ -441,7 +707,7 @@
     "includes": [
       "Experienced local guide",
       "Return transport from Sarajevo",
-      "Small group max 12"
+      "Small group, personally guided"
     ],
     "excludes": [
       "Lunch in home of Lukomir residents (approx. 10 EUR / 20 BAM))",
@@ -560,70 +826,200 @@
     "mapProfile": "foot-hiking"
   },
   {
-    "id": 4,
-    "slug": "bosnian-cooking-class-sarajevo",
-    "category": "food-culture",
-    "city": "Sarajevo",
+    "id": 9,
+    "slug": "srebrenica-day-trip-from-sarajevo",
+    "category": "history",
+    "city": "Srebrenica",
     "region": "Bosnia & Herzegovina",
-    "title": "Bosnian Cooking Class in Sarajevo: Burek, Klepe & Local Home Dining",
-    "price": 55,
+    "title": "Srebrenica Day Trip from Sarajevo | Genocide Memorial & Museum Tour",
+    "price": 85,
     "rating": 5,
-    "reviews": 8,
-    "duration": "3 hours",
-    "groupSize": 6,
-    "badge": "Authentic",
-    "hero": "/uploads/cooking-4-class.webp",
-    "detailHero": "/uploads/tour-7-hero.webp",
-    "description": "There is a version of travel where you eat at the right places, see the right things, and still feel like an outsider. This is not that. In a warm Sarajevo home, your host welcomes you with traditional Bosnian coffee and the kind of unhurried hospitality that cannot be staged.\n\nWhat follows is three to four hours of cooking, storytelling, and sitting down together over a meal you made with your own hands. You will learn to stretch burek dough the way it has been done for generations, fold klepe dumplings by hand, and prepare a seasonal dish — stuffed peppers, Begova čorba, or sataraš — chosen by your host based on what is fresh. Everything bakes, simmers, and comes together while conversation flows naturally. You finish with sutlijaš or hurmašice, homemade juice, and the particular satisfaction of a meal that meant something.",
+    "reviews": 2,
+    "duration": "Full day",
+    "groupSize": 12,
+    "badge": "Emotional",
+    "hero": "/uploads/srebrenica-7.webp",
+    "detailHero": "/uploads/srebrenica-7.webp",
+    "description": "In July 1995, over 8,000 Bosniak Muslim men and boys were systematically killed in and around the town of Srebrenica in what the International Court of Justice ruled a genocide. It happened in Europe, under a United Nations protection mandate, within living memory. The Srebrenica-Potočari Memorial and Cemetery now holds the identified remains of those victims — and the process of identification continues to this day. \n\n This full-day trip from Sarajevo is not designed to be comfortable. It is designed to be honest. Your guide will provide full historical context throughout — the lead-up to the genocide, the failure of international protection, the role of the Dutchbat UN battalion, the testimonies of survivors, and the ongoing work of documentation and justice. You will visit the memorial cemetery, the genocide museum, the former UN Dutch Battalion base, the Memorial Room of the Mothers of Srebrenica, and the town itself. You will leave knowing what happened, why it matters, and why remembrance is not optional.",
     "highlights": [
-      "Seasonal Starter Dish — Cook a traditional recipe chosen by your host — stuffed peppers, sataraš, or Begova čorba — based on the season.",
-      "Handmade Burek or Bosnian Pita — Learn to stretch and fill dough entirely by hand, mastering a technique passed down through generations.",
-      "Klepe Dumplings from Scratch — Fold and cook delicate meat or vegetable dumplings — one of Bosnia's most beloved comfort foods.",
-      "Three-Course Shared Meal — Sit down and enjoy everything you prepared together, paired with homemade juices.",
-      "Traditional Bosnian Coffee — The experience is closed in the Bosnian way — slowly, warmly, with coffee prepared in a džezva and stories already beginning.",
-      "Traditional Desserts — End with sutlijaš or hurmašice, sweet, simple, and the kind of finish that makes the whole experience linger."
+      "Srebrenica-Potočari Memorial & Cemetery — The primary site of remembrance, where thousands of identified victims are buried in white stone markers across a hillside that extends as far as the eye can see.",
+      "Srebrenica Genocide Museum — A deeply documented account of the events of July 1995, told through testimony, evidence, and the findings of international tribunals. One of the most important museums in Europe.",
+      "Dutch Battalion UN Base (Dutchbat) — The former headquarters of the UN peacekeeping force tasked with protecting the safe zone. A sobering site that raises necessary questions about the limits and failures of international intervention.",
+      "Memorial Room of the Mothers of Srebrenica — A space dedicated to the survivors — the mothers, wives, and daughters who lost everything and have spent decades demanding truth, identification, and accountability.",
+      "Town of Srebrenica — The town itself, quiet and still marked by the weight of what occurred here, provides essential human context that no museum exhibit can fully replicate."
     ],
+    "fitnessNote": {
+      "type": "emotional",
+      "level": "Emotionally demanding",
+      "detail": "This tour covers the Srebrenica genocide — one of the most traumatic events in European post-war history. The experience includes memorial sites, documentary footage, and survivor testimonials. We encourage all guests to consider this carefully before booking. The round trip also involves approximately 5 hours of driving. Not recommended for children under 16."
+    },
     "includes": [
-      "Family home hosted",
-      "Small group max 6",
-      "AC transportation"
+      "Local guide",
+      "Small group, personally guided",
+      "Transportation in AC Vehicle"
     ],
     "excludes": [
-      "Gratuities (optional but appreciated)",
+      "Food and drinks at stops",
       "Personal expenses"
     ],
     "faqs": [
       {
-        "question": "Do I need any cooking experience to join this experience?",
-        "answer": "None at all. Your host guides every step with patience and warmth. The focus is on connection and enjoyment — not technique. If you can stretch dough and laugh at the same time, you are fully qualified."
+        "question": "Is this tour appropriate for visitors who are emotionally sensitive to trauma and genocide content?",
+        "answer": "This tour engages directly and unflinchingly with the Srebrenica genocide — mass atrocity, survivor testimony, and ongoing identification of victims. It is handled with full respect and care, but the content is heavy by nature. Guests should arrive prepared for that. It is not recommended for children under 16."
       },
       {
-        "question": "Can dietary requirements or preferences be accommodated?",
-        "answer": "Yes. Vegetarian fillings for burek and klepe are available. Please mention any dietary needs at the time of booking so your host can prepare accordingly."
+        "question": "Does the tour present events from a particular political perspective?",
+        "answer": "The tour presents events as established historical and legal fact — as ruled by the International Court of Justice and the International Criminal Tribunal for the former Yugoslavia. Srebrenica is recognised as genocide under international law. The guide does not present this as contested. Denial of the genocide will not be entertained on this tour."
       },
       {
-        "question": "How many people participate in the cooking experience?",
-        "answer": "This is an intimate experience designed for small groups — typically two to six guests. It takes place in a private Sarajevo home, so the atmosphere stays personal and unhurried throughout."
+        "question": "How long is the full day trip and what is the travel time from Sarajevo?",
+        "answer": "The drive from Sarajevo to Srebrenica takes approximately two and a half hours each way through mountain roads. The full day runs around 10 hours including transport, site visits, and time for quiet reflection. A stop for lunch in the area is included in the schedule."
       }
     ],
     "meetingPoint": "In front of the Tallest Tourguide & Friends office, Hamdije Kresevljakovica 61, Sarajevo. Right next to the Viking Pub.",
     "startingTimes": [
-      "04 PM"
+      "08 AM"
     ],
     "languages": [
       "english",
       "bosnian"
     ],
     "rightFor": [
-      "Food lovers wanting a genuine local kitchen experience",
-      "Couples and small groups seeking intimate cultural immersion",
-      "Families with children who enjoy hands-on activities",
-      "Anyone who believes the best way into a culture is through its food"
+      "Travelers committed to understanding modern European genocide",
+      "Guests who have already seen Sarajevo and want to go deeper into Bosnia",
+      "Educators, human rights advocates, and those with a professional interest",
+      "Anyone who believes remembrance is not optional"
     ],
     "notRightFor": [
-      "Guests expecting restaurant-style dining rather than home cooking",
-      "Those with severe allergies to dairy or meat (vegetarian options available, but the kitchen works with animal products)",
-      "Anyone looking for outdoor sightseeing rather than an indoor experience"
+      "Children under 16 — content carries significant emotional weight",
+      "Guests who are emotionally sensitive to genocide content or survivor testimony",
+      "Those wanting sightseeing, nature, or a typical full-day excursion",
+      "Anyone not prepared for approximately 5 hours of driving"
+    ],
+    "accessibility": {
+      "walkingDistanceKm": null,
+      "drivingDistanceKm": 145,
+      "durationMin": 160,
+      "elevationGainM": null,
+      "effortLevel": "low",
+      "suitability": {
+        "wheelchair": "yes",
+        "stroller": "yes",
+        "smallChildren": null,
+        "children": "partial",
+        "pregnancy": "yes",
+        "seniors": "yes",
+        "pets": "no"
+      },
+      "requirements": [],
+      "terrain": "The memorial site involves walking on slightly uneven ground",
+      "notes": "Walking: Limited — most of the day is spent in vehicles and at the memorial\n\nPhysical accessibility is manageable for most guests. Please contact us with specific mobility concerns."
+    },
+    "subtitle": "What Happened in Srebrenica in July 1995 Must Not Be Forgotten. This Tour Exists So It Isn't.",
+    "gallery": [
+      "/uploads/srebrenica-1.webp",
+      "/uploads/srebrenica-2.webp",
+      "/uploads/srebrenica-3.webp",
+      "/uploads/srebrenica-4.webp",
+      "/uploads/srebrenica-5.webp",
+      "/uploads/srebrenica-6.webp",
+      "/uploads/srebrenica-7.webp"
+    ],
+    "mapWaypoints": [
+      {
+        "lat": 43.85578753562027,
+        "lng": 18.406962242918024,
+        "label": "Sarajevo"
+      },
+      {
+        "lat": 44.15828000736652,
+        "lng": 19.300190013969626,
+        "label": "Srebrenica Museum"
+      },
+      {
+        "lat": 44.158226689044554,
+        "lng": 19.302396560193312,
+        "label": "Srebrenica Memorial Center - Potocari"
+      },
+      {
+        "lat": 44.106173374838285,
+        "lng": 19.297775471575882,
+        "label": "Srebrenica"
+      }
+    ],
+    "mapProfile": "driving-car",
+    "journalPosts": [
+      "srebrenica-what-i-carried-and-what-history-still-carries"
+    ],
+    "oldPrice": null,
+    "extras": []
+  },
+  {
+    "slug": "home-hosted-dinner",
+    "title": "At the Family Table: Home-Hosted Dinner in Sarajevo",
+    "subtitle": "The Best Meal in Sarajevo Isn't in a Restaurant. It's in Someone's Home.",
+    "category": "food-culture",
+    "badge": "Authentic",
+    "price": 35,
+    "rating": 5,
+    "reviews": 4,
+    "duration": "2 hours",
+    "groupSize": 8,
+    "hero": "/uploads/home-hosted-dinner-37rhoiaq.webp",
+    "detailHero": "/uploads/home-hosted-dinner-jo91k279.webp",
+    "description": "<p>There is a version of travel where you eat well but never really connect. This is not that. This evening opens a genuine Sarajevo home for a dinner built around food, conversation, and the kind of hospitality Bosnia has always been quietly known for. No restaurant can recreate it, because it was never designed to be replicated — only shared.</p><p>Your host shapes the menu around the season and your preferences, but two dishes anchor every table: burek, the hand-stretched meat pastry that defines Bosnian baking, and klepe, delicate dumplings served with garlic yogurt. Around them, expect slow-cooked dishes, homemade preserves, and a dessert that closes the evening properly. You leave the way guests in Bosnia always leave — full, welcomed, and already telling someone about it.</p>",
+    "highlights": [
+      "A Genuine Local Home — Not a restaurant, not a staged setting. A real Sarajevo household opens its doors for the evening.",
+      "Burek, Made by our Mothers — A recipe passed down through generations, baked the way it has always been done in Bosnian homes.",
+      "Klepe Dumplings — Delicate meat-filled dumplings served with garlic yogurt — one of Bosnia's most loved comfort dishes.",
+      "A Seasonal Home-Cooked Menu — Shaped around what's fresh and your preferences, never a fixed tourist menu.",
+      "Homemade Drinks & Dessert — The evening closes with traditional Bosnian sweets and drinks made the same way they always have been."
+    ],
+    "includes": [
+      "Home-cooked three-course dinner",
+      "Burek and klepe as the centerpiece dishes",
+      "Homemade drinks",
+      "Seasonal dishes shaped around your preferences",
+      "Local family host",
+      "Kept intimate — a household table"
+    ],
+    "excludes": [
+      "Transport to and from the home (unless booked as part of a package)",
+      "Alcoholic beverages",
+      "Gratuities"
+    ],
+    "rightFor": [
+      "Couples and cultural travelers who want a genuine, unscripted evening",
+      "Food lovers seeking real Bosnian home cooking, not a tourist menu",
+      "Travelers who want to connect with a local family, not just observe one",
+      "Anyone who values warmth and hospitality over polish and performance"
+    ],
+    "notRightFor": [
+      "Guests expecting a cooking class or hands-on instruction",
+      "Large groups looking for a formal, restaurant-style setting",
+      "Travelers with very rigid dietary restrictions not communicated in advance",
+      "Those seeking a quiet, low-interaction dining experience"
+    ],
+    "faqs": [
+      {
+        "question": "Can dietary requirements or preferences be accommodated?",
+        "answer": "<p>Yes. Vegetarian fillings for burek and klepe are available, and your host shapes the wider menu around any dietary needs communicated at booking.</p>"
+      },
+      {
+        "question": "How many guests share the dinner?",
+        "answer": "<p>The evening is kept intimate — a household table inside a private Sarajevo home rather than a restaurant or event space.</p>"
+      },
+      {
+        "question": "Is this a cooking class, or purely a dining experience?",
+        "answer": "<p>This is a dining experience, not a class. The focus is on sharing the meal and the evening. If you would rather cook alongside your host, our Authentic Bosnian Cooking Experience is the better fit.</p>"
+      }
+    ],
+    "meetingPoint": "Latin Bridge, Sarajevo, Old Town",
+    "startingTimes": [
+      "6 PM"
+    ],
+    "languages": [
+      "English"
     ],
     "accessibility": {
       "walkingDistanceKm": null,
@@ -637,184 +1033,31 @@
         "wheelchair": null,
         "stroller": null,
         "smallChildren": null,
-        "children": null,
-        "pregnancy": "yes",
-        "seniors": "yes",
-        "pets": null
-      },
-      "requirements": [],
-      "terrain": "Indoor, first floor",
-      "notes": "Walking: None — the experience takes place in a private home\n\nPlease mention any mobility or dietary requirements at the time of booking."
-    },
-    "subtitle": "The Best Meal in Sarajevo Isn't in a Restaurant. It's in Someone's Home.",
-    "gallery": [
-      "/uploads/cooking-1-class.webp",
-      "/uploads/cooking-2-class.webp",
-      "/uploads/cooking-3-class.webp",
-      "/uploads/cooking-4-class.webp",
-      "/uploads/cooking-5-class.webp",
-      "/uploads/cooking-6-class.webp",
-      "/uploads/cooking-7-class.webp"
-    ],
-    "mapWaypoints": [
-      {
-        "lat": 43.85696584469741,
-        "lng": 18.427094566825225,
-        "label": "Tallest Tourguide & Friends Office"
-      },
-      {
-        "lat": 43.8595,
-        "lng": 18.4257,
-        "label": "Markale Market"
-      },
-      {
-        "lat": 43.84827609898238,
-        "lng": 18.43277373538746,
-        "label": "Guide's Home "
-      }
-    ],
-    "mapProfile": "foot-walking"
-  },
-  {
-    "id": 5,
-    "slug": "jajce-travnik-day-trip-sarajevo",
-    "category": "day-trips",
-    "city": "Jajce",
-    "region": "Bosnia & Herzegovina",
-    "title": "Jajce & Travnik Day Trip from Sarajevo: Medieval Bosnia Full Day Tour",
-    "price": 85,
-    "rating": 5,
-    "reviews": 12,
-    "duration": "Full day",
-    "groupSize": 12,
-    "badge": null,
-    "hero": "/uploads/jajce-1.webp",
-    "detailHero": "/uploads/jajce-5.webp",
-    "description": "Long before modern borders were drawn, Bosnia had its own medieval kingdom — with royal cities, fortress towns, and a landscape that made it nearly unconquerable. This full-day tour from Sarajevo takes you to two of its most remarkable survivors: Jajce, the last capital of the Bosnian kingdom, and Travnik, the seat of Ottoman viziers for over a century. Two towns, two eras, one extraordinary day.\n\nThe route winds through central Bosnia with a stop at Visoko — home to the controversial Bosnian pyramids — before arriving at Jajce, where a waterfall tumbles directly into the town center and the Pliva lakes mirror the sky just minutes away. Travnik follows, with its colourful bazaar, the birthplace of Nobel laureate Ivo Andrić, and a fortress that has watched over the valley for 600 years. This is Bosnia that most visitors never reach — and never stop thinking about.",
-    "highlights": [
-      "Visoko (optional) — A thought-provoking stop at the site of the so-called Bosnian Pyramids, one of the most debated archaeological mysteries in Europe.",
-      "Jajce Old Town — The royal capital of the last Bosnian kingdom, a walled hilltop town where medieval streets and Ottoman layers exist side by side.",
-      "Jajce Waterfall — One of the rarest sights in Europe — a full river waterfall crashing into the heart of a living town.",
-      "Pliva Lakes — Two glacial lakes just outside Jajce, calm and mirror-flat, surrounded by old watermills that still stand at the water's edge.",
-      "Travnik Castle — A commanding 15th-century fortress rising above Travnik, offering sweeping views over the valley and the old bazaar below.",
-      "Travnik Old Town — Birthplace of Ivo Andrić, Nobel Prize winner, and a town rich with Ottoman architecture and living tradition."
-    ],
-    "includes": [
-      "Local guide",
-      "Small group max 12",
-      "Transport in AC Vehicle",
-      "Free cancellation 24h"
-    ],
-    "excludes": [
-      "Museums and castle entrances",
-      "Lunch",
-      "Gratuities (optional but appreciated)",
-      "Personal expenses"
-    ],
-    "faqs": [
-      {
-        "question": "Is prior knowledge of Bosnian medieval history needed to enjoy this tour?",
-        "answer": "Not at all. The guide builds the story from the ground up — connecting the kingdoms, the Ottoman era, and the landscape in a way that makes everything click, even for first-time visitors."
-      },
-      {
-        "question": "Is the Visoko pyramid stop confirmed or truly optional?",
-        "answer": "It is an optional addition depending on group interest and timing. If included, your guide will present the site honestly — covering both the archaeological debate and what is definitively known — so you can form your own view."
-      },
-      {
-        "question": "Is this tour physically demanding?",
-        "answer": "There is moderate walking involved, including some uphill paths at Jajce and Travnik Castle. The pace is relaxed and manageable for most fitness levels. Comfortable walking shoes are strongly recommended."
-      }
-    ],
-    "meetingPoint": "In front of the Tallest Tourguide & Friends office, Hamdije Kresevljakovica 61, Sarajevo. Right next to the Viking Pub.",
-    "startingTimes": [
-      "08 AM"
-    ],
-    "languages": [
-      "english",
-      "bosnian"
-    ],
-    "rightFor": [
-      "History enthusiasts curious about medieval Bosnia and the Ottoman era",
-      "Travelers on longer Bosnia trips wanting to see central Bosnia",
-      "Those drawn to dramatic landscapes and fortified hilltop towns",
-      "Anyone who prefers layered historical storytelling over beach or nightlife"
-    ],
-    "notRightFor": [
-      "Guests who have already visited both Jajce and Travnik",
-      "Those prone to motion sickness on winding mountain roads",
-      "Visitors expecting mostly flat, easy walking throughout"
-    ],
-    "accessibility": {
-      "walkingDistanceKm": null,
-      "drivingDistanceKm": null,
-      "walkingDurationMin": null,
-      "drivingDurationMin": null,
-      "durationMin": null,
-      "elevationGainM": null,
-      "effortLevel": null,
-      "suitability": {
-        "wheelchair": "no",
-        "stroller": "partial",
-        "smallChildren": null,
         "children": "yes",
         "pregnancy": "yes",
         "seniors": "yes",
-        "pets": "yes"
+        "pets": "partial"
       },
       "requirements": [],
-      "terrain": "Cobblestone and uneven paths; steep climb to Travnik Castle",
-      "notes": "Walking: Moderate walking with uphill climbs at castle sites\n\nThe castle climbs involve steps and uneven ground. Comfortable walking shoes are essential."
+      "terrain": "",
+      "notes": "We need your food restrictions to be announced at least a day in advance so we can prepare accordingly. "
     },
-    "subtitle": "Kings, Castles & Waterfalls: A Full Day in Medieval Bosnia",
+    "fitnessNote": null,
     "gallery": [
-      "/uploads/jajce-1.webp",
-      "/uploads/jajce-2.webp",
-      "/uploads/jajce-3.webp",
-      "/uploads/jajce-4.webp",
-      "/uploads/jajce-5.webp",
-      "/uploads/jajce-6.webp",
-      "/uploads/jajce-7.webp",
-      "/uploads/jajce-8.webp",
-      "/uploads/tour-6-hero.webp"
+      "/uploads/home-hosted-dinner-b1dtwgcd.webp",
+      "/uploads/home-hosted-dinner-ni5ri4l6.webp",
+      "/uploads/home-hosted-dinner-lc2mgl7t.webp",
+      "/uploads/home-hosted-dinner-prf3e7wc.webp",
+      "/uploads/home-hosted-dinner-tgj2w1ce.webp"
     ],
-    "mapWaypoints": [
-      {
-        "lat": 43.85678126021869,
-        "lng": 18.403531029387583,
-        "label": "Sarajevo"
-      },
-      {
-        "lat": 43.99260181048281,
-        "lng": 18.17739356711044,
-        "label": "Visoko"
-      },
-      {
-        "lat": 44.22610896578288,
-        "lng": 17.665149338101614,
-        "label": "Travnik"
-      },
-      {
-        "lat": 44.14501771809758,
-        "lng": 17.394726262684454,
-        "label": "Donji Vakuf"
-      },
-      {
-        "lat": 44.33746502572596,
-        "lng": 17.269794398579894,
-        "label": "Pliva Waterfall in Jajce"
-      },
-      {
-        "lat": 44.34845595729735,
-        "lng": 17.239768622581238,
-        "label": "Lover’s Bridge"
-      },
-      {
-        "lat": 44.347383633072965,
-        "lng": 17.22566739695896,
-        "label": "Plivski Mlinčići -  Pliva's Watermill's"
-      }
-    ],
-    "mapProfile": "driving-car"
+    "mapWaypoints": [],
+    "mapProfile": "foot-walking",
+    "id": 10,
+    "oldPrice": null,
+    "extras": [],
+    "journalPosts": [
+      "bosnian-food-guide-cuisine"
+    ]
   },
   {
     "id": 6,
@@ -846,9 +1089,9 @@
     ],
     "includes": [
       "Local guide",
-      "Small group max 12",
+      "Small group, personally guided",
       "Walking tour",
-      "Free cancellation 24h"
+      "Free cancellation up to 24h before"
     ],
     "excludes": [
       "Gratuities (optional but appreciated)",
@@ -988,7 +1231,7 @@
     ],
     "includes": [
       "Local guide",
-      "Small group max 12",
+      "Small group, personally guided",
       "Walking tour"
     ],
     "excludes": [
@@ -1126,9 +1369,9 @@
     ],
     "includes": [
       "Local guide",
-      "Small group max 12",
+      "Small group, personally guided",
       "Walking tour",
-      "Free cancellation 24h"
+      "Free cancellation up to 24h before"
     ],
     "excludes": [
       "Entrance fees to Tunnel Museum (20 BAM/10 EUR)",
@@ -1243,228 +1486,5 @@
       }
     ],
     "mapProfile": "driving-car"
-  },
-  {
-    "id": 9,
-    "slug": "srebrenica-day-trip-from-sarajevo",
-    "category": "history",
-    "city": "Srebrenica",
-    "region": "Bosnia & Herzegovina",
-    "title": "Srebrenica Day Trip from Sarajevo | Genocide Memorial & Museum Tour",
-    "price": 85,
-    "rating": 5,
-    "reviews": 2,
-    "duration": "Full day",
-    "groupSize": 12,
-    "badge": "Emotional",
-    "hero": "/uploads/srebrenica-7.webp",
-    "detailHero": "/uploads/srebrenica-7.webp",
-    "description": "In July 1995, over 8,000 Bosniak Muslim men and boys were systematically killed in and around the town of Srebrenica in what the International Court of Justice ruled a genocide. It happened in Europe, under a United Nations protection mandate, within living memory. The Srebrenica-Potočari Memorial and Cemetery now holds the identified remains of those victims — and the process of identification continues to this day. \n\n This full-day trip from Sarajevo is not designed to be comfortable. It is designed to be honest. Your guide will provide full historical context throughout — the lead-up to the genocide, the failure of international protection, the role of the Dutchbat UN battalion, the testimonies of survivors, and the ongoing work of documentation and justice. You will visit the memorial cemetery, the genocide museum, the former UN Dutch Battalion base, the Memorial Room of the Mothers of Srebrenica, and the town itself. You will leave knowing what happened, why it matters, and why remembrance is not optional.",
-    "highlights": [
-      "Srebrenica-Potočari Memorial & Cemetery — The primary site of remembrance, where thousands of identified victims are buried in white stone markers across a hillside that extends as far as the eye can see.",
-      "Srebrenica Genocide Museum — A deeply documented account of the events of July 1995, told through testimony, evidence, and the findings of international tribunals. One of the most important museums in Europe.",
-      "Dutch Battalion UN Base (Dutchbat) — The former headquarters of the UN peacekeeping force tasked with protecting the safe zone. A sobering site that raises necessary questions about the limits and failures of international intervention.",
-      "Memorial Room of the Mothers of Srebrenica — A space dedicated to the survivors — the mothers, wives, and daughters who lost everything and have spent decades demanding truth, identification, and accountability.",
-      "Town of Srebrenica — The town itself, quiet and still marked by the weight of what occurred here, provides essential human context that no museum exhibit can fully replicate."
-    ],
-    "fitnessNote": {
-      "type": "emotional",
-      "level": "Emotionally demanding",
-      "detail": "This tour covers the Srebrenica genocide — one of the most traumatic events in European post-war history. The experience includes memorial sites, documentary footage, and survivor testimonials. We encourage all guests to consider this carefully before booking. The round trip also involves approximately 5 hours of driving. Not recommended for children under 16."
-    },
-    "includes": [
-      "Local guide",
-      "Small group max 12",
-      "Transportation in AC Vehicle"
-    ],
-    "excludes": [
-      "Food and drinks at stops",
-      "Personal expenses"
-    ],
-    "faqs": [
-      {
-        "question": "Is this tour appropriate for visitors who are emotionally sensitive to trauma and genocide content?",
-        "answer": "This tour engages directly and unflinchingly with the Srebrenica genocide — mass atrocity, survivor testimony, and ongoing identification of victims. It is handled with full respect and care, but the content is heavy by nature. Guests should arrive prepared for that. It is not recommended for children under 16."
-      },
-      {
-        "question": "Does the tour present events from a particular political perspective?",
-        "answer": "The tour presents events as established historical and legal fact — as ruled by the International Court of Justice and the International Criminal Tribunal for the former Yugoslavia. Srebrenica is recognised as genocide under international law. The guide does not present this as contested. Denial of the genocide will not be entertained on this tour."
-      },
-      {
-        "question": "How long is the full day trip and what is the travel time from Sarajevo?",
-        "answer": "The drive from Sarajevo to Srebrenica takes approximately two and a half hours each way through mountain roads. The full day runs around 10 hours including transport, site visits, and time for quiet reflection. A stop for lunch in the area is included in the schedule."
-      }
-    ],
-    "meetingPoint": "In front of the Tallest Tourguide & Friends office, Hamdije Kresevljakovica 61, Sarajevo. Right next to the Viking Pub.",
-    "startingTimes": [
-      "08 AM"
-    ],
-    "languages": [
-      "english",
-      "bosnian"
-    ],
-    "rightFor": [
-      "Travelers committed to understanding modern European genocide",
-      "Guests who have already seen Sarajevo and want to go deeper into Bosnia",
-      "Educators, human rights advocates, and those with a professional interest",
-      "Anyone who believes remembrance is not optional"
-    ],
-    "notRightFor": [
-      "Children under 16 — content carries significant emotional weight",
-      "Guests who are emotionally sensitive to genocide content or survivor testimony",
-      "Those wanting sightseeing, nature, or a typical full-day excursion",
-      "Anyone not prepared for approximately 5 hours of driving"
-    ],
-    "accessibility": {
-      "walkingDistanceKm": null,
-      "drivingDistanceKm": 145,
-      "durationMin": 160,
-      "elevationGainM": null,
-      "effortLevel": "low",
-      "suitability": {
-        "wheelchair": "yes",
-        "stroller": "yes",
-        "smallChildren": null,
-        "children": "partial",
-        "pregnancy": "yes",
-        "seniors": "yes",
-        "pets": "no"
-      },
-      "requirements": [],
-      "terrain": "The memorial site involves walking on slightly uneven ground",
-      "notes": "Walking: Limited — most of the day is spent in vehicles and at the memorial\n\nPhysical accessibility is manageable for most guests. Please contact us with specific mobility concerns."
-    },
-    "subtitle": "What Happened in Srebrenica in July 1995 Must Not Be Forgotten. This Tour Exists So It Isn't.",
-    "gallery": [
-      "/uploads/srebrenica-1.webp",
-      "/uploads/srebrenica-2.webp",
-      "/uploads/srebrenica-3.webp",
-      "/uploads/srebrenica-4.webp",
-      "/uploads/srebrenica-5.webp",
-      "/uploads/srebrenica-6.webp",
-      "/uploads/srebrenica-7.webp"
-    ],
-    "mapWaypoints": [
-      {
-        "lat": 43.85578753562027,
-        "lng": 18.406962242918024,
-        "label": "Sarajevo"
-      },
-      {
-        "lat": 44.15828000736652,
-        "lng": 19.300190013969626,
-        "label": "Srebrenica Museum"
-      },
-      {
-        "lat": 44.158226689044554,
-        "lng": 19.302396560193312,
-        "label": "Srebrenica Memorial Center - Potocari"
-      },
-      {
-        "lat": 44.106173374838285,
-        "lng": 19.297775471575882,
-        "label": "Srebrenica"
-      }
-    ],
-    "mapProfile": "driving-car"
-  },
-  {
-    "slug": "home-hosted-dinner",
-    "title": "At the Family Table: Home-Hosted Dinner in Sarajevo",
-    "subtitle": "The Best Meal in Sarajevo Isn't in a Restaurant. It's in Someone's Home.",
-    "category": "authentic",
-    "badge": "Traditional",
-    "price": 35,
-    "rating": 5,
-    "reviews": 4,
-    "duration": "2 hours",
-    "groupSize": 8,
-    "hero": "/uploads/home-hosted-dinner-qh56pmb2.webp",
-    "detailHero": "/uploads/home-hosted-dinner-zrcxo1ew.webp",
-    "description": "<p>There is a version of travel where you eat well but never really connect. This is not that. This evening opens a genuine Sarajevo home for a dinner built around food, conversation, and the kind of hospitality Bosnia has always been quietly known for. No restaurant can recreate it, because it was never designed to be replicated — only shared.</p><p>Your host shapes the menu around the season and your preferences, but two dishes anchor every table: burek, the hand-stretched meat pastry that defines Bosnian baking, and klepe, delicate dumplings served with garlic yogurt. Around them, expect slow-cooked dishes, homemade preserves, and a dessert that closes the evening properly. You leave the way guests in Bosnia always leave — full, welcomed, and already telling someone about it.</p>",
-    "highlights": [
-      "A Genuine Local Home — Not a restaurant, not a staged setting. A real Sarajevo household opens its doors for the evening.",
-      "Burek, Made by our Mothers — A recipe passed down through generations, baked the way it has always been done in Bosnian homes.",
-      "Klepe Dumplings — Delicate meat-filled dumplings served with garlic yogurt — one of Bosnia's most loved comfort dishes.",
-      "A Seasonal Home-Cooked Menu — Shaped around what's fresh and your preferences, never a fixed tourist menu.",
-      "Homemade Drinks & Dessert — The evening closes with traditional Bosnian sweets and drinks made the same way they always have been."
-    ],
-    "includes": [
-      "Home-cooked three-course dinner",
-      "Burek and klepe as the centerpiece dishes",
-      "Homemade drinks",
-      "Seasonal dishes shaped around your preferences",
-      "Local family host",
-      "Small group, max 8"
-    ],
-    "excludes": [
-      "Transport to and from the home (unless booked as part of a package)",
-      "Alcoholic beverages",
-      "Gratuities"
-    ],
-    "rightFor": [
-      "Couples and cultural travelers who want a genuine, unscripted evening",
-      "Food lovers seeking real Bosnian home cooking, not a tourist menu",
-      "Travelers who want to connect with a local family, not just observe one",
-      "Anyone who values warmth and hospitality over polish and performance"
-    ],
-    "notRightFor": [
-      "Guests expecting a cooking class or hands-on instruction",
-      "Large groups looking for a formal, restaurant-style setting",
-      "Travelers with very rigid dietary restrictions not communicated in advance",
-      "Those seeking a quiet, low-interaction dining experience"
-    ],
-    "faqs": [
-      {
-        "question": "Can dietary requirements or preferences be accommodated?",
-        "answer": "<p>Yes. Vegetarian fillings for burek and klepe are available, and your host shapes the wider menu around any dietary needs communicated at booking.</p>"
-      },
-      {
-        "question": "How many guests share the dinner?",
-        "answer": "<p>The evening is kept intimate, typically for small groups of two to 8, inside a private Sarajevo home rather than a restaurant or event space.</p>"
-      },
-      {
-        "question": "Is this a cooking class, or purely a dining experience?",
-        "answer": "<p>This is a dining experience, not a class. The focus is on sharing the meal and the evening. If you would rather cook alongside your host, our Authentic Bosnian Cooking Experience is the better fit.</p>"
-      }
-    ],
-    "meetingPoint": "Latin Bridge, Sarajevo, Old Town",
-    "startingTimes": [
-      "6 PM"
-    ],
-    "languages": [
-      "English"
-    ],
-    "accessibility": {
-      "walkingDistanceKm": null,
-      "drivingDistanceKm": null,
-      "walkingDurationMin": null,
-      "drivingDurationMin": null,
-      "durationMin": null,
-      "elevationGainM": null,
-      "effortLevel": null,
-      "suitability": {
-        "wheelchair": null,
-        "stroller": null,
-        "smallChildren": null,
-        "children": "yes",
-        "pregnancy": "yes",
-        "seniors": "yes",
-        "pets": null
-      },
-      "requirements": [],
-      "terrain": "",
-      "notes": "We need your food restrictions to be announced at least a day in advance so we can prepare accordingly. "
-    },
-    "fitnessNote": null,
-    "gallery": [
-      "/uploads/home-hosted-dinner-ni5ri4l6.webp",
-      "/uploads/home-hosted-dinner-tgj2w1ce.webp",
-      "/uploads/home-hosted-dinner-lc2mgl7t.webp",
-      "/uploads/home-hosted-dinner-prf3e7wc.webp"
-    ],
-    "mapWaypoints": [],
-    "mapProfile": "foot-walking",
-    "id": 10
   }
 ]

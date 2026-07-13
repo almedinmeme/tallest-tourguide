@@ -3,7 +3,8 @@
 // are enumerable at build time: they get prerendered HTML and sitemap entries
 // instead of being invisible to crawlers behind a runtime fetch.
 //
-// Content fields (content, content2–content5) are TipTap HTML strings.
+// Post bodies are a blocks[] array (see journalBlocks.js) — text blocks hold
+// TipTap HTML; use postBlocks(post) to get the render-ready list.
 
 import journal from './journal.json'
 
