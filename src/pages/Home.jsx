@@ -118,12 +118,13 @@ function Home() {
           maxWidth: isMobile ? '480px' : '1200px',
         }}>
 
-          {/* Positioning tag — small pill above the headline. Frames the
-              company as the regional expert, not a single-city outfit. */}
+          {/* Positioning tag — small pill above the headline. Plain-language
+              category recognition ("what is this site?"); no trade jargon
+              like "DMC" — that vocabulary lives on the Partners page. */}
           <div style={styles.locationTag}>
             <Compass size={12} color="var(--color-amber)" />
             <span style={styles.locationText}>
-              Your Balkan DMC
+              {isMobile ? 'Tours & tailor-made journeys' : 'Small-group tours & tailor-made journeys'}
             </span>
           </div>
 
@@ -134,14 +135,17 @@ function Home() {
               This is the technique that gives the hero its
               bold, energetic character without needing
               to make everything big and loud simultaneously. */}
+          {/* One sentence per line — the quiet italic setup and the bold
+              payoff each own a line, so the weight contrast reads as designed
+              rather than wherever the container happens to wrap. */}
           <h1 style={{
             ...styles.heroHeadline,
             fontSize: isMobile ? '30px' : '42px',
           }}>
-            <span style={styles.heroHeadlineThin}>
+            <span style={{ ...styles.heroHeadlineThin, display: 'block' }}>
               You Won't Just See the Balkans.
-            </span>{' '}
-            <span style={styles.heroHeadlineBold}>
+            </span>
+            <span style={{ ...styles.heroHeadlineBold, display: 'block' }}>
               You'll Understand Them.
             </span>
           </h1>
