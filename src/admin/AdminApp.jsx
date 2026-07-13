@@ -1,4 +1,5 @@
-import { NavLink, Routes, Route, Navigate } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { NavLink, Routes, Route, Navigate, useNavigate } from 'react-router-dom'
 import Dashboard from './pages/Dashboard'
 import ToursList from './pages/ToursList'
 import TourEditor from './pages/TourEditor'
@@ -12,13 +13,27 @@ import PagesList from './pages/PagesList'
 import PageEditor from './pages/PageEditor'
 import JournalList from './pages/JournalList'
 import JournalEditor from './pages/JournalEditor'
+import SettingsPage from './pages/SettingsPage'
+import * as api from './api'
 import { s, colors, adminGlobalCSS } from './styles'
+import { ToastProvider } from './components/Toast'
+import { useToast } from './hooks/useToast'
+import DirtyProvider from './components/DirtyProvider'
+import { useConfirmLeave } from './hooks/dirtyContext'
 
 function NavItem({ to, end, icon, children }) {
+  const navigate = useNavigate()
+  const confirmLeave = useConfirmLeave()
   return (
     <NavLink
       to={to}
       end={end}
+      onClick={(e) => {
+        // Route through the dirty guard so unsaved editor changes prompt first.
+        if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return
+        e.preventDefault()
+        confirmLeave(() => navigate(to))
+      }}
       style={({ isActive }) => ({
         ...s.navLink,
         ...(isActive ? s.navLinkActive : {}),
@@ -80,6 +95,12 @@ const Icon = {
       <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
     </svg>
   ),
+  settings: (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="3" />
+      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h.01a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h.01a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v.01a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+    </svg>
+  ),
   external: (
     <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
       <path d="M7 17 17 7" />
@@ -88,10 +109,152 @@ const Icon = {
   ),
 }
 
+// Editing writes to local JSON only; nothing is live until committed and
+// deployed. This pill keeps that visible without being noisy; clicking it
+// lists exactly which files would be committed and offers to commit them
+// (pathspec-scoped to src/data + public/uploads — deploying stays manual).
+function GitStatusPill() {
+  const [changed, setChanged] = useState(null)
+  const [files, setFiles] = useState([])
+  const [open, setOpen] = useState(false)
+  const [message, setMessage] = useState('')
+  const [committing, setCommitting] = useState(false)
+  const toast = useToast()
+
+  const check = () =>
+    fetch('/api/admin/status')
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        setChanged(data?.changedFiles ?? null)
+        setFiles(data?.files ?? [])
+      })
+      .catch(() => setChanged(null))
+
+  useEffect(() => {
+    check()
+    window.addEventListener('focus', check)
+    return () => window.removeEventListener('focus', check)
+  }, [])
+
+  const commit = async () => {
+    setCommitting(true)
+    try {
+      await api.publish(message)
+      toast.success('Committed — deploy when you are ready')
+      setMessage('')
+      setOpen(false)
+      check()
+    } catch (e) {
+      toast.error(`Commit failed: ${e.message}`)
+    } finally {
+      setCommitting(false)
+    }
+  }
+
+  if (changed == null || changed === 0) return null
+  const shown = files.slice(0, 8)
+  return (
+    <div style={{ margin: '8px 14px 0' }}>
+      <button
+        onClick={() => setOpen((v) => !v)}
+        title="Content edits are saved locally. Commit them here, then deploy as usual."
+        style={{
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: 6,
+          padding: '3px 10px',
+          fontSize: 11,
+          fontWeight: 600,
+          borderRadius: 999,
+          backgroundColor: 'rgba(201,138,43,0.16)',
+          color: '#e0b060',
+          border: '1px solid rgba(201,138,43,0.35)',
+          cursor: 'pointer',
+        }}
+      >
+        <span style={{ width: 6, height: 6, borderRadius: 999, backgroundColor: '#e0b060' }} />
+        {changed} unpublished change{changed === 1 ? '' : 's'}
+        <span style={{ opacity: 0.7 }}>{open ? '▴' : '▾'}</span>
+      </button>
+      {open && (
+        <div style={{ marginTop: 8 }}>
+          {files.length > 0 && (
+            <ul style={{ listStyle: 'none', margin: 0, padding: 0, display: 'flex', flexDirection: 'column', gap: 3 }}>
+              {shown.map((f) => (
+                <li
+                  key={f}
+                  title={f}
+                  style={{
+                    fontSize: 10.5,
+                    fontFamily: 'ui-monospace, monospace',
+                    color: colors.textOnDarkMuted,
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  {f.replace(/^(src\/data|public\/uploads)\//, '')}
+                </li>
+              ))}
+              {files.length > shown.length && (
+                <li style={{ fontSize: 10.5, color: colors.textOnDarkMuted, opacity: 0.7 }}>
+                  +{files.length - shown.length} more
+                </li>
+              )}
+            </ul>
+          )}
+          <input
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            onKeyDown={(e) => { if (e.key === 'Enter' && !committing) commit() }}
+            placeholder="Commit message (optional)"
+            style={{
+              width: '100%',
+              boxSizing: 'border-box',
+              marginTop: 8,
+              padding: '6px 8px',
+              fontSize: 11.5,
+              borderRadius: 6,
+              border: '1px solid rgba(255,255,255,0.15)',
+              backgroundColor: 'rgba(255,255,255,0.06)',
+              color: '#fff',
+              outline: 'none',
+            }}
+          />
+          <button
+            onClick={commit}
+            disabled={committing}
+            style={{
+              width: '100%',
+              marginTop: 6,
+              padding: '6px 8px',
+              fontSize: 11.5,
+              fontWeight: 700,
+              borderRadius: 6,
+              border: 'none',
+              cursor: committing ? 'default' : 'pointer',
+              backgroundColor: colors.primary,
+              color: '#fff',
+              opacity: committing ? 0.6 : 1,
+            }}
+          >
+            {committing ? 'Committing…' : `Commit ${changed} change${changed === 1 ? '' : 's'}`}
+          </button>
+          <p style={{ margin: '6px 0 0', fontSize: 10, lineHeight: 1.5, color: colors.textOnDarkMuted, opacity: 0.75 }}>
+            Commits only content files (src/data, public/uploads). Deploying stays a manual step.
+          </p>
+        </div>
+      )}
+    </div>
+  )
+}
+
 export default function AdminApp() {
   return (
     <div style={s.page}>
       <style>{adminGlobalCSS}</style>
+      <ToastProvider>
+      <DirtyProvider>
       <div style={s.shell}>
         <aside style={s.sidebar}>
           <div style={s.sidebarTitle}>
@@ -121,6 +284,7 @@ export default function AdminApp() {
             <NavItem to="/admin/accommodations" icon={Icon.accommodations}>Accommodations</NavItem>
             <NavItem to="/admin/pages" icon={Icon.pages}>Pages</NavItem>
             <NavItem to="/admin/journal" icon={Icon.journal}>Journal</NavItem>
+            <NavItem to="/admin/settings" icon={Icon.settings}>Settings</NavItem>
           </nav>
           <div style={{ marginTop: 'auto', borderTop: `1px solid rgba(255,255,255,0.06)`, paddingTop: 14, marginLeft: -2, marginRight: -2 }}>
             <a
@@ -140,6 +304,10 @@ export default function AdminApp() {
             >
               View public site {Icon.external}
             </a>
+            <GitStatusPill />
+            <p style={{ margin: '10px 14px 0', fontSize: 11, lineHeight: 1.5, color: colors.textOnDarkMuted, opacity: 0.75 }}>
+              Local editor — changes are saved to this project's files. Commit &amp; deploy to publish.
+            </p>
           </div>
         </aside>
         <main style={s.main}>
@@ -162,10 +330,13 @@ export default function AdminApp() {
             <Route path="journal" element={<JournalList />} />
             <Route path="journal/new" element={<JournalEditor />} />
             <Route path="journal/:id" element={<JournalEditor />} />
+            <Route path="settings" element={<SettingsPage />} />
             <Route path="*" element={<Navigate to="/admin" replace />} />
           </Routes>
         </main>
       </div>
+      </DirtyProvider>
+      </ToastProvider>
     </div>
   )
 }

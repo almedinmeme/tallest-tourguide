@@ -6,12 +6,17 @@ import { s, colors } from '../styles'
 // Maps each editorial page slug to its public route, so the admin can jump
 // straight to the live page.
 export const PAGE_ROUTES = {
+  home: '/',
   'our-story': '/about',
   hospitality: '/hospitality',
   signature: '/signature',
   partners: '/partners',
   consult: '/consult',
   'where-we-stay': '/where-we-stay',
+  personalised: '/personalised',
+  tours: '/tours',
+  journal: '/journal',
+  journeys: '/multi-day-tours',
 }
 
 export default function PagesList() {

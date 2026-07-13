@@ -470,6 +470,23 @@ export const adminGlobalCSS = `
     100% { opacity: 1; }
   }
 
+  /* Toast slide-in */
+  @keyframes admin-toast-in {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Dialog pop-in */
+  @keyframes admin-dialog-in {
+    from { opacity: 0; transform: scale(0.97); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+
+  /* Rows being dragged */
+  tr[data-dragging="true"] td {
+    opacity: 0.4;
+  }
+
   /* Smooth-scroll anchor jumps */
   html { scroll-behavior: smooth; }
 `

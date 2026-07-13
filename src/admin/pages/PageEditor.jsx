@@ -1,5 +1,4 @@
-import { useEffect, useState } from 'react'
-import { useParams, Link } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import * as api from '../api'
 import { s, colors } from '../styles'
 import FormField from '../components/FormField'
@@ -7,7 +6,11 @@ import RichTextEditor from '../components/RichTextEditor'
 import ImageUpload from '../components/ImageUpload'
 import JsonField from '../components/JsonField'
 import ExtraEditor from '../components/ExtraEditor'
+import seoLengthHint from '../components/seoLengthHint'
 import SectionNav from '../components/SectionNav'
+import SaveButton from '../components/SaveButton'
+import GuardedLink from '../components/GuardedLink'
+import { useEditorForm } from '../hooks/useEditorForm'
 import { PAGE_ROUTES } from './PagesList'
 
 const LAYOUTS = ['text', 'image-right', 'image-left', 'full-image']
@@ -17,6 +20,54 @@ const LAYOUTS = ['text', 'image-right', 'image-left', 'full-image']
 // `extra` content instead of a raw-JSON box. Unknown pages fall back to the
 // full generic editor (DEFAULT_CONFIG).
 const PAGE_CONFIG = {
+  home: {
+    // The homepage headline/copy is designed in code; only the photo
+    // rotation, promoted tours and SEO are content. heroFields: false hides
+    // the unused kicker/heading/subheading/image section.
+    sections: false, quotes: false, cta: false, heroFields: false,
+    extra: [
+      { key: 'heroImages', type: 'objectList', label: 'Hero photos', hint: 'Rotating full-screen photos behind the homepage headline (they change every 6 seconds). Leave empty to use the built-in set.', fields: [
+        { key: 'image', type: 'image', label: 'Photo' },
+      ] },
+      { key: 'favouriteTours', type: 'relationList', relation: 'tour', label: 'Traveller favourites', hint: 'The tour cards on the hero\'s right side (up to 3 shown). Leave empty to show the first two tours from your tours order.', placeholder: '+ Add tour' },
+    ],
+  },
+  personalised: {
+    sections: false, quotes: false, cta: false, heroFields: false,
+    extra: [
+      { key: 'cities', type: 'list', label: 'Bosnian cities & places', hint: 'The "Where would you like to go?" choices in the questionnaire (Bosnia & Herzegovina group). The Balkan regions come from the Destinations collection automatically.', placeholder: 'e.g. Konjic & Blagaj' },
+    ],
+  },
+  // The three listing pages: photo and header copy are editable; every field
+  // left empty falls back to the built-in design. (Tours swaps to its
+  // city-specific copy when visitors arrive via ?city=, regardless.)
+  tours: {
+    sections: false, quotes: false, cta: false, heroFields: false,
+    extra: [
+      { key: 'heroImage', type: 'image', label: 'Hero photo', hint: 'The photo behind the All Tours page header. Leave empty to use the built-in Sarajevo aerial.' },
+      { key: 'kicker', type: 'text', label: 'Kicker', hint: 'Small amber line above the headline. Empty = “Explore Bosnia”.' },
+      { key: 'heading', type: 'text', label: 'Headline', hint: 'Empty = “All Tours”.' },
+      { key: 'lede', type: 'textarea', label: 'Intro line', hint: 'The sentence under the headline. Empty = the built-in line.' },
+    ],
+  },
+  journal: {
+    sections: false, quotes: false, cta: false, heroFields: false,
+    extra: [
+      { key: 'heroImage', type: 'image', label: 'Hero photo', hint: 'The photo behind the Journal page header. Leave empty to use the built-in coppersmith workshop.' },
+      { key: 'kicker', type: 'text', label: 'Kicker', hint: 'Small amber line above the headline. Empty = “From the Guide”.' },
+      { key: 'heading', type: 'text', label: 'Headline', hint: 'Empty = “The Journal”.' },
+      { key: 'lede', type: 'textarea', label: 'Intro line', hint: 'The sentence under the headline. Empty = the built-in line.' },
+    ],
+  },
+  journeys: {
+    sections: false, quotes: false, cta: false, heroFields: false,
+    extra: [
+      { key: 'heroImage', type: 'image', label: 'Hero photo', hint: 'The photo behind the Journeys page header. Leave empty to use the built-in Kotor bay aerial.' },
+      { key: 'kicker', type: 'text', label: 'Kicker', hint: 'Small amber line above the headline. Empty = “Multi-day journeys”.' },
+      { key: 'heading', type: 'text', label: 'Headline', hint: 'Empty = “Journeys”.' },
+      { key: 'lede', type: 'textarea', label: 'Intro line', hint: 'The sentence under the headline. Empty = the built-in line.' },
+    ],
+  },
   'our-story': {
     sections: true, quotes: true, cta: true,
     extra: [
@@ -43,7 +94,7 @@ const PAGE_CONFIG = {
         { key: 'rhythm', type: 'text', label: 'Rhythm', hint: 'One sentence on pacing, shown in italics.' },
         { key: 'expertNote', type: 'textarea', label: 'About the expert', hint: 'One or two sentences on who leads it and why.' },
         { key: 'duration', type: 'text', label: 'Length' },
-        { key: 'maxGuests', type: 'text', label: 'Group size' },
+        { key: 'maxGuests', type: 'text', label: 'Group size (shown on page)', hint: 'Keep it number-free — e.g. “Kept small” or “Private”.' },
         { key: 'expert', type: 'text', label: 'Led by' },
         { key: 'fromPrice', type: 'text', label: 'From price', hint: 'A number, or “On request”.' },
       ] },
@@ -113,30 +164,15 @@ const DEFAULT_CONFIG = { sections: true, quotes: true, cta: true, extra: null }
 
 export default function PageEditor() {
   const { id } = useParams()
-  const [item, setItem] = useState(null)
-  const [err, setErr] = useState(null)
-  const [saving, setSaving] = useState(false)
-  const [savedAt, setSavedAt] = useState(null)
 
-  useEffect(() => {
-    api.pages.get(id).then(setItem).catch((e) => setErr(e.message))
-  }, [id])
-
-  const set = (patch) => setItem((t) => ({ ...t, ...patch }))
-  const setNested = (key, patch) => setItem((t) => ({ ...t, [key]: { ...(t[key] || {}), ...patch } }))
-
-  const onSave = async () => {
-    setSaving(true)
-    setErr(null)
-    try {
-      await api.pages.update(id, item)
-      setSavedAt(Date.now())
-    } catch (e) {
-      setErr(e.message)
-    } finally {
-      setSaving(false)
-    }
-  }
+  // Pages are singletons with fixed slugs — no create flow, no slug/title checks.
+  const { item, set, setNested, err, saving, dirty, onSave } = useEditorForm({
+    collection: api.pages,
+    id,
+    empty: null,
+    checkBasics: false,
+    savedMessage: 'Page saved',
+  })
 
   if (err && !item) return <div style={{ color: 'crimson' }}>{err}</div>
   if (!item) return <div>Loading…</div>
@@ -145,7 +181,7 @@ export default function PageEditor() {
   const config = PAGE_CONFIG[item.slug] || DEFAULT_CONFIG
   const nav = [
     { id: 'seo', label: 'SEO' },
-    { id: 'hero', label: 'Hero' },
+    ...(config.heroFields === false ? [] : [{ id: 'hero', label: 'Hero' }]),
     ...(config.sections ? [{ id: 'sections', label: 'Sections' }] : []),
     ...(config.quotes ? [{ id: 'quotes', label: 'Pull quotes' }] : []),
     ...(config.cta ? [{ id: 'cta', label: 'Call to action' }] : []),
@@ -156,13 +192,12 @@ export default function PageEditor() {
     <div>
       <div style={s.stickyHeader}>
         <div style={{ minWidth: 0 }}>
-          <Link to="/admin/pages" style={{ color: colors.textMuted, textDecoration: 'none', fontSize: 13 }}>← All pages</Link>
+          <GuardedLink to="/admin/pages" style={{ color: colors.textMuted, textDecoration: 'none', fontSize: 13 }}>← All pages</GuardedLink>
           <h1 style={{ ...s.h1, marginTop: 4 }}>{item.title || item.slug}</h1>
         </div>
         <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexShrink: 0 }}>
-          {savedAt && <span style={{ fontSize: 12, color: colors.success }}>Saved</span>}
           {route && <a href={route} target="_blank" rel="noreferrer" style={{ ...s.btn, ...s.btnSecondary, textDecoration: 'none' }}>View on site ↗</a>}
-          <button style={s.btn} onClick={onSave} disabled={saving}>{saving ? 'Saving…' : 'Save'}</button>
+          <SaveButton dirty={dirty} saving={saving} onClick={onSave} />
         </div>
       </div>
 
@@ -174,14 +209,15 @@ export default function PageEditor() {
 
           <section id="seo" style={{ ...s.card, scrollMarginTop: 100 }}>
             <h2 style={{ ...s.h2, marginTop: 0 }}>SEO</h2>
-            <FormField label="Meta title">
+            <FormField label="Meta title" hint={seoLengthHint(item.seo?.title, 60, 'title')}>
               <input style={s.input} value={item.seo?.title || ''} onChange={(e) => setNested('seo', { title: e.target.value })} />
             </FormField>
-            <FormField label="Meta description">
+            <FormField label="Meta description" hint={seoLengthHint(item.seo?.description, 160, 'description')}>
               <textarea style={s.textarea} value={item.seo?.description || ''} onChange={(e) => setNested('seo', { description: e.target.value })} />
             </FormField>
           </section>
 
+          {config.heroFields !== false && (
           <section id="hero" style={{ ...s.card, scrollMarginTop: 100 }}>
             <h2 style={{ ...s.h2, marginTop: 0 }}>Hero</h2>
             <div style={s.grid2}>
@@ -199,6 +235,7 @@ export default function PageEditor() {
               <ImageUpload value={item.hero?.image} onChange={(v) => setNested('hero', { image: v })} slug={item.slug || 'page'} />
             </FormField>
           </section>
+          )}
 
           {config.sections && (
             <section id="sections" style={{ ...s.card, scrollMarginTop: 100 }}>
@@ -250,8 +287,8 @@ export default function PageEditor() {
           </section>
 
           <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, marginTop: 16 }}>
-            <Link to="/admin/pages" style={{ ...s.btn, ...s.btnGhost, textDecoration: 'none' }}>Back</Link>
-            <button style={s.btn} onClick={onSave} disabled={saving}>{saving ? 'Saving…' : 'Save'}</button>
+            <GuardedLink to="/admin/pages" style={{ ...s.btn, ...s.btnGhost, textDecoration: 'none' }}>Back</GuardedLink>
+            <SaveButton dirty={dirty} saving={saving} onClick={onSave} />
           </div>
 
         </div>

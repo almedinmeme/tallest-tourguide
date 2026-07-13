@@ -1,5 +1,4 @@
-import { useEffect, useState } from 'react'
-import { useNavigate, useParams, Link } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import * as api from '../api'
 import { s, colors } from '../styles'
 import FormField from '../components/FormField'
@@ -15,6 +14,13 @@ import JsonField from '../components/JsonField'
 import SectionNav from '../components/SectionNav'
 import AccessibilityEditor, { EMPTY_ACCESSIBILITY } from '../components/AccessibilityEditor'
 import RouteStatusBadge from '../components/RouteStatusBadge'
+import SaveButton from '../components/SaveButton'
+import GuardedLink from '../components/GuardedLink'
+import SlugField from '../components/SlugField'
+import RelationPicker from '../components/RelationPicker'
+import { useEditorForm } from '../hooks/useEditorForm'
+import { invalidateOptionsCache } from '../hooks/useCollectionOptions'
+import { toNumberOrNull } from '../utils/validate'
 
 const SECTIONS = [
   { id: 'basics', label: 'Basics' },
@@ -27,6 +33,7 @@ const SECTIONS = [
   { id: 'fitness', label: 'Fitness note' },
   { id: 'faqs', label: 'FAQs' },
   { id: 'map', label: 'Map waypoints' },
+  { id: 'journal', label: 'Journal stories' },
   { id: 'advanced', label: 'Advanced' },
 ]
 
@@ -59,61 +66,51 @@ const EMPTY = {
   gallery: [],
   mapWaypoints: [],
   mapProfile: 'foot-walking',
+  journalPosts: [],
+}
+
+function validateTour(t) {
+  const errors = {}
+  const price = toNumberOrNull(t.price)
+  if (price == null || price < 0) errors.price = 'Price must be a number ≥ 0.'
+  if (t.oldPrice !== '' && t.oldPrice != null && toNumberOrNull(t.oldPrice) == null) errors.oldPrice = 'Must be a number.'
+  const rating = toNumberOrNull(t.rating)
+  if (t.rating !== '' && t.rating != null && (rating == null || rating < 0 || rating > 5)) errors.rating = 'Rating must be between 0 and 5.'
+  const groupSize = toNumberOrNull(t.groupSize)
+  if (groupSize == null || groupSize < 1) errors.groupSize = 'Capacity must be at least 1.'
+  return errors
 }
 
 export default function TourEditor() {
   const { id } = useParams()
-  const isNew = !id
-  const nav = useNavigate()
 
-  const [tour, setTour] = useState(isNew ? EMPTY : null)
-  const [err, setErr] = useState(null)
-  const [saving, setSaving] = useState(false)
-
-  useEffect(() => {
-    if (isNew) return
-    api.tours
-      .get(id)
-      .then(setTour)
-      .catch((e) => setErr(e.message))
-  }, [id, isNew])
-
-  const set = (patch) => setTour((t) => ({ ...t, ...patch }))
-
-  const setNested = (key, patch) =>
-    setTour((t) => ({ ...t, [key]: { ...(t[key] || {}), ...patch } }))
-
-  const onSave = async () => {
-    setSaving(true)
-    setErr(null)
-    try {
-      const cleaned = {
-        ...tour,
-        price: Number(tour.price) || 0,
-        rating: Number(tour.rating) || 0,
-        reviews: Number(tour.reviews) || 0,
-        groupSize: Number(tour.groupSize) || 0,
-        extras: (tour.extras || [])
-          .filter((e) => (e.label || '').trim())
-          .map((e) => ({
-            label: e.label.trim(),
-            description: (e.description || '').trim(),
-            price: Number(e.price) || 0,
-            perPerson: !!e.perPerson,
-          })),
-      }
-      if (isNew) {
-        const created = await api.tours.create(cleaned)
-        nav(`/admin/tours/${created.id}`, { replace: true })
-      } else {
-        await api.tours.update(id, cleaned)
-      }
-    } catch (e) {
-      setErr(e.message)
-    } finally {
-      setSaving(false)
-    }
-  }
+  const { item: tour, setItem: setTour, set, setNested, err, saving, dirty, fieldErrors, onSave, isNew } = useEditorForm({
+    collection: api.tours,
+    id,
+    empty: EMPTY,
+    titleField: 'title',
+    validate: validateTour,
+    clean: (t) => ({
+      ...t,
+      slug: t.slug.trim(),
+      price: Number(t.price),
+      oldPrice: toNumberOrNull(t.oldPrice),
+      rating: toNumberOrNull(t.rating),
+      reviews: toNumberOrNull(t.reviews) ?? 0,
+      groupSize: Number(t.groupSize),
+      extras: (t.extras || [])
+        .filter((e) => (e.label || '').trim())
+        .map((e) => ({
+          label: e.label.trim(),
+          description: (e.description || '').trim(),
+          price: Number(e.price) || 0,
+          perPerson: !!e.perPerson,
+        })),
+    }),
+    editorPath: (newId) => `/admin/tours/${newId}`,
+    savedMessage: 'Tour saved',
+    afterSave: () => invalidateOptionsCache('tour'),
+  })
 
   if (err && !tour) return <div style={{ color: 'crimson' }}>{err}</div>
   if (!tour) return <div>Loading…</div>
@@ -122,7 +119,7 @@ export default function TourEditor() {
     <div>
       <div style={s.stickyHeader}>
         <div style={{ minWidth: 0 }}>
-          <Link to="/admin/tours" style={{ color: colors.textMuted, textDecoration: 'none', fontSize: 13 }}>← All tours</Link>
+          <GuardedLink to="/admin/tours" style={{ color: colors.textMuted, textDecoration: 'none', fontSize: 13 }}>← All tours</GuardedLink>
           <h1 style={{ ...s.h1, marginTop: 4, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
             {isNew ? 'New tour' : tour.title || 'Untitled tour'}
           </h1>
@@ -133,9 +130,7 @@ export default function TourEditor() {
               View on site ↗
             </a>
           )}
-          <button style={s.btn} onClick={onSave} disabled={saving}>
-            {saving ? 'Saving…' : 'Save'}
-          </button>
+          <SaveButton dirty={dirty} saving={saving} isNew={isNew} onClick={onSave} />
         </div>
       </div>
 
@@ -148,12 +143,17 @@ export default function TourEditor() {
       <section id="basics" style={{ ...s.card, scrollMarginTop: 100 }}>
         <h2 style={{ ...s.h2, marginTop: 0 }}>Basics</h2>
         <div style={s.grid2}>
-          <FormField label="Title">
+          <FormField label="Title" error={fieldErrors.title}>
             <input style={s.input} value={tour.title || ''} onChange={(e) => set({ title: e.target.value })} />
           </FormField>
-          <FormField label="Slug" hint="URL path: /tours/your-slug">
-            <input style={s.input} value={tour.slug || ''} onChange={(e) => set({ slug: e.target.value })} />
-          </FormField>
+          <SlugField
+            value={tour.slug}
+            onChange={(v) => set({ slug: v })}
+            titleValue={tour.title}
+            isNew={isNew}
+            error={fieldErrors.slug}
+            hint="URL path: /tours/your-slug"
+          />
         </div>
         <FormField label="Subtitle">
           <input style={s.input} value={tour.subtitle || ''} onChange={(e) => set({ subtitle: e.target.value })} />
@@ -170,19 +170,22 @@ export default function TourEditor() {
           </FormField>
         </div>
         <div style={s.grid3}>
-          <FormField label="Price (€)">
-            <input type="number" style={s.input} value={tour.price ?? ''} onChange={(e) => set({ price: e.target.value })} />
+          <FormField label="Price (€)" error={fieldErrors.price}>
+            <input type="number" min="0" style={s.input} value={tour.price ?? ''} onChange={(e) => set({ price: e.target.value })} />
           </FormField>
-          <FormField label="Rating">
-            <input type="number" step="0.1" style={s.input} value={tour.rating ?? ''} onChange={(e) => set({ rating: e.target.value })} />
+          <FormField label="Old price (€)" error={fieldErrors.oldPrice} hint="Optional — shows a struck-through “was” price and save % on cards and the tour page. Leave empty for no discount.">
+            <input type="number" min="0" style={s.input} value={tour.oldPrice ?? ''} onChange={(e) => set({ oldPrice: e.target.value })} />
+          </FormField>
+          <FormField label="Rating" error={fieldErrors.rating}>
+            <input type="number" step="0.1" min="0" max="5" style={s.input} value={tour.rating ?? ''} onChange={(e) => set({ rating: e.target.value })} />
           </FormField>
           <FormField label="Reviews">
-            <input type="number" style={s.input} value={tour.reviews ?? ''} onChange={(e) => set({ reviews: e.target.value })} />
+            <input type="number" min="0" style={s.input} value={tour.reviews ?? ''} onChange={(e) => set({ reviews: e.target.value })} />
           </FormField>
         </div>
         <div style={s.grid2}>
-          <FormField label="Group size (max)">
-            <input type="number" style={s.input} value={tour.groupSize ?? ''} onChange={(e) => set({ groupSize: e.target.value })} />
+          <FormField label="Capacity" error={fieldErrors.groupSize} hint="Internal booking cap — the number is never shown on the site; pages say “Small group”.">
+            <input type="number" min="1" style={s.input} value={tour.groupSize ?? ''} onChange={(e) => set({ groupSize: e.target.value })} />
           </FormField>
           <FormField label="Map profile" hint="Use foot-hiking for trails through mountains, forests or off-road paths.">
             <select style={s.input} value={tour.mapProfile || 'foot-walking'} onChange={(e) => set({ mapProfile: e.target.value })}>
@@ -338,6 +341,21 @@ export default function TourEditor() {
         <WaypointEditor value={tour.mapWaypoints} onChange={(v) => set({ mapWaypoints: v })} />
       </section>
 
+      <section id="journal" style={{ ...s.card, scrollMarginTop: 100 }}>
+        <h2 style={{ ...s.h2, marginTop: 0 }}>Journal stories</h2>
+        <p style={s.subheadingHint}>
+          Hand-pick the posts shown in “From the Journal” on this tour's page, in this order.
+          Leave empty to automatically show posts that link to this tour.
+        </p>
+        <RelationPicker
+          kind="journal"
+          multiple
+          value={tour.journalPosts}
+          onChange={(v) => set({ journalPosts: v })}
+          placeholder="+ Add post"
+        />
+      </section>
+
       <details id="advanced" style={{ ...s.card, scrollMarginTop: 100 }}>
         <summary style={{ cursor: 'pointer', fontWeight: 600 }}>Advanced — raw JSON</summary>
         <p style={s.hint}>Edit the entire tour as JSON. Use this only if a field isn't covered above.</p>
@@ -345,10 +363,8 @@ export default function TourEditor() {
       </details>
 
       <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, marginTop: 16 }}>
-        <Link to="/admin/tours" style={{ ...s.btn, ...s.btnGhost, textDecoration: 'none' }}>Cancel</Link>
-        <button style={s.btn} onClick={onSave} disabled={saving}>
-          {saving ? 'Saving…' : 'Save'}
-        </button>
+        <GuardedLink to="/admin/tours" style={{ ...s.btn, ...s.btnGhost, textDecoration: 'none' }}>Cancel</GuardedLink>
+        <SaveButton dirty={dirty} saving={saving} isNew={isNew} onClick={onSave} />
       </div>
 
         </div>

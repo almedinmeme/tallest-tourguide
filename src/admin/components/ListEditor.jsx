@@ -1,7 +1,10 @@
+import DragHandle from './DragHandle'
+import { useListDrag } from '../hooks/useListDrag'
 import { s, colors } from '../styles'
 
 export default function ListEditor({ value, onChange, label, hint, placeholder, multiline = false }) {
   const items = Array.isArray(value) ? value : []
+  const drag = useListDrag(items, onChange)
 
   const update = (idx, next) => {
     const copy = items.slice()
@@ -45,19 +48,35 @@ export default function ListEditor({ value, onChange, label, hint, placeholder, 
         </p>
       ) : (
         <div style={{ display: 'grid', gap: 6 }}>
-          {items.map((it, idx) => (
-            <div key={idx} style={{ display: 'grid', gridTemplateColumns: '1fr auto auto auto', gap: 6, alignItems: 'flex-start' }}>
-              <Field
-                value={it}
-                onChange={(e) => update(idx, e.target.value)}
-                placeholder={placeholder}
-                style={multiline ? s.textarea : s.input}
-              />
-              <button type="button" style={{ ...s.btn, ...s.btnGhost, padding: '6px 9px' }} onClick={() => move(idx, -1)} disabled={idx === 0}>↑</button>
-              <button type="button" style={{ ...s.btn, ...s.btnGhost, padding: '6px 9px' }} onClick={() => move(idx, 1)} disabled={idx === items.length - 1}>↓</button>
-              <button type="button" style={{ ...s.btn, ...s.btnGhost, padding: '6px 9px', color: colors.danger }} onClick={() => remove(idx)}>✕</button>
-            </div>
-          ))}
+          {items.map((it, idx) => {
+            const { style: dropStyle, ...dropProps } = drag.rowProps(idx)
+            return (
+              <div
+                key={idx}
+                {...dropProps}
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'auto 1fr auto auto auto',
+                  gap: 6,
+                  alignItems: 'flex-start',
+                  borderRadius: 6,
+                  opacity: drag.dragIndex === idx ? 0.4 : 1,
+                  ...dropStyle,
+                }}
+              >
+                <DragHandle {...drag.handleProps(idx)} />
+                <Field
+                  value={it}
+                  onChange={(e) => update(idx, e.target.value)}
+                  placeholder={placeholder}
+                  style={multiline ? s.textarea : s.input}
+                />
+                <button type="button" style={{ ...s.btn, ...s.btnGhost, padding: '6px 9px' }} onClick={() => move(idx, -1)} disabled={idx === 0}>↑</button>
+                <button type="button" style={{ ...s.btn, ...s.btnGhost, padding: '6px 9px' }} onClick={() => move(idx, 1)} disabled={idx === items.length - 1}>↓</button>
+                <button type="button" style={{ ...s.btn, ...s.btnGhost, padding: '6px 9px', color: colors.danger }} onClick={() => remove(idx)}>✕</button>
+              </div>
+            )
+          })}
         </div>
       )}
       <button type="button" style={{ ...s.btn, ...s.btnSecondary, marginTop: 10 }} onClick={add}>

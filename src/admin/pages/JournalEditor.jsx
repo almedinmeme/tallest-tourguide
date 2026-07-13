@@ -1,18 +1,25 @@
-import { useEffect, useState } from 'react'
-import { useNavigate, useParams, Link } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import * as api from '../api'
 import { s, colors } from '../styles'
 import FormField from '../components/FormField'
-import RichTextEditor from '../components/RichTextEditor'
 import ImageUpload from '../components/ImageUpload'
 import JsonField from '../components/JsonField'
 import SectionNav from '../components/SectionNav'
+import RelationPicker from '../components/RelationPicker'
+import SaveButton from '../components/SaveButton'
+import GuardedLink from '../components/GuardedLink'
+import SlugField from '../components/SlugField'
+import BlogBlocksEditor from '../components/BlogBlocksEditor'
+import seoLengthHint from '../components/seoLengthHint'
+import { useEditorForm } from '../hooks/useEditorForm'
+import { postBlocks } from '../../data/journalBlocks'
 
 const SECTIONS = [
   { id: 'basics', label: 'Basics' },
   { id: 'hero', label: 'Hero image' },
   { id: 'body', label: 'Body' },
   { id: 'related', label: 'Related content' },
+  { id: 'seo', label: 'SEO' },
   { id: 'advanced', label: 'Advanced' },
 ]
 
@@ -24,92 +31,56 @@ const EMPTY = {
   category: '',
   publishedDate: new Date().toISOString().slice(0, 10),
   heroImage: '',
-  content: '',
-  inlineImage1: '',
-  inlineImage1Caption: '',
-  content2: '',
-  inlineImage2: '',
-  inlineImage2Caption: '',
-  content3: '',
-  inlineImage3: '',
-  inlineImage3Caption: '',
-  content4: '',
-  inlineImage4: '',
-  inlineImage4Caption: '',
-  content5: '',
+  blocks: [],
   relatedTourSlug: '',
   relatedPackageSlug: '',
-  inlineCardSlug: '',
-  inlineCardType: 'tour',
+  seoTitle: '',
+  seoDescription: '',
 }
 
-// The public page (BlogPost.jsx) renders these in order:
-// content → image1 → content2 → image2 → inline promo card →
-// content3 → image3 → content4 → image4 → content5.
-function BodyBlock({ item, set, n }) {
-  const contentKey = n === 1 ? 'content' : `content${n}`
-  const imageKey = `inlineImage${n}`
-  const captionKey = `inlineImage${n}Caption`
-  return (
-    <>
-      <FormField label={`Text block ${n}`}>
-        <RichTextEditor
-          value={item[contentKey] || ''}
-          onChange={(v) => set({ [contentKey]: v })}
-          slug={item.slug || 'journal'}
-        />
-      </FormField>
-      {n < 5 && (
-        <div style={{ ...s.grid2, marginTop: 12, marginBottom: 20 }}>
-          <FormField label={`Image after block ${n}`} hint="Optional.">
-            <ImageUpload value={item[imageKey]} onChange={(v) => set({ [imageKey]: v })} slug={item.slug || 'journal'} />
-          </FormField>
-          <FormField label="Caption" hint="Shown under the image, italic.">
-            <input style={s.input} value={item[captionKey] || ''} onChange={(e) => set({ [captionKey]: e.target.value })} />
-          </FormField>
-        </div>
-      )}
-    </>
-  )
+// Fields from the old fixed body layout (content, inlineImage1, …, plus the
+// post-level inline card). Posts are migrated to blocks[]; saving strips any
+// stragglers so the two never drift.
+const LEGACY_BODY_KEYS = [
+  'content',
+  ...[2, 3, 4, 5].map((n) => `content${n}`),
+  ...[1, 2, 3, 4].flatMap((n) => [`inlineImage${n}`, `inlineImage${n}Caption`]),
+  'inlineCardSlug',
+  'inlineCardType',
+]
+
+const stripTags = (html) => (html || '').replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').trim()
+
+// Drop blocks with nothing in them: empty text (unless it holds an image),
+// images without a photo, booking cards without a picked tour/package.
+const isRealBlock = (b) =>
+  b.type === 'text'
+    ? Boolean(stripTags(b.html) || /<img\b/i.test(b.html || ''))
+    : b.type === 'image'
+      ? Boolean(b.src)
+      : Boolean(b.slug)
+
+function cleanPost(it) {
+  // postBlocks also folds any legacy body fields / post-level inline card
+  // into the block list before the legacy keys are stripped.
+  const blocks = postBlocks(it).filter(isRealBlock)
+  const cleaned = { ...it, slug: it.slug.trim(), blocks }
+  for (const key of LEGACY_BODY_KEYS) delete cleaned[key]
+  return cleaned
 }
 
 export default function JournalEditor() {
   const { id } = useParams()
-  const isNew = !id
-  const nav = useNavigate()
 
-  const [item, setItem] = useState(isNew ? EMPTY : null)
-  const [err, setErr] = useState(null)
-  const [saving, setSaving] = useState(false)
-
-  useEffect(() => {
-    if (isNew) return
-    api.journal.get(id).then(setItem).catch((e) => setErr(e.message))
-  }, [id, isNew])
-
-  const set = (patch) => setItem((t) => ({ ...t, ...patch }))
-
-  const onSave = async () => {
-    if (!item.slug?.trim()) {
-      setErr('A slug is required — it becomes the URL: /journal/<slug>')
-      return
-    }
-    setSaving(true)
-    setErr(null)
-    try {
-      const cleaned = { ...item, slug: item.slug.trim() }
-      if (isNew) {
-        const created = await api.journal.create(cleaned)
-        nav(`/admin/journal/${created.id}`, { replace: true })
-      } else {
-        await api.journal.update(id, cleaned)
-      }
-    } catch (e) {
-      setErr(e.message)
-    } finally {
-      setSaving(false)
-    }
-  }
+  const { item, setItem, set, err, saving, dirty, fieldErrors, onSave, isNew } = useEditorForm({
+    collection: api.journal,
+    id,
+    empty: EMPTY,
+    titleField: 'title',
+    clean: cleanPost,
+    editorPath: (newId) => `/admin/journal/${newId}`,
+    savedMessage: 'Post saved',
+  })
 
   if (err && !item) return <div style={{ color: 'crimson' }}>{err}</div>
   if (!item) return <div>Loading…</div>
@@ -118,7 +89,7 @@ export default function JournalEditor() {
     <div>
       <div style={s.stickyHeader}>
         <div style={{ minWidth: 0 }}>
-          <Link to="/admin/journal" style={{ color: colors.textMuted, textDecoration: 'none', fontSize: 13 }}>← All posts</Link>
+          <GuardedLink to="/admin/journal" style={{ color: colors.textMuted, textDecoration: 'none', fontSize: 13 }}>← All posts</GuardedLink>
           <h1 style={{ ...s.h1, marginTop: 4, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
             {isNew ? 'New post' : item.title || 'Untitled'}
           </h1>
@@ -127,7 +98,7 @@ export default function JournalEditor() {
           {!isNew && item.slug && (
             <a href={`/journal/${item.slug}`} target="_blank" rel="noreferrer" style={{ ...s.btn, ...s.btnSecondary, textDecoration: 'none' }}>View post ↗</a>
           )}
-          <button style={s.btn} onClick={onSave} disabled={saving}>{saving ? 'Saving…' : 'Save'}</button>
+          <SaveButton dirty={dirty} saving={saving} isNew={isNew} onClick={onSave} />
         </div>
       </div>
 
@@ -140,12 +111,17 @@ export default function JournalEditor() {
           <section id="basics" style={{ ...s.card, scrollMarginTop: 100 }}>
             <h2 style={{ ...s.h2, marginTop: 0 }}>Basics</h2>
             <div style={s.grid2}>
-              <FormField label="Title">
+              <FormField label="Title" error={fieldErrors.title}>
                 <input style={s.input} value={item.title || ''} onChange={(e) => set({ title: e.target.value })} />
               </FormField>
-              <FormField label="Slug" hint="The URL: /journal/<slug>. Changing it on a live post breaks inbound links.">
-                <input style={s.input} value={item.slug || ''} onChange={(e) => set({ slug: e.target.value })} />
-              </FormField>
+              <SlugField
+                value={item.slug}
+                onChange={(v) => set({ slug: v })}
+                titleValue={item.title}
+                isNew={isNew}
+                error={fieldErrors.slug}
+                hint="The URL: /journal/<slug>. Changing it on a live post breaks inbound links."
+              />
             </div>
             <div style={s.grid3}>
               <FormField label="Category">
@@ -174,34 +150,41 @@ export default function JournalEditor() {
           <section id="body" style={{ ...s.card, scrollMarginTop: 100 }}>
             <h2 style={{ ...s.h2, marginTop: 0 }}>Body</h2>
             <p style={s.subheadingHint}>
-              Text blocks alternate with optional images. The promo card (Related content) appears between blocks 2 and 3.
+              Add as many text, image and booking-card blocks as the story needs — they render top to bottom. Drag to rearrange.
             </p>
-            {[1, 2, 3, 4, 5].map((n) => (
-              <BodyBlock key={n} item={item} set={set} n={n} />
-            ))}
+            <BlogBlocksEditor
+              value={postBlocks(item)}
+              onChange={(v) => set({ blocks: v })}
+              slug={item.slug || 'journal'}
+            />
           </section>
 
           <section id="related" style={{ ...s.card, scrollMarginTop: 100 }}>
             <h2 style={{ ...s.h2, marginTop: 0 }}>Related content</h2>
+            <p style={s.subheadingHint}>
+              These show as booking cards at the end of the post. For cards inside the story, add a “Booking card” block in the Body section above.
+            </p>
             <div style={s.grid2}>
-              <FormField label="Related tour slug" hint="Shows a booking card at the end of the post.">
-                <input style={s.input} value={item.relatedTourSlug || ''} onChange={(e) => set({ relatedTourSlug: e.target.value })} placeholder="sarajevo-walking-tour" />
+              <FormField label="Related tour">
+                <RelationPicker kind="tour" value={item.relatedTourSlug || ''} onChange={(v) => set({ relatedTourSlug: v })} />
               </FormField>
-              <FormField label="Related package slug">
-                <input style={s.input} value={item.relatedPackageSlug || ''} onChange={(e) => set({ relatedPackageSlug: e.target.value })} placeholder="bosnia-deep-dive" />
+              <FormField label="Related package">
+                <RelationPicker kind="package" value={item.relatedPackageSlug || ''} onChange={(v) => set({ relatedPackageSlug: v })} />
               </FormField>
             </div>
-            <div style={s.grid2}>
-              <FormField label="Inline promo card slug" hint="Card shown mid-article, between text blocks 2 and 3.">
-                <input style={s.input} value={item.inlineCardSlug || ''} onChange={(e) => set({ inlineCardSlug: e.target.value })} />
-              </FormField>
-              <FormField label="Inline card type">
-                <select style={s.input} value={item.inlineCardType || 'tour'} onChange={(e) => set({ inlineCardType: e.target.value })}>
-                  <option value="tour">Tour</option>
-                  <option value="package">Package</option>
-                </select>
-              </FormField>
-            </div>
+          </section>
+
+          <section id="seo" style={{ ...s.card, scrollMarginTop: 100 }}>
+            <h2 style={{ ...s.h2, marginTop: 0 }}>SEO</h2>
+            <p style={s.subheadingHint}>
+              What Google shows for this post. Empty fields fall back to the title and excerpt.
+            </p>
+            <FormField label="Meta title" hint={seoLengthHint(item.seoTitle, 60, 'title')}>
+              <input style={s.input} value={item.seoTitle || ''} onChange={(e) => set({ seoTitle: e.target.value })} placeholder={item.title || ''} />
+            </FormField>
+            <FormField label="Meta description" hint={seoLengthHint(item.seoDescription, 160, 'description')}>
+              <textarea style={s.textarea} value={item.seoDescription || ''} onChange={(e) => set({ seoDescription: e.target.value })} placeholder={item.excerpt || ''} />
+            </FormField>
           </section>
 
           <details id="advanced" style={{ ...s.card, scrollMarginTop: 100 }}>
@@ -210,8 +193,8 @@ export default function JournalEditor() {
           </details>
 
           <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, marginTop: 16 }}>
-            <Link to="/admin/journal" style={{ ...s.btn, ...s.btnGhost, textDecoration: 'none' }}>Cancel</Link>
-            <button style={s.btn} onClick={onSave} disabled={saving}>{saving ? 'Saving…' : 'Save'}</button>
+            <GuardedLink to="/admin/journal" style={{ ...s.btn, ...s.btnGhost, textDecoration: 'none' }}>Cancel</GuardedLink>
+            <SaveButton dirty={dirty} saving={saving} isNew={isNew} onClick={onSave} />
           </div>
 
         </div>

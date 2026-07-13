@@ -1,5 +1,4 @@
-import { useEffect, useState } from 'react'
-import { useNavigate, useParams, Link } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import * as api from '../api'
 import { s, colors } from '../styles'
 import FormField from '../components/FormField'
@@ -18,6 +17,14 @@ import JsonField from '../components/JsonField'
 import SectionNav from '../components/SectionNav'
 import AccessibilityEditor, { EMPTY_ACCESSIBILITY } from '../components/AccessibilityEditor'
 import RouteStatusBadge from '../components/RouteStatusBadge'
+import SaveButton from '../components/SaveButton'
+import GuardedLink from '../components/GuardedLink'
+import SlugField from '../components/SlugField'
+import BadgeStylePicker from '../components/BadgeStylePicker'
+import RelationPicker from '../components/RelationPicker'
+import { useEditorForm } from '../hooks/useEditorForm'
+import { invalidateOptionsCache } from '../hooks/useCollectionOptions'
+import { toNumberOrNull } from '../utils/validate'
 
 const SECTIONS = [
   { id: 'basics',       label: 'Basics' },
@@ -34,6 +41,7 @@ const SECTIONS = [
   { id: 'fitness',      label: 'Fitness notes' },
   { id: 'accessibility',label: 'Accessibility' },
   { id: 'important',    label: 'Important info' },
+  { id: 'journal',      label: 'Journal stories' },
   { id: 'advanced',     label: 'Advanced' },
 ]
 
@@ -75,54 +83,43 @@ const EMPTY = {
   suitability: { goodFor: [], thinkTwice: [] },
   fitnessNotes: [],
   accessibility: EMPTY_ACCESSIBILITY,
+  journalPosts: [],
 }
 
-const numFields = ['groupSize', 'price', 'originalPrice', 'priceWith', 'priceWithout', 'rating', 'reviews', 'locations', 'countries']
+// Optional prices stay null when empty; the rest fall back to 0 as before.
+const nullableNumFields = ['originalPrice', 'priceWith', 'priceWithout']
+const numFields = ['groupSize', 'price', 'rating', 'reviews', 'locations', 'countries']
+
+function validatePackage(p) {
+  const errors = {}
+  const price = toNumberOrNull(p.price)
+  if (price == null || price < 0) errors.price = 'Price must be a number ≥ 0.'
+  const rating = toNumberOrNull(p.rating)
+  if (p.rating !== '' && p.rating != null && (rating == null || rating < 0 || rating > 5)) errors.rating = 'Rating must be between 0 and 5.'
+  const groupSize = toNumberOrNull(p.groupSize)
+  if (groupSize == null || groupSize < 1) errors.groupSize = 'Capacity must be at least 1.'
+  return errors
+}
 
 export default function PackageEditor() {
   const { id } = useParams()
-  const isNew = !id
-  const nav = useNavigate()
 
-  const [pkg, setPkg] = useState(isNew ? EMPTY : null)
-  const [err, setErr] = useState(null)
-  const [saving, setSaving] = useState(false)
-
-  useEffect(() => {
-    if (isNew) return
-    api.packages
-      .get(id)
-      .then(setPkg)
-      .catch((e) => setErr(e.message))
-  }, [id, isNew])
-
-  const set = (patch) => setPkg((p) => ({ ...p, ...patch }))
-
-  const onSave = async () => {
-    setSaving(true)
-    setErr(null)
-    try {
-      const cleaned = { ...pkg }
-      for (const f of numFields) {
-        if (cleaned[f] === '' || cleaned[f] === null || cleaned[f] === undefined) {
-          if (f === 'originalPrice' || f === 'priceWith' || f === 'priceWithout') cleaned[f] = null
-          else cleaned[f] = 0
-        } else {
-          cleaned[f] = Number(cleaned[f])
-        }
-      }
-      if (isNew) {
-        const created = await api.packages.create(cleaned)
-        nav(`/admin/packages/${created.id}`, { replace: true })
-      } else {
-        await api.packages.update(id, cleaned)
-      }
-    } catch (e) {
-      setErr(e.message)
-    } finally {
-      setSaving(false)
-    }
-  }
+  const { item: pkg, setItem: setPkg, set, err, saving, dirty, fieldErrors, onSave, isNew } = useEditorForm({
+    collection: api.packages,
+    id,
+    empty: EMPTY,
+    titleField: 'name',
+    validate: validatePackage,
+    clean: (p) => {
+      const cleaned = { ...p, slug: p.slug.trim() }
+      for (const f of nullableNumFields) cleaned[f] = toNumberOrNull(cleaned[f])
+      for (const f of numFields) cleaned[f] = toNumberOrNull(cleaned[f]) ?? 0
+      return cleaned
+    },
+    editorPath: (newId) => `/admin/packages/${newId}`,
+    savedMessage: 'Package saved',
+    afterSave: () => invalidateOptionsCache('package'),
+  })
 
   if (err && !pkg) return <div style={{ color: 'crimson' }}>{err}</div>
   if (!pkg) return <div>Loading…</div>
@@ -131,7 +128,7 @@ export default function PackageEditor() {
     <div>
       <div style={s.stickyHeader}>
         <div style={{ minWidth: 0 }}>
-          <Link to="/admin/packages" style={{ color: colors.textMuted, textDecoration: 'none', fontSize: 13 }}>← All packages</Link>
+          <GuardedLink to="/admin/packages" style={{ color: colors.textMuted, textDecoration: 'none', fontSize: 13 }}>← All packages</GuardedLink>
           <h1 style={{ ...s.h1, marginTop: 4, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
             {isNew ? 'New package' : pkg.name || 'Untitled package'}
           </h1>
@@ -142,9 +139,7 @@ export default function PackageEditor() {
               View on site ↗
             </a>
           )}
-          <button style={s.btn} onClick={onSave} disabled={saving}>
-            {saving ? 'Saving…' : 'Save'}
-          </button>
+          <SaveButton dirty={dirty} saving={saving} isNew={isNew} onClick={onSave} />
         </div>
       </div>
 
@@ -156,16 +151,21 @@ export default function PackageEditor() {
 
       <section id="basics" style={{ ...s.card, scrollMarginTop: 100 }}>
         <h2 style={{ ...s.h2, marginTop: 0 }}>Basics</h2>
-        <FormField label="Name">
+        <FormField label="Name" error={fieldErrors.name}>
           <input style={s.input} value={pkg.name || ''} onChange={(e) => set({ name: e.target.value })} />
         </FormField>
         <FormField label="Subtitle">
           <input style={s.input} value={pkg.subtitle || ''} onChange={(e) => set({ subtitle: e.target.value })} />
         </FormField>
         <div style={s.grid2}>
-          <FormField label="Slug" hint="URL: /packages/your-slug">
-            <input style={s.input} value={pkg.slug || ''} onChange={(e) => set({ slug: e.target.value })} />
-          </FormField>
+          <SlugField
+            value={pkg.slug}
+            onChange={(v) => set({ slug: v })}
+            titleValue={pkg.name}
+            isNew={isNew}
+            error={fieldErrors.slug}
+            hint="URL: /packages/your-slug"
+          />
           <FormField label="Duration">
             <input style={s.input} value={pkg.duration || ''} onChange={(e) => set({ duration: e.target.value })} placeholder="e.g. 5 Days" />
           </FormField>
@@ -178,8 +178,8 @@ export default function PackageEditor() {
               <option>Challenging</option>
             </select>
           </FormField>
-          <FormField label="Group size (max)">
-            <input type="number" style={s.input} value={pkg.groupSize ?? ''} onChange={(e) => set({ groupSize: e.target.value })} />
+          <FormField label="Capacity" error={fieldErrors.groupSize} hint="Internal booking cap — the number is never shown on the site; pages say “Small group”.">
+            <input type="number" min="1" style={s.input} value={pkg.groupSize ?? ''} onChange={(e) => set({ groupSize: e.target.value })} />
           </FormField>
           <FormField label="Locations">
             <input type="number" style={s.input} value={pkg.locations ?? ''} onChange={(e) => set({ locations: e.target.value })} />
@@ -198,8 +198,8 @@ export default function PackageEditor() {
       <section id="pricing" style={{ ...s.card, scrollMarginTop: 100 }}>
         <h2 style={{ ...s.h2, marginTop: 0 }}>Pricing</h2>
         <div style={s.grid2}>
-          <FormField label="Price (€)" hint="Card price">
-            <input type="number" style={s.input} value={pkg.price ?? ''} onChange={(e) => set({ price: e.target.value })} />
+          <FormField label="Price (€)" error={fieldErrors.price} hint="Card price">
+            <input type="number" min="0" style={s.input} value={pkg.price ?? ''} onChange={(e) => set({ price: e.target.value })} />
           </FormField>
           <FormField label="Price without (€)" hint="Without single-supplement">
             <input type="number" style={s.input} value={pkg.priceWithout ?? ''} onChange={(e) => set({ priceWithout: e.target.value })} />
@@ -209,8 +209,8 @@ export default function PackageEditor() {
           </FormField>
         </div>
         <div style={s.grid2}>
-          <FormField label="Rating">
-            <input type="number" step="0.1" style={s.input} value={pkg.rating ?? ''} onChange={(e) => set({ rating: e.target.value })} />
+          <FormField label="Rating" error={fieldErrors.rating}>
+            <input type="number" step="0.1" min="0" max="5" style={s.input} value={pkg.rating ?? ''} onChange={(e) => set({ rating: e.target.value })} />
           </FormField>
           <FormField label="Reviews">
             <input type="number" style={s.input} value={pkg.reviews ?? ''} onChange={(e) => set({ reviews: e.target.value })} />
@@ -220,17 +220,12 @@ export default function PackageEditor() {
 
       <section id="badge" style={{ ...s.card, scrollMarginTop: 100 }}>
         <h2 style={{ ...s.h2, marginTop: 0 }}>Badge</h2>
-        <div style={s.grid3}>
-          <FormField label="Badge text">
-            <input style={s.input} value={pkg.badge || ''} onChange={(e) => set({ badge: e.target.value })} placeholder="Most Popular" />
-          </FormField>
-          <FormField label="Badge bg" hint="CSS color or var(--…)">
-            <input style={s.input} value={pkg.badgeColor || ''} onChange={(e) => set({ badgeColor: e.target.value })} placeholder="var(--color-amber)" />
-          </FormField>
-          <FormField label="Badge text color">
-            <input style={s.input} value={pkg.badgeTextColor || ''} onChange={(e) => set({ badgeTextColor: e.target.value })} placeholder="var(--color-n900)" />
-          </FormField>
-        </div>
+        <BadgeStylePicker
+          badge={pkg.badge}
+          color={pkg.badgeColor}
+          textColor={pkg.badgeTextColor}
+          onChange={(patch) => set(patch)}
+        />
       </section>
 
       <section id="media" style={{ ...s.card, scrollMarginTop: 100 }}>
@@ -327,6 +322,21 @@ export default function PackageEditor() {
         <ImportantInfoEditor value={pkg.importantInfo} onChange={(v) => set({ importantInfo: v })} />
       </section>
 
+      <section id="journal" style={{ ...s.card, scrollMarginTop: 100 }}>
+        <h2 style={{ ...s.h2, marginTop: 0 }}>Journal stories</h2>
+        <p style={s.subheadingHint}>
+          Hand-pick the posts shown in “From the Journal” on this package's page, in this order.
+          Leave empty to automatically show posts that link to this package.
+        </p>
+        <RelationPicker
+          kind="journal"
+          multiple
+          value={pkg.journalPosts}
+          onChange={(v) => set({ journalPosts: v })}
+          placeholder="+ Add post"
+        />
+      </section>
+
       <details id="advanced" style={{ ...s.card, scrollMarginTop: 100 }}>
         <summary style={{ cursor: 'pointer', fontWeight: 600 }}>Advanced — raw JSON</summary>
         <p style={s.hint}>Edit the entire package as JSON. Use this only if a field isn't covered above.</p>
@@ -334,10 +344,8 @@ export default function PackageEditor() {
       </details>
 
       <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, marginTop: 16 }}>
-        <Link to="/admin/packages" style={{ ...s.btn, ...s.btnGhost, textDecoration: 'none' }}>Cancel</Link>
-        <button style={s.btn} onClick={onSave} disabled={saving}>
-          {saving ? 'Saving…' : 'Save'}
-        </button>
+        <GuardedLink to="/admin/packages" style={{ ...s.btn, ...s.btnGhost, textDecoration: 'none' }}>Cancel</GuardedLink>
+        <SaveButton dirty={dirty} saving={saving} isNew={isNew} onClick={onSave} />
       </div>
 
         </div>

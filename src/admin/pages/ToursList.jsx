@@ -2,12 +2,20 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import * as api from '../api'
 import { s, colors } from '../styles'
+import { SearchBox, Thumb, SkeletonRows } from '../components/ListChrome'
+import DragHandle from '../components/DragHandle'
+import ConfirmDialog from '../components/ConfirmDialog'
+import { useToast } from '../hooks/useToast'
+import { useListDrag } from '../hooks/useListDrag'
+import { copySlug } from '../utils/duplicate'
 
 export default function ToursList() {
   const [items, setItems] = useState(null)
   const [err, setErr] = useState(null)
   const [q, setQ] = useState('')
+  const [pendingDelete, setPendingDelete] = useState(null)
   const nav = useNavigate()
+  const toast = useToast()
 
   const load = () =>
     api.tours
@@ -19,13 +27,56 @@ export default function ToursList() {
     load()
   }, [])
 
-  const onDelete = async (id, title) => {
-    if (!window.confirm(`Delete "${title}"? This cannot be undone.`)) return
+  // The JSON array order is exactly what /tours and the homepage render, so
+  // reordering here is the site-wide ordering control.
+  const canReorder = q.trim() === ''
+
+  const persistOrder = async (next) => {
+    setItems(next)
+    try {
+      await api.tours.reorder(next.map((t) => t.id))
+      toast.success('Order saved — this is the order shown on the site')
+    } catch (e) {
+      toast.error(`Couldn't save the new order: ${e.message}`)
+      load()
+    }
+  }
+
+  const drag = useListDrag(items || [], persistOrder)
+
+  const move = (idx, dir) => {
+    const target = idx + dir
+    if (!items || target < 0 || target >= items.length) return
+    const next = items.slice()
+    const [it] = next.splice(idx, 1)
+    next.splice(target, 0, it)
+    persistOrder(next)
+  }
+
+  const confirmDelete = async () => {
+    const { id, title } = pendingDelete
+    setPendingDelete(null)
     try {
       await api.tours.remove(id)
+      toast.success(`Deleted “${title}”`)
       load()
     } catch (e) {
-      alert(e.message)
+      toast.error(`Delete failed: ${e.message}`)
+    }
+  }
+
+  const duplicate = async (t) => {
+    try {
+      const { id, ...rest } = t
+      const created = await api.tours.create({
+        ...rest,
+        slug: copySlug(t.slug, items.map((i) => i.slug)),
+        title: `${t.title} (copy)`,
+      })
+      toast.success('Duplicated — you are editing the copy now')
+      nav(`/admin/tours/${created.id}`)
+    } catch (e) {
+      toast.error(`Duplicate failed: ${e.message}`)
     }
   }
 
@@ -54,6 +105,9 @@ export default function ToursList() {
 
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, marginBottom: 14 }}>
         <SearchBox value={q} onChange={setQ} placeholder="Search tours by title, slug, category…" />
+        <span style={{ fontSize: 12.5, color: colors.textMuted }}>
+          {canReorder ? 'Drag rows to set the order shown on /tours and the homepage.' : 'Clear the search to reorder tours.'}
+        </span>
       </div>
 
       {items == null ? (
@@ -66,17 +120,21 @@ export default function ToursList() {
         <table style={s.table}>
           <thead>
             <tr>
+              <th style={{ ...s.th, width: 34 }}></th>
               <th style={{ ...s.th, width: 84 }}></th>
               <th style={s.th}>Tour</th>
               <th style={{ ...s.th, width: 130 }}>Category</th>
               <th style={{ ...s.th, width: 90 }}>Price</th>
               <th style={{ ...s.th, width: 90 }}>Rating</th>
-              <th style={{ ...s.th, width: 160 }}></th>
+              <th style={{ ...s.th, width: 210 }}></th>
             </tr>
           </thead>
           <tbody>
-            {filtered.map((t) => (
-              <tr key={t.id}>
+            {filtered.map((t, idx) => (
+              <tr key={t.id} {...(canReorder ? drag.rowProps(idx) : {})}>
+                <td style={{ ...s.td, padding: '10px 4px 10px 12px' }}>
+                  <DragHandle disabled={!canReorder} title="Clear search to reorder" {...(canReorder ? drag.handleProps(idx) : {})} />
+                </td>
                 <td style={{ ...s.td, padding: '10px 16px' }}>
                   <Thumb src={t.hero} alt={t.title} />
                 </td>
@@ -110,9 +168,22 @@ export default function ToursList() {
                 </td>
                 <td style={s.td}>
                   <div style={{ display: 'flex', gap: 6, justifyContent: 'flex-end' }}>
+                    <button
+                      style={{ ...s.btn, ...s.btnGhost, padding: '6px 8px' }}
+                      title="Move up"
+                      disabled={!canReorder || idx === 0}
+                      onClick={() => move(idx, -1)}
+                    >↑</button>
+                    <button
+                      style={{ ...s.btn, ...s.btnGhost, padding: '6px 8px' }}
+                      title="Move down"
+                      disabled={!canReorder || idx === filtered.length - 1}
+                      onClick={() => move(idx, 1)}
+                    >↓</button>
                     <a href={`/tours/${t.slug}`} target="_blank" rel="noreferrer" style={{ ...s.btn, ...s.btnGhost, textDecoration: 'none' }} title="Open public page">↗</a>
+                    <button style={{ ...s.btn, ...s.btnGhost, padding: '6px 8px' }} title="Duplicate this tour" onClick={() => duplicate(t)}>⧉</button>
                     <Link to={`/admin/tours/${t.id}`} style={{ ...s.btn, ...s.btnSecondary, textDecoration: 'none' }}>Edit</Link>
-                    <button style={{ ...s.btn, ...s.btnGhost, color: colors.danger }} onClick={() => onDelete(t.id, t.title)}>Delete</button>
+                    <button style={{ ...s.btn, ...s.btnGhost, color: colors.danger }} onClick={() => setPendingDelete({ id: t.id, title: t.title })}>Delete</button>
                   </div>
                 </td>
               </tr>
@@ -120,64 +191,16 @@ export default function ToursList() {
           </tbody>
         </table>
       )}
-    </div>
-  )
-}
 
-function SearchBox({ value, onChange, placeholder }) {
-  return (
-    <div style={{ position: 'relative', flex: '0 0 auto' }}>
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={colors.textMuted} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-        style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }}>
-        <circle cx="11" cy="11" r="7" />
-        <path d="m21 21-4.3-4.3" />
-      </svg>
-      <input
-        type="text"
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        placeholder={placeholder}
-        style={s.searchInput}
+      <ConfirmDialog
+        open={!!pendingDelete}
+        title="Delete tour?"
+        body={<>“{pendingDelete?.title}” will be removed from the site and from <code>tours.json</code>. This cannot be undone.</>}
+        confirmLabel="Delete"
+        danger
+        onConfirm={confirmDelete}
+        onCancel={() => setPendingDelete(null)}
       />
-    </div>
-  )
-}
-
-function Thumb({ src, alt }) {
-  if (!src) {
-    return (
-      <div
-        style={{
-          width: 64,
-          height: 44,
-          borderRadius: 6,
-          backgroundColor: colors.panelMuted,
-          border: `1px solid ${colors.border}`,
-        }}
-      />
-    )
-  }
-  return (
-    <img
-      src={src}
-      alt={alt || ''}
-      style={{ width: 64, height: 44, objectFit: 'cover', borderRadius: 6, border: `1px solid ${colors.border}`, display: 'block' }}
-    />
-  )
-}
-
-function SkeletonRows() {
-  return (
-    <div style={{ ...s.card, padding: 0 }}>
-      {[0, 1, 2, 3].map((i) => (
-        <div key={i} style={{ display: 'flex', gap: 16, alignItems: 'center', padding: '14px 16px', borderBottom: i < 3 ? `1px solid ${colors.border}` : 'none' }}>
-          <div style={{ ...s.skeleton, width: 64, height: 44 }} />
-          <div style={{ flex: 1 }}>
-            <div style={{ ...s.skeleton, width: '40%', height: 14, marginBottom: 6 }} />
-            <div style={{ ...s.skeleton, width: '60%', height: 11 }} />
-          </div>
-        </div>
-      ))}
     </div>
   )
 }

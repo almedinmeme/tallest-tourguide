@@ -6,11 +6,13 @@ import { s, colors } from '../styles'
 export default function Dashboard() {
   const [tours, setTours] = useState(null)
   const [packages, setPackages] = useState(null)
+  const [journal, setJournal] = useState(null)
+  const [destinations, setDestinations] = useState(null)
   const [err, setErr] = useState(null)
 
   useEffect(() => {
-    Promise.all([api.tours.list(), api.packages.list()])
-      .then(([t, p]) => { setTours(t); setPackages(p) })
+    Promise.all([api.tours.list(), api.packages.list(), api.journal.list(), api.destinations.list()])
+      .then(([t, p, j, d]) => { setTours(t); setPackages(p); setJournal(j); setDestinations(d) })
       .catch((e) => setErr(e.message))
   }, [])
 
@@ -26,7 +28,7 @@ export default function Dashboard() {
       </div>
 
       {/* Stats */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, marginBottom: 28 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16, marginBottom: 28 }}>
         <StatCard
           to="/admin/tours"
           eyebrow="Tours"
@@ -53,17 +55,26 @@ export default function Dashboard() {
           }
         />
         <StatCard
-          eyebrow="Total days planned"
-          value={
-            packages == null
-              ? null
-              : packages.reduce((acc, p) => acc + (Array.isArray(p.days) ? p.days.length : 0), 0)
-          }
-          caption="Across all packages"
+          to="/admin/journal"
+          eyebrow="Journal"
+          value={journal == null ? null : journal.length}
+          caption="Manage posts →"
           icon={
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-              <rect x="3" y="5" width="18" height="16" rx="2" />
-              <path d="M3 9h18M9 3v4M15 3v4" />
+              <path d="M12 20h9" />
+              <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z" />
+            </svg>
+          }
+        />
+        <StatCard
+          to="/admin/destinations"
+          eyebrow="Destinations"
+          value={destinations == null ? null : destinations.length}
+          caption="Manage destinations →"
+          icon={
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="9" />
+              <path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18" />
             </svg>
           }
         />
@@ -82,9 +93,9 @@ export default function Dashboard() {
           <div style={{ ...s.card }}>
             <h2 style={{ ...s.h2, margin: '0 0 8px', fontSize: 15 }}>How it works</h2>
             <p style={{ fontSize: 13, color: colors.textSubtle, lineHeight: 1.6, margin: 0 }}>
-              Edits here write to{' '}
-              <code style={codeStyle}>src/data/tours.json</code> and{' '}
-              <code style={codeStyle}>src/data/packages.json</code>. Uploaded images go to{' '}
+              Edits here write to the JSON files in{' '}
+              <code style={codeStyle}>src/data/</code> (tours, packages, journal, destinations,
+              accommodations, pages). Uploaded images go to{' '}
               <code style={codeStyle}>public/uploads/</code> as compressed WebP. When you're happy,
               commit the changes — the public site reads the same JSON.
             </p>
@@ -94,6 +105,7 @@ export default function Dashboard() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
               <Link to="/admin/tours/new" style={{ ...s.btn, ...s.btnSecondary, textDecoration: 'none', justifyContent: 'flex-start' }}>+ New tour</Link>
               <Link to="/admin/packages/new" style={{ ...s.btn, ...s.btnSecondary, textDecoration: 'none', justifyContent: 'flex-start' }}>+ New package</Link>
+              <Link to="/admin/journal/new" style={{ ...s.btn, ...s.btnSecondary, textDecoration: 'none', justifyContent: 'flex-start' }}>+ New journal post</Link>
               <a href="/" target="_blank" rel="noreferrer" style={{ ...s.btn, ...s.btnGhost, textDecoration: 'none', justifyContent: 'flex-start' }}>
                 Open public site ↗
               </a>

@@ -2,6 +2,9 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import * as api from '../api'
 import { s, colors } from '../styles'
+import ConfirmDialog from '../components/ConfirmDialog'
+import { useToast } from '../hooks/useToast'
+import { copySlug } from '../utils/duplicate'
 
 function formatDate(dateStr) {
   if (!dateStr) return ''
@@ -12,7 +15,9 @@ export default function JournalList() {
   const [items, setItems] = useState(null)
   const [err, setErr] = useState(null)
   const [q, setQ] = useState('')
+  const [pendingDelete, setPendingDelete] = useState(null)
   const nav = useNavigate()
+  const toast = useToast()
 
   const load = () =>
     api.journal
@@ -24,13 +29,33 @@ export default function JournalList() {
     load()
   }, [])
 
-  const onDelete = async (id, title) => {
-    if (!window.confirm(`Delete "${title}"? This cannot be undone.`)) return
+  const confirmDelete = async () => {
+    const { id, title } = pendingDelete
+    setPendingDelete(null)
     try {
       await api.journal.remove(id)
+      toast.success(`Deleted “${title}”`)
       load()
     } catch (e) {
-      alert(e.message)
+      toast.error(`Delete failed: ${e.message}`)
+    }
+  }
+
+  // Copies start as drafts so a half-edited duplicate never leaks onto the
+  // live journal.
+  const duplicate = async (post) => {
+    try {
+      const { id, ...rest } = post
+      const created = await api.journal.create({
+        ...rest,
+        slug: copySlug(post.slug, items.map((i) => i.slug)),
+        title: `${post.title} (copy)`,
+        published: false,
+      })
+      toast.success('Duplicated as a draft — you are editing the copy now')
+      nav(`/admin/journal/${created.id}`)
+    } catch (e) {
+      toast.error(`Duplicate failed: ${e.message}`)
     }
   }
 
@@ -105,8 +130,9 @@ export default function JournalList() {
                 </td>
                 <td style={s.td}>
                   <div style={{ display: 'flex', gap: 6, justifyContent: 'flex-end' }}>
+                    <button style={{ ...s.btn, ...s.btnGhost, padding: '6px 8px' }} title="Duplicate as draft" onClick={() => duplicate(p)}>⧉</button>
                     <Link to={`/admin/journal/${p.id}`} style={{ ...s.btn, ...s.btnSecondary, textDecoration: 'none' }}>Edit</Link>
-                    <button style={{ ...s.btn, ...s.btnGhost, color: colors.danger }} onClick={() => onDelete(p.id, p.title)}>Delete</button>
+                    <button style={{ ...s.btn, ...s.btnGhost, color: colors.danger }} onClick={() => setPendingDelete({ id: p.id, title: p.title })}>Delete</button>
                   </div>
                 </td>
               </tr>
@@ -114,6 +140,16 @@ export default function JournalList() {
           </tbody>
         </table>
       )}
+
+      <ConfirmDialog
+        open={!!pendingDelete}
+        title="Delete post?"
+        body={<>“{pendingDelete?.title}” will be removed from the journal. This cannot be undone.</>}
+        confirmLabel="Delete"
+        danger
+        onConfirm={confirmDelete}
+        onCancel={() => setPendingDelete(null)}
+      />
     </div>
   )
 }

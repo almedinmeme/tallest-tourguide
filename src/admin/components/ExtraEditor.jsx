@@ -2,11 +2,13 @@ import RichTextEditor from './RichTextEditor'
 import ImageUpload from './ImageUpload'
 import ListEditor from './ListEditor'
 import FormField from './FormField'
+import RelationPicker from './RelationPicker'
 import { s, colors } from '../styles'
 
 // Schema-driven editor for a page's bespoke `extra` content, so each page gets
 // real fields instead of a raw-JSON box. Field types: text, textarea, richtext,
-// image, list (string[]), objectList (array of objects with their own fields).
+// image, list (string[]), objectList (array of objects with their own fields),
+// relationList (multi-select of tour/package/journal slugs via RelationPicker).
 export default function ExtraEditor({ schema, value, onChange, slug }) {
   const extra = value && typeof value === 'object' && !Array.isArray(value) ? value : {}
   const setKey = (key, v) => onChange({ ...extra, [key]: v })
@@ -56,6 +58,19 @@ function Field({ field, value, onChange, slug }) {
   }
   if (type === 'objectList') {
     return <ObjectListEditor field={field} value={value} onChange={onChange} slug={slug} />
+  }
+  if (type === 'relationList') {
+    return (
+      <FormField label={label} hint={hint}>
+        <RelationPicker
+          kind={field.relation || 'tour'}
+          multiple
+          value={Array.isArray(value) ? value : []}
+          onChange={onChange}
+          placeholder={placeholder || '+ Add'}
+        />
+      </FormField>
+    )
   }
   return null
 }

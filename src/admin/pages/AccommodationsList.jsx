@@ -2,6 +2,9 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import * as api from '../api'
 import { s, colors } from '../styles'
+import ConfirmDialog from '../components/ConfirmDialog'
+import { useToast } from '../hooks/useToast'
+import { copySlug } from '../utils/duplicate'
 
 const TYPE_LABEL = {
   homestay: 'Homestay',
@@ -13,7 +16,9 @@ export default function AccommodationsList() {
   const [items, setItems] = useState(null)
   const [err, setErr] = useState(null)
   const [q, setQ] = useState('')
+  const [pendingDelete, setPendingDelete] = useState(null)
   const nav = useNavigate()
+  const toast = useToast()
 
   const load = () =>
     api.accommodations
@@ -25,13 +30,30 @@ export default function AccommodationsList() {
     load()
   }, [])
 
-  const onDelete = async (id, name) => {
-    if (!window.confirm(`Delete "${name}"? This cannot be undone.`)) return
+  const confirmDelete = async () => {
+    const { id, name } = pendingDelete
+    setPendingDelete(null)
     try {
       await api.accommodations.remove(id)
+      toast.success(`Deleted “${name}”`)
       load()
     } catch (e) {
-      alert(e.message)
+      toast.error(`Delete failed: ${e.message}`)
+    }
+  }
+
+  const duplicate = async (a) => {
+    try {
+      const { id, ...rest } = a
+      const created = await api.accommodations.create({
+        ...rest,
+        slug: copySlug(a.slug || 'accommodation', items.map((i) => i.slug)),
+        name: `${a.name} (copy)`,
+      })
+      toast.success('Duplicated — you are editing the copy now')
+      nav(`/admin/accommodations/${created.id}`)
+    } catch (e) {
+      toast.error(`Duplicate failed: ${e.message}`)
     }
   }
 
@@ -99,8 +121,9 @@ export default function AccommodationsList() {
                 <td style={s.td}>{a.location}{a.country ? <span style={{ color: colors.textMuted }}> · {a.country}</span> : null}</td>
                 <td style={s.td}>
                   <div style={{ display: 'flex', gap: 6, justifyContent: 'flex-end' }}>
+                    <button style={{ ...s.btn, ...s.btnGhost, padding: '6px 8px' }} title="Duplicate this accommodation" onClick={() => duplicate(a)}>⧉</button>
                     <Link to={`/admin/accommodations/${a.id}`} style={{ ...s.btn, ...s.btnSecondary, textDecoration: 'none' }}>Edit</Link>
-                    <button style={{ ...s.btn, ...s.btnGhost, color: colors.danger }} onClick={() => onDelete(a.id, a.name)}>Delete</button>
+                    <button style={{ ...s.btn, ...s.btnGhost, color: colors.danger }} onClick={() => setPendingDelete({ id: a.id, name: a.name })}>Delete</button>
                   </div>
                 </td>
               </tr>
@@ -108,6 +131,16 @@ export default function AccommodationsList() {
           </tbody>
         </table>
       )}
+
+      <ConfirmDialog
+        open={!!pendingDelete}
+        title="Delete accommodation?"
+        body={<>“{pendingDelete?.name}” will be removed from the site. This cannot be undone.</>}
+        confirmLabel="Delete"
+        danger
+        onConfirm={confirmDelete}
+        onCancel={() => setPendingDelete(null)}
+      />
     </div>
   )
 }

@@ -1,13 +1,17 @@
-import { useEffect, useState } from 'react'
-import { useNavigate, useParams, Link } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import * as api from '../api'
 import { s, colors } from '../styles'
 import FormField from '../components/FormField'
 import RichTextEditor from '../components/RichTextEditor'
 import ImageUpload from '../components/ImageUpload'
-import ListEditor from '../components/ListEditor'
 import JsonField from '../components/JsonField'
 import SectionNav from '../components/SectionNav'
+import RelationPicker from '../components/RelationPicker'
+import SaveButton from '../components/SaveButton'
+import GuardedLink from '../components/GuardedLink'
+import SlugField from '../components/SlugField'
+import { useEditorForm } from '../hooks/useEditorForm'
+import { toNumberOrNull } from '../utils/validate'
 
 const SECTIONS = [
   { id: 'basics', label: 'Basics' },
@@ -35,37 +39,17 @@ const EMPTY = {
 
 export default function DestinationEditor() {
   const { id } = useParams()
-  const isNew = !id
-  const nav = useNavigate()
 
-  const [item, setItem] = useState(isNew ? EMPTY : null)
-  const [err, setErr] = useState(null)
-  const [saving, setSaving] = useState(false)
-
-  useEffect(() => {
-    if (isNew) return
-    api.destinations.get(id).then(setItem).catch((e) => setErr(e.message))
-  }, [id, isNew])
-
-  const set = (patch) => setItem((t) => ({ ...t, ...patch }))
-
-  const onSave = async () => {
-    setSaving(true)
-    setErr(null)
-    try {
-      const cleaned = { ...item, order: Number(item.order) || 0 }
-      if (isNew) {
-        const created = await api.destinations.create(cleaned)
-        nav(`/admin/destinations/${created.id}`, { replace: true })
-      } else {
-        await api.destinations.update(id, cleaned)
-      }
-    } catch (e) {
-      setErr(e.message)
-    } finally {
-      setSaving(false)
-    }
-  }
+  const { item, setItem, set, err, saving, dirty, fieldErrors, onSave, isNew } = useEditorForm({
+    collection: api.destinations,
+    id,
+    empty: EMPTY,
+    titleField: 'name',
+    titleLabel: 'Region name',
+    clean: (it) => ({ ...it, slug: it.slug.trim(), order: toNumberOrNull(it.order) ?? 0 }),
+    editorPath: (newId) => `/admin/destinations/${newId}`,
+    savedMessage: 'Destination saved',
+  })
 
   if (err && !item) return <div style={{ color: 'crimson' }}>{err}</div>
   if (!item) return <div>Loading…</div>
@@ -74,7 +58,7 @@ export default function DestinationEditor() {
     <div>
       <div style={s.stickyHeader}>
         <div style={{ minWidth: 0 }}>
-          <Link to="/admin/destinations" style={{ color: colors.textMuted, textDecoration: 'none', fontSize: 13 }}>← All destinations</Link>
+          <GuardedLink to="/admin/destinations" style={{ color: colors.textMuted, textDecoration: 'none', fontSize: 13 }}>← All destinations</GuardedLink>
           <h1 style={{ ...s.h1, marginTop: 4, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
             {isNew ? 'New destination' : item.name || 'Untitled'}
           </h1>
@@ -85,7 +69,7 @@ export default function DestinationEditor() {
               View on site ↗
             </a>
           )}
-          <button style={s.btn} onClick={onSave} disabled={saving}>{saving ? 'Saving…' : 'Save'}</button>
+          <SaveButton dirty={dirty} saving={saving} isNew={isNew} onClick={onSave} />
         </div>
       </div>
 
@@ -98,12 +82,17 @@ export default function DestinationEditor() {
           <section id="basics" style={{ ...s.card, scrollMarginTop: 100 }}>
             <h2 style={{ ...s.h2, marginTop: 0 }}>Basics</h2>
             <div style={s.grid2}>
-              <FormField label="Region name">
+              <FormField label="Region name" error={fieldErrors.name}>
                 <input style={s.input} value={item.name || ''} onChange={(e) => set({ name: e.target.value })} placeholder="Bosnia, Montenegro…" />
               </FormField>
-              <FormField label="Slug" hint="URL path: /destinations/your-slug">
-                <input style={s.input} value={item.slug || ''} onChange={(e) => set({ slug: e.target.value })} />
-              </FormField>
+              <SlugField
+                value={item.slug}
+                onChange={(v) => set({ slug: v })}
+                titleValue={item.name}
+                isNew={isNew}
+                error={fieldErrors.slug}
+                hint="URL path: /destinations/your-slug"
+              />
             </div>
             <div style={s.grid2}>
               <FormField label="Country">
@@ -145,10 +134,14 @@ export default function DestinationEditor() {
 
           <section id="related" style={{ ...s.card, scrollMarginTop: 100 }}>
             <h2 style={{ ...s.h2, marginTop: 0 }}>Related tours & packages</h2>
-            <p style={s.subheadingHint}>Enter tour/package slugs to link this region to bookable trips. No dead ends.</p>
-            <div style={{ ...s.grid2, rowGap: 28 }}>
-              <ListEditor label="Related tour slugs" value={item.relatedTours} onChange={(v) => set({ relatedTours: v })} placeholder="e.g. sarajevo-walking-tour" />
-              <ListEditor label="Related package slugs" value={item.relatedPackages} onChange={(v) => set({ relatedPackages: v })} placeholder="e.g. sarajevo-essential" />
+            <p style={s.subheadingHint}>Link this region to bookable trips. No dead ends.</p>
+            <div style={{ ...s.grid2, rowGap: 28, alignItems: 'start' }}>
+              <FormField label="Related tours">
+                <RelationPicker kind="tour" multiple value={item.relatedTours} onChange={(v) => set({ relatedTours: v })} placeholder="+ Add tour" />
+              </FormField>
+              <FormField label="Related packages">
+                <RelationPicker kind="package" multiple value={item.relatedPackages} onChange={(v) => set({ relatedPackages: v })} placeholder="+ Add package" />
+              </FormField>
             </div>
           </section>
 
@@ -158,8 +151,8 @@ export default function DestinationEditor() {
           </details>
 
           <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, marginTop: 16 }}>
-            <Link to="/admin/destinations" style={{ ...s.btn, ...s.btnGhost, textDecoration: 'none' }}>Cancel</Link>
-            <button style={s.btn} onClick={onSave} disabled={saving}>{saving ? 'Saving…' : 'Save'}</button>
+            <GuardedLink to="/admin/destinations" style={{ ...s.btn, ...s.btnGhost, textDecoration: 'none' }}>Cancel</GuardedLink>
+            <SaveButton dirty={dirty} saving={saving} isNew={isNew} onClick={onSave} />
           </div>
 
         </div>

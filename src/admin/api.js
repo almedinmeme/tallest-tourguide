@@ -27,6 +27,8 @@ function makeCollection(name) {
     update: (id, body) =>
       jsonFetch(`${BASE}/${name}/${id}`, { method: 'PUT', body: JSON.stringify(body) }),
     remove: (id) => jsonFetch(`${BASE}/${name}/${id}`, { method: 'DELETE' }),
+    reorder: (ids) =>
+      jsonFetch(`${BASE}/${name}/order`, { method: 'PUT', body: JSON.stringify({ ids }) }),
   }
 }
 
@@ -36,6 +38,16 @@ export const destinations = makeCollection('destinations')
 export const accommodations = makeCollection('accommodations')
 export const pages = makeCollection('pages')
 export const journal = makeCollection('journal')
+
+// Singleton — one object, no ids.
+export const settings = {
+  get: () => jsonFetch(`${BASE}/settings`),
+  update: (body) => jsonFetch(`${BASE}/settings`, { method: 'PUT', body: JSON.stringify(body) }),
+}
+
+// Commit all content changes (src/data + public/uploads) with a message.
+export const publish = (message) =>
+  jsonFetch(`${BASE}/publish`, { method: 'POST', body: JSON.stringify({ message }) })
 
 export async function uploadImage(file, slug) {
   const fd = new FormData()
