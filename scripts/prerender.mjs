@@ -145,7 +145,15 @@ async function main() {
   const server = await preview({ preview: { port: PORT, strictPort: false } })
   const base = server.resolvedUrls?.local?.[0]?.replace(/\/$/, '') || `http://localhost:${PORT}`
 
-  const browser = await puppeteer.launch({ headless: true, args: ['--no-sandbox'] })
+  // Airtable is blocked at the DNS level: tour pages call it live for
+  // availability/reviews, it rate-limits under 51-route × retry load, and the
+  // static HTML must not embed live data anyway — the client refetches after
+  // hydration. A resolver rule (vs request interception) can't deadlock the
+  // crawl: the fetch fails instantly and the app's fallbacks render.
+  const browser = await puppeteer.launch({
+    headless: true,
+    args: ['--no-sandbox', '--host-resolver-rules=MAP api.airtable.com ~NOTFOUND'],
+  })
   let page = await newMobilePage(browser)
 
   // Render everything into memory FIRST. If we wrote files during the crawl,
