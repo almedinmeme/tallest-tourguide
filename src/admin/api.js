@@ -45,9 +45,10 @@ export const settings = {
   update: (body) => jsonFetch(`${BASE}/settings`, { method: 'PUT', body: JSON.stringify(body) }),
 }
 
-// Commit all content changes (src/data + public/uploads) with a message.
-export const publish = (message) =>
-  jsonFetch(`${BASE}/publish`, { method: 'POST', body: JSON.stringify({ message }) })
+// Commit all content changes (src/data + public/uploads) and, unless
+// push:false, push — which is what deploys the site (Netlify builds on push).
+export const publish = (message, { push = true } = {}) =>
+  jsonFetch(`${BASE}/publish`, { method: 'POST', body: JSON.stringify({ message, push }) })
 
 export async function uploadImage(file, slug) {
   const fd = new FormData()

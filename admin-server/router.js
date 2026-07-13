@@ -112,40 +112,73 @@ export function buildAdminRouter() {
     res.json(body)
   }))
 
-  // Commit the content paths (and only those) so an editor can publish
-  // without leaving the admin. Deliberately scoped with a pathspec: anything
-  // the user has staged elsewhere in the repo is left untouched, and there
-  // is no push — deploying stays a human step.
+  const git = (args) =>
+    new Promise((resolve, reject) => {
+      execFile('git', args, (err, stdout, stderr) => {
+        if (err) {
+          const e = new Error((stderr || stdout || err.message).trim())
+          e.stdout = stdout
+          reject(e)
+        } else resolve(stdout)
+      })
+    })
+
+  // Commit the content paths (and only those) and optionally push, so an
+  // editor can go live without leaving the admin. Deliberately scoped with a
+  // pathspec: anything staged elsewhere in the repo is left untouched.
+  // Netlify auto-builds on push, so push === deploy. Body:
+  //   { message?: string, push?: boolean (default true) }
+  // With a clean tree and push=true this is a plain deploy of unpushed
+  // commits (the "committed but never pushed" trap).
   router.post('/publish', asyncHandler(async (req, res) => {
     const message = String(req.body?.message || '').trim() || 'Content updates from the admin panel'
-    execFile('git', ['add', '--', 'src/data', 'public/uploads'], (addErr) => {
-      if (addErr) return res.status(500).json({ error: addErr.message })
-      execFile(
-        'git',
-        ['commit', '-m', message, '--', 'src/data', 'public/uploads'],
-        (err, stdout, stderr) => {
-          if (err) return res.status(400).json({ error: (stderr || stdout || err.message).trim() })
-          res.json({ ok: true, output: stdout.trim() })
-        },
-      )
-    })
+    const wantPush = req.body?.push !== false
+
+    let committed = false
+    try {
+      const dirty = (await git(['status', '--porcelain', '--', 'src/data', 'public/uploads'])).trim()
+      if (dirty) {
+        await git(['add', '--', 'src/data', 'public/uploads'])
+        await git(['commit', '-m', message, '--', 'src/data', 'public/uploads'])
+        committed = true
+      }
+    } catch (e) {
+      return res.status(400).json({ error: `Commit failed: ${e.message}` })
+    }
+
+    if (!wantPush) return res.json({ ok: true, committed, pushed: false })
+
+    try {
+      await git(['push', 'origin', 'HEAD'])
+      return res.json({ ok: true, committed, pushed: true })
+    } catch (e) {
+      // The commit is safe locally — report the push separately so the UI
+      // can say "committed, deploy failed, retry later" instead of implying
+      // the work was lost.
+      return res.json({ ok: false, committed, pushed: false, pushError: e.message })
+    }
   }))
 
-  // Content edits only exist locally until committed — surface how many
-  // data/upload files are uncommitted (and which) so editors know to publish.
-  router.get('/status', (_req, res) => {
-    execFile(
-      'git',
-      ['status', '--porcelain', '--', 'src/data', 'public/uploads'],
-      (err, stdout) => {
-        if (err) return res.json({ changedFiles: null })
-        const lines = stdout.split('\n').filter(Boolean)
-        // Porcelain lines are "XY path" (renames: "XY old -> new").
-        const files = lines.map((l) => l.slice(3).split(' -> ').pop())
-        res.json({ changedFiles: lines.length, files: files.slice(0, 40) })
-      },
-    )
-  })
+  // Content edits only exist locally until committed AND pushed — surface
+  // uncommitted data/upload files and any local commits the remote doesn't
+  // have yet, so editors always see undeployed work.
+  router.get('/status', asyncHandler(async (_req, res) => {
+    try {
+      const stdout = await git(['status', '--porcelain', '--', 'src/data', 'public/uploads'])
+      const lines = stdout.split('\n').filter(Boolean)
+      // Porcelain lines are "XY path" (renames: "XY old -> new").
+      const files = lines.map((l) => l.slice(3).split(' -> ').pop())
+      let ahead = 0
+      try {
+        ahead = parseInt(await git(['rev-list', '--count', '@{upstream}..HEAD']), 10) || 0
+      } catch {
+        // No upstream configured — nothing to report.
+      }
+      res.json({ changedFiles: lines.length, files: files.slice(0, 40), ahead })
+    } catch {
+      res.json({ changedFiles: null })
+    }
+  }))
 
   router.use((err, _req, res, _next) => {
     console.error('[admin-server]', err)

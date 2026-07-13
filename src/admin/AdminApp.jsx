@@ -109,16 +109,17 @@ const Icon = {
   ),
 }
 
-// Editing writes to local JSON only; nothing is live until committed and
-// deployed. This pill keeps that visible without being noisy; clicking it
-// lists exactly which files would be committed and offers to commit them
-// (pathspec-scoped to src/data + public/uploads — deploying stays manual).
+// Editing writes to local JSON only; nothing is live until committed AND
+// pushed (Netlify auto-builds on push). This pill surfaces both kinds of
+// undeployed work — uncommitted files and unpushed commits — and can commit
+// + deploy in one click (pathspec-scoped to src/data + public/uploads).
 function GitStatusPill() {
   const [changed, setChanged] = useState(null)
+  const [ahead, setAhead] = useState(0)
   const [files, setFiles] = useState([])
   const [open, setOpen] = useState(false)
   const [message, setMessage] = useState('')
-  const [committing, setCommitting] = useState(false)
+  const [busy, setBusy] = useState(null) // 'deploy' | 'commit' | null
   const toast = useToast()
 
   const check = () =>
@@ -127,6 +128,7 @@ function GitStatusPill() {
       .then((data) => {
         setChanged(data?.changedFiles ?? null)
         setFiles(data?.files ?? [])
+        setAhead(data?.ahead ?? 0)
       })
       .catch(() => setChanged(null))
 
@@ -136,28 +138,50 @@ function GitStatusPill() {
     return () => window.removeEventListener('focus', check)
   }, [])
 
-  const commit = async () => {
-    setCommitting(true)
+  const run = async (push) => {
+    setBusy(push ? 'deploy' : 'commit')
     try {
-      await api.publish(message)
-      toast.success('Committed — deploy when you are ready')
+      const result = await api.publish(message, { push })
+      if (result.pushed) {
+        toast.success('Deployed — Netlify is building; live in a few minutes')
+      } else if (result.ok) {
+        toast.success('Committed — not deployed yet')
+      } else {
+        toast.error(`Committed, but deploy failed: ${result.pushError} — your work is safe, try Deploy again later`)
+      }
       setMessage('')
       setOpen(false)
       check()
     } catch (e) {
-      toast.error(`Commit failed: ${e.message}`)
+      toast.error(`Failed: ${e.message}`)
     } finally {
-      setCommitting(false)
+      setBusy(null)
     }
   }
 
-  if (changed == null || changed === 0) return null
+  const hasWork = (changed ?? 0) > 0 || ahead > 0
+  if (changed == null || !hasWork) return null
+
+  const label =
+    changed > 0
+      ? `${changed} unpublished change${changed === 1 ? '' : 's'}`
+      : `${ahead} commit${ahead === 1 ? '' : 's'} not deployed`
   const shown = files.slice(0, 8)
+  const smallBtn = {
+    width: '100%',
+    marginTop: 6,
+    padding: '6px 8px',
+    fontSize: 11.5,
+    borderRadius: 6,
+    cursor: busy ? 'default' : 'pointer',
+    opacity: busy ? 0.6 : 1,
+  }
+
   return (
     <div style={{ margin: '8px 14px 0' }}>
       <button
         onClick={() => setOpen((v) => !v)}
-        title="Content edits are saved locally. Commit them here, then deploy as usual."
+        title="Work that is not on the live site yet. Deploy commits it and pushes — Netlify rebuilds automatically."
         style={{
           display: 'inline-flex',
           alignItems: 'center',
@@ -173,7 +197,7 @@ function GitStatusPill() {
         }}
       >
         <span style={{ width: 6, height: 6, borderRadius: 999, backgroundColor: '#e0b060' }} />
-        {changed} unpublished change{changed === 1 ? '' : 's'}
+        {label}
         <span style={{ opacity: 0.7 }}>{open ? '▴' : '▾'}</span>
       </button>
       {open && (
@@ -203,45 +227,48 @@ function GitStatusPill() {
               )}
             </ul>
           )}
-          <input
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            onKeyDown={(e) => { if (e.key === 'Enter' && !committing) commit() }}
-            placeholder="Commit message (optional)"
-            style={{
-              width: '100%',
-              boxSizing: 'border-box',
-              marginTop: 8,
-              padding: '6px 8px',
-              fontSize: 11.5,
-              borderRadius: 6,
-              border: '1px solid rgba(255,255,255,0.15)',
-              backgroundColor: 'rgba(255,255,255,0.06)',
-              color: '#fff',
-              outline: 'none',
-            }}
-          />
+          {changed > 0 && (
+            <input
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              onKeyDown={(e) => { if (e.key === 'Enter' && !busy) run(true) }}
+              placeholder="Commit message (optional)"
+              style={{
+                width: '100%',
+                boxSizing: 'border-box',
+                marginTop: 8,
+                padding: '6px 8px',
+                fontSize: 11.5,
+                borderRadius: 6,
+                border: '1px solid rgba(255,255,255,0.15)',
+                backgroundColor: 'rgba(255,255,255,0.06)',
+                color: '#fff',
+                outline: 'none',
+              }}
+            />
+          )}
           <button
-            onClick={commit}
-            disabled={committing}
-            style={{
-              width: '100%',
-              marginTop: 6,
-              padding: '6px 8px',
-              fontSize: 11.5,
-              fontWeight: 700,
-              borderRadius: 6,
-              border: 'none',
-              cursor: committing ? 'default' : 'pointer',
-              backgroundColor: colors.primary,
-              color: '#fff',
-              opacity: committing ? 0.6 : 1,
-            }}
+            onClick={() => run(true)}
+            disabled={!!busy}
+            style={{ ...smallBtn, fontWeight: 700, border: 'none', backgroundColor: colors.primary, color: '#fff' }}
           >
-            {committing ? 'Committing…' : `Commit ${changed} change${changed === 1 ? '' : 's'}`}
+            {busy === 'deploy'
+              ? 'Deploying…'
+              : changed > 0
+                ? `Commit & deploy ${changed} change${changed === 1 ? '' : 's'}`
+                : 'Deploy now'}
           </button>
+          {changed > 0 && (
+            <button
+              onClick={() => run(false)}
+              disabled={!!busy}
+              style={{ ...smallBtn, fontWeight: 600, backgroundColor: 'transparent', color: colors.textOnDarkMuted, border: '1px solid rgba(255,255,255,0.18)' }}
+            >
+              {busy === 'commit' ? 'Committing…' : 'Commit only (no deploy)'}
+            </button>
+          )}
           <p style={{ margin: '6px 0 0', fontSize: 10, lineHeight: 1.5, color: colors.textOnDarkMuted, opacity: 0.75 }}>
-            Commits only content files (src/data, public/uploads). Deploying stays a manual step.
+            Commits only content files (src/data, public/uploads). Deploy pushes to GitHub — Netlify rebuilds the live site automatically.
           </p>
         </div>
       )}
