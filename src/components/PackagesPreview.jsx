@@ -38,7 +38,7 @@ function PackagesPreview() {
 
       {/* Carousel */}
       <div
-        style={styles.carouselWrapper}
+        style={{ ...styles.carouselWrapper, ...(isMobile ? null : styles.carouselBreathe) }}
         onTouchStart={(e) => { touchStartX.current = e.touches[0].clientX }}
         onTouchEnd={(e) => {
           if (touchStartX.current === null) return
@@ -52,7 +52,7 @@ function PackagesPreview() {
       >
         <div style={{
           ...styles.carouselTrack,
-          transform: `translateX(-${page * 100}%)`,
+          transform: `translateX(calc(${page} * (-100% - 24px)))`,
         }}>
           {Array.from({ length: totalPages }).map((_, pageIdx) => (
             <div key={pageIdx} style={{
@@ -218,6 +218,19 @@ const styles = {
     overflow: 'hidden',
   },
 
+  // Desktop only: the wrapper clips (overflow hidden) flush against the
+  // cards, amputating the hover lift's shadow (0 20px 56px on
+  // .pkg-card:hover). Pad the clip box (12px sides, more vertically) and
+  // cancel it with negative margins + a wider max-width so cards sit
+  // exactly where they were. The 24px gap between pages (carouselPage
+  // marginRight + the track's calc() stride) keeps the next page fully
+  // outside the padded clip window — no peeking.
+  carouselBreathe: {
+    maxWidth: '1184px',
+    margin: '-24px auto -32px',
+    padding: '24px 12px 32px',
+  },
+
   carouselTrack: {
     display: 'flex',
     transition: 'transform 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
@@ -228,6 +241,7 @@ const styles = {
     gap: '20px',
     minWidth: '100%',
     alignItems: 'stretch',
+    marginRight: '24px',
   },
 
   controls: {

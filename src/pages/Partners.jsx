@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { CONTACT_EMAIL } from '../data/settings'
 import emailjs from '@emailjs/browser'
 import { Check } from 'lucide-react'
 import SEO from '../components/SEO'
@@ -210,7 +211,7 @@ function PartnerEnquiry({ isMobile, ctaNote }) {
               <Button variant="primary" full onClick={handleSubmit} disabled={isSending}>
                 {isSending ? 'Sending…' : 'Send enquiry'}
               </Button>
-              {isError && <p style={{ fontFamily: 'var(--font-body)', fontSize: 14, color: 'var(--color-error)', marginTop: 10 }}>Something went wrong. Please email hello@tallesttourguide.com directly.</p>}
+              {isError && <p style={{ fontFamily: 'var(--font-body)', fontSize: 14, color: 'var(--color-error)', marginTop: 10 }}>Something went wrong. Please email {CONTACT_EMAIL} directly.</p>}
             </div>
           )}
         </div>

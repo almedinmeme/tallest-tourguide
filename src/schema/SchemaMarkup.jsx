@@ -1,10 +1,12 @@
 // SchemaMarkup.jsx
+import { CONTACT_EMAIL, INSTAGRAM_URL, TRIPADVISOR_URL } from '../data/settings'
 // Schema.org structured data for Tallest Tourguide.
 // Tells Google exactly what type of business this is,
 // what each tour offers, and how to display it in search.
 //
 // Components used across the site:
 //   LocalBusinessSchema  → App.jsx (once, site-wide)
+//   OrganizationSchema   → App.jsx (once, site-wide: Organization + WebSite)
 //   TourActivitySchema   → TourDetail.jsx (TouristAttraction + Product/offers)
 //   PackageSchema        → PackageDetail.jsx (TouristTrip + Product/offers)
 //   FAQSchema            → TourDetail.jsx (per tour, auto-skips if no faqs)
@@ -29,19 +31,25 @@ import { siteUrl, SITE_ORIGIN } from '../utils/seo'
 export function LocalBusinessSchema() {
   const schema = {
     '@context': 'https://schema.org',
-    '@type': 'TouristInformationCenter',
+    '@type': 'TravelAgency',
     name: 'Tallest Tourguide',
     url: siteUrl('/'),
     logo: `${SITE_ORIGIN}/logo.svg`,
     image: `${SITE_ORIGIN}/og-image.jpg`,
     description:
-      'Small group guided tours in Sarajevo and Bosnia. War history, food experiences, Mostar day trips. Local guide with 14 years experience. Max 12 guests.',
+      'Small group guided tours in Sarajevo and Bosnia. War history, food experiences, Mostar day trips. Local guide with 14 years experience. Genuinely small groups.',
+    telephone: '+38762664244',
+    email: CONTACT_EMAIL,
     address: {
       '@type': 'PostalAddress',
+      streetAddress: 'Hamdije Kreševljakovića 61',
       addressLocality: 'Sarajevo',
       addressRegion: 'Federation of Bosnia and Herzegovina',
+      postalCode: '71000',
       addressCountry: 'BA',
     },
+    hasMap:
+      'https://www.google.com/maps/place/Tallest+Tourguide+%26+Friends/@43.8568344,18.4235815,17z',
     geo: {
       '@type': 'GeoCoordinates',
       latitude: 43.8563,
@@ -60,7 +68,8 @@ export function LocalBusinessSchema() {
       },
     ],
     sameAs: [
-      'https://www.tripadvisor.com/Attraction_Review-g294450-d14011605-Reviews-Tallest_Tourguide_Tours_and_Excursions-Sarajevo_Sarajevo_Canton_Federation_of_Bo.html',
+      TRIPADVISOR_URL,
+      INSTAGRAM_URL,
     ],
   }
 
@@ -68,6 +77,51 @@ export function LocalBusinessSchema() {
     <Helmet>
       <script type="application/ld+json">
         {JSON.stringify(schema)}
+      </script>
+    </Helmet>
+  )
+}
+
+// ----------------------------------------------------------
+// 3. ORGANIZATION + WEBSITE SCHEMA
+//    The brand-level entity (who publishes this site) and the
+//    site itself. Complements LocalBusinessSchema: LocalBusiness
+//    covers the Sarajevo storefront, Organization covers the
+//    brand Google shows in knowledge panels and news results.
+//    Used in App.jsx — renders once on every page.
+// ----------------------------------------------------------
+export function OrganizationSchema() {
+  const organization = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    '@id': `${SITE_ORIGIN}/#organization`,
+    name: 'Tallest Tourguide',
+    url: siteUrl('/'),
+    logo: `${SITE_ORIGIN}/logo.svg`,
+    email: CONTACT_EMAIL,
+    telephone: '+38762664244',
+    sameAs: [
+      TRIPADVISOR_URL,
+      INSTAGRAM_URL,
+    ],
+  }
+
+  const website = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'Tallest Tourguide',
+    url: siteUrl('/'),
+    inLanguage: 'en',
+    publisher: { '@id': `${SITE_ORIGIN}/#organization` },
+  }
+
+  return (
+    <Helmet>
+      <script type="application/ld+json">
+        {JSON.stringify(organization)}
+      </script>
+      <script type="application/ld+json">
+        {JSON.stringify(website)}
       </script>
     </Helmet>
   )
@@ -118,7 +172,6 @@ export function TourActivitySchema({ tour }) {
         addressCountry: 'BA',
       },
     },
-    maximumAttendeeCapacity: tour.groupSize || 12,
     aggregateRating: tour.rating
       ? {
           '@type': 'AggregateRating',
@@ -246,7 +299,6 @@ export function PackageSchema({ pkg }) {
       name: 'Tallest Tourguide',
       url: siteUrl('/'),
     },
-    maximumAttendeeCapacity: pkg.groupSize || 8,
   }
 
   const product = {

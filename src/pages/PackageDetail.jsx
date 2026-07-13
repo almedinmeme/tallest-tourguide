@@ -801,6 +801,7 @@ function PackageDetail() {
 <SEO
   title={`${pkg.name} — ${pkg.subtitle}`}
   description={(pkg.about || pkg.description || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 155)}
+  image={pkg.heroImage || pkg.hero || undefined}
   url={`/packages/${pkg.slug}`}
 />
 <PackageSchema pkg={pkg} />
@@ -870,7 +871,7 @@ function PackageDetail() {
               </span>
               <span style={styles.metaPill}>
                 <Users size={13} color="var(--color-forest-green)" />
-                Max {pkg.groupSize} people
+                Small group
               </span>
             </div>
 
@@ -1403,7 +1404,7 @@ function PackageDetail() {
       </div>
 
       {/* ── FROM THE JOURNAL ───────────────────────────── */}
-      <FromTheJournal packageSlug={pkg.slug} />
+      <FromTheJournal packageSlug={pkg.slug} pinned={pkg.journalPosts} />
 
       {/* ── RELATED PACKAGES ───────────────────────────── */}
       {relatedPackages.length > 0 && (
@@ -1449,7 +1450,7 @@ function PackageDetail() {
                           {p.subtitle && <p style={{ fontFamily: 'var(--font-body)', fontSize: '12px', color: 'rgba(255,255,255,0.70)', margin: '0 0 10px', fontStyle: 'italic' }}>{p.subtitle}</p>}
                           <div style={{ display: 'flex', gap: '5px', flexWrap: 'wrap', marginBottom: '12px' }}>
                             <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '11px', color: 'rgba(255,255,255,0.92)', backgroundColor: 'rgba(0,0,0,0.42)', backdropFilter: 'blur(6px)', border: '1px solid rgba(255,255,255,0.16)', padding: '3px 9px', borderRadius: 'var(--radius-pill)' }}><Gauge size={11} />{p.difficulty}</span>
-                            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '11px', color: 'rgba(255,255,255,0.92)', backgroundColor: 'rgba(0,0,0,0.42)', backdropFilter: 'blur(6px)', border: '1px solid rgba(255,255,255,0.16)', padding: '3px 9px', borderRadius: 'var(--radius-pill)' }}><Users size={11} />Max {p.groupSize}</span>
+                            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '11px', color: 'rgba(255,255,255,0.92)', backgroundColor: 'rgba(0,0,0,0.42)', backdropFilter: 'blur(6px)', border: '1px solid rgba(255,255,255,0.16)', padding: '3px 9px', borderRadius: 'var(--radius-pill)' }}><MapPin size={11} />{p.locations} locations</span>
                           </div>
                           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '10px' }}>
                             <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px' }}>
@@ -1487,7 +1488,7 @@ function PackageDetail() {
                             {p.subtitle && <p style={{ fontFamily: 'var(--font-body)', fontSize: '12px', color: 'rgba(255,255,255,0.70)', margin: '0 0 10px', fontStyle: 'italic' }}>{p.subtitle}</p>}
                             <div style={{ display: 'flex', gap: '5px', flexWrap: 'wrap', marginBottom: '12px' }}>
                               <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '11px', color: 'rgba(255,255,255,0.92)', backgroundColor: 'rgba(0,0,0,0.42)', backdropFilter: 'blur(6px)', border: '1px solid rgba(255,255,255,0.16)', padding: '3px 9px', borderRadius: 'var(--radius-pill)' }}><Gauge size={11} />{p.difficulty}</span>
-                              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '11px', color: 'rgba(255,255,255,0.92)', backgroundColor: 'rgba(0,0,0,0.42)', backdropFilter: 'blur(6px)', border: '1px solid rgba(255,255,255,0.16)', padding: '3px 9px', borderRadius: 'var(--radius-pill)' }}><Users size={11} />Max {p.groupSize}</span>
+                              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '11px', color: 'rgba(255,255,255,0.92)', backgroundColor: 'rgba(0,0,0,0.42)', backdropFilter: 'blur(6px)', border: '1px solid rgba(255,255,255,0.16)', padding: '3px 9px', borderRadius: 'var(--radius-pill)' }}><MapPin size={11} />{p.locations} locations</span>
                             </div>
                             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '10px' }}>
                               <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px' }}>

@@ -248,6 +248,41 @@ a[href^="/tours/"]:hover .view-tour-pill {
   background-color: var(--color-n100);
 }
 
+/* Homepage hero — quick-link chips + featured tour cards */
+.hero-chip:hover {
+  background-color: rgba(255, 255, 255, 0.26) !important;
+  border-color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.hero-featured-card:hover {
+  background-color: rgba(12, 22, 17, 0.78) !important;
+  transform: translateX(-3px);
+}
+
+/* Closing CTA banner — snapshots straighten slightly on hover */
+.cta-snapshot:hover {
+  transform: rotate(0deg) translateY(-6px) !important;
+  z-index: 5 !important;
+}
+
+/* Personalised questionnaire — tactile focus & hover states */
+.pt-input:focus {
+  outline: none;
+  border-color: var(--color-forest-green) !important;
+  box-shadow: 0 0 0 3px rgba(46, 125, 94, 0.14);
+}
+
+.pt-options > button {
+  transition: border-color 0.15s ease, background-color 0.15s ease,
+    transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.pt-options > button:hover {
+  border-color: var(--color-forest-green) !important;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 10px rgba(20, 40, 30, 0.08);
+}
+
 /* ── Button system ───────────────────────────────────────────
    One component, three variants, three sizes. Amber is the single
    primary conversion action per view; green outline is secondary;
@@ -440,6 +475,16 @@ a[href^="/tours/"]:hover .view-tour-pill {
 }
 .nav-dropdown {
   animation: dropdownAppear var(--t-base) cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+/* Small floating menus (sort dropdowns and similar) — opacity/Y entrance
+   for panels that are positioned with left/right, never transform-centered. */
+@keyframes menuAppear {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.menu-appear {
+  animation: menuAppear var(--t-fast) both;
 }
 
 /* Destinations mega-menu entrance — opacity/Y only; the panel is centered

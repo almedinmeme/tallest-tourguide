@@ -1,9 +1,22 @@
-import { useState, useEffect, useRef } from 'react'
+// BosniaCulturalGuide.jsx
+// The Bosnia travel guide — a genuine cultural briefing, not a logistics
+// checklist. The copy is the asset here; this file frames it in the editorial
+// design generation (Newsreader titles, open layout, no boxed callouts) with
+// the shared SectionNav. Article JSON-LD marks it as an authored guide.
+import { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
+import { Helmet } from 'react-helmet-async'
+import { ArrowRight } from 'lucide-react'
 import SEO from '../components/SEO'
 import useWindowWidth from '../hooks/useWindowWidth'
 import Button from '../components/Button'
+import InfoHero from '../components/InfoHero'
+import SectionNav from '../components/SectionNav'
+import { siteUrl, SITE_ORIGIN } from '../utils/seo'
 
 const NAVBAR_HEIGHT = 68
+
+const inlineLink = { color: 'var(--color-forest-green)', fontWeight: 700, textDecoration: 'none' }
 
 const sections = [
   {
@@ -192,6 +205,16 @@ const sections = [
         type: 'p',
         text: 'Sarajevo specifically has a dry, self-deprecating humour about its situation. Lean into it. The jokes about the Siege and the politics are better coming from the people who lived it — but they appreciate it when you can laugh alongside them rather than looking horrified.',
       },
+      {
+        type: 'node',
+        node: (
+          <>
+            It's why we travel the way we do — genuinely small groups, and stays in{' '}
+            <Link to="/where-we-stay" style={inlineLink}>family-owned places</Link> where{' '}
+            <Link to="/hospitality" style={inlineLink}>gostoprimstvo</Link> is the point, not a slogan.
+          </>
+        ),
+      },
     ],
   },
   {
@@ -211,85 +234,18 @@ const sections = [
         type: 'p',
         text: 'Emergency numbers: 112 (general), 122 (police), 124 (ambulance). Keep travel insurance details accessible.',
       },
+      {
+        type: 'node',
+        node: (
+          <>
+            For how we plan around conditions and look after guests on tour, read{' '}
+            <Link to="/safe-travels" style={inlineLink}>Safe travels</Link>.
+          </>
+        ),
+      },
     ],
   },
 ]
-
-function StickyNav({ activeId, onScrollTo, isMobile }) {
-  const [navbarVisible, setNavbarVisible] = useState(true)
-  const lastScrollY = useRef(0)
-
-  useEffect(() => {
-    const onScroll = () => {
-      const y = window.scrollY
-      if (y < 80) {
-        setNavbarVisible(true)
-      } else if (y > lastScrollY.current) {
-        setNavbarVisible(false)
-      } else {
-        setNavbarVisible(true)
-      }
-      lastScrollY.current = y
-    }
-    window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [])
-
-  return (
-    <nav style={{
-      position: 'sticky',
-      top: navbarVisible ? `${NAVBAR_HEIGHT}px` : '0px',
-      transition: 'top 0.3s ease',
-      zIndex: 95,
-      backgroundColor: 'var(--color-n000)',
-      borderBottom: '1px solid var(--color-n300)',
-      overflowX: 'auto',
-      scrollbarWidth: 'none',
-      msOverflowStyle: 'none',
-      whiteSpace: 'nowrap',
-    }}>
-      <div style={{
-        display: 'flex',
-        alignItems: 'stretch',
-        height: '44px',
-        maxWidth: '1060px',
-        margin: '0 auto',
-        padding: isMobile ? '0 16px' : '0 40px',
-        minWidth: 'max-content',
-      }}>
-        {sections.map(({ id, number, title }) => {
-          const isActive = activeId === id
-          return (
-            <button
-              key={id}
-              onClick={() => onScrollTo(id)}
-              style={{
-                height: '100%',
-                padding: isMobile ? '0 10px' : '0 14px',
-                background: 'none',
-                border: 'none',
-                borderBottom: isActive ? '2px solid var(--color-forest-green)' : '2px solid transparent',
-                color: isActive ? 'var(--color-forest-green)' : 'var(--color-n500)',
-                fontFamily: 'var(--font-body)',
-                fontSize: isMobile ? '12px' : '13px',
-                fontWeight: isActive ? '600' : '400',
-                cursor: 'pointer',
-                whiteSpace: 'nowrap',
-                transition: 'color 0.15s ease, border-color 0.15s ease',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '5px',
-              }}
-            >
-              <span style={{ fontSize: '10px', color: isActive ? 'var(--color-forest-green)' : 'var(--color-n400)', fontWeight: '600' }}>{number}</span>
-              {title}
-            </button>
-          )
-        })}
-      </div>
-    </nav>
-  )
-}
 
 function BosniaCulturalGuide() {
   const width = useWindowWidth()
@@ -320,59 +276,60 @@ function BosniaCulturalGuide() {
     window.scrollTo({ top: y, behavior: 'smooth' })
   }
 
+  const articleSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: 'Bosnia Travel Guide — Good Things to Know',
+    description: 'A Bosnia travel guide written by a local guide: visas, money, what to eat, the language, religion, politics, how to approach the war — and how Bosnians actually feel about visitors.',
+    url: siteUrl('/bosnia-guide'),
+    inLanguage: 'en',
+    author: { '@type': 'Person', name: 'Almedin Omerović' },
+    publisher: {
+      '@type': 'Organization',
+      name: 'Tallest Tourguide',
+      logo: { '@type': 'ImageObject', url: `${SITE_ORIGIN}/og-image.jpg` },
+    },
+  }
+
   return (
-    <div style={{ backgroundColor: 'var(--color-n100)', minHeight: '100vh' }}>
+    <div style={{ backgroundColor: 'var(--color-n000)', minHeight: '100vh' }}>
       <SEO
-        title="Good Things to Know About Bosnia — Tallest Tourguide"
-        description="A practical and cultural guide for visitors to Bosnia: visas, currency, food, religion, the political structure, the war, what not to say, and how Bosnians feel about tourists."
+        title="Bosnia Travel Guide — Good Things to Know"
+        description="A Bosnia travel guide written by a local guide: visas, money, what to eat, the language, religion, politics, how to approach the war — and how Bosnians actually feel about visitors."
         url="/bosnia-guide"
         image="https://tallesttourguide.com/og-image.jpg"
       />
+      <Helmet>
+        <script type="application/ld+json">{JSON.stringify(articleSchema)}</script>
+      </Helmet>
 
-      {/* ── HEADER ── */}
-      <section style={{
-        backgroundColor: 'var(--color-forest-green)',
-        padding: isMobile ? '36px 24px 44px' : '48px 40px 56px',
-      }}>
-        <div style={{ maxWidth: '1060px', margin: '0 auto' }}>
-          <span style={styles.eyebrow}>Before You Go</span>
-          <h1 style={{ ...styles.headline, fontSize: isMobile ? '30px' : '40px' }}>
-            Good things to know about Bosnia
-          </h1>
-          <p style={styles.subheading}>
-            Not a logistics checklist. A genuine guide to the country you are about to visit —
-            its food, politics, history, and people.
-          </p>
-          <div style={styles.headerMeta}>
-            <span style={styles.headerMetaItem}>10 topics</span>
-            <span style={styles.headerMetaDot}>·</span>
-            <span style={styles.headerMetaItem}>10 min read</span>
-            <span style={styles.headerMetaDot}>·</span>
-            <span style={styles.headerMetaItem}>Written by your guide</span>
-          </div>
-        </div>
-      </section>
+      <InfoHero
+        kicker="Before you go"
+        title="The Bosnia travel guide"
+        lede="Not a logistics checklist. A genuine guide to the country you are about to visit — its food, politics, history, and people. It's the context we build every small-group tour on."
+        meta="Written by your guide · 10 topics · 10 min read"
+      />
 
-      {/* ── STICKY NAV ── */}
-      <StickyNav activeId={activeId} onScrollTo={scrollTo} isMobile={isMobile} />
+      {/* Sticky section nav */}
+      <SectionNav sections={sections} activeId={activeId} onScrollTo={scrollTo} isMobile={isMobile} />
 
-      {/* ── ARTICLE ── */}
+      {/* Article */}
       <div style={{
         maxWidth: '720px',
         margin: '0 auto',
         padding: isMobile ? '32px 20px 72px' : '48px 40px 96px',
       }}>
-        <article style={styles.article}>
+        <article style={{ minWidth: 0 }}>
 
           {sections.map(({ id, number, title, content }, idx) => (
             <section
               key={id}
               id={id}
               style={{
-                ...styles.section,
-                borderTop: idx === 0 ? 'none' : '1px solid var(--color-n300)',
-                paddingTop: idx === 0 ? 0 : '40px',
-                marginTop: idx === 0 ? 0 : '40px',
+                scrollMarginTop: '120px',
+                borderTop: idx === 0 ? 'none' : '1px solid var(--color-n200)',
+                paddingTop: idx === 0 ? 0 : '36px',
+                marginTop: idx === 0 ? 0 : '36px',
               }}
             >
               <div style={styles.sectionHeader}>
@@ -380,15 +337,17 @@ function BosniaCulturalGuide() {
                 <h2 style={styles.sectionTitle}>{title}</h2>
               </div>
 
-              <div style={styles.sectionBody}>
+              <div style={{ ...styles.sectionBody, paddingLeft: isMobile ? 0 : '30px' }}>
                 {content.map((block, j) => {
                   if (block.type === 'p') {
                     return <p key={j} style={styles.bodyText}>{block.text}</p>
                   }
+                  if (block.type === 'node') {
+                    return <p key={j} style={styles.bodyText}>{block.node}</p>
+                  }
                   if (block.type === 'callout') {
                     return (
                       <div key={j} style={styles.callout}>
-                        <div style={styles.calloutAccent} />
                         <p style={styles.calloutText}>{block.text}</p>
                       </div>
                     )
@@ -414,7 +373,8 @@ function BosniaCulturalGuide() {
                         {block.items.map((phrase, k) => (
                           <div key={k} style={{
                             ...styles.phraseRow,
-                            gridTemplateColumns: isMobile ? '120px 1fr' : '140px 180px 1fr',
+                            gridTemplateColumns: isMobile ? '130px 1fr' : '150px 190px 1fr',
+                            borderBottom: k === block.items.length - 1 ? 'none' : '1px solid var(--color-n200)',
                           }}>
                             <span style={styles.phraseLocal}>{phrase.local}</span>
                             {!isMobile && <span style={styles.phrasePhonetic}>{phrase.phonetic}</span>}
@@ -430,11 +390,24 @@ function BosniaCulturalGuide() {
             </section>
           ))}
 
-          {/* ── CTA ── */}
+          {/* Plan the rest — the pre-trip reading cluster */}
+          <div style={styles.planRest}>
+            <span style={styles.planRestLabel}>Plan the rest</span>
+            <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', gap: isMobile ? 10 : 32 }}>
+              <Link to="/practical-info" style={styles.planRestLink}>
+                Practical info — money, SIMs, getting around <ArrowRight size={15} style={{ verticalAlign: '-2px' }} />
+              </Link>
+              <Link to="/safe-travels" style={styles.planRestLink}>
+                Safe travels — how we look after you <ArrowRight size={15} style={{ verticalAlign: '-2px' }} />
+              </Link>
+            </div>
+          </div>
+
+          {/* CTA — quiet hairline row */}
           <div style={{
             ...styles.cta,
             flexDirection: isMobile ? 'column' : 'row',
-            marginTop: '48px',
+            textAlign: isMobile ? 'center' : 'left',
           }}>
             <div>
               <p style={styles.ctaTitle}>Ready to see it for yourself?</p>
@@ -442,7 +415,7 @@ function BosniaCulturalGuide() {
                 A guide who knows the context makes every street and every story mean something.
               </p>
             </div>
-            <div style={{ display: 'flex', gap: '12px', flexShrink: 0, flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', gap: '12px', flexShrink: 0, flexWrap: 'wrap', justifyContent: 'center' }}>
               <Button to="/tours" variant="secondary">Browse tours</Button>
               <Button to="/contact" variant="secondary">Ask a question</Button>
             </div>
@@ -455,226 +428,41 @@ function BosniaCulturalGuide() {
 }
 
 const styles = {
-  eyebrow: {
-    display: 'block',
-    fontFamily: 'var(--font-body)',
-    fontWeight: '600',
-    fontSize: '11px',
-    color: 'rgba(255,255,255,0.55)',
-    letterSpacing: '0.12em',
-    textTransform: 'uppercase',
-    marginBottom: '10px',
-  },
+  sectionHeader: { display: 'flex', alignItems: 'baseline', gap: '14px', marginBottom: '18px' },
+  sectionNumber: { fontFamily: 'var(--font-hero)', fontWeight: 500, fontSize: '15px', color: 'var(--color-amber)', flexShrink: 0 },
+  sectionTitle: { fontFamily: 'var(--font-hero)', fontWeight: 500, fontSize: 'clamp(21px, 2.8vw, 26px)', color: 'var(--color-n900)', margin: 0, lineHeight: 1.25, letterSpacing: '-0.01em' },
+  sectionBody: { display: 'flex', flexDirection: 'column', gap: '16px' },
+  bodyText: { fontFamily: 'var(--font-body)', fontSize: '16px', color: 'var(--color-n700)', lineHeight: '1.8', margin: 0 },
 
-  headline: {
-    fontFamily: 'var(--font-display)',
-    fontWeight: '700',
-    color: '#fff',
-    margin: '0 0 12px 0',
-    lineHeight: 1.15,
-  },
+  callout: { borderLeft: '2px solid var(--color-amber)', backgroundColor: 'var(--color-n100)', borderRadius: '0 10px 10px 0', padding: '14px 18px' },
+  calloutText: { fontFamily: 'var(--font-body)', fontSize: '14.5px', color: 'var(--color-n700)', lineHeight: '1.75', margin: 0, fontStyle: 'italic' },
 
-  subheading: {
-    fontFamily: 'var(--font-body)',
-    fontSize: '16px',
-    color: 'rgba(255,255,255,0.72)',
-    lineHeight: '1.65',
-    margin: '0 0 20px 0',
-    maxWidth: '560px',
-  },
+  bulletsTitle: { fontFamily: 'var(--font-body)', fontWeight: '600', fontSize: '14px', color: 'var(--color-n800)', margin: '0 0 10px 0' },
+  bulletList: { margin: 0, padding: 0, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '10px' },
+  bulletItem: { fontFamily: 'var(--font-body)', fontSize: '15.5px', color: 'var(--color-n700)', lineHeight: '1.7', display: 'flex', alignItems: 'flex-start', gap: '10px' },
+  bulletDot: { width: '5px', height: '5px', borderRadius: '50%', backgroundColor: 'var(--color-forest-green)', flexShrink: 0, marginTop: '9px' },
 
-  headerMeta: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px',
-    flexWrap: 'wrap',
-  },
+  phrasesGrid: { display: 'flex', flexDirection: 'column', margin: '4px 0' },
+  phraseRow: { display: 'grid', gap: '12px', padding: '11px 0', alignItems: 'baseline' },
+  phraseLocal: { fontFamily: 'var(--font-hero)', fontWeight: 500, fontSize: '18px', color: 'var(--color-forest-green)' },
+  phrasePhonetic: { fontFamily: 'var(--font-body)', fontSize: '13px', color: 'var(--color-n500)', fontStyle: 'italic' },
+  phraseMeaning: { fontFamily: 'var(--font-body)', fontSize: '14.5px', color: 'var(--color-n700)' },
 
-  headerMetaItem: {
-    fontFamily: 'var(--font-body)',
-    fontSize: '13px',
-    color: 'rgba(255,255,255,0.45)',
-  },
-
-  headerMetaDot: {
-    color: 'rgba(255,255,255,0.25)',
-  },
-
-  article: {
-    minWidth: 0,
-  },
-
-  section: {
-    scrollMarginTop: '120px',
-  },
-
-  sectionHeader: {
-    display: 'flex',
-    alignItems: 'baseline',
-    gap: '12px',
-    marginBottom: '20px',
-  },
-
-  sectionNumber: {
-    fontFamily: 'var(--font-display)',
-    fontWeight: '700',
-    fontSize: '12px',
-    color: 'var(--color-forest-green)',
-    opacity: 0.6,
-    flexShrink: 0,
-  },
-
-  sectionTitle: {
-    fontFamily: 'var(--font-display)',
-    fontWeight: '700',
-    fontSize: '22px',
-    color: 'var(--color-n900)',
-    margin: 0,
-    lineHeight: 1.25,
-  },
-
-  sectionBody: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '16px',
-    paddingLeft: '28px',
-  },
-
-  bodyText: {
-    fontFamily: 'var(--font-body)',
-    fontSize: '15px',
-    color: 'var(--color-n700)',
-    lineHeight: '1.8',
-    margin: 0,
-  },
-
-  callout: {
-    display: 'flex',
-    gap: '16px',
-    backgroundColor: 'var(--color-n000)',
-    borderRadius: '10px',
-    padding: '16px 20px',
-    boxShadow: 'var(--shadow-sm)',
-  },
-
-  calloutAccent: {
-    width: '3px',
-    borderRadius: '2px',
-    backgroundColor: 'var(--color-forest-green)',
-    flexShrink: 0,
-    alignSelf: 'stretch',
-  },
-
-  calloutText: {
-    fontFamily: 'var(--font-body)',
-    fontSize: '14px',
-    color: 'var(--color-n700)',
-    lineHeight: '1.75',
-    margin: 0,
-    fontStyle: 'italic',
-  },
-
-  bulletsTitle: {
-    fontFamily: 'var(--font-body)',
-    fontWeight: '600',
-    fontSize: '14px',
-    color: 'var(--color-n800)',
-    margin: '0 0 10px 0',
-  },
-
-  bulletList: {
-    margin: 0,
-    padding: 0,
-    listStyle: 'none',
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '10px',
-  },
-
-  bulletItem: {
-    fontFamily: 'var(--font-body)',
-    fontSize: '15px',
-    color: 'var(--color-n700)',
-    lineHeight: '1.7',
-    display: 'flex',
-    alignItems: 'flex-start',
-    gap: '10px',
-  },
-
-  bulletDot: {
-    width: '5px',
-    height: '5px',
-    borderRadius: '50%',
-    backgroundColor: 'var(--color-forest-green)',
-    flexShrink: 0,
-    marginTop: '8px',
-  },
-
-  phrasesGrid: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '0',
-    backgroundColor: 'var(--color-n000)',
-    borderRadius: '10px',
-    overflow: 'hidden',
-    boxShadow: 'var(--shadow-sm)',
-  },
-
-  phraseRow: {
-    display: 'grid',
-    gap: '12px',
-    padding: '12px 20px',
-    borderBottom: '1px solid var(--color-n200)',
-    alignItems: 'center',
-  },
-
-  phraseLocal: {
-    fontFamily: 'var(--font-display)',
-    fontWeight: '700',
-    fontSize: '15px',
-    color: 'var(--color-forest-green)',
-  },
-
-  phrasePhonetic: {
-    fontFamily: 'var(--font-body)',
-    fontSize: '13px',
-    color: 'var(--color-n500)',
-    fontStyle: 'italic',
-  },
-
-  phraseMeaning: {
-    fontFamily: 'var(--font-body)',
-    fontSize: '14px',
-    color: 'var(--color-n700)',
-  },
+  planRest: { marginTop: '56px', paddingTop: '28px', borderTop: '1px solid var(--color-n200)' },
+  planRestLabel: { display: 'block', fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--color-forest-green)', marginBottom: 14 },
+  planRestLink: { fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: 15, color: 'var(--color-n900)', textDecoration: 'none' },
 
   cta: {
-    backgroundColor: 'var(--color-n000)',
-    borderRadius: '14px',
-    padding: '28px 32px',
+    marginTop: '40px',
+    paddingTop: '32px',
+    borderTop: '1px solid var(--color-n200)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
     gap: '24px',
-    boxShadow: 'var(--shadow-sm)',
   },
-
-  ctaTitle: {
-    fontFamily: 'var(--font-display)',
-    fontWeight: '700',
-    fontSize: '18px',
-    color: 'var(--color-n900)',
-    margin: '0 0 4px 0',
-  },
-
-  ctaSubtitle: {
-    fontFamily: 'var(--font-body)',
-    fontSize: '14px',
-    color: 'var(--color-n600)',
-    margin: 0,
-    lineHeight: '1.6',
-  },
-
+  ctaTitle: { fontFamily: 'var(--font-display)', fontWeight: '700', fontSize: '18px', color: 'var(--color-n900)', margin: '0 0 4px 0' },
+  ctaSubtitle: { fontFamily: 'var(--font-body)', fontSize: '14px', color: 'var(--color-n600)', margin: 0, lineHeight: '1.6' },
 }
 
 export default BosniaCulturalGuide

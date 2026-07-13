@@ -15,8 +15,11 @@
 // Conversion furniture: on mobile the trip summary sits above the form (you
 // see what you're paying for before you're asked to pay), a sticky total bar
 // mirrors the pay button while it's off screen, and the real cancellation
-// policy (full refund >30 days out) is stated next to the CTA.
+// policy is stated next to the CTA — sourced from src/data/policy.js so it
+// always matches /booking-conditions (day tours: 24h free cancellation;
+// packages: full refund >30 days out).
 import { useEffect, useMemo, useState } from 'react'
+import { Helmet } from 'react-helmet-async'
 import { Link, Navigate, useLocation } from 'react-router-dom'
 import {
   Lock, ShieldCheck, CheckCircle, ArrowLeft, ChevronDown,
@@ -30,9 +33,22 @@ import {
   processCardPayment,
   applyCardDiscount,
 } from '../utils/booking'
+import {
+  CANCEL_LINE_TOUR,
+  CANCEL_LINE_PACKAGE,
+  DEPOSIT_PERCENT,
+  BALANCE_DUE_DAYS,
+} from '../data/policy'
+
+// Checkout is a transactional flow — keep it out of search results.
+const NoIndexMeta = () => (
+  <Helmet>
+    <meta name="robots" content="noindex" />
+  </Helmet>
+)
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-const WHATSAPP_URL = 'https://wa.me/38762664244'
+import { WHATSAPP_URL, CONTACT_EMAIL } from '../data/settings'
 
 // Cosmetic card-field formatting — digits only, grouped like a real card.
 const formatCardNumber = (v) => v.replace(/\D/g, '').slice(0, 19).replace(/(\d{4})(?=\d)/g, '$1 ')
@@ -189,6 +205,7 @@ function Checkout() {
   if (done) {
     return (
       <div style={styles.page}>
+        <NoIndexMeta />
         <TopBar />
         <main style={styles.successWrap}>
           <div style={styles.successCard}>
@@ -283,6 +300,7 @@ function Checkout() {
   // ---- Checkout screen ----------------------------------------------------
   return (
     <div style={styles.page}>
+      <NoIndexMeta />
       <TopBar />
 
       <main style={{ ...styles.main, padding: isMobile ? '18px 16px 110px' : '28px 32px 96px' }}>
@@ -524,7 +542,7 @@ function Checkout() {
               </p>
               {!isQuote && (
                 <p style={styles.cancelLine}>
-                  Free cancellation up to 30 days before the tour ·{' '}
+                  {booking.kind === 'package' ? CANCEL_LINE_PACKAGE : CANCEL_LINE_TOUR}{' '}
                   <Link to="/booking-conditions" style={styles.cancelLink}>Booking conditions</Link>
                 </p>
               )}
@@ -532,7 +550,7 @@ function Checkout() {
               {isError && (
                 <p style={styles.errorBanner}>
                   Something went wrong. Please try again, or email us at
-                  hello@tallesttourguide.com.
+                  {CONTACT_EMAIL}.
                 </p>
               )}
             </div>
@@ -548,7 +566,8 @@ function Checkout() {
                 {priceBlock}
                 {booking.deposit && !isQuote && (
                   <p style={styles.depositNote}>
-                    A deposit secures your place; the balance is due before departure.
+                    A {DEPOSIT_PERCENT}% deposit secures your place; the balance is due{' '}
+                    {BALANCE_DUE_DAYS} days before departure.
                   </p>
                 )}
               </div>

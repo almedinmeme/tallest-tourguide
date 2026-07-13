@@ -1,11 +1,18 @@
 import { useState, useRef, useEffect } from 'react'
-import { ChevronDown, ArrowUpDown, X, Check } from 'lucide-react'
+import { ChevronDown, ArrowUpDown, X, Check, Search } from 'lucide-react'
 import { useSearchParams } from 'react-router-dom'
 import SEO from '../components/SEO'
+import PageHero from '../components/PageHero'
 import TourCard from '../components/TourCard'
 import useWindowWidth from '../hooks/useWindowWidth'
 import tours from '../data/tours'
 import { useAllReviews } from '../hooks/useAllReviews'
+import { getPage } from '../data/pages'
+
+// Hero photo and SEO are editable in the admin (Pages → All Tours); empty
+// fields fall back to the built-ins.
+const toursPage = getPage('tours')
+const HERO_IMAGE = toursPage?.extra?.heroImage || '/uploads/bosnia-and-herzegovina-sarajevo.webp'
 
 const CATEGORY_LABELS = {
   'city-walks':   'City Walks',
@@ -59,14 +66,37 @@ function Tours() {
   const isMobile = width <= 768
   const { stats } = useAllReviews()
 
-  const [activeCategory, setActiveCategory] = useState('all')
+  // Place-led entry: /tours?city=Sarajevo filters to that city's day tours.
+  // ?category= (hero quick links) seeds the category filter; ?search= (hero
+  // and nav search bars) free-text filters across title/city/category.
+  const [searchParams, setSearchParams] = useSearchParams()
+  const activeCity = searchParams.get('city') || ''
+  const activeSearch = searchParams.get('search') || ''
+
+  const [activeCategory, setActiveCategory] = useState(searchParams.get('category') || 'all')
   const [activeLength,   setActiveLength]   = useState('all')
   const [sortBy,         setSortBy]         = useState('default')
   const [sortOpen,       setSortOpen]       = useState(false)
 
-  // Place-led entry: /tours?city=Sarajevo filters to that city's day tours.
-  const [searchParams, setSearchParams] = useSearchParams()
-  const activeCity = searchParams.get('city') || ''
+  // The hero search field mirrors ?search= — seeded from it, resynced when
+  // the param changes underneath us (e.g. a new search from the navbar).
+  const [searchInput,   setSearchInput]   = useState(activeSearch)
+  const [searchFocused, setSearchFocused] = useState(false)
+  useEffect(() => { setSearchInput(activeSearch) }, [activeSearch])
+
+  // The grid filters live as you type; the URL catches up on a short
+  // debounce so results stay shareable without a history entry per keystroke.
+  useEffect(() => {
+    const t = setTimeout(() => {
+      const q = searchInput.trim()
+      if (q === activeSearch) return
+      const next = new URLSearchParams(searchParams)
+      if (q) next.set('search', q)
+      else next.delete('search')
+      setSearchParams(next, { replace: true })
+    }, 350)
+    return () => clearTimeout(t)
+  }, [searchInput]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const sortRef = useRef(null)
 
@@ -80,10 +110,18 @@ function Tours() {
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
+  const searchQuery = searchInput.trim().toLowerCase()
   const filtered = tours.filter((tour) => {
     if (activeCity && (tour.city || '').toLowerCase() !== activeCity.toLowerCase()) return false
     if (activeCategory !== 'all' && tour.category !== activeCategory) return false
     if (activeLength !== 'all' && getLengthBucket(tour.duration) !== activeLength) return false
+    if (
+      searchQuery &&
+      ![tour.title, tour.subtitle, tour.city, tour.category, tour.badge].some(
+        (f) => f && f.toLowerCase().includes(searchQuery),
+      )
+    )
+      return false
     return true
   })
 
@@ -95,7 +133,7 @@ function Tours() {
     return 0
   })
 
-  const hasActiveFilters = activeCategory !== 'all' || activeLength !== 'all' || sortBy !== 'default' || !!activeCity
+  const hasActiveFilters = activeCategory !== 'all' || activeLength !== 'all' || sortBy !== 'default' || !!activeCity || !!searchQuery
 
   function clearCity() {
     const next = new URLSearchParams(searchParams)
@@ -103,11 +141,31 @@ function Tours() {
     setSearchParams(next, { replace: true })
   }
 
+  function clearSearch() {
+    setSearchInput('')
+    const next = new URLSearchParams(searchParams)
+    next.delete('search')
+    setSearchParams(next, { replace: true })
+  }
+
+  function submitSearch(e) {
+    e.preventDefault()
+    const q = searchInput.trim()
+    const next = new URLSearchParams(searchParams)
+    if (q) next.set('search', q)
+    else next.delete('search')
+    setSearchParams(next, { replace: true })
+  }
+
   function clearFilters() {
     setActiveCategory('all')
     setActiveLength('all')
     setSortBy('default')
-    clearCity()
+    setSearchInput('')
+    const next = new URLSearchParams(searchParams)
+    next.delete('city')
+    next.delete('search')
+    setSearchParams(next, { replace: true })
   }
 
   const sortIsActive = sortBy !== 'default'
@@ -115,42 +173,63 @@ function Tours() {
   return (
     <div>
       <SEO
-        title="Guided Tours in Sarajevo"
-        description="Small group tours in Sarajevo and Bosnia led by a local guide. War history, food tours, day trips to Mostar and more. Max 12 people. Book online."
+        title={toursPage?.seo?.title || 'Guided Tours in Sarajevo'}
+        description={toursPage?.seo?.description || 'Small group tours in Sarajevo and Bosnia led by a local guide. War history, food tours, day trips to Mostar and more. Genuinely small groups. Book online.'}
         url="/tours"
         image="https://tallesttourguide.com/og-image.jpg"
       />
 
-      {/* ── PAGE HEADER ── */}
-      <section style={styles.pageHeader}>
-        <div style={styles.headerInner}>
-          <span style={styles.eyebrow}>{activeCity ? 'Day tours' : 'Explore Bosnia'}</span>
-          <h1 style={styles.headline}>{activeCity ? `Day tours in ${activeCity}` : 'All Tours'}</h1>
-          <p style={styles.subheading}>
-            {activeCity
-              ? `Our small-group day tours in ${activeCity}, each led by a local guide.`
-              : 'One local guide. Every experience designed to show you the Bosnia most visitors never find.'}
-          </p>
-          {activeCity && (
-            <button
-              onClick={clearCity}
-              style={{ marginTop: 18, display: 'inline-flex', alignItems: 'center', gap: 7, height: 38, padding: '0 16px', background: 'rgba(255,255,255,0.14)', color: '#fff', border: '1px solid rgba(255,255,255,0.4)', borderRadius: 999, fontFamily: 'var(--font-body)', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}
-            >
-              <X size={14} /> Show all day tours
+      {/* ── PAGE HERO ── */}
+      <PageHero
+        image={HERO_IMAGE}
+        imageAlt="Gazi Husrev-beg Mosque and the clock tower above the rooftops of Sarajevo"
+        focal="center 42%"
+        kicker={activeCity ? 'Day tours' : (toursPage?.extra?.kicker || 'Explore Bosnia')}
+        title={activeCity ? `Day tours in ${activeCity}` : (toursPage?.extra?.heading || 'All Tours')}
+        lede={activeCity
+          ? `Our small-group day tours in ${activeCity}, each led by a local guide.`
+          : (toursPage?.extra?.lede || 'One local guide. Every experience designed to show you the Bosnia most visitors never find.')}
+        overlap
+      >
+        <form role="search" onSubmit={submitSearch} style={{ ...styles.heroSearch, boxShadow: searchFocused ? '0 10px 36px rgba(0,0,0,0.32), 0 0 0 3px rgba(244,161,48,0.4)' : '0 10px 36px rgba(0,0,0,0.28)' }}>
+          <Search size={17} color="var(--color-n500)" style={{ flexShrink: 0 }} />
+          <input
+            type="text"
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+            onFocus={() => setSearchFocused(true)}
+            onBlur={() => setSearchFocused(false)}
+            placeholder={isMobile ? 'Search tours…' : 'Search tours — try “Mostar” or “food”…'}
+            aria-label="Search tours"
+            style={styles.heroSearchInput}
+          />
+          {searchInput && (
+            <button type="button" onClick={clearSearch} aria-label="Clear search" style={styles.heroSearchClear}>
+              <X size={15} />
             </button>
           )}
-        </div>
-      </section>
+          <button type="submit" className="btn-lift btn-glow-green" style={styles.heroSearchSubmit}>Search</button>
+        </form>
+        {activeCity && (
+          <button
+            onClick={clearCity}
+            className="hero-chip"
+            style={{ marginTop: 16, display: 'inline-flex', alignItems: 'center', gap: 7, height: 38, padding: '0 16px', background: 'rgba(255,255,255,0.14)', color: '#fff', border: '1px solid rgba(255,255,255,0.4)', borderRadius: 999, fontFamily: 'var(--font-body)', fontSize: 13, fontWeight: 600, cursor: 'pointer', transition: 'background-color var(--t-fast), border-color var(--t-fast)' }}
+          >
+            <X size={14} /> Show all day tours
+          </button>
+        )}
+      </PageHero>
 
       {/* ── FLOATING FILTER CARD ── */}
       <div style={{
         ...styles.filterOuter,
         padding: isMobile ? '0 12px' : '0 40px',
-        marginTop: isMobile ? '-24px' : '-44px',
+        marginTop: isMobile ? '-24px' : '-60px',
       }}>
         <div style={{
           ...styles.filterCard,
-          padding: isMobile ? '14px 16px' : '20px 24px',
+          padding: isMobile ? '14px 16px' : '16px 22px',
         }}>
 
           {isMobile ? (
@@ -183,20 +262,22 @@ function Tours() {
               {/* MOBILE: Row 2 — Scrollable chips left, sort+count pinned right */}
               <div style={{ display: 'flex', alignItems: 'center', gap: '0' }}>
 
-                {/* Scrollable duration + time chips */}
+                {/* Scrollable duration segmented control */}
                 <div
                   className="chips-scroll"
-                  style={{ display: 'flex', alignItems: 'center', gap: '2px', flex: 1 }}
+                  style={{ display: 'flex', alignItems: 'center', flex: 1 }}
                 >
-                  {LENGTH_OPTIONS.map((opt) => (
-                    <button
-                      key={opt.value}
-                      style={chipStyle(activeLength === opt.value, true)}
-                      onClick={() => setActiveLength(opt.value)}
-                    >
-                      {opt.label}
-                    </button>
-                  ))}
+                  <div style={styles.segmented}>
+                    {LENGTH_OPTIONS.map((opt) => (
+                      <button
+                        key={opt.value}
+                        style={chipStyle(activeLength === opt.value, true)}
+                        onClick={() => setActiveLength(opt.value)}
+                      >
+                        {opt.label}
+                      </button>
+                    ))}
+                  </div>
                 </div>
 
                 {/* Pinned right: count + optional clear + sort */}
@@ -239,7 +320,7 @@ function Tours() {
                     </button>
 
                     {sortOpen && (
-                      <div style={{ ...styles.sortDropdown, right: 0, left: 'auto' }}>
+                      <div className="menu-appear" style={{ ...styles.sortDropdown, right: 0, left: 'auto' }}>
                         {SORT_OPTIONS.map((opt) => (
                           <button
                             key={opt.value}
@@ -263,27 +344,31 @@ function Tours() {
             <>
               {/* DESKTOP: Row 1 — Category pills + result count */}
               <div style={styles.categoryRow}>
-                <div style={styles.categoryPills}>
-                  <button
-                    style={catPillStyle(activeCategory === 'all')}
-                    onClick={() => setActiveCategory('all')}
-                    className="btn-lift"
-                  >
-                    All Tours
-                  </button>
-                  {CATEGORIES.map((cat) => (
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <span style={styles.filterLabel}>Category</span>
+                  <div style={styles.categoryPills}>
                     <button
-                      key={cat}
-                      style={catPillStyle(activeCategory === cat)}
-                      onClick={() => setActiveCategory(cat)}
+                      style={catPillStyle(activeCategory === 'all')}
+                      onClick={() => setActiveCategory('all')}
                       className="btn-lift"
                     >
-                      {CATEGORY_LABELS[cat]}
+                      All Tours
                     </button>
-                  ))}
+                    {CATEGORIES.map((cat) => (
+                      <button
+                        key={cat}
+                        style={catPillStyle(activeCategory === cat)}
+                        onClick={() => setActiveCategory(cat)}
+                        className="btn-lift"
+                      >
+                        {CATEGORY_LABELS[cat]}
+                      </button>
+                    ))}
+                  </div>
                 </div>
                 <span style={styles.resultCount}>
-                  {sorted.length} {sorted.length === 1 ? 'tour' : 'tours'}
+                  <strong style={styles.resultCountNumber}>{sorted.length}</strong>{' '}
+                  {sorted.length === 1 ? 'tour' : 'tours'}
                 </span>
               </div>
 
@@ -293,9 +378,9 @@ function Tours() {
               {/* DESKTOP: Row 2 — Duration | Time | Sort */}
               <div style={{ ...styles.controlsRow, flexDirection: 'row', alignItems: 'center' }}>
 
-                <div style={{ ...styles.filterGroup, flexDirection: 'row', alignItems: 'center', gap: '10px' }}>
+                <div style={{ ...styles.filterGroup, flexDirection: 'row', alignItems: 'center', gap: '12px' }}>
                   <span style={styles.filterLabel}>Duration</span>
-                  <div style={styles.filterChips}>
+                  <div style={styles.segmented}>
                     {LENGTH_OPTIONS.map((opt) => (
                       <button
                         key={opt.value}
@@ -335,7 +420,7 @@ function Tours() {
                     </button>
 
                     {sortOpen && (
-                      <div style={styles.sortDropdown}>
+                      <div className="menu-appear" style={styles.sortDropdown}>
                         {SORT_OPTIONS.map((opt) => (
                           <button
                             key={opt.value}
@@ -381,10 +466,11 @@ function Tours() {
                 slug={tour.slug}
                 title={tour.title}
                 price={tour.price}
+                oldPrice={tour.oldPrice}
                 rating={stats[String(tour.id)]?.avgRating ?? tour.rating}
                 reviews={stats[String(tour.id)]?.count ?? tour.reviews}
                 duration={tour.duration}
-                groupSize={tour.groupSize}
+                highlights={tour.highlights}
                 badge={tour.badge}
                 hero={tour.hero}
                 startingTimes={tour.startingTimes}
@@ -406,33 +492,36 @@ function catPillStyle(active, compact = false) {
     height: compact ? '30px' : '34px',
     padding: compact ? '0 13px' : '0 16px',
     borderRadius: 'var(--radius-pill)',
-    border: active ? 'none' : '1.5px solid var(--color-n200)',
-    backgroundColor: active ? 'var(--color-forest-green)' : 'var(--color-n100)',
+    border: active ? '1.5px solid var(--color-forest-green)' : '1.5px solid var(--color-n200)',
+    backgroundColor: active ? 'var(--color-forest-green)' : 'var(--color-n000)',
     color: active ? 'var(--color-n000)' : 'var(--color-n700)',
     fontFamily: 'var(--font-body)',
     fontWeight: '600',
     fontSize: compact ? '12px' : '13px',
     cursor: 'pointer',
     whiteSpace: 'nowrap',
-    transition: 'background-color var(--t-fast), color var(--t-fast)',
+    transition: 'background-color var(--t-fast), color var(--t-fast), border-color var(--t-fast)',
   }
 }
 
+// Segment inside the styles.segmented track — active gets the raised white
+// pill, inactive stays quiet on the n100 track.
 function chipStyle(active, compact = false) {
   return {
     height: compact ? '26px' : '28px',
-    padding: compact ? '0 10px' : '0 12px',
+    padding: compact ? '0 12px' : '0 14px',
     borderRadius: 'var(--radius-pill)',
     border: 'none',
-    backgroundColor: active ? 'var(--color-n900)' : 'transparent',
-    color: active ? 'var(--color-n000)' : 'var(--color-n500)',
+    backgroundColor: active ? 'var(--color-n000)' : 'transparent',
+    color: active ? 'var(--color-n900)' : 'var(--color-n500)',
     fontFamily: 'var(--font-body)',
     fontWeight: active ? '600' : '500',
     fontSize: compact ? '12px' : '13px',
     cursor: 'pointer',
     whiteSpace: 'nowrap',
     flexShrink: 0,
-    transition: 'background-color var(--t-fast), color var(--t-fast)',
+    boxShadow: active ? '0 1px 4px rgba(0,0,0,0.12)' : 'none',
+    transition: 'background-color var(--t-fast), color var(--t-fast), box-shadow var(--t-fast)',
   }
 }
 
@@ -478,41 +567,54 @@ function sortOptionStyle(active) {
 /* ── Styles ──────────────────────────────────────────────────── */
 
 const styles = {
-  pageHeader: {
+  heroSearch: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px',
+    maxWidth: '520px',
+    backgroundColor: 'var(--color-n000)',
+    borderRadius: '999px',
+    padding: '6px 6px 6px 18px',
+    transition: 'box-shadow 0.2s ease',
+  },
+
+  heroSearchInput: {
+    flex: 1,
+    minWidth: 0,
+    border: 'none',
+    outline: 'none',
+    background: 'transparent',
+    fontFamily: 'var(--font-body)',
+    fontSize: '15px',
+    color: 'var(--color-n900)',
+    padding: '9px 0',
+  },
+
+  heroSearchClear: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '30px',
+    height: '30px',
+    border: 'none',
+    background: 'transparent',
+    color: 'var(--color-n500)',
+    cursor: 'pointer',
+    borderRadius: '50%',
+    flexShrink: 0,
+  },
+
+  heroSearchSubmit: {
+    flexShrink: 0,
+    border: 'none',
+    cursor: 'pointer',
     backgroundColor: 'var(--color-forest-green)',
-    padding: '36px 40px 72px',
-  },
-
-  headerInner: {
-    maxWidth: '680px',
-    margin: '0 auto',
-    textAlign: 'center',
-  },
-
-  eyebrow: {
-    display: 'block',
-    fontFamily: 'var(--font-body)',
-    fontWeight: '500',
-    fontSize: 'var(--text-small)',
-    color: 'var(--color-mid-green)',
-    letterSpacing: '2px',
-    textTransform: 'uppercase',
-    marginBottom: '12px',
-  },
-
-  headline: {
-    fontFamily: 'var(--font-display)',
-    fontWeight: '700',
-    fontSize: 'var(--text-h1)',
     color: 'var(--color-n000)',
-    marginBottom: '12px',
-  },
-
-  subheading: {
     fontFamily: 'var(--font-body)',
-    fontSize: 'var(--text-body)',
-    color: 'var(--color-amber-light)',
-    lineHeight: 'var(--leading-body)',
+    fontWeight: '700',
+    fontSize: '14px',
+    padding: '11px 22px',
+    borderRadius: '999px',
   },
 
   filterOuter: {
@@ -553,10 +655,27 @@ const styles = {
     whiteSpace: 'nowrap',
   },
 
+  resultCountNumber: {
+    fontFamily: 'var(--font-display)',
+    fontWeight: '700',
+    fontSize: '14px',
+    color: 'var(--color-forest-green)',
+  },
+
+  segmented: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: '2px',
+    backgroundColor: 'var(--color-n100)',
+    borderRadius: 'var(--radius-pill)',
+    padding: '3px',
+    flexShrink: 0,
+  },
+
   filterDivider: {
     height: '1px',
     backgroundColor: 'var(--color-n200)',
-    margin: '16px 0',
+    margin: '12px 0',
   },
 
   controlsRow: {

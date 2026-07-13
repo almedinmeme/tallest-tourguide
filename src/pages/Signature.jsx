@@ -20,7 +20,7 @@ export default function Signature() {
     <main style={{ backgroundColor: 'var(--color-n000)' }}>
       <SEO
         title={page.seo?.title || 'Signature Experiences'}
-        description={page.seo?.description || 'Private, expert-led Balkan journeys designed around you. A maximum of six guests.'}
+        description={page.seo?.description || 'Private, expert-led Balkan journeys designed around you. Kept intimately small.'}
         url="/signature"
       />
 
@@ -59,7 +59,11 @@ export default function Signature() {
             )}
             {j.secondImage && (
               isMobile ? (
-                <img src={j.secondImage} alt="" loading="lazy" style={{ width: '62%', aspectRatio: '3/4', objectFit: 'cover', borderRadius: 'var(--radius-lg)', display: 'block', marginTop: 12, marginLeft: 'auto' }} />
+                // Same collage as desktop, at phone scale: the portrait shot
+                // overlaps the main photo's lower corner instead of dangling
+                // below it. Negative margin-top is width-relative, so the
+                // overlap scales with the screen.
+                <img src={j.secondImage} alt="" loading="lazy" style={{ position: 'relative', width: '46%', aspectRatio: '3/4', objectFit: 'cover', borderRadius: 'var(--radius-lg)', display: 'block', marginTop: '-24%', marginLeft: 'auto', marginRight: 14, border: '4px solid var(--color-n000)', boxShadow: 'var(--shadow-lg)' }} />
               ) : (
                 <img src={j.secondImage} alt="" loading="lazy" style={{ position: 'absolute', bottom: 0, [imageFirst ? 'left' : 'right']: 0, width: '42%', aspectRatio: '3/4', objectFit: 'cover', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-lg)', border: '5px solid var(--color-n000)', display: 'block' }} />
               )

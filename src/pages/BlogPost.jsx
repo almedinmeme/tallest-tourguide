@@ -1,5 +1,5 @@
 import { useParams, Link } from 'react-router-dom'
-import { Star, Clock, Users, ArrowRight } from 'lucide-react'
+import { Star, Clock, Sparkles, MapPin, ArrowRight } from 'lucide-react'
 import { trackEvent } from '../utils/analytics'
 import SEO from '../components/SEO'
 import Img from '../components/Img'
@@ -8,6 +8,7 @@ import { BlogPostingSchema } from '../schema/SchemaMarkup'
 import { useBlog } from '../hooks/useBlog'
 import useWindowWidth from '../hooks/useWindowWidth'
 import tours from '../data/tours'
+import { postBlocks } from '../data/journalBlocks'
 
 // Minimal package data needed for the recommendation card.
 // Full data lives in PackageDetail.jsx.
@@ -51,12 +52,15 @@ function BlogPost() {
     ? packages.find((p) => p.slug === post.relatedPackageSlug)
     : null
 
-  const inlineCard = post?.inlineCardSlug
-    ? post.inlineCardType === 'package'
-      ? packages.find((p) => p.slug === post.inlineCardSlug)
-      : tours.find((t) => t.slug === post.inlineCardSlug)
-    : null
-  const inlineCardIsPackage = post?.inlineCardType === 'package'
+  // Each promo block names its own tour/package (a post can feature several).
+  const resolvePromo = (block) => {
+    if (!block.slug) return null
+    const isPackage = block.cardType === 'package'
+    const card = isPackage
+      ? packages.find((p) => p.slug === block.slug)
+      : tours.find((t) => t.slug === block.slug)
+    return card ? { card, isPackage } : null
+  }
 
   if (loading) {
     return (
@@ -89,8 +93,8 @@ function BlogPost() {
   return (
     <div>
       <SEO
-        title={post.title}
-        description={post.excerpt || post.title}
+        title={post.seoTitle || post.title}
+        description={post.seoDescription || post.excerpt || post.title}
         image={post.heroImage || undefined}
         url={`/journal/${post.slug}`}
         type="article"
@@ -155,62 +159,41 @@ function BlogPost() {
 
           <div style={styles.divider} />
 
-          {/* Body — alternating text blocks and images.
-              Content sections are stored as HTML (TipTap output). */}
-          {post.content && (
-            <div className="blog-content" dangerouslySetInnerHTML={{ __html: post.content }} />
-          )}
-          {post.inlineImage1 && (
-            <figure style={styles.figure}>
-              <Img src={post.inlineImage1} alt={post.inlineImage1Caption || post.title} sizes="(max-width: 768px) 92vw, 720px" style={styles.inlineImage} />
-              {post.inlineImage1Caption && (
-                <figcaption style={styles.figcaption}>{post.inlineImage1Caption}</figcaption>
-              )}
-            </figure>
-          )}
-          {post.content2 && (
-            <div className="blog-content" dangerouslySetInnerHTML={{ __html: post.content2 }} />
-          )}
-          {post.inlineImage2 && (
-            <figure style={styles.figure}>
-              <Img src={post.inlineImage2} alt={post.inlineImage2Caption || post.title} sizes="(max-width: 768px) 92vw, 720px" style={styles.inlineImage} />
-              {post.inlineImage2Caption && (
-                <figcaption style={styles.figcaption}>{post.inlineImage2Caption}</figcaption>
-              )}
-            </figure>
-          )}
-          {inlineCard && (
-            <InlinePromoCard
-              card={inlineCard}
-              isPackage={inlineCardIsPackage}
-              isMobile={isMobile}
-            />
-          )}
-          {post.content3 && (
-            <div className="blog-content" dangerouslySetInnerHTML={{ __html: post.content3 }} />
-          )}
-          {post.inlineImage3 && (
-            <figure style={styles.figure}>
-              <Img src={post.inlineImage3} alt={post.inlineImage3Caption || post.title} sizes="(max-width: 768px) 92vw, 720px" style={styles.inlineImage} />
-              {post.inlineImage3Caption && (
-                <figcaption style={styles.figcaption}>{post.inlineImage3Caption}</figcaption>
-              )}
-            </figure>
-          )}
-          {post.content4 && (
-            <div className="blog-content" dangerouslySetInnerHTML={{ __html: post.content4 }} />
-          )}
-          {post.inlineImage4 && (
-            <figure style={styles.figure}>
-              <Img src={post.inlineImage4} alt={post.inlineImage4Caption || post.title} sizes="(max-width: 768px) 92vw, 720px" style={styles.inlineImage} />
-              {post.inlineImage4Caption && (
-                <figcaption style={styles.figcaption}>{post.inlineImage4Caption}</figcaption>
-              )}
-            </figure>
-          )}
-          {post.content5 && (
-            <div className="blog-content" dangerouslySetInnerHTML={{ __html: post.content5 }} />
-          )}
+          {/* Body — ordered blocks (text HTML from TipTap, full-width images,
+              and an optional promo-card position marker). postBlocks() also
+              handles posts still on the legacy fixed-field layout. */}
+          {postBlocks(post).map((block, i) => {
+            if (block.type === 'text' && block.html) {
+              return <div key={i} className="blog-content" dangerouslySetInnerHTML={{ __html: block.html }} />
+            }
+            if (block.type === 'image' && block.src) {
+              return (
+                <figure key={i} style={styles.figure}>
+                  <Img src={block.src} alt={block.caption || post.title} sizes="(max-width: 768px) 92vw, 720px" style={styles.inlineImage} />
+                  {block.caption && (
+                    <figcaption style={styles.figcaption}>{block.caption}</figcaption>
+                  )}
+                </figure>
+              )
+            }
+            if (block.type === 'promo') {
+              const promo = resolvePromo(block)
+              if (!promo) return null
+              return (
+                <aside key={i} style={{ ...styles.promoBand, ...(isMobile ? { padding: '14px 14px 16px' } : {}) }}>
+                  <span style={styles.promoEyebrow}>
+                    {promo.isPackage ? 'Interested in this package?' : 'Interested in this tour?'}
+                  </span>
+                  <InlinePromoCard
+                    card={promo.card}
+                    isPackage={promo.isPackage}
+                    isMobile={isMobile}
+                  />
+                </aside>
+              )
+            }
+            return null
+          })}
 
           {/* Back link */}
           <div style={styles.footer}>
@@ -307,7 +290,7 @@ function BlogPost() {
                       <div style={styles.experienceMeta}>
                         <span style={styles.experienceMetaItem}>{relatedTour.duration}</span>
                         <span style={styles.experienceMetaDot}>·</span>
-                        <span style={styles.experienceMetaItem}>Max {relatedTour.groupSize}</span>
+                        <span style={styles.experienceMetaItem}>{(relatedTour.highlights || []).length} highlights</span>
                       </div>
                       <div style={styles.experienceFooter}>
                         <div>
@@ -344,7 +327,7 @@ function BlogPost() {
                       <div style={styles.experienceMeta}>
                         <span style={styles.experienceMetaItem}>{relatedPackage.duration}</span>
                         <span style={styles.experienceMetaDot}>·</span>
-                        <span style={styles.experienceMetaItem}>Max {relatedPackage.groupSize}</span>
+                        <span style={styles.experienceMetaItem}>{relatedPackage.locations} locations</span>
                       </div>
                       <div style={styles.experienceFooter}>
                         <div>
@@ -679,6 +662,26 @@ const styles = {
     margin: '8px 0',
   },
 
+  // Tinted band that sets the inline booking card apart from the story.
+  promoBand: {
+    backgroundColor: 'rgba(46, 125, 94, 0.06)',
+    border: '1px solid rgba(46, 125, 94, 0.14)',
+    borderRadius: '18px',
+    padding: '20px 20px 22px 20px',
+    margin: '40px 0',
+  },
+
+  promoEyebrow: {
+    display: 'block',
+    fontFamily: 'var(--font-body)',
+    fontWeight: '600',
+    fontSize: '11px',
+    color: 'var(--color-forest-green)',
+    textTransform: 'uppercase',
+    letterSpacing: '1.5px',
+    marginBottom: '12px',
+  },
+
   inlineImage: {
     width: '100%',
     height: 'auto',
@@ -999,11 +1002,12 @@ function InlinePromoCard({ card, isPackage, isMobile }) {
   return (
     <Link
       to={href}
-      style={cardStyles.wrapper}
+      style={{ ...cardStyles.wrapper, flexDirection: isMobile ? 'column' : 'row' }}
       className="card-lift"
       onClick={() => trackEvent('cta_click', { type: 'inline_card', card_slug: card.slug, card_type: isPackage ? 'package' : 'tour' })}
     >
-      <div style={{ ...cardStyles.imageCol, width: isMobile ? '140px' : '260px', flexShrink: 0 }}>
+      {/* On phones the card stacks: full-width photo above the details. */}
+      <div style={{ ...cardStyles.imageCol, ...(isMobile ? { width: '100%', aspectRatio: '16 / 9' } : { width: '260px' }), flexShrink: 0 }}>
         {image
           ? <img src={image} alt={title} loading="lazy" style={cardStyles.image} />
           : <div style={cardStyles.imagePlaceholder} />
@@ -1025,8 +1029,12 @@ function InlinePromoCard({ card, isPackage, isMobile }) {
             <span style={cardStyles.metaText}>{card.duration}</span>
           </div>
           <div style={cardStyles.metaItem}>
-            <Users size={12} color="var(--color-n600)" />
-            <span style={cardStyles.metaText}>Max {card.groupSize}</span>
+            {isPackage
+              ? <MapPin size={12} color="var(--color-n600)" />
+              : <Sparkles size={12} color="var(--color-n600)" />}
+            <span style={cardStyles.metaText}>
+              {isPackage ? `${card.locations} locations` : `${(card.highlights || []).length} highlights`}
+            </span>
           </div>
         </div>
         <div style={cardStyles.footer}>
@@ -1035,7 +1043,7 @@ function InlinePromoCard({ card, isPackage, isMobile }) {
             <span style={cardStyles.pricePer}>/person</span>
           </div>
           <div style={cardStyles.cta}>
-            <span style={cardStyles.ctaText}>Book Now</span>
+            <span style={cardStyles.ctaText}>{isPackage ? 'View package' : 'View tour'}</span>
             <ArrowRight size={13} color="var(--color-n900)" />
           </div>
         </div>
@@ -1054,7 +1062,8 @@ const cardStyles = {
     border: '1px solid var(--color-n300)',
     backgroundColor: 'var(--color-n000)',
     boxShadow: 'var(--shadow-sm)',
-    margin: '32px 0',
+    // Outer spacing lives on the promo band wrapper.
+    margin: 0,
     transition: 'transform var(--t-lift), box-shadow var(--t-lift)',
   },
 

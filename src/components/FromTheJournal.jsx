@@ -6,20 +6,34 @@
 
 import { Link } from 'react-router-dom'
 import { posts } from '../data/journal'
+import { postPromoRefs } from '../data/journalBlocks'
 
 function formatDate(dateStr) {
   if (!dateStr) return ''
   return new Date(dateStr).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
 }
 
-export default function FromTheJournal({ tourSlug, packageSlug, max = 3 }) {
-  const related = posts
-    .filter(
-      (p) =>
-        (tourSlug && (p.relatedTourSlug === tourSlug || (p.inlineCardType === 'tour' && p.inlineCardSlug === tourSlug))) ||
-        (packageSlug && (p.relatedPackageSlug === packageSlug || (p.inlineCardType === 'package' && p.inlineCardSlug === packageSlug))),
-    )
-    .slice(0, max)
+// `pinned` (post slugs, from the tour/package's journalPosts field) is the
+// hand-picked list, shown in that order. When empty, fall back to the
+// automatic reverse lookup: posts that link to this trip.
+export default function FromTheJournal({ tourSlug, packageSlug, pinned, max = 3 }) {
+  const pinnedPosts = (pinned || [])
+    .map((slug) => posts.find((p) => p.slug === slug))
+    .filter(Boolean)
+
+  const related =
+    pinnedPosts.length > 0
+      ? pinnedPosts
+      : posts
+          .filter((p) => {
+            const promos = postPromoRefs(p)
+            return (
+              (tourSlug && (p.relatedTourSlug === tourSlug || promos.some((r) => r.type === 'tour' && r.slug === tourSlug))) ||
+              (packageSlug &&
+                (p.relatedPackageSlug === packageSlug || promos.some((r) => r.type === 'package' && r.slug === packageSlug)))
+            )
+          })
+          .slice(0, max)
 
   if (related.length === 0) return null
 

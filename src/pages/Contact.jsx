@@ -12,7 +12,7 @@ import Button from '../components/Button'
 import useWindowWidth from '../hooks/useWindowWidth'
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-const WHATSAPP_URL = 'https://wa.me/38762664244'
+import { WHATSAPP_URL, CONTACT_EMAIL, PHONE_DISPLAY } from '../data/settings'
 
 const TOPICS = ['Booking question', 'Private group', 'Partnership', 'Something else']
 
@@ -125,19 +125,19 @@ export default function Contact() {
               </span>
               <span style={styles.channelBody}>
                 <span style={styles.channelLabel}>WhatsApp</span>
-                <span style={styles.channelValue}>+387 62 664 244</span>
+                <span style={styles.channelValue}>{PHONE_DISPLAY}</span>
                 <span style={styles.channelNote}>Usually the quickest reply</span>
               </span>
               <ArrowRight size={16} color="var(--color-n400)" style={{ flexShrink: 0 }} />
             </a>
 
-            <a href="mailto:hello@tallesttourguide.com" className="contact-channel" style={styles.channel}>
+            <a href={`mailto:${CONTACT_EMAIL}`} className="contact-channel" style={styles.channel}>
               <span style={{ ...styles.channelIcon, backgroundColor: 'rgba(46,125,94,0.1)' }}>
                 <Mail size={19} color="var(--color-forest-green)" />
               </span>
               <span style={styles.channelBody}>
                 <span style={styles.channelLabel}>Email</span>
-                <span style={styles.channelValue}>hello@tallesttourguide.com</span>
+                <span style={styles.channelValue}>{CONTACT_EMAIL}</span>
                 <span style={styles.channelNote}>For longer plans and attachments</span>
               </span>
               <ArrowRight size={16} color="var(--color-n400)" style={{ flexShrink: 0 }} />
@@ -267,7 +267,7 @@ export default function Contact() {
 
                 {isError && (
                   <p style={styles.errorBanner}>
-                    Something went wrong. Please try again, or email us directly at hello@tallesttourguide.com.
+                    Something went wrong. Please try again, or email us directly at {CONTACT_EMAIL}.
                   </p>
                 )}
               </>

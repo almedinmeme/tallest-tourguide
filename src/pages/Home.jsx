@@ -8,17 +8,27 @@
 import SEO from '../components/SEO'
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { MapPin, ArrowRight, Star, ChevronDown, ChevronLeft, ChevronRight, Users, UserCheck, ShieldCheck } from 'lucide-react'
+import { Compass, ArrowRight, Star, ChevronDown, ChevronLeft, ChevronRight, Users, UserCheck, ShieldCheck } from 'lucide-react'
 import TourCard from '../components/TourCard'
-import Button from '../components/Button'
+import HeroSearch from '../components/HeroSearch'
 import tours from '../data/tours'
 import useWindowWidth from '../hooks/useWindowWidth'
 import hero2 from '../assets/tour-2-hero.webp'
 import hero3 from '../assets/tour-3-hero.webp'
 import hero4 from '../assets/tour-5-hero.webp'
 import hero5 from '../assets/tour-7-hero.webp'
+import { getPage } from '../data/pages'
 
-const HERO_IMAGES = ['/hero-bg.webp', hero2, hero3, hero4, hero5]
+// Hero photos and the "Traveller favourites" cards are editable in the admin
+// (Pages → Homepage). Empty admin fields fall back to the built-in set / the
+// first tours in the admin-controlled tours order.
+const homePage = getPage('home')
+const ADMIN_HERO_IMAGES = (homePage?.extra?.heroImages || []).map((h) => h.image).filter(Boolean)
+const HERO_IMAGES = ADMIN_HERO_IMAGES.length > 0 ? ADMIN_HERO_IMAGES : ['/hero-bg.webp', hero2, hero3, hero4, hero5]
+
+const FAVOURITE_SLUGS = homePage?.extra?.favouriteTours || []
+const favouriteTours = FAVOURITE_SLUGS.map((slug) => tours.find((t) => t.slug === slug)).filter(Boolean)
+const FEATURED_TOURS = (favouriteTours.length > 0 ? favouriteTours : tours).slice(0, favouriteTours.length > 0 ? 3 : 2)
 import GuideSection from '../components/GuideSection'
 import HowItWorks from '../components/HowItWorks'
 import Reviews from '../components/Reviews'
@@ -26,6 +36,7 @@ import CTABanner from '../components/CTABanner'
 import PackagesPreview from '../components/PackagesPreview'
 import { useBlog } from '../hooks/useBlog'
 import { useAllReviews } from '../hooks/useAllReviews'
+import { TRUST_BAR_CANCEL } from '../data/policy'
 
 
 function Home() {
@@ -52,8 +63,8 @@ function Home() {
     // As we add more sections below the hero, they'll stack here.
     <div>
 <SEO
-  title="Guided Tours in Sarajevo"
-  description="Small group tours in Sarajevo and Bosnia led by a local guide. War history, food tours, day trips to Mostar and more. Max 12 people. Book online."
+  title={homePage?.seo?.title || 'Guided Tours in Sarajevo'}
+  description={homePage?.seo?.description || 'Small group tours in Sarajevo and Bosnia led by a local guide. War history, food tours, day trips to Mostar and more. Genuinely small groups. Book online.'}
   url="/"
   image="https://tallesttourguide.com/og-image.jpg"
 />
@@ -103,16 +114,16 @@ function Home() {
           textAlign: isMobile ? 'center' : 'left',
           gap: isMobile ? '20px' : '24px',
           width: isMobile ? '100%' : undefined,
-          maxWidth: isMobile ? '480px' : '600px',
+          // Wide enough for the headline to sit on a single line on desktop.
+          maxWidth: isMobile ? '480px' : '1200px',
         }}>
 
-          {/* Location tag — small pill above the headline.
-              Grounded in place immediately — visitors know
-              exactly where this is before they read anything else. */}
+          {/* Positioning tag — small pill above the headline. Frames the
+              company as the regional expert, not a single-city outfit. */}
           <div style={styles.locationTag}>
-            <MapPin size={12} color="var(--color-amber)" />
+            <Compass size={12} color="var(--color-amber)" />
             <span style={styles.locationText}>
-              Sarajevo, Bosnia & Herzegovina
+              Your Balkan DMC
             </span>
           </div>
 
@@ -125,14 +136,13 @@ function Home() {
               to make everything big and loud simultaneously. */}
           <h1 style={{
             ...styles.heroHeadline,
-            fontSize: isMobile ? '32px' : '56px',
+            fontSize: isMobile ? '30px' : '42px',
           }}>
             <span style={styles.heroHeadlineThin}>
-              You Won't Just See Bosnia.
-            </span>
-            <br />
+              You Won't Just See the Balkans.
+            </span>{' '}
             <span style={styles.heroHeadlineBold}>
-              You'll Understand It.
+              You'll Understand Them.
             </span>
           </h1>
 
@@ -140,30 +150,19 @@ function Home() {
           <p style={{
             ...styles.heroSub,
             fontSize: isMobile ? '13px' : '14px',
-            maxWidth: isMobile ? '320px' : '420px',
+            maxWidth: isMobile ? '320px' : '560px',
           }}>
-            Small groups. Trusted guides. Experiences that stay with you.
+            Small groups. Trusted guides. Rooted in <strong style={{ color: '#fff', fontWeight: 700 }}>Bosnia</strong>, at home across the Balkans.
           </p>
 
-          {/* CTA row — primary and secondary buttons.
-              Buttons are slightly larger than the rest of
-              the site to match the hero's bold energy. */}
-          <div style={{
-            ...styles.heroCtas,
-            flexDirection: isMobile ? 'column' : 'row',
-            alignItems: isMobile ? 'stretch' : 'center',
-            width: isMobile ? '100%' : 'auto',
-          }}>
-
-            <Button to="/tours" variant="primary" size="lg">
-              <span>Explore tours</span>
-              <ArrowRight size={18} color="var(--color-n900)" />
-            </Button>
-
-            <Button to="/multi-day-tours" variant="secondary" size="lg" onDark>
-              Plan a full trip
-            </Button>
-
+          {/* Search-first CTA — the hero doubles as the booking entry point.
+              A prominent search bar with live results replaces the old
+              button pair; the quick-link chips underneath cover the same
+              destinations ("Explore tours") and the multi-day journeys
+              ("Plan a full trip") in one tap. Extra top margin gives the
+              headline room to breathe before the search bar. */}
+          <div style={{ marginTop: isMobile ? '8px' : '14px', width: '100%', display: 'flex', justifyContent: isMobile ? 'center' : 'flex-start' }}>
+            <HeroSearch isMobile={isMobile} />
           </div>
 
           {/* Social proof micro-line —
@@ -184,6 +183,30 @@ function Home() {
           </div>
 
         </div>
+
+        {/* Featured tours — desktop only. Two compact glassy cards on the
+            hero's right side promote the top of the tours list (the order
+            set by drag-reorder in the admin), so the hero sells concrete,
+            bookable trips — not just a mood. Mobile skips this: the tours
+            rail sits right below the fold there. */}
+        {!isMobile && (
+          <div style={styles.heroFeatured}>
+            <span style={styles.heroFeaturedLabel}>Traveller favourites</span>
+            {FEATURED_TOURS.map((t) => (
+              <Link key={t.slug} to={`/tours/${t.slug}`} style={styles.heroFeaturedCard} className="hero-featured-card">
+                <img src={t.hero} alt="" style={styles.heroFeaturedThumb} />
+                <div style={{ minWidth: 0 }}>
+                  <span style={styles.heroFeaturedTitle}>{t.title.split(/[:|]/)[0].trim()}</span>
+                  <span style={styles.heroFeaturedMeta}>
+                    <Star size={11} color="var(--color-amber)" fill="var(--color-amber)" style={{ flexShrink: 0 }} />
+                    {t.rating} · {t.duration} · from €{t.price}
+                  </span>
+                </div>
+                <ArrowRight size={15} color="rgba(255,255,255,0.7)" style={{ flexShrink: 0, marginLeft: 'auto' }} />
+              </Link>
+            ))}
+          </div>
+        )}
 
         {/* Scroll indicator — animated bouncing arrow
             at the bottom center of the hero.
@@ -244,7 +267,7 @@ function Home() {
               </div>
               <div style={styles.trustContent}>
                 <span style={styles.trustLabel}>Group Size</span>
-                <span style={styles.trustValue}>Max 12 people</span>
+                <span style={styles.trustValue}>Genuinely small</span>
               </div>
             </div>
 
@@ -256,7 +279,7 @@ function Home() {
               </div>
               <div style={styles.trustContent}>
                 <span style={styles.trustLabel}>Cancellation</span>
-                <span style={styles.trustValue}>24 hours before</span>
+                <span style={styles.trustValue}>{TRUST_BAR_CANCEL.desktop}</span>
               </div>
             </div>
 
@@ -284,13 +307,13 @@ function Home() {
 
             <div style={styles.trustItemMobile}>
               <UserCheck size={15} color="var(--color-forest-green)" />
-              <span style={styles.trustValueMobile}>Max 12</span>
-              <span style={styles.trustLabelMobile}>Per Group</span>
+              <span style={styles.trustValueMobile}>Small groups</span>
+              <span style={styles.trustLabelMobile}>Every Tour</span>
             </div>
 
             <div style={styles.trustItemMobile}>
               <ShieldCheck size={15} color="var(--color-forest-green)" />
-              <span style={styles.trustValueMobile}>24h before</span>
+              <span style={styles.trustValueMobile}>{TRUST_BAR_CANCEL.mobile}</span>
               <span style={styles.trustLabelMobile}>Cancellation</span>
             </div>
 
@@ -312,7 +335,7 @@ function Home() {
           <span style={styles.sectionEyebrow}>What We Offer</span>
           <h2 style={styles.sectionTitle}>Our Most Popular Tours</h2>
           <p style={styles.sectionSubtitle}>
-            Every tour runs with a maximum of 12 guests. Small enough to feel personal. Guided closely enough to feel private.
+            Every tour runs as a genuinely small group. Small enough to feel personal. Guided closely enough to feel private.
           </p>
         </div>
 
@@ -324,7 +347,7 @@ function Home() {
           return (
             <>
               <div
-                style={styles.carouselWrapper}
+                style={{ ...styles.carouselWrapper, ...(isMobile ? null : styles.carouselBreathe) }}
                 onTouchStart={(e) => { tourTouchStartX.current = e.touches[0].clientX }}
                 onTouchEnd={(e) => {
                   if (tourTouchStartX.current === null) return
@@ -338,7 +361,7 @@ function Home() {
               >
                 <div style={{
                   ...styles.carouselTrack,
-                  transform: `translateX(-${tourPage * 100}%)`,
+                  transform: `translateX(calc(${tourPage} * (-100% - 24px)))`,
                 }}>
                   {Array.from({ length: totalPages }).map((_, pageIdx) => (
                     <div key={pageIdx} style={{
@@ -352,10 +375,11 @@ function Home() {
                           slug={tour.slug}
                           title={tour.title}
                           price={tour.price}
+                          oldPrice={tour.oldPrice}
                           rating={stats[String(tour.id)]?.avgRating ?? tour.rating}
                           reviews={stats[String(tour.id)]?.count ?? tour.reviews}
                           duration={tour.duration}
-                          groupSize={tour.groupSize}
+                          highlights={tour.highlights}
                           badge={tour.badge}
                           hero={tour.hero}
                           startingTimes={tour.startingTimes}
@@ -461,7 +485,7 @@ function Home() {
 
               {/* Carousel track */}
               <div
-                style={blogStyles.carouselWrapper}
+                style={{ ...blogStyles.carouselWrapper, ...(isMobile ? null : styles.carouselBreathe) }}
                 onTouchStart={(e) => { touchStartX.current = e.touches[0].clientX }}
                 onTouchEnd={(e) => {
                   if (touchStartX.current === null) return
@@ -475,7 +499,7 @@ function Home() {
               >
                 <div style={{
                   ...blogStyles.carouselTrack,
-                  transform: `translateX(-${blogPage * 100}%)`,
+                  transform: `translateX(calc(${blogPage} * (-100% - 24px)))`,
                 }}>
                   {Array.from({ length: totalPages }).map((_, pageIdx) => (
                     <div key={pageIdx} style={{
@@ -628,6 +652,18 @@ const styles = {
     overflow: 'hidden',
   },
 
+  // Desktop: the wrapper clips (overflow hidden) flush against the cards,
+  // amputating the hover lift's shadow. Pad the clip box (12px sides, more
+  // vertically) and cancel it with negative margins + wider max-width so the
+  // cards sit exactly where they were. The 24px gap between carousel pages
+  // (carouselPage marginRight + the calc() stride on the track) keeps the
+  // next page fully outside the padded clip window — no peeking.
+  carouselBreathe: {
+    maxWidth: '1124px',
+    padding: '24px 12px 32px',
+    margin: '-24px auto -32px',
+  },
+
   carouselTrack: {
     display: 'flex',
     transition: 'transform 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
@@ -638,6 +674,9 @@ const styles = {
     gap: '28px',
     minWidth: '100%',
     alignItems: 'stretch',
+    // Spacer between pages — paired with the track's calc() stride, it keeps
+    // the next page clear of the padded clip window (carouselBreathe).
+    marginRight: '24px',
   },
 
   carouselControls: {
@@ -813,6 +852,75 @@ hero: {
     alignItems: 'center',
   },
 
+  // Right-side featured tour cards (desktop only) — glassy, over the photo.
+  heroFeatured: {
+    position: 'absolute',
+    right: '72px',
+    bottom: '96px',
+    zIndex: 3,
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '10px',
+    width: '340px',
+  },
+
+  heroFeaturedLabel: {
+    fontFamily: 'var(--font-body)',
+    fontSize: '11px',
+    fontWeight: 700,
+    textTransform: 'uppercase',
+    letterSpacing: '1.6px',
+    color: 'var(--color-amber)',
+    marginBottom: '2px',
+    textShadow: '0 1px 8px rgba(0,0,0,0.4)',
+  },
+
+  heroFeaturedCard: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '12px',
+    padding: '10px',
+    borderRadius: '14px',
+    textDecoration: 'none',
+    backgroundColor: 'rgba(12, 22, 17, 0.55)',
+    border: '1px solid rgba(255,255,255,0.16)',
+    backdropFilter: 'blur(10px)',
+    WebkitBackdropFilter: 'blur(10px)',
+    transition: 'background-color 0.2s ease, transform 0.2s ease',
+  },
+
+  heroFeaturedThumb: {
+    width: '64px',
+    height: '64px',
+    objectFit: 'cover',
+    borderRadius: '10px',
+    flexShrink: 0,
+    display: 'block',
+  },
+
+  heroFeaturedTitle: {
+    fontFamily: 'var(--font-body)',
+    fontSize: '14px',
+    fontWeight: 700,
+    color: '#fff',
+    lineHeight: 1.3,
+    overflow: 'hidden',
+    display: '-webkit-box',
+    WebkitLineClamp: 2,
+    WebkitBoxOrient: 'vertical',
+  },
+
+  heroFeaturedMeta: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '5px',
+    fontFamily: 'var(--font-body)',
+    fontSize: '12px',
+    fontWeight: 600,
+    color: 'rgba(255,255,255,0.78)',
+    marginTop: '4px',
+  },
+
   // Background image fills the entire hero section.
   // position absolute takes it out of document flow
   // so it sits behind all other hero elements.
@@ -897,7 +1005,6 @@ hero: {
   heroHeadlineThin: {
     fontWeight: '300',
     fontStyle: 'italic',
-    display: 'block',
     opacity: 0.9,
   },
 
@@ -905,7 +1012,6 @@ hero: {
   // This is the line the eye lands on first.
   heroHeadlineBold: {
     fontWeight: '800',
-    display: 'block',
     color: 'var(--color-n000)',
   },
 
@@ -1005,6 +1111,18 @@ const blogStyles = {
     overflow: 'hidden',
   },
 
+  // Desktop: the wrapper clips (overflow hidden) flush against the cards,
+  // amputating the hover lift's shadow. Pad the clip box (12px sides, more
+  // vertically) and cancel it with negative margins + wider max-width so the
+  // cards sit exactly where they were. The 24px gap between carousel pages
+  // (carouselPage marginRight + the calc() stride on the track) keeps the
+  // next page fully outside the padded clip window — no peeking.
+  carouselBreathe: {
+    maxWidth: '1124px',
+    padding: '24px 12px 32px',
+    margin: '-24px auto -32px',
+  },
+
   carouselTrack: {
     display: 'flex',
     transition: 'transform 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
@@ -1015,6 +1133,8 @@ const blogStyles = {
     gap: '24px',
     minWidth: '100%',
     alignItems: 'stretch',
+    // Same page-spacer as the tour carousel — see carouselBreathe.
+    marginRight: '24px',
   },
 
   controls: {

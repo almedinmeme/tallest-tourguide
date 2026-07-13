@@ -144,8 +144,8 @@ function Gallery({ images = [], alt = 'Gallery image' }) {
               onClick={() => open(index)}
               style={{
                 flexShrink: 0,
-                width: '380px',
-                height: '272px',
+                width: 'min(470px, 84vw)',
+                height: '336px',
                 borderRadius: '10px',
                 overflow: 'hidden',
                 cursor: 'pointer',
@@ -167,7 +167,7 @@ function Gallery({ images = [], alt = 'Gallery image' }) {
               <Img
                 src={item.src}
                 alt={item.caption || `${alt} ${index + 1}`}
-                sizes="(max-width: 768px) 80vw, 420px"
+                sizes="(max-width: 768px) 84vw, 470px"
                 draggable={false}
                 style={{
                   width: '100%',

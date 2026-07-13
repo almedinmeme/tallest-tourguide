@@ -1,132 +1,131 @@
-import { ArrowRight, Mail } from 'lucide-react'
+// CTABanner.jsx
+// The homepage's closing argument. The "story" idea is made literal: a small
+// cluster of tilted snapshots — real photos from the top tours — sits beside
+// the headline like pages from a travel journal. Deep forest background so
+// the section reads as a distinct final chapter, not another light strip.
+
+import { ArrowRight } from 'lucide-react'
 import Button from './Button'
+import tours from '../data/tours'
 import useWindowWidth from '../hooks/useWindowWidth'
 
 function CTABanner() {
   const width = useWindowWidth()
   const isMobile = width <= 768
 
+  // The first three tours (admin drag-order) supply the snapshots.
+  const snapshots = tours.slice(0, 3).map((t) => ({
+    src: t.hero,
+    caption: t.city || 'Bosnia',
+    slug: t.slug,
+  }))
+
+  const rotations = ['-5deg', '3deg', '-2deg']
+
   return (
     <section style={styles.section}>
-
-      {/* Subtle grain texture overlay — a semi-transparent
-          radial gradient that adds depth to the flat dark background
-          without adding any visual noise or competing elements.
-          Pure CSS, zero performance cost. */}
       <div style={styles.glow} />
 
-      <div style={{
-        ...styles.inner,
-        flexDirection: isMobile ? 'column' : 'row',
-        gap: isMobile ? '40px' : '0',
-        textAlign: isMobile ? 'center' : 'left',
-        alignItems: isMobile ? 'center' : 'center',
-      }}>
+      <div
+        style={{
+          ...styles.inner,
+          flexDirection: isMobile ? 'column' : 'row',
+          gap: isMobile ? '48px' : '72px',
+          textAlign: isMobile ? 'center' : 'left',
+        }}
+      >
+        {/* ── TEXT SIDE ─────────────────────────────────── */}
+        <div style={{ ...styles.textSide, alignItems: isMobile ? 'center' : 'flex-start' }}>
+          <span style={styles.eyebrow}>
+            Vidimo se <span style={styles.eyebrowNote}>— “see you there”, in Bosnian</span>
+          </span>
 
-        {/* ── LEFT SIDE — Headline ─────────────────────── */}
-        <div style={{
-  ...styles.leftSide,
-  paddingRight: isMobile ? '0' : '64px',
-}}>
-
-          <span style={styles.eyebrow}>Sarajevo · Bosnia</span>
-
-          <h2 style={{
-            ...styles.headline,
-            fontSize: isMobile ? '32px' : '52px',
-          }}>
-            Your next great<br />
-            story starts here.
+          <h2 style={{ ...styles.headline, fontSize: isMobile ? '32px' : '46px' }}>
+            <span style={styles.headlineThin}>Your next great story</span>{' '}
+            <span style={styles.headlineBold}>starts here.</span>
           </h2>
 
-          <p style={styles.subtext}>
-            Small groups. Local knowledge. No two tours the same.
+          <p style={{ ...styles.subtext, maxWidth: isMobile ? '340px' : '440px' }}>
+            Every tour ends the same way — someone saying “I didn't expect that.”
+            Come collect a story worth retelling.
           </p>
 
-        </div>
-
-        {/* Vertical divider — desktop only.
-            A single 1px line that creates visual separation
-            between the headline and the action side without
-            using heavy visual elements like cards or boxes. */}
-        {!isMobile && (
-          <div style={styles.verticalDivider} />
-        )}
-
-        {/* ── RIGHT SIDE — Actions ─────────────────────── */}
-       <div style={{
-  ...styles.rightSide,
-  alignItems: isMobile ? 'center' : 'flex-start',
-  paddingLeft: isMobile ? '0' : '64px',
-}}>
-
-    
-
-          {/* CTA buttons — stacked on mobile, side by side on desktop */}
-          <div style={{
-            display: 'flex',
-            flexDirection: isMobile ? 'column' : 'row',
-            gap: '12px',
-            width: '100%',
-          }}>
-
-            <Button to="/tours" variant="primary" style={{ flex: isMobile ? 'none' : 1, width: isMobile ? '100%' : 'auto' }}>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: isMobile ? 'column' : 'row',
+              gap: '12px',
+              width: isMobile ? '100%' : 'auto',
+              marginTop: '8px',
+            }}
+          >
+            <Button to="/tours" variant="primary" style={{ width: isMobile ? '100%' : 'auto' }}>
               <span>Book a tour</span>
               <ArrowRight size={16} color="var(--color-n900)" />
             </Button>
-
-            <Button to="/contact" variant="secondary" style={{ flex: isMobile ? 'none' : 1, width: isMobile ? '100%' : 'auto' }}>
-              <Mail size={15} />
-              <span>Contact us</span>
+            <Button to="/personalised" variant="secondary" onDark style={{ width: isMobile ? '100%' : 'auto' }}>
+              Plan your trip — it's free
             </Button>
-
           </div>
 
-          {/* Trust micro-copy — three signals stacked vertically
-              rather than in a single line. Easier to scan,
-              more breathing room per item. */}
-         <div style={{
-  ...styles.trustStack,
-  alignItems: isMobile ? 'center' : 'flex-start',
-}}>
+          <div style={{ ...styles.trustRow, justifyContent: isMobile ? 'center' : 'flex-start' }}>
             <span style={styles.trustItem}>✓ Free cancellation</span>
+            <span style={styles.trustDot}>·</span>
             <span style={styles.trustItem}>✓ Confirmed within 24h</span>
+            <span style={styles.trustDot}>·</span>
             <span style={styles.trustItem}>✓ Small groups only</span>
           </div>
-
         </div>
 
+        {/* ── SNAPSHOT CLUSTER ──────────────────────────── */}
+        <div
+          style={{
+            ...styles.photoCluster,
+            transform: isMobile ? 'scale(0.82)' : 'none',
+            margin: isMobile ? '-24px 0' : '0',
+          }}
+          aria-hidden
+        >
+          {snapshots.map((snap, i) => (
+            <div
+              key={snap.slug}
+              className="cta-snapshot"
+              style={{
+                ...styles.snapshot,
+                transform: `rotate(${rotations[i]})`,
+                marginLeft: i === 0 ? 0 : '-36px',
+                marginTop: i === 1 ? '28px' : 0,
+                zIndex: i === 1 ? 2 : 1,
+              }}
+            >
+              <img src={snap.src} alt="" loading="lazy" style={styles.snapshotImg} />
+              <span style={styles.snapshotCaption}>{snap.caption}</span>
+            </div>
+          ))}
+        </div>
       </div>
-
     </section>
   )
 }
 
 const styles = {
-  // Deep dark background — breaks completely from the
-  // Forest Green of both the hero and the reviews section.
-  // The slight green undertone keeps it on-brand without
-  // repeating the same green.
-   section: {
-    backgroundColor: '#F0F7F4',  // Very light mint green — on brand but light
-    padding: '96px 40px',
+  section: {
+    backgroundColor: 'var(--color-forest-deep)',
+    padding: '104px 40px',
     position: 'relative',
     overflow: 'hidden',
   },
 
-  // A soft radial glow in the center of the section —
-  // Forest Green at 15% opacity, fading to transparent.
-  // Creates depth and warmth on the dark background
-  // without adding any visible element.
- glow: {
+  // Warm glow behind the photos — candlelight against the deep green.
+  glow: {
     position: 'absolute',
     top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: '800px',
-    height: '400px',
+    right: '10%',
+    transform: 'translateY(-50%)',
+    width: '640px',
+    height: '480px',
     borderRadius: '50%',
-    background: 'radial-gradient(ellipse, rgba(46,125,94,0.08) 0%, transparent 70%)',
+    background: 'radial-gradient(ellipse, rgba(244,161,48,0.10) 0%, transparent 65%)',
     pointerEvents: 'none',
   },
 
@@ -134,63 +133,112 @@ const styles = {
     position: 'relative',
     zIndex: 1,
     display: 'flex',
+    alignItems: 'center',
     justifyContent: 'center',
-    maxWidth: '1000px',
+    maxWidth: '1080px',
     margin: '0 auto',
   },
 
-  leftSide: {
+  textSide: {
     flex: 1,
-    paddingRight: '64px',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '18px',
   },
 
-eyebrow: {
-    display: 'block',
+  eyebrow: {
     fontFamily: 'var(--font-body)',
-    fontWeight: '500',
-    fontSize: 'var(--text-small)',
-    color: 'var(--color-forest-green)',
-    letterSpacing: '3px',
+    fontWeight: '700',
+    fontSize: '12px',
+    color: 'var(--color-amber)',
+    letterSpacing: '2.5px',
     textTransform: 'uppercase',
-    marginBottom: '20px',
+  },
+
+  eyebrowNote: {
+    fontWeight: '500',
+    textTransform: 'none',
+    letterSpacing: '0.2px',
+    color: 'rgba(255,255,255,0.55)',
+    fontStyle: 'italic',
   },
 
   headline: {
-    fontFamily: 'var(--font-display)',
-    fontWeight: '700',
-    color: 'var(--color-n900)',  // Dark on light background
-    lineHeight: '1.15',
-    marginBottom: '16px',
+    fontFamily: 'var(--font-hero)',
+    color: 'var(--color-n000)',
+    lineHeight: '1.12',
+    margin: 0,
+  },
+
+  headlineThin: {
+    fontWeight: '300',
+    fontStyle: 'italic',
+    opacity: 0.92,
+  },
+
+  headlineBold: {
+    fontWeight: '800',
   },
 
   subtext: {
     fontFamily: 'var(--font-body)',
-    fontSize: 'var(--text-body)',
-    color: 'var(--color-n600)',  // Body text color
-    lineHeight: 'var(--leading-body)',
+    fontSize: '15px',
+    color: 'rgba(255,255,255,0.72)',
+    lineHeight: '1.7',
+    margin: 0,
   },
 
-  verticalDivider: {
-    width: '1px',
-    backgroundColor: 'var(--color-n300)',  // Light grey on light bg
-    alignSelf: 'stretch',
-    flexShrink: 0,
-  },
-
-  trustStack: {
+  trustRow: {
     display: 'flex',
-    flexDirection: 'column',
-    gap: '6px',
-    marginTop: '8px',
+    alignItems: 'center',
+    gap: '10px',
+    flexWrap: 'wrap',
+    marginTop: '4px',
   },
 
   trustItem: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '6px',
     fontFamily: 'var(--font-body)',
-    fontSize: 'var(--text-small)',
-    color: 'var(--color-n600)',  // Readable on light background
+    fontSize: '13px',
+    color: 'rgba(255,255,255,0.6)',
+    whiteSpace: 'nowrap',
+  },
+
+  trustDot: {
+    color: 'rgba(255,255,255,0.3)',
+  },
+
+  // ── Snapshots ──────────────────────────────────────────
+  photoCluster: {
+    display: 'flex',
+    alignItems: 'flex-start',
+    flexShrink: 0,
+  },
+
+  snapshot: {
+    backgroundColor: '#FDFBF6',
+    padding: '8px 8px 30px',
+    borderRadius: '4px',
+    boxShadow: '0 12px 32px rgba(0,0,0,0.35)',
+    width: '168px',
+    transition: 'transform 0.25s ease',
+  },
+
+  snapshotImg: {
+    width: '100%',
+    height: '150px',
+    objectFit: 'cover',
+    display: 'block',
+    borderRadius: '2px',
+  },
+
+  snapshotCaption: {
+    display: 'block',
+    fontFamily: 'var(--font-hero)',
+    fontStyle: 'italic',
+    fontSize: '14px',
+    color: '#3a352c',
+    textAlign: 'center',
+    marginTop: '8px',
   },
 }
 

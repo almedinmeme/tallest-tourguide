@@ -1,6 +1,6 @@
 import { lazy, Suspense } from 'react'
 import { Routes, Route, useLocation, useParams, Navigate } from 'react-router-dom'
-import { LocalBusinessSchema } from './schema/SchemaMarkup'
+import { LocalBusinessSchema, OrganizationSchema } from './schema/SchemaMarkup'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import ScrollToTopButton from './components/ScrollToTopButton'
@@ -120,6 +120,7 @@ function App() {
           It tells Google this is a real local business in Sarajevo.
           Invisible to visitors — only read by search engines. */}
       <LocalBusinessSchema />
+      <OrganizationSchema />
 
       {!isCheckout && <Navbar />}
 

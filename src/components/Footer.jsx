@@ -2,6 +2,7 @@
 import { useState } from 'react'
 import useWindowWidth from '../hooks/useWindowWidth'
 import { Link } from 'react-router-dom'
+import { CONTACT_EMAIL, PHONE_DISPLAY, WHATSAPP_URL, INSTAGRAM_URL, TRIPADVISOR_URL } from '../data/settings'
 import { MapPin, Mail, Phone, ArrowUpRight } from 'lucide-react'
 import logo from '../assets/logo.svg'
 
@@ -44,7 +45,7 @@ function Footer() {
           {/* Social links — text links */}
           <div style={styles.socialRow}>
             <a
-              href="https://www.instagram.com/tallest.tourguide/"
+              href={INSTAGRAM_URL}
               target="_blank"
               rel="noopener noreferrer"
               style={{
@@ -58,7 +59,7 @@ function Footer() {
             </a>
             <span style={styles.socialDot}>·</span>
             <a
-              href="https://www.tripadvisor.com/Attraction_Review-g294450-d14011605-Reviews-Tallest_Tourguide_Tours_and_Excursions-Sarajevo_Sarajevo_Canton_Federation_of_Bo.html"
+              href={TRIPADVISOR_URL}
               target="_blank"
               rel="noopener noreferrer"
               style={{
@@ -72,7 +73,7 @@ function Footer() {
             </a>
             <span style={styles.socialDot}>·</span>
             <a
-              href="https://wa.me/38762664244"
+              href={WHATSAPP_URL}
               target="_blank"
               rel="noopener noreferrer"
               style={{
@@ -146,7 +147,7 @@ function Footer() {
         <div style={styles.column}>
           <span style={styles.columnLabel}>Reviews</span>
           <a
-            href="https://www.tripadvisor.com/Attraction_Review-g294450-d14011605-Reviews-Tallest_Tourguide_Tours_and_Excursions-Sarajevo_Sarajevo_Canton_Federation_of_Bo.html"
+            href={TRIPADVISOR_URL}
             target="_blank"
             rel="noopener noreferrer"
             style={{
@@ -195,14 +196,14 @@ function Footer() {
           </div>
           <div style={styles.contactItem}>
             <Mail size={13} color="var(--color-mid-green)" style={{ flexShrink: 0 }} />
-            <a href="mailto:tallest.tourguide@gmail.com" style={styles.contactLink}>
-              tallest.tourguide@gmail.com
+            <a href={`mailto:${CONTACT_EMAIL}`} style={styles.contactLink}>
+              {CONTACT_EMAIL}
             </a>
           </div>
           <div style={styles.contactItem}>
             <Phone size={13} color="var(--color-mid-green)" style={{ flexShrink: 0 }} />
-            <a href="https://wa.me/38762664244" target="_blank" rel="noopener noreferrer" style={styles.contactLink}>
-              +387 62 664 244
+            <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" style={styles.contactLink}>
+              {PHONE_DISPLAY}
             </a>
           </div>
         </div>

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Helmet } from 'react-helmet-async'
 import { useParams, Link } from 'react-router-dom'
 import { Star, CheckCircle, ArrowLeft } from 'lucide-react'
 import tours from '../data/tours'
@@ -110,6 +111,10 @@ function LeaveReview() {
 
   return (
     <div style={{ minHeight: '100vh', backgroundColor: 'var(--color-n100)' }}>
+      {/* Guest-only review form — keep it out of search results. */}
+      <Helmet>
+        <meta name="robots" content="noindex" />
+      </Helmet>
 
       {/* Green header band */}
       <div style={styles.heroBand}>

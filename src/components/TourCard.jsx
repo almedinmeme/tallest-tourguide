@@ -6,14 +6,26 @@
 // The booking action lives on the detail page where the visitor
 // has full information to make a confident decision.
 import { useState } from 'react'
-import { Star, Clock, Users, ArrowRight, Watch } from 'lucide-react'
+import { Star, Clock, Sparkles, ArrowRight, Watch } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { getTourLanguages } from '../data/tourLanguages'
+import { CANCEL_SHORT_TOUR } from '../data/policy'
 import Img from './Img'
 
-function TourCard({ id, slug, title, price, rating, reviews, duration, groupSize, badge, hero, startingTimes, languages }) {
+// Language flags are parked, not deleted: today every tour runs in English
+// and Bosnian, so the flags carry no decision value on the card. Flip this
+// back on when the multi-language site/tours ship.
+const SHOW_LANGUAGE_FLAGS = false
+
+function TourCard({ id, slug, title, price, oldPrice, rating, reviews, duration, highlights, badge, hero, startingTimes, languages }) {
   const supportedLanguages = getTourLanguages(languages)
   const [cardHovered, setCardHovered] = useState(false)
+  // Accepts the highlights array or a pre-computed count.
+  const highlightCount = Array.isArray(highlights) ? highlights.length : highlights || 0
+  // Display-only discount: `price` stays the single source of truth for all
+  // booking math; oldPrice is the struck-through "was" price when set.
+  const hasDiscount = Number(oldPrice) > Number(price)
+  const discountPct = hasDiscount ? Math.round((1 - price / oldPrice) * 100) : 0
 
   return (
     // The entire card is wrapped in a Link component.
@@ -36,7 +48,7 @@ function TourCard({ id, slug, title, price, rating, reviews, duration, groupSize
               src={hero}
               alt={title}
               sizes="(max-width: 768px) 92vw, 380px"
-              style={styles.photo}
+              style={{ ...styles.photo, transform: cardHovered ? 'scale(1.05)' : 'none' }}
             />
           ) : (
             <div style={styles.photoPlaceholder} />
@@ -53,6 +65,8 @@ function TourCard({ id, slug, title, price, rating, reviews, duration, groupSize
               Visitors see the price immediately without scrolling
               through the card details first. */}
           <div style={styles.pricePill}>
+            {hasDiscount && <span style={styles.discountTag}>−{discountPct}%</span>}
+            {hasDiscount && <span style={styles.priceWas}>€{oldPrice}</span>}
             <span style={styles.priceAmount}>€{price}</span>
             <span style={styles.pricePer}>/person</span>
           </div>
@@ -80,10 +94,12 @@ function TourCard({ id, slug, title, price, rating, reviews, duration, groupSize
     <Clock size={13} color="var(--color-n600)" />
     <span style={styles.meta}>{duration}</span>
   </div>
-  <div style={styles.metaItem}>
-    <Users size={13} color="var(--color-n600)" />
-    <span style={styles.meta}>Max {groupSize}</span>
-  </div>
+  {highlightCount > 0 && (
+    <div style={styles.metaItem}>
+      <Sparkles size={13} color="var(--color-n600)" />
+      <span style={styles.meta}>{highlightCount} highlights</span>
+    </div>
+  )}
   {startingTimes && startingTimes.length > 0 && (
     <div style={styles.metaItem}>
       <Watch size={13} color="var(--color-n600)" />
@@ -112,7 +128,7 @@ function TourCard({ id, slug, title, price, rating, reviews, duration, groupSize
               <ArrowRight size={14} color={cardHovered ? '#ffffff' : 'var(--color-forest-green)'} />
             </div>
 
-            {supportedLanguages.length > 0 && (
+            {SHOW_LANGUAGE_FLAGS && supportedLanguages.length > 0 && (
               <div
                 style={styles.languageFlags}
                 aria-label={`Available in ${supportedLanguages.map((language) => language.label).join(' and ')}`}
@@ -128,6 +144,14 @@ function TourCard({ id, slug, title, price, rating, reviews, duration, groupSize
                   </span>
                 ))}
               </div>
+            )}
+
+            {/* The freed slot earns its keep: savings when discounted,
+                the true 24h promise otherwise. */}
+            {!SHOW_LANGUAGE_FLAGS && (
+              hasDiscount
+                ? <span style={styles.saveNote}>You save €{oldPrice - price}</span>
+                : <span style={styles.cancelNote}>{CANCEL_SHORT_TOUR}</span>
             )}
           </div>
 
@@ -145,16 +169,16 @@ const styles = {
 cardLink: {
     display: 'block',
     textDecoration: 'none',
-    borderRadius: '12px',
+    borderRadius: 'var(--radius-lg)',
     transition: 'transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
   },
 
   card: {
     backgroundColor: 'var(--color-n000)',
-    borderRadius: '12px',
+    borderRadius: 'var(--radius-lg)',
     overflow: 'hidden',
     boxShadow: '0 2px 16px rgba(0,0,0,0.08)',
-    border: '1px solid var(--color-n300)',
+    border: '1px solid var(--color-n200)',
     height: '100%',
   },
 
@@ -209,11 +233,11 @@ cardLink: {
     right: '12px',
     backgroundColor: 'rgba(0,0,0,0.65)',
     backdropFilter: 'blur(4px)',
-    borderRadius: '6px',
+    borderRadius: '8px',
     padding: '5px 10px',
     display: 'flex',
-    alignItems: 'baseline',
-    gap: '3px',
+    alignItems: 'center',
+    gap: '4px',
     zIndex: 1,
   },
 
@@ -228,6 +252,30 @@ cardLink: {
     fontFamily: 'var(--font-body)',
     fontSize: '11px',
     color: 'rgba(255,255,255,0.7)',
+  },
+
+  // Discount treatment — display only. The percent tag floats on the pill's
+  // upper-left shoulder instead of cramming into the price row, so the pill
+  // stays clean while the amber accent keeps the deal prominent.
+  discountTag: {
+    position: 'absolute',
+    top: '-10px',
+    left: '10px',
+    backgroundColor: 'var(--color-amber)',
+    color: 'var(--color-n900)',
+    fontFamily: 'var(--font-body)',
+    fontWeight: '700',
+    fontSize: '11px',
+    padding: '2px 7px',
+    borderRadius: 'var(--radius-pill)',
+    boxShadow: 'var(--shadow-sm)',
+  },
+
+  priceWas: {
+    fontFamily: 'var(--font-body)',
+    fontSize: '13px',
+    color: 'rgba(255,255,255,0.65)',
+    textDecoration: 'line-through',
   },
 
   body: {
@@ -268,9 +316,12 @@ cardLink: {
     marginBottom: '10px',
   },
 
+  // Wraps between items, never inside them — on narrow cards the row breaks
+  // into tidy lines of whole chips instead of splitting "Small group" mid-word.
   metaRow: {
     display: 'flex',
-    gap: '16px',
+    flexWrap: 'wrap',
+    gap: '6px 14px',
     marginBottom: '14px',
   },
 
@@ -284,11 +335,12 @@ cardLink: {
     fontFamily: 'var(--font-body)',
     fontSize: '13px',
     color: 'var(--color-n600)',
+    whiteSpace: 'nowrap',
   },
 
   divider: {
     height: '1px',
-    backgroundColor: 'var(--color-n300)',
+    backgroundColor: 'var(--color-n200)',
     marginBottom: '14px',
   },
 
@@ -304,6 +356,26 @@ cardLink: {
     display: 'flex',
     alignItems: 'center',
     gap: '8px',
+  },
+
+  // Soft amber chip — reads as a deal without shouting.
+  saveNote: {
+    fontFamily: 'var(--font-body)',
+    fontWeight: '700',
+    fontSize: '12.5px',
+    color: 'var(--color-n900)',
+    backgroundColor: 'var(--color-amber-light)',
+    padding: '4px 12px',
+    borderRadius: 'var(--radius-pill)',
+    whiteSpace: 'nowrap',
+  },
+
+  cancelNote: {
+    fontFamily: 'var(--font-body)',
+    fontWeight: '500',
+    fontSize: '12.5px',
+    color: 'var(--color-n500)',
+    whiteSpace: 'nowrap',
   },
 
   languageFlag: {

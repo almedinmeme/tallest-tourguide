@@ -126,14 +126,14 @@ function GuideSection() {
                   onClick={() => setSelectedPhoto(index)}
                   style={{
                     ...styles.thumbnail,
-                    // Active thumbnail gets a Forest Green border
-                    // so visitors can see which photo is displayed.
-                    // Opacity on inactive thumbnails creates visual
-                    // hierarchy — the selected one reads as "current."
-                    border: selectedPhoto === index
-                      ? '2px solid var(--color-forest-green)'
-                      : '2px solid transparent',
-                    opacity: selectedPhoto === index ? 1 : 0.6,
+                    // Active thumbnail gets a Forest Green ring so visitors
+                    // can see which photo is displayed; the offset ring
+                    // (border + box-shadow) reads cleaner than a border that
+                    // eats into the image itself.
+                    boxShadow: selectedPhoto === index
+                      ? '0 0 0 2px var(--color-n000), 0 0 0 4px var(--color-forest-green)'
+                      : 'none',
+                    opacity: selectedPhoto === index ? 1 : 0.55,
                   }}
                   aria-label={`View photo ${index + 1}`}
                 >
@@ -158,12 +158,13 @@ function GuideSection() {
                   onClick={() => setSelectedPhoto(index)}
                   style={{
                     ...styles.dot,
+                    // Morphing pill indicator — the active dot stretches to a
+                    // pill rather than just scaling up, matching the carousel
+                    // dots on the packages preview below.
+                    width: selectedPhoto === index ? '22px' : '8px',
                     backgroundColor: selectedPhoto === index
                       ? 'var(--color-forest-green)'
                       : 'var(--color-n300)',
-                    transform: selectedPhoto === index
-                      ? 'scale(1.3)'
-                      : 'scale(1)',
                   }}
                   aria-label={`Go to photo ${index + 1}`}
                 />
@@ -179,8 +180,8 @@ function GuideSection() {
           <span style={styles.eyebrow}>Our belief</span>
 
           <h2 style={styles.headline}>
-            Deeply Local.<br />
-            Deeply Committed.
+            Deeply local.<br />
+            Deeply committed.
           </h2>
 
           <p style={styles.subheading}>
@@ -190,10 +191,17 @@ function GuideSection() {
             not through a tour operator's lens.
           </p>
 
+          {/* Open quote, not a box — matches the testimonial treatment used
+              on Consult: a serif quote mark and italic Newsreader voice read
+              as personal, where a filled callout box would read as a warning
+              or a marketing pull-out. */}
           <blockquote style={styles.pullQuote}>
-            "Every person you meet through us — your guide, your driver,
-            the person cooking your meal — is someone I deeply trust.
-            Bosnia deserves to be known by people who actually love it."
+            <span aria-hidden style={styles.quoteMark}>“</span>
+            <p style={styles.pullQuoteText}>
+              Every person you meet through us — your guide, your driver,
+              the person cooking your meal — is someone I deeply trust.
+              Bosnia deserves to be known by people who actually love it.
+            </p>
           </blockquote>
 
         </div>
@@ -228,48 +236,66 @@ const styles = {
   eyebrow: {
     display: 'block',
     fontFamily: 'var(--font-body)',
-    fontWeight: '500',
-    fontSize: 'var(--text-small)',
+    fontWeight: '700',
+    fontSize: '13px',
     color: 'var(--color-forest-green)',
     letterSpacing: '2px',
     textTransform: 'uppercase',
-    marginBottom: '16px',
+    marginBottom: '14px',
   },
 
+  // Newsreader serif — the editorial voice used across the redesigned
+  // pages (Consult, Signature, Where We Stay) rather than the sans display
+  // face, so the site's most personal section reads like it's spoken, not
+  // typeset by a marketing template.
   headline: {
-    fontFamily: 'var(--font-display)',
-    fontWeight: '700',
-    fontSize: 'var(--text-h1)',
+    fontFamily: 'var(--font-hero)',
+    fontWeight: 400,
+    fontSize: 'clamp(30px, 3.8vw, 44px)',
+    letterSpacing: '-0.015em',
     color: 'var(--color-n900)',
-    lineHeight: '1.2',
-    marginBottom: '20px',
+    lineHeight: '1.15',
+    marginBottom: '22px',
   },
 
   subheading: {
     fontFamily: 'var(--font-body)',
     fontSize: 'var(--text-body-l)',
-    color: 'var(--color-n600)',
-    lineHeight: 'var(--leading-body)',
-    marginBottom: '24px',
+    color: 'var(--color-n700)',
+    lineHeight: '1.7',
+    marginBottom: '28px',
   },
 
-  // The pull quote uses a Forest Green left border —
-  // a classic typographic blockquote treatment.
-  // The italic style signals personal voice rather than
-  // marketing language. Pale amber background gives it
-  // warmth without competing with the text beside it.
+  // Open quote, not a box — a large amber serif quote mark and an italic
+  // Newsreader voice, set off by a hairline rather than a filled amber
+  // panel. Reads as someone speaking, not a highlighted marketing callout.
   pullQuote: {
-    borderLeft: '4px solid var(--color-forest-green)',
-    backgroundColor: 'var(--color-amber-light)',
-    padding: '16px 20px',
-    borderRadius: '0 8px 8px 0',
-    fontFamily: 'var(--font-display)',
-    fontWeight: '600',
-    fontSize: 'var(--text-body-l)',
-    color: 'var(--color-n900)',
+    position: 'relative',
+    margin: 0,
+    paddingTop: '20px',
+    borderTop: '2px solid var(--color-n200)',
+  },
+
+  quoteMark: {
+    position: 'absolute',
+    top: '4px',
+    left: 0,
+    fontFamily: 'var(--font-hero)',
+    fontSize: '52px',
+    lineHeight: 1,
+    color: 'var(--color-amber)',
+    opacity: 0.7,
+  },
+
+  pullQuoteText: {
+    fontFamily: 'var(--font-hero)',
     fontStyle: 'italic',
-    lineHeight: '1.5',
-    margin: '0',
+    fontWeight: 400,
+    fontSize: 'clamp(18px, 1.9vw, 21px)',
+    lineHeight: '1.55',
+    color: 'var(--color-n800)',
+    margin: '10px 0 0',
+    paddingLeft: '4px',
   },
 
   photoColumn: {
@@ -282,10 +308,11 @@ const styles = {
   // to be positioned absolutely inside the photo frame.
   mainPhotoWrapper: {
     position: 'relative',
-    borderRadius: '12px',
+    borderRadius: 'var(--radius-lg)',
     overflow: 'hidden',
     aspectRatio: '4/3',
     backgroundColor: 'var(--color-n300)',
+    boxShadow: 'var(--shadow-sm)',
   },
 
   mainPhoto: {
@@ -298,15 +325,18 @@ const styles = {
     transition: 'opacity 0.2s ease',
   },
 
-  // Arrow buttons sit over the photo on left and right edges.
-  // Semi-transparent dark background ensures they're visible
-  // against any photo colour — light or dark.
+  // Arrow buttons sit over the photo on left and right edges. The glass
+  // pill treatment (dark scrim + blur + thin light border) matches the
+  // overlay chrome used on cinematic hero photos elsewhere on the site,
+  // rather than a flat black circle.
   arrowBtn: {
     position: 'absolute',
     top: '50%',
     transform: 'translateY(-50%)',
-    backgroundColor: 'rgba(0,0,0,0.45)',
-    border: 'none',
+    backgroundColor: 'rgba(10,16,20,0.42)',
+    backdropFilter: 'blur(6px)',
+    WebkitBackdropFilter: 'blur(6px)',
+    border: '1px solid rgba(255,255,255,0.25)',
     borderRadius: '50%',
     width: '40px',
     height: '40px',
@@ -321,13 +351,16 @@ const styles = {
     position: 'absolute',
     bottom: '12px',
     right: '12px',
-    backgroundColor: 'rgba(0,0,0,0.5)',
+    backgroundColor: 'rgba(10,16,20,0.42)',
+    backdropFilter: 'blur(6px)',
+    WebkitBackdropFilter: 'blur(6px)',
+    border: '1px solid rgba(255,255,255,0.25)',
     color: 'var(--color-n000)',
     fontFamily: 'var(--font-body)',
     fontWeight: '600',
     fontSize: 'var(--text-tiny)',
-    padding: '4px 8px',
-    borderRadius: '4px',
+    padding: '4px 10px',
+    borderRadius: 'var(--radius-pill)',
   },
 
   caption: {
@@ -346,12 +379,13 @@ const styles = {
   thumbnail: {
     flex: 1,
     aspectRatio: '4/3',
-    borderRadius: '6px',
+    borderRadius: 'var(--radius)',
     overflow: 'hidden',
     cursor: 'pointer',
     padding: 0,
+    border: 'none',
     background: 'none',
-    transition: 'opacity 0.15s ease, border 0.15s ease',
+    transition: 'opacity 0.15s ease, box-shadow 0.15s ease',
   },
 
   thumbnailImg: {
@@ -369,13 +403,12 @@ const styles = {
   },
 
   dot: {
-    width: '8px',
     height: '8px',
-    borderRadius: '50%',
+    borderRadius: 'var(--radius-pill)',
     border: 'none',
     cursor: 'pointer',
     padding: 0,
-    transition: 'background-color 0.2s ease, transform 0.2s ease',
+    transition: 'width 0.25s ease, background-color 0.2s ease',
   },
 }
 

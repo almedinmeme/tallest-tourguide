@@ -6,6 +6,7 @@ import {
   ChevronDown, ArrowUpDown, X, Check,
 } from 'lucide-react'
 import useWindowWidth from '../hooks/useWindowWidth'
+import PageHero from '../components/PageHero'
 import Button from '../components/Button'
 
 const DURATION_OPTIONS = [
@@ -57,6 +58,12 @@ const DIFFICULTY_COLOR = {
 }
 
 import { packages as standardPackages } from '../data/packages'
+import { getPage } from '../data/pages'
+
+// Hero photo and SEO are editable in the admin (Pages → Journeys); empty
+// fields fall back to the built-ins.
+const journeysPage = getPage('journeys')
+const HERO_IMAGE = journeysPage?.extra?.heroImage || '/uploads/balkans-full-arc-803ecks8.webp'
 
 function Packages() {
   const width = useWindowWidth()
@@ -115,34 +122,32 @@ function Packages() {
     <div>
 
       <SEO
-        title="Multi-day tours"
-        description="Multi-day tour packages in Bosnia and the Adriatic. 3-Day Complete Sarajevo Experience (3 days), Bosnia Deep Dive (5 days), and Sarajevo to Dubrovnik (7 days). Includes private transfers, meals, and all guided experiences."
+        title={journeysPage?.seo?.title || 'Multi-day tours'}
+        description={journeysPage?.seo?.description || 'Multi-day tour packages across Bosnia and the Balkans — from the 4-Day Complete Sarajevo Experience to Sarajevo to Dubrovnik and the Balkans Full Arc. Private transfers, meals, and all guided experiences included.'}
         url="/multi-day-tours"
         image="https://tallesttourguide.com/og-image.jpg"
       />
 
-      {/* Page header */}
-      <section style={styles.pageHeader}>
-        <div style={styles.headerInner}>
-          <span style={styles.eyebrow}>Multi-day journeys</span>
-          <h1 style={styles.headline}>Journeys</h1>
-          <p style={styles.subheading}>
-            From two focused days in Sarajevo to a seven-day journey
-            all the way to Dubrovnik — or a fully personalised itinerary
-            built entirely around you.
-          </p>
-        </div>
-      </section>
+      {/* Page hero */}
+      <PageHero
+        image={HERO_IMAGE}
+        imageAlt="The walled old town and bay of Kotor, Montenegro, seen from the fortress above"
+        focal="center 60%"
+        kicker={journeysPage?.extra?.kicker || 'Multi-day journeys'}
+        title={journeysPage?.extra?.heading || 'Journeys'}
+        lede={journeysPage?.extra?.lede || 'From two focused days in Sarajevo to a seven-day journey all the way to Dubrovnik — or a fully personalised itinerary built entirely around you.'}
+        overlap
+      />
 
       {/* Floating filter card */}
       <div style={{
         ...styles.filterOuter,
         padding: isMobile ? '0 12px' : '0 40px',
-        marginTop: isMobile ? '-24px' : '-44px',
+        marginTop: isMobile ? '-24px' : '-60px',
       }}>
         <div style={{
           ...styles.filterCard,
-          padding: isMobile ? '14px 16px' : '20px 24px',
+          padding: isMobile ? '14px 16px' : '16px 22px',
         }}>
 
           {isMobile ? (
@@ -158,12 +163,14 @@ function Packages() {
               <div style={styles.filterDivider} />
 
               <div style={{ display: 'flex', alignItems: 'center', gap: '0' }}>
-                <div className="chips-scroll" style={{ display: 'flex', alignItems: 'center', gap: '2px', flex: 1 }}>
-                  {DIFFICULTY_OPTIONS.map((opt) => (
-                    <button key={opt.value} style={chipStyle(activeDifficulty === opt.value, true)} onClick={() => setActiveDifficulty(opt.value)}>
-                      {opt.label}
-                    </button>
-                  ))}
+                <div className="chips-scroll" style={{ display: 'flex', alignItems: 'center', flex: 1 }}>
+                  <div style={styles.segmented}>
+                    {DIFFICULTY_OPTIONS.map((opt) => (
+                      <button key={opt.value} style={chipStyle(activeDifficulty === opt.value, true)} onClick={() => setActiveDifficulty(opt.value)}>
+                        {opt.label}
+                      </button>
+                    ))}
+                  </div>
                 </div>
 
                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexShrink: 0, paddingLeft: '10px', borderLeft: '1px solid var(--color-n200)', marginLeft: '4px' }}>
@@ -179,7 +186,7 @@ function Packages() {
                       <ChevronDown size={11} style={{ transform: sortOpen ? 'rotate(180deg)' : 'none', transition: 'transform var(--t-fast)' }} />
                     </button>
                     {sortOpen && (
-                      <div style={{ ...styles.sortDropdown, right: 0, left: 'auto' }}>
+                      <div className="menu-appear" style={{ ...styles.sortDropdown, right: 0, left: 'auto' }}>
                         {SORT_OPTIONS.map((opt) => (
                           <button key={opt.value} style={sortOptionStyle(sortBy === opt.value)} onClick={() => { setSortBy(opt.value); setSortOpen(false) }}>
                             {opt.label}
@@ -207,15 +214,19 @@ function Packages() {
             <>
               {/* Row 1: Duration pills + count */}
               <div style={styles.categoryRow}>
-                <div style={styles.categoryPills}>
-                  {DURATION_OPTIONS.map((opt) => (
-                    <button key={opt.value} style={catPillStyle(activeDuration === opt.value)} onClick={() => setActiveDuration(opt.value)} className="btn-lift">
-                      {opt.label}
-                    </button>
-                  ))}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <span style={styles.filterLabel}>Duration</span>
+                  <div style={styles.categoryPills}>
+                    {DURATION_OPTIONS.map((opt) => (
+                      <button key={opt.value} style={catPillStyle(activeDuration === opt.value)} onClick={() => setActiveDuration(opt.value)} className="btn-lift">
+                        {opt.label}
+                      </button>
+                    ))}
+                  </div>
                 </div>
                 <span style={styles.resultCount}>
-                  {sorted.length} {sorted.length === 1 ? 'package' : 'packages'}
+                  <strong style={styles.resultCountNumber}>{sorted.length}</strong>{' '}
+                  {sorted.length === 1 ? 'package' : 'packages'}
                 </span>
               </div>
 
@@ -223,9 +234,9 @@ function Packages() {
 
               {/* Row 2: Difficulty chips + sort */}
               <div style={{ ...styles.controlsRow, flexDirection: 'row', alignItems: 'center' }}>
-                <div style={{ ...styles.filterGroup, flexDirection: 'row', alignItems: 'center', gap: '10px' }}>
+                <div style={{ ...styles.filterGroup, flexDirection: 'row', alignItems: 'center', gap: '12px' }}>
                   <span style={styles.filterLabel}>Difficulty</span>
-                  <div style={styles.filterChips}>
+                  <div style={styles.segmented}>
                     {DIFFICULTY_OPTIONS.map((opt) => (
                       <button key={opt.value} style={chipStyle(activeDifficulty === opt.value)} onClick={() => setActiveDifficulty(opt.value)}>
                         {opt.label}
@@ -250,7 +261,7 @@ function Packages() {
                       <ChevronDown size={13} style={{ transform: sortOpen ? 'rotate(180deg)' : 'none', transition: 'transform var(--t-fast)' }} />
                     </button>
                     {sortOpen && (
-                      <div style={styles.sortDropdown}>
+                      <div className="menu-appear" style={styles.sortDropdown}>
                         {SORT_OPTIONS.map((opt) => (
                           <button key={opt.value} style={sortOptionStyle(sortBy === opt.value)} onClick={() => { setSortBy(opt.value); setSortOpen(false) }}>
                             {opt.label}
@@ -411,43 +422,6 @@ function Packages() {
 }
 
 const styles = {
-  pageHeader: {
-    backgroundColor: 'var(--color-forest-green)',
-    padding: '36px 40px 72px',
-  },
-
-  headerInner: {
-    maxWidth: '680px',
-    margin: '0 auto',
-    textAlign: 'center',
-  },
-
-  eyebrow: {
-    display: 'block',
-    fontFamily: 'var(--font-body)',
-    fontWeight: '500',
-    fontSize: 'var(--text-small)',
-    color: 'var(--color-mid-green)',
-    letterSpacing: '2px',
-    textTransform: 'uppercase',
-    marginBottom: '12px',
-  },
-
-  headline: {
-    fontFamily: 'var(--font-display)',
-    fontWeight: '700',
-    fontSize: 'var(--text-h1)',
-    color: 'var(--color-n000)',
-    marginBottom: '12px',
-  },
-
-  subheading: {
-    fontFamily: 'var(--font-body)',
-    fontSize: 'var(--text-body)',
-    color: 'var(--color-amber-light)',
-    lineHeight: 'var(--leading-body)',
-  },
-
   filterOuter: {
     position: 'relative',
     zIndex: 10,
@@ -484,10 +458,27 @@ const styles = {
     whiteSpace: 'nowrap',
   },
 
+  resultCountNumber: {
+    fontFamily: 'var(--font-display)',
+    fontWeight: '700',
+    fontSize: '14px',
+    color: 'var(--color-forest-green)',
+  },
+
+  segmented: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: '2px',
+    backgroundColor: 'var(--color-n100)',
+    borderRadius: 'var(--radius-pill)',
+    padding: '3px',
+    flexShrink: 0,
+  },
+
   filterDivider: {
     height: '1px',
     backgroundColor: 'var(--color-n200)',
-    margin: '16px 0',
+    margin: '12px 0',
   },
 
   controlsRow: {
@@ -888,8 +879,8 @@ function countryChipStyle(active, compact = false) {
     height: compact ? '26px' : '28px',
     padding: compact ? '0 10px' : '0 12px',
     borderRadius: 'var(--radius-pill)',
-    border: active ? 'none' : '1.5px solid var(--color-n200)',
-    backgroundColor: active ? 'var(--color-forest-green)' : 'var(--color-n100)',
+    border: active ? '1.5px solid var(--color-forest-green)' : '1.5px solid var(--color-n200)',
+    backgroundColor: active ? 'var(--color-forest-green)' : 'var(--color-n000)',
     color: active ? 'var(--color-n000)' : 'var(--color-n700)',
     fontFamily: 'var(--font-body)',
     fontWeight: '600',
@@ -906,33 +897,36 @@ function catPillStyle(active, compact = false) {
     height: compact ? '30px' : '34px',
     padding: compact ? '0 13px' : '0 16px',
     borderRadius: 'var(--radius-pill)',
-    border: active ? 'none' : '1.5px solid var(--color-n200)',
-    backgroundColor: active ? 'var(--color-forest-green)' : 'var(--color-n100)',
+    border: active ? '1.5px solid var(--color-forest-green)' : '1.5px solid var(--color-n200)',
+    backgroundColor: active ? 'var(--color-forest-green)' : 'var(--color-n000)',
     color: active ? 'var(--color-n000)' : 'var(--color-n700)',
     fontFamily: 'var(--font-body)',
     fontWeight: '600',
     fontSize: compact ? '12px' : '13px',
     cursor: 'pointer',
     whiteSpace: 'nowrap',
-    transition: 'background-color var(--t-fast), color var(--t-fast)',
+    transition: 'background-color var(--t-fast), color var(--t-fast), border-color var(--t-fast)',
   }
 }
 
+// Segment inside the styles.segmented track — active gets the raised white
+// pill, inactive stays quiet on the n100 track.
 function chipStyle(active, compact = false) {
   return {
     height: compact ? '26px' : '28px',
-    padding: compact ? '0 10px' : '0 12px',
+    padding: compact ? '0 12px' : '0 14px',
     borderRadius: 'var(--radius-pill)',
     border: 'none',
-    backgroundColor: active ? 'var(--color-n900)' : 'transparent',
-    color: active ? 'var(--color-n000)' : 'var(--color-n500)',
+    backgroundColor: active ? 'var(--color-n000)' : 'transparent',
+    color: active ? 'var(--color-n900)' : 'var(--color-n500)',
     fontFamily: 'var(--font-body)',
     fontWeight: active ? '600' : '500',
     fontSize: compact ? '12px' : '13px',
     cursor: 'pointer',
     whiteSpace: 'nowrap',
     flexShrink: 0,
-    transition: 'background-color var(--t-fast), color var(--t-fast)',
+    boxShadow: active ? '0 1px 4px rgba(0,0,0,0.12)' : 'none',
+    transition: 'background-color var(--t-fast), color var(--t-fast), box-shadow var(--t-fast)',
   }
 }
 

@@ -1,4 +1,5 @@
 // PersonalisedTour.jsx
+import { CONTACT_EMAIL } from '../data/settings'
 // Dedicated page for the Personalised Tour Package.
 // Contains a hero section, value proposition, and a
 // multi-step questionnaire that collects visitor preferences
@@ -10,12 +11,14 @@
 import SEO from '../components/SEO'
 import { useState } from 'react'
 import {
-  ArrowRight, ArrowLeft, CheckCircle,
-  Sparkles, Users, Calendar, Heart,
+  ArrowRight, ArrowLeft, CheckCircle, Check,
+  Sparkles, Users, Heart,
 } from 'lucide-react'
 import emailjs from '@emailjs/browser'
 import useWindowWidth from '../hooks/useWindowWidth'
 import Button from '../components/Button'
+import { sortedDestinations } from '../data/destinations'
+import { getPage } from '../data/pages'
 
 // ─────────────────────────────────────────────────────────
 // QUESTIONNAIRE DATA
@@ -70,6 +73,27 @@ const activities = [
   { id: 'photography', label: 'Photography spots' },
 ]
 
+// Places to visit — Bosnian cities managed in the admin (Pages →
+// Personalised Tour → "Bosnian cities & places"), plus the wider Balkan
+// regions straight from the destinations collection. Both stay in sync with
+// the admin without code changes.
+const personalisedPage = getPage('personalised')
+const adminCities = (personalisedPage?.extra?.cities || []).filter(Boolean)
+const bosniaCities = adminCities.length > 0 ? adminCities : [
+  'Sarajevo',
+  'Mostar',
+  'Srebrenica',
+  'Jajce & Travnik',
+  'Lukomir',
+  'Konjic & Blagaj',
+  'Stolac',
+  'Banja Luka',
+]
+
+const balkanRegions = sortedDestinations
+  .filter((d) => d.slug !== 'bosnia-and-herzegovina')
+  .map((d) => d.name)
+
 const accommodationOptions = [
   { id: 'hotel3', label: '3 Star Hotel' },
   { id: 'hotel4', label: '4 Star Hotel' },
@@ -95,6 +119,7 @@ const howHeardOptions = [
 ]
 
 const TOTAL_STEPS = 4
+const STEP_LABELS = ['About you', 'Your trip', 'Interests', 'Details']
 
 function PersonalisedTour() {
   const width = useWindowWidth()
@@ -117,6 +142,7 @@ function PersonalisedTour() {
     arrivalDate: '',
     departureDate: '',
     duration: '',
+    places: [],
     // Step 3 — Your interests
     activities: [],
     accommodation: '',
@@ -136,6 +162,15 @@ function PersonalisedTour() {
       activities: prev.activities.includes(activityId)
         ? prev.activities.filter((a) => a !== activityId)
         : [...prev.activities, activityId],
+    }))
+  }
+
+  const togglePlace = (place) => {
+    setFormData((prev) => ({
+      ...prev,
+      places: prev.places.includes(place)
+        ? prev.places.filter((p) => p !== place)
+        : [...prev.places, place],
     }))
   }
 
@@ -168,6 +203,7 @@ function PersonalisedTour() {
         `Group size: ${formData.groupSize}\n` +
         `Dates: ${formData.arrivalDate || 'Flexible'} to ${formData.departureDate || 'Flexible'}\n` +
         `Duration: ${formData.duration || 'Flexible'}\n` +
+        `Places: ${formData.places.length > 0 ? formData.places.join(', ') : 'Open to suggestions'}\n` +
         `Budget: ${budgetLabel}\n` +
         `Accommodation: ${accommodationLabel}\n` +
         `Phone: ${formData.phone || 'Not provided'}\n\n` +
@@ -189,68 +225,74 @@ function PersonalisedTour() {
   return (
     <div>
       <SEO
-  title="Personalised Tour Package"
-  description="Build a custom Bosnia itinerary around your interests. Private guide, flexible dates, accommodation arranged on request. Fill in our short questionnaire."
+  title={personalisedPage?.seo?.title || 'Personalised Tour Package'}
+  description={personalisedPage?.seo?.description || 'Build a custom Bosnia itinerary around your interests. Private guide, flexible dates, accommodation arranged on request. Fill in our short questionnaire.'}
   url="/personalised"
   image="https://tallesttourguide.com/og-image.jpg"
 />
 
-      {/* ── HERO ────────────────────────────────────────── */}
-      <section style={styles.hero}>
-        <div style={{ maxWidth: '1060px', margin: '0 auto' }}>
-          <span style={styles.eyebrow}>Personalised Tour Package</span>
+      {/* ── HERO ────────────────────────────────────────────
+          Deep-forest editorial opening (same voice as the homepage hero
+          and closing banner), with the three value props folded in as a
+          quiet strip — no floating boxes. */}
+      <section style={{ ...styles.hero, padding: isMobile ? '56px 24px 40px' : '80px 40px 56px' }}>
+        <div style={styles.heroGlow} />
+        <div style={{ maxWidth: '1000px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
+          <span style={styles.eyebrow}>Plan your trip — free</span>
           <h1 style={{
             ...styles.heroTitle,
-            fontSize: isMobile ? '28px' : '36px',
+            fontSize: isMobile ? '32px' : '46px',
           }}>
-            Your Bosnia. Your Way.
+            <span style={styles.heroTitleThin}>Your Bosnia.</span>{' '}
+            <span style={styles.heroTitleBold}>Your Way.</span>
           </h1>
-          <p style={{ ...styles.heroSubtitle, maxWidth: '520px', margin: '10px auto 0' }}>
-            Tell us what you're curious about and we'll build an itinerary around you — not the other way around.
+          <p style={{ ...styles.heroSubtitle, maxWidth: '540px', margin: '14px auto 0' }}>
+            Tell us what you're curious about and we'll build an itinerary
+            around you — not the other way around.
           </p>
-        </div>
-      </section>
+          <div style={styles.heroTrustRow}>
+            <span style={styles.heroTrustItem}>✓ Free to request</span>
+            <span style={styles.heroTrustDot}>·</span>
+            <span style={styles.heroTrustItem}>✓ No obligation</span>
+            <span style={styles.heroTrustDot}>·</span>
+            <span style={styles.heroTrustItem}>✓ Proposal within 24h</span>
+          </div>
 
-      {/* ── WHY CHOOSE PERSONALISED ─────────────────────── */}
-      <section style={styles.whySection}>
-        <div style={{
-          ...styles.whyGrid,
-          gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)',
-        }}>
-
-          {[
-            {
-              icon: Sparkles,
-              title: 'Built Around You',
-              text: 'Every stop, experience, and meal is chosen for your interests — not pulled from a template.',
-            },
-            {
-              icon: Users,
-              title: 'Private Guide',
-              text: 'No shared groups. Your guide\'s full attention, your pace, your questions answered fully.',
-            },
-            {
-              icon: Heart,
-              title: 'Local Knowledge',
-              text: 'Places that don\'t appear on Google Maps. People who live here. Stories you won\'t read anywhere.',
-            },
-          ].map((item, i) => {
-            const Icon = item.icon
-            return (
-              <div key={i} style={styles.whyCard}>
-                <div style={styles.whyIconWrapper}>
-                  <Icon
-                    size={15}
-                    color="var(--color-forest-green)"
-                    strokeWidth={1.8}
-                  />
+          {/* Value props — inside the hero, separated by a hairline */}
+          <div style={{
+            ...styles.heroValues,
+            gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)',
+            textAlign: isMobile ? 'center' : 'left',
+          }}>
+            {[
+              {
+                icon: Sparkles,
+                title: 'Built Around You',
+                text: 'Every stop, experience, and meal chosen for your interests — never a template.',
+              },
+              {
+                icon: Users,
+                title: 'Private Guide',
+                text: 'No shared groups. Your guide\'s full attention, your pace, your questions.',
+              },
+              {
+                icon: Heart,
+                title: 'Local Knowledge',
+                text: 'Places that aren\'t on Google Maps. People who live here. Stories you won\'t read anywhere.',
+              },
+            ].map((item, i) => {
+              const Icon = item.icon
+              return (
+                <div key={i} style={{ ...styles.heroValue, alignItems: isMobile ? 'center' : 'flex-start' }}>
+                  <div style={styles.heroValueIcon}>
+                    <Icon size={15} color="var(--color-amber)" strokeWidth={1.8} />
+                  </div>
+                  <h3 style={styles.heroValueTitle}>{item.title}</h3>
+                  <p style={styles.heroValueText}>{item.text}</p>
                 </div>
-                <h3 style={styles.whyTitle}>{item.title}</h3>
-                <p style={styles.whyText}>{item.text}</p>
-              </div>
-            )
-          })}
-
+              )
+            })}
+          </div>
         </div>
       </section>
 
@@ -288,23 +330,59 @@ function PersonalisedTour() {
           ) : (
 
             <>
-              {/* Progress bar */}
-              <div style={styles.progressSection}>
-                <div style={styles.progressHeader}>
-                  <span style={styles.progressLabel}>
-                    Step {step} of {TOTAL_STEPS}
-                  </span>
-                  <span style={styles.progressPercent}>
-                    {Math.round((step / TOTAL_STEPS) * 100)}%
-                  </span>
+              {/* Step indicator — labelled milestones instead of a bare
+                  percentage. Completed steps get a check; the connector
+                  line fills as you go. Mobile falls back to a slim bar
+                  with the current step's name. */}
+              {isMobile ? (
+                <div style={styles.progressSection}>
+                  <div style={styles.progressHeader}>
+                    <span style={styles.progressLabel}>
+                      Step {step} of {TOTAL_STEPS} — {STEP_LABELS[step - 1]}
+                    </span>
+                  </div>
+                  <div style={styles.progressTrack}>
+                    <div style={{
+                      ...styles.progressFill,
+                      width: `${(step / TOTAL_STEPS) * 100}%`,
+                    }} />
+                  </div>
                 </div>
-                <div style={styles.progressTrack}>
-                  <div style={{
-                    ...styles.progressFill,
-                    width: `${(step / TOTAL_STEPS) * 100}%`,
-                  }} />
+              ) : (
+                <div style={styles.stepsRow}>
+                  {STEP_LABELS.map((label, i) => {
+                    const n = i + 1
+                    const done = n < step
+                    const current = n === step
+                    return (
+                      <div key={label} style={{ ...styles.stepItem, flex: n < TOTAL_STEPS ? 1 : 'none' }}>
+                        <div
+                          style={{
+                            ...styles.stepCircle,
+                            backgroundColor: done ? 'var(--color-forest-green)' : current ? 'var(--color-n000)' : 'var(--color-n100)',
+                            borderColor: done || current ? 'var(--color-forest-green)' : 'var(--color-n300)',
+                            color: current ? 'var(--color-forest-green)' : 'var(--color-n500)',
+                          }}
+                        >
+                          {done ? <Check size={13} color="#fff" strokeWidth={3} /> : n}
+                        </div>
+                        <span
+                          style={{
+                            ...styles.stepLabel,
+                            color: current ? 'var(--color-n900)' : done ? 'var(--color-forest-green)' : 'var(--color-n500)',
+                            fontWeight: current ? 700 : 600,
+                          }}
+                        >
+                          {label}
+                        </span>
+                        {n < TOTAL_STEPS && (
+                          <div style={{ ...styles.stepConnector, backgroundColor: done ? 'var(--color-forest-green)' : 'var(--color-n300)' }} />
+                        )}
+                      </div>
+                    )
+                  })}
                 </div>
-              </div>
+              )}
 
               {/* ── STEP 1 — About You ─────────────────── */}
               {step === 1 && (
@@ -327,7 +405,7 @@ function PersonalisedTour() {
                       <input
                         type="text"
                         placeholder="Ana Kovačević"
-                        style={styles.input}
+                        className="pt-input" style={styles.input}
                         value={formData.name}
                         onChange={(e) =>
                           updateForm('name', e.target.value)
@@ -341,7 +419,7 @@ function PersonalisedTour() {
                       <input
                         type="email"
                         placeholder="ana@example.com"
-                        style={styles.input}
+                        className="pt-input" style={styles.input}
                         value={formData.email}
                         onChange={(e) =>
                           updateForm('email', e.target.value)
@@ -357,7 +435,7 @@ function PersonalisedTour() {
                     <input
                       type="tel"
                       placeholder="+387 61 000 000"
-                      style={styles.input}
+                      className="pt-input" style={styles.input}
                       value={formData.phone}
                       onChange={(e) =>
                         updateForm('phone', e.target.value)
@@ -369,7 +447,7 @@ function PersonalisedTour() {
                     <label style={styles.label}>
                       What kind of traveller are you? *
                     </label>
-                    <div style={{
+                    <div className="pt-options" style={{
                       ...styles.optionGrid,
                       gridTemplateColumns: isMobile
                         ? '1fr'
@@ -427,7 +505,7 @@ function PersonalisedTour() {
                     <label style={styles.label}>
                       How many people? *
                     </label>
-                    <div style={{
+                    <div className="pt-options" style={{
                       ...styles.optionGrid,
                       gridTemplateColumns: isMobile
                         ? 'repeat(2, 1fr)'
@@ -472,7 +550,7 @@ function PersonalisedTour() {
                       </label>
                       <input
                         type="date"
-                        style={styles.input}
+                        className="pt-input" style={styles.input}
                         value={formData.arrivalDate}
                         onChange={(e) =>
                           updateForm('arrivalDate', e.target.value)
@@ -485,7 +563,7 @@ function PersonalisedTour() {
                       </label>
                       <input
                         type="date"
-                        style={styles.input}
+                        className="pt-input" style={styles.input}
                         value={formData.departureDate}
                         onChange={(e) =>
                           updateForm('departureDate', e.target.value)
@@ -498,7 +576,7 @@ function PersonalisedTour() {
                     <label style={styles.label}>
                       How long would you like to travel?
                     </label>
-                    <div style={{
+                    <div className="pt-options" style={{
                       ...styles.optionGrid,
                       gridTemplateColumns: isMobile
                         ? 'repeat(2, 1fr)'
@@ -536,6 +614,63 @@ function PersonalisedTour() {
                     </div>
                   </div>
 
+                  <div style={styles.formGroup}>
+                    <label style={styles.label}>
+                      Where would you like to go?
+                    </label>
+                    <p style={styles.placesHint}>
+                      Pick as many as you like — or leave it to us and we'll suggest a route.
+                    </p>
+
+                    <span style={styles.placesGroupLabel}>Bosnia & Herzegovina</span>
+                    <div className="pt-options" style={styles.placesWrap}>
+                      {bosniaCities.map((place) => {
+                        const isSelected = formData.places.includes(place)
+                        return (
+                          <button
+                            key={place}
+                            style={{
+                              ...styles.placeChip,
+                              borderColor: isSelected ? 'var(--color-forest-green)' : 'var(--color-n300)',
+                              backgroundColor: isSelected ? 'rgba(46,125,94,0.08)' : 'var(--color-n000)',
+                              color: isSelected ? 'var(--color-forest-green)' : 'var(--color-n600)',
+                            }}
+                            onClick={() => togglePlace(place)}
+                          >
+                            {isSelected && <CheckCircle size={13} color="var(--color-forest-green)" />}
+                            {place}
+                          </button>
+                        )
+                      })}
+                    </div>
+
+                    {balkanRegions.length > 0 && (
+                      <>
+                        <span style={{ ...styles.placesGroupLabel, marginTop: '14px' }}>Across the Balkans</span>
+                        <div className="pt-options" style={styles.placesWrap}>
+                          {balkanRegions.map((place) => {
+                            const isSelected = formData.places.includes(place)
+                            return (
+                              <button
+                                key={place}
+                                style={{
+                                  ...styles.placeChip,
+                                  borderColor: isSelected ? 'var(--color-forest-green)' : 'var(--color-n300)',
+                                  backgroundColor: isSelected ? 'rgba(46,125,94,0.08)' : 'var(--color-n000)',
+                                  color: isSelected ? 'var(--color-forest-green)' : 'var(--color-n600)',
+                                }}
+                                onClick={() => togglePlace(place)}
+                              >
+                                {isSelected && <CheckCircle size={13} color="var(--color-forest-green)" />}
+                                {place}
+                              </button>
+                            )
+                          })}
+                        </div>
+                      </>
+                    )}
+                  </div>
+
                 </div>
               )}
 
@@ -554,7 +689,7 @@ function PersonalisedTour() {
                     <label style={styles.label}>
                       Activities & experiences *
                     </label>
-                    <div style={{
+                    <div className="pt-options" style={{
                       ...styles.activitiesGrid,
                       gridTemplateColumns: isMobile
                         ? 'repeat(2, 1fr)'
@@ -599,7 +734,7 @@ function PersonalisedTour() {
                     <label style={styles.label}>
                       Accommodation preference
                     </label>
-                    <div style={{
+                    <div className="pt-options" style={{
                       ...styles.optionGrid,
                       gridTemplateColumns: isMobile
                         ? '1fr'
@@ -637,7 +772,7 @@ function PersonalisedTour() {
                     <label style={styles.label}>
                       Daily budget per person *
                     </label>
-                    <div style={{
+                    <div className="pt-options" style={{
                       ...styles.optionGrid,
                       gridTemplateColumns: isMobile
                         ? 'repeat(2, 1fr)'
@@ -698,7 +833,7 @@ function PersonalisedTour() {
                     </label>
                     <textarea
                       placeholder="Tell us anything that would help us plan the perfect trip for you..."
-                      style={styles.textarea}
+                      className="pt-input" style={styles.textarea}
                       value={formData.otherInfo}
                       onChange={(e) =>
                         updateForm('otherInfo', e.target.value)
@@ -710,7 +845,7 @@ function PersonalisedTour() {
                     <label style={styles.label}>
                       How did you hear about us?
                     </label>
-                    <div style={{
+                    <div className="pt-options" style={{
                       ...styles.optionGrid,
                       gridTemplateColumns: isMobile
                         ? 'repeat(2, 1fr)'
@@ -795,6 +930,14 @@ function PersonalisedTour() {
                           {formData.duration || 'Flexible'}
                         </span>
                       </div>
+                      <div style={styles.summaryItem}>
+                        <span style={styles.summaryLabel}>
+                          Places
+                        </span>
+                        <span style={styles.summaryValue}>
+                          {formData.places.length > 0 ? formData.places.join(', ') : 'Open to suggestions'}
+                        </span>
+                      </div>
                     </div>
                   </div>
 
@@ -854,7 +997,7 @@ function PersonalisedTour() {
               {isError && (
                 <p style={styles.errorMessage}>
                   Something went wrong. Please try again or
-                  email us at hello@tallesttourguide.com
+                  email us at {CONTACT_EMAIL}
                 </p>
               )}
 
@@ -870,106 +1013,117 @@ function PersonalisedTour() {
 
 const styles = {
 
-  heroInner: {
-    maxWidth: '600px',
-    margin: '0 auto',
-    position: 'relative',
-    zIndex: 1,
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    gap: '16px',
-  },
-
-  heroIconWrapper: {
-    width: '64px',
-    height: '64px',
-    borderRadius: '18px',
-    backgroundColor: 'rgba(244,161,48,0.12)',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: '8px',
-  },
-
   hero: {
-    backgroundColor: 'var(--color-forest-green)',
-    padding: '36px 40px',
+    backgroundColor: 'var(--color-forest-deep)',
     textAlign: 'center',
     position: 'relative',
     overflow: 'hidden',
   },
 
+  // Warm amber glow — same "candlelight on deep green" treatment as the
+  // homepage closing banner, so the brand pages feel like one family.
+  heroGlow: {
+    position: 'absolute',
+    top: '-20%',
+    left: '50%',
+    transform: 'translateX(-50%)',
+    width: '760px',
+    height: '480px',
+    borderRadius: '50%',
+    background: 'radial-gradient(ellipse, rgba(244,161,48,0.10) 0%, transparent 65%)',
+    pointerEvents: 'none',
+  },
+
   heroTitle: {
-    fontFamily: 'var(--font-display)',
-    fontWeight: '700',
+    fontFamily: 'var(--font-hero)',
     color: 'var(--color-n000)',
-    lineHeight: '1.15',
-    margin: 0,
+    lineHeight: '1.12',
+    margin: '14px 0 0',
+  },
+
+  heroTitleThin: {
+    fontWeight: '300',
+    fontStyle: 'italic',
+    opacity: 0.92,
+  },
+
+  heroTitleBold: {
+    fontWeight: '800',
   },
 
   heroSubtitle: {
     fontFamily: 'var(--font-body)',
     fontSize: 'var(--text-body-l)',
-    color: 'var(--color-amber-light)',  // Amber light instead of grey
+    color: 'rgba(255,255,255,0.75)',
     lineHeight: 'var(--leading-body)',
-    margin: 0,
   },
 
   eyebrow: {
     fontFamily: 'var(--font-body)',
-    fontWeight: '500',
-    fontSize: 'var(--text-small)',
-    color: 'var(--color-mid-green)',  // Mid green eyebrow
-    letterSpacing: '2px',
+    fontWeight: '700',
+    fontSize: '12px',
+    color: 'var(--color-amber)',
+    letterSpacing: '2.5px',
     textTransform: 'uppercase',
   },
 
- whySection: {
-    backgroundColor: 'var(--color-n100)',
-    padding: '28px 40px',
+  heroTrustRow: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '10px',
+    flexWrap: 'wrap',
+    marginTop: '18px',
   },
 
-  whyGrid: {
+  heroTrustItem: {
+    fontFamily: 'var(--font-body)',
+    fontSize: '13px',
+    color: 'rgba(255,255,255,0.6)',
+    whiteSpace: 'nowrap',
+  },
+
+  heroTrustDot: {
+    color: 'rgba(255,255,255,0.3)',
+  },
+
+  heroValues: {
     display: 'grid',
-    gap: '16px',
-    maxWidth: '900px',
-    margin: '0 auto',
+    gap: '28px',
+    marginTop: '44px',
+    paddingTop: '36px',
+    borderTop: '1px solid rgba(255,255,255,0.12)',
   },
 
-  whyCard: {
+  heroValue: {
     display: 'flex',
     flexDirection: 'column',
-    gap: '6px',
-    padding: '14px 16px',
-    backgroundColor: 'var(--color-n100)',
-    borderRadius: '12px',
-    border: '1px solid var(--color-n300)',
+    gap: '8px',
   },
 
-  whyIconWrapper: {
-    width: '30px',
-    height: '30px',
-    borderRadius: '8px',
-    backgroundColor: 'rgba(46,125,94,0.1)',
+  heroValueIcon: {
+    width: '32px',
+    height: '32px',
+    borderRadius: '9px',
+    backgroundColor: 'rgba(244,161,48,0.14)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
   },
 
-  whyTitle: {
+  heroValueTitle: {
     fontFamily: 'var(--font-display)',
     fontWeight: '700',
-    fontSize: 'var(--text-body)',
-    color: 'var(--color-n900)',
+    fontSize: '15px',
+    color: 'var(--color-n000)',
     margin: 0,
   },
 
-  whyText: {
+  heroValueText: {
     fontFamily: 'var(--font-body)',
-    fontSize: 'var(--text-small)',
-    color: 'var(--color-n600)',
-    lineHeight: 'var(--leading-body)',
+    fontSize: '13.5px',
+    color: 'rgba(255,255,255,0.62)',
+    lineHeight: '1.6',
     margin: 0,
   },
 
@@ -1005,11 +1159,47 @@ const styles = {
     color: 'var(--color-n600)',
   },
 
-  progressPercent: {
+  // Desktop step indicator — numbered milestones with a filling connector.
+  stepsRow: {
+    display: 'flex',
+    alignItems: 'center',
+    marginBottom: '40px',
+  },
+
+  stepItem: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '9px',
+  },
+
+  stepCircle: {
+    width: '28px',
+    height: '28px',
+    borderRadius: '50%',
+    border: '2px solid',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
     fontFamily: 'var(--font-display)',
     fontWeight: '700',
-    fontSize: 'var(--text-small)',
-    color: 'var(--color-forest-green)',
+    fontSize: '13px',
+    flexShrink: 0,
+    transition: 'all 0.25s ease',
+  },
+
+  stepLabel: {
+    fontFamily: 'var(--font-body)',
+    fontSize: '13px',
+    whiteSpace: 'nowrap',
+    transition: 'color 0.25s ease',
+  },
+
+  stepConnector: {
+    flex: 1,
+    height: '2px',
+    margin: '0 14px',
+    borderRadius: '1px',
+    transition: 'background-color 0.25s ease',
   },
 
   progressTrack: {
@@ -1143,6 +1333,46 @@ const styles = {
   activitiesGrid: {
     display: 'grid',
     gap: '8px',
+  },
+
+  // "Where would you like to go?" — wrapping chip rows in two groups.
+  placesHint: {
+    fontFamily: 'var(--font-body)',
+    fontSize: '13px',
+    color: 'var(--color-n600)',
+    margin: '-4px 0 2px',
+  },
+
+  placesGroupLabel: {
+    fontFamily: 'var(--font-body)',
+    fontWeight: '700',
+    fontSize: '11px',
+    color: 'var(--color-n500)',
+    textTransform: 'uppercase',
+    letterSpacing: '1px',
+    marginTop: '4px',
+  },
+
+  placesWrap: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: '8px',
+  },
+
+  placeChip: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: '6px',
+    height: '40px',
+    padding: '0 14px',
+    borderRadius: '999px',
+    border: '1.5px solid',
+    background: 'none',
+    cursor: 'pointer',
+    fontFamily: 'var(--font-body)',
+    fontWeight: '500',
+    fontSize: 'var(--text-small)',
+    whiteSpace: 'nowrap',
   },
 
   activityChip: {

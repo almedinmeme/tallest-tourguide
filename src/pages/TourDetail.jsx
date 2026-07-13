@@ -32,6 +32,10 @@ import RichContent from '../components/RichContent'
 import AccessibilitySection from '../components/AccessibilitySection'
 const RouteMap = lazy(() => import('../components/RouteMap'))
 
+// Decorative hero language pills — re-enable when multi-language ships.
+// (The booking form's language selector is functional and stays regardless.)
+const SHOW_LANGUAGE_PILLS = false
+
 // Mirror of AccessibilitySection's internal check so we can conditionally
 // show the in-page nav tab without importing internals.
 function hasAccessibilityContent(acc) {
@@ -415,6 +419,11 @@ function TourDetail() {
                       Shared Tour
                     </span>
                     <span style={styles.typeOptionPrice}>
+                      {Number(tour.oldPrice) > Number(tour.price) && (
+                        <span style={{ fontSize: '13px', fontWeight: 500, color: 'var(--color-n400)', textDecoration: 'line-through', marginRight: '5px' }}>
+                          €{tour.oldPrice}
+                        </span>
+                      )}
                       €{tour.price}
                       <span style={styles.typePerPerson}>/person</span>
                     </span>
@@ -660,6 +669,7 @@ function TourDetail() {
       <SEO
   title={tour.title}
   description={`${(tour.description || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 155)}...`}
+  image={tour.hero || undefined}
   url={`/tours/${tour.slug}`}
 />
 
@@ -732,8 +742,10 @@ function TourDetail() {
               <p style={styles.tourSubtitle}>{tour.subtitle}</p>
             )}
 
-            {/* Language pills */}
-            {supportedLanguages.length > 0 && (
+            {/* Language pills — parked, not deleted: every tour currently runs
+                in English and Bosnian, so the pills add noise rather than
+                information. Flip back on when multi-language tours ship. */}
+            {SHOW_LANGUAGE_PILLS && supportedLanguages.length > 0 && (
               <div style={styles.pillRow}>
                 {supportedLanguages.map((language) => (
                   <span key={language.id} style={styles.languagePill}>
@@ -757,7 +769,7 @@ function TourDetail() {
               </div>
               <div style={styles.metaPill}>
                 <Users size={13} color="var(--color-n600)" />
-                <span>Max {tour.groupSize} people</span>
+                <span>Small group</span>
               </div>
             </div>
 
@@ -1143,7 +1155,7 @@ function TourDetail() {
       </div>
 
       {/* ── FROM THE JOURNAL ───────────────────────────── */}
-      <FromTheJournal tourSlug={tour.slug} />
+      <FromTheJournal tourSlug={tour.slug} pinned={tour.journalPosts} />
 
       {/* ── RELATED TOURS ──────────────────────────────── */}
       {relatedTours.length > 0 && (
@@ -1180,16 +1192,17 @@ function TourDetail() {
                 padding: '0 20px 8px',
               }}>
                 {relatedTours.map((t) => (
-                  <div key={t.id} style={{ flex: '0 0 78vw', maxWidth: '320px', scrollSnapAlign: 'start' }}>
+                  <div key={t.id} style={{ flex: '0 0 84vw', maxWidth: '340px', scrollSnapAlign: 'start' }}>
                     <TourCard
                       id={t.id}
                       slug={t.slug}
                       title={t.title}
                       price={t.price}
+                      oldPrice={t.oldPrice}
                       rating={t.rating}
                       reviews={t.reviews}
                       duration={t.duration}
-                      groupSize={t.groupSize}
+                      highlights={t.highlights}
                       badge={t.badge}
                       hero={t.hero}
                       startingTimes={t.startingTimes}
@@ -1227,6 +1240,11 @@ function TourDetail() {
       {isMobile && (
         <div style={styles.mobileBottomBar}>
           <div style={styles.mobileBottomBarLeft}>
+            {Number(tour.oldPrice) > Number(tour.price) && (
+              <span style={{ fontFamily: 'var(--font-body)', fontSize: '13px', color: 'var(--color-n400)', textDecoration: 'line-through', marginRight: '2px' }}>
+                €{tour.oldPrice}
+              </span>
+            )}
             <span style={styles.mobilePrice}>€{tour.price}</span>
             <span style={styles.mobilePricePer}>per person</span>
           </div>

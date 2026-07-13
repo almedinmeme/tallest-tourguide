@@ -1,9 +1,16 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import SEO from '../components/SEO'
+import PageHero from '../components/PageHero'
 import Img from '../components/Img'
 import { useBlog } from '../hooks/useBlog'
 import useWindowWidth from '../hooks/useWindowWidth'
+import { getPage } from '../data/pages'
+
+// Hero photo and SEO are editable in the admin (Pages → The Journal); empty
+// fields fall back to the built-ins.
+const journalPage = getPage('journal')
+const HERO_IMAGE = journalPage?.extra?.heroImage || '/uploads/4-days-sarajevo-experience-coppersmith.webp'
 
 // The brief's editorial categories, in display order. We only show a chip
 // for a category that actually has posts (plus "All").
@@ -42,22 +49,19 @@ function Blog() {
   return (
     <div>
       <SEO
-        title="The Journal"
-        description="Route guides, cultural explainers, and hidden corners of the Balkans — local knowledge that isn't on Google, from people who travel these roads year-round."
+        title={journalPage?.seo?.title || 'The Journal'}
+        description={journalPage?.seo?.description || "Route guides, cultural explainers, and hidden corners of the Balkans — local knowledge that isn't on Google, from people who travel these roads year-round."}
         url="/journal"
       />
 
-      {/* ── PAGE HEADER ─────────────────────────────────── */}
-      <section style={styles.pageHeader}>
-        <div style={styles.headerInner}>
-          <span style={styles.eyebrow}>From the Guide</span>
-          <h1 style={styles.headline}>The Journal</h1>
-          <p style={styles.subheading}>
-            We know things that aren't on Google. Route guides, cultural
-            explainers, and hidden corners of the Balkans — here's some of it, free.
-          </p>
-        </div>
-      </section>
+      {/* ── PAGE HERO ───────────────────────────────────── */}
+      <PageHero
+        image={HERO_IMAGE}
+        imageAlt="A coppersmith's workshop in Sarajevo's old bazaar, walls covered in engraved copperware"
+        kicker={journalPage?.extra?.kicker || 'From the Guide'}
+        title={journalPage?.extra?.heading || 'The Journal'}
+        lede={journalPage?.extra?.lede || "We know things that aren't on Google. Route guides, cultural explainers, and hidden corners of the Balkans — here's some of it, free."}
+      />
 
       {/* ── POST GRID ───────────────────────────────────── */}
       <section style={styles.section}>
@@ -150,43 +154,6 @@ function Blog() {
 }
 
 const styles = {
-  pageHeader: {
-    backgroundColor: 'var(--color-forest-green)',
-    padding: '36px 40px',
-  },
-
-  headerInner: {
-    maxWidth: '680px',
-    margin: '0 auto',
-    textAlign: 'center',
-  },
-
-  eyebrow: {
-    display: 'block',
-    fontFamily: 'var(--font-body)',
-    fontWeight: '500',
-    fontSize: 'var(--text-small)',
-    color: 'var(--color-mid-green)',
-    letterSpacing: '2px',
-    textTransform: 'uppercase',
-    marginBottom: '12px',
-  },
-
-  headline: {
-    fontFamily: 'var(--font-display)',
-    fontWeight: '700',
-    fontSize: 'var(--text-h1)',
-    color: 'var(--color-n000)',
-    marginBottom: '12px',
-  },
-
-  subheading: {
-    fontFamily: 'var(--font-body)',
-    fontSize: 'var(--text-body)',
-    color: 'var(--color-amber-light)',
-    lineHeight: 'var(--leading-body)',
-  },
-
   section: {
     backgroundColor: 'var(--color-n100)',
     padding: '64px 40px 80px 40px',
@@ -210,7 +177,7 @@ const styles = {
     fontWeight: '600',
     color: 'var(--color-n700)',
     backgroundColor: 'var(--color-n000)',
-    border: '1px solid var(--color-n300)',
+    border: '1.5px solid var(--color-n200)',
     borderRadius: 'var(--radius-pill)',
     padding: '8px 18px',
     cursor: 'pointer',

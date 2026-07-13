@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { ChevronDown, Sparkles, Search, X } from 'lucide-react'
+import { ChevronDown, Sparkles, Search, X, Menu } from 'lucide-react'
 import useWindowWidth from '../hooks/useWindowWidth'
 import logo from '../assets/logo.svg'
 import { useBlog } from '../hooks/useBlog'
@@ -483,8 +483,11 @@ function Navbar() {
               The Journal
             </Link>
 
+            {/* Lands on the free questionnaire, not the paid consult — a €90
+                price as the first click was scaring warm leads away. The
+                consult stays reachable under Discover → Trip Consultation. */}
             <Link
-              to="/consult"
+              to="/personalised"
               style={styles.ctaBtn}
               className="btn-lift"
             >
@@ -497,11 +500,17 @@ function Navbar() {
         {/* Mobile hamburger */}
         {isMobile && (
           <button
-            style={styles.hamburger}
+            style={{
+              ...styles.hamburger,
+              backgroundColor: isMenuOpen ? 'var(--color-forest-green)' : 'rgba(46,125,94,0.06)',
+              borderColor: isMenuOpen ? 'var(--color-forest-green)' : 'rgba(46,125,94,0.25)',
+              color: isMenuOpen ? 'var(--color-n000)' : 'var(--color-forest-green)',
+            }}
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             aria-label="Toggle navigation"
+            aria-expanded={isMenuOpen}
           >
-            {isMenuOpen ? '✕' : '☰'}
+            {isMenuOpen ? <X size={22} strokeWidth={2.25} /> : <Menu size={22} strokeWidth={2.25} />}
           </button>
         )}
 
@@ -811,10 +820,7 @@ const styles = {
   },
 
   hamburger: {
-    background: 'none',
-    border: 'none',
-    fontSize: '22px',
-    color: 'var(--color-n900)',
+    border: '1.5px solid rgba(46,125,94,0.25)',
     cursor: 'pointer',
     width: '44px',
     height: '44px',
@@ -822,6 +828,7 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 'var(--radius)',
+    transition: 'background-color var(--t-fast), border-color var(--t-fast), color var(--t-fast)',
   },
 }
 

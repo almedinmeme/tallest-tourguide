@@ -27,6 +27,10 @@ function SEO({
   // (directory prerender output), so the canonical never points at a 301.
   const fullUrl = siteUrl(url || '/')
 
+  // og:image must be an absolute URL — social scrapers ignore relative
+  // paths, so site-relative uploads (/uploads/...) get the origin prefixed.
+  const fullImage = image.startsWith('/') ? `${SITE_ORIGIN}${image}` : image
+
   return (
     <Helmet>
       {/* Primary meta tags */}
@@ -38,7 +42,7 @@ function SEO({
       <meta property="og:type" content={type} />
       <meta property="og:title" content={fullTitle} />
       <meta property="og:description" content={description} />
-      <meta property="og:image" content={image} />
+      <meta property="og:image" content={fullImage} />
       <meta property="og:url" content={fullUrl} />
       <meta property="og:site_name" content="Tallest Tourguide" />
       <meta property="og:locale" content="en_US" />
@@ -47,7 +51,7 @@ function SEO({
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={fullTitle} />
       <meta name="twitter:description" content={description} />
-      <meta name="twitter:image" content={image} />
+      <meta name="twitter:image" content={fullImage} />
 
       {/* Geographic meta — helps with local search */}
       <meta name="geo.region" content="BA" />

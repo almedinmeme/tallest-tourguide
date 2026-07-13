@@ -1,4 +1,5 @@
 // Reviews.jsx
+import { TRIPADVISOR_URL } from '../data/settings'
 // A cinematic full-viewport review section.
 // Each review occupies the full screen height with a rich
 // dark background — Forest Green or near-black alternating —
@@ -317,7 +318,7 @@ function Reviews() {
               saving Amber exclusively for primary booking CTAs
               maintains the colour's conversion signal value. */}
           
-            <a href="https://www.tripadvisor.com/Attraction_Review-g294450-d14011605-Reviews-Tallest_Tourguide_Tours_and_Excursions-Sarajevo_Sarajevo_Canton_Federation_of_Bo.html"
+            <a href={TRIPADVISOR_URL}
             target="_blank"
             rel="noopener noreferrer"
             style={styles.tripAdvisorBtn}
