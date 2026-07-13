@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Tallest Tourguide · Website UI Kit</title>
+<link rel="icon" href="../../assets/favicon.svg">
+<link rel="stylesheet" href="../../colors_and_type.css">
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--color-n100); color: var(--fg-1); font-family: var(--font-body); -webkit-font-smoothing: antialiased; }
+  a { text-decoration: none; color: inherit; }
+</style>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel" src="icons.jsx"></script>
+<script type="text/babel" src="chrome.jsx"></script>
+<script type="text/babel" src="content.jsx"></script>
+<script type="text/babel" src="screens.jsx"></script>
+<script type="text/babel">
+const { useState, useEffect } = React;
+
+const TOURS = [
+  { id: 't1', title: 'Mostar Day Trip from Sarajevo', image: '../../assets/tour-2-hero.webp', price: 65, rating: 4.9, reviews: 180, duration: '10 hours', maxGuests: 8, languages: ['🇬🇧','🇩🇪','🇫🇷'], badge: 'Most Popular' },
+  { id: 't2', title: 'Sarajevo War Tour & Tunnel of Hope', image: '../../assets/tour-3-hero.webp', price: 45, rating: 4.9, reviews: 142, duration: '4 hours', maxGuests: 10, languages: ['🇬🇧','🇩🇪'], badge: null },
+  { id: 't3', title: 'Sarajevo Walking Tour with a Local', image: '../../assets/tour-1-hero.webp', price: 25, rating: 5.0, reviews: 98, duration: '3 hours', maxGuests: 12, languages: ['🇬🇧','🇩🇪','🇮🇹','🇫🇷'], badge: 'Bestseller' },
+  { id: 't4', title: 'Lukomir Highland Hike', image: '../../assets/tour-5-hero.webp', price: 55, rating: 4.8, reviews: 64, duration: '8 hours', maxGuests: 8, languages: ['🇬🇧'], badge: null },
+  { id: 't5', title: 'Traditional Bosnian Cooking Class', image: '../../assets/tour-4-hero.webp', price: 48, rating: 5.0, reviews: 112, duration: '4 hours', maxGuests: 6, languages: ['🇬🇧','🇩🇪'], badge: null },
+  { id: 't6', title: 'Jajce & Travnik Full-Day Trip', image: '../../assets/tour-6-hero.webp', price: 72, rating: 4.9, reviews: 56, duration: '11 hours', maxGuests: 8, languages: ['🇬🇧','🇮🇹'], badge: null },
+];
+
+function HomeScreen({ onNav, onTour }) {
+  return (
+    <>
+      <Hero onCTA={onNav} />
+      <TrustBar />
+      <section style={{ padding: '96px 40px 40px' }}>
+        <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+          <SectionHeader eyebrow="What We Offer" title="Our Most Popular Tours" subtitle="Small groups. Trusted guides. Experiences that stay with you." />
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24 }}>
+            {TOURS.map(t => <TourCard key={t.id} tour={t} onClick={() => onTour(t)} />)}
+          </div>
+          <div style={{ textAlign: 'center', marginTop: 48 }}>
+            <a onClick={() => onNav('Tours')} style={{
+              display: 'inline-flex', alignItems: 'center', gap: 10, height: 48, padding: '0 28px',
+              border: '1.5px solid var(--color-forest-green)', color: 'var(--color-forest-green)',
+              borderRadius: 8, fontWeight: 700, fontSize: 14, cursor: 'pointer'
+            }}>View All Tours <Icons.ArrowRight size={16} color="currentColor" /></a>
+          </div>
+        </div>
+      </section>
+
+      <section style={{ padding: '72px 40px' }}>
+        <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+          <SectionHeader eyebrow="Multi-Day Journeys" title="Journeys" subtitle="Deeper, slower, further. Curated itineraries across Bosnia and the wider Balkans." />
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24 }}>
+            {[
+              { id: 'p1', image: '../../assets/package-1-hero.webp', title: 'Sarajevo Essential', dur: '2 days · 1 night', price: 99, desc: 'The city, the war tunnel, a sunset viewpoint, and dinner with locals.' },
+              { id: 'p2', image: '../../assets/package-2-hero.webp', title: 'Bosnia Deep Dive', dur: '5 days · 4 nights', price: 759, desc: 'Sarajevo, Mostar, Jajce, Travnik, Lukomir. The full story.' },
+            ].map(p => (
+              <a key={p.id} style={{
+                display: 'block', background: '#fff', borderRadius: 12, overflow: 'hidden',
+                border: '1px solid var(--color-n300)', boxShadow: '0 2px 16px rgba(0,0,0,0.08)',
+                cursor: 'pointer'
+              }}>
+                <img src={p.image} style={{ width: '100%', aspectRatio: '16/9', objectFit: 'cover' }} />
+                <div style={{ padding: 24 }}>
+                  <div style={{ fontSize: 11, fontWeight: 600, color: 'var(--color-forest-green)', textTransform: 'uppercase', letterSpacing: '1.5px' }}>{p.dur}</div>
+                  <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 24, fontWeight: 700, color: 'var(--fg-1)', margin: '10px 0 8px' }}>{p.title}</h3>
+                  <p style={{ fontSize: 14, color: 'var(--fg-2)', lineHeight: 1.6, margin: 0 }}>{p.desc}</p>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginTop: 20, paddingTop: 16, borderTop: '1px solid var(--color-n300)' }}>
+                    <div><span style={{ fontSize: 12, color: 'var(--fg-2)' }}>From</span><span style={{ fontFamily: 'var(--font-display)', fontSize: 24, fontWeight: 800, color: 'var(--fg-1)', marginLeft: 6 }}>€{p.price}</span></div>
+                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: 'var(--color-forest-green)', fontWeight: 700, fontSize: 13 }}>View Package <Icons.ArrowRight size={14} color="currentColor" /></span>
+                  </div>
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <CTABanner onCTA={onNav} />
+    </>
+  );
+}
+
+function App() {
+  const [screen, setScreen] = useState(() => localStorage.getItem('tt-screen') || 'Home');
+  const [activeTour, setActiveTour] = useState(null);
+  useEffect(() => { localStorage.setItem('tt-screen', screen); }, [screen]);
+
+  const onNav = (name) => { setActiveTour(null); setScreen(name); window.scrollTo(0, 0); };
+  const onTour = (tour) => { setActiveTour(tour); setScreen('TourDetail'); window.scrollTo(0, 0); };
+
+  let body;
+  if (screen === 'Contact') body = <ContactForm />;
+  else if (screen === 'TourDetail' && activeTour) body = <TourDetail tour={activeTour} onBack={() => onNav('Tours')} onBook={() => onNav('Contact')} />;
+  else if (screen === 'Tours') body = (
+    <section style={{ padding: '72px 40px 96px' }}>
+      <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+        <SectionHeader eyebrow="Single-Day" title="Day Tours" subtitle="Eighteen tours across Sarajevo, Mostar, Jajce and beyond. All small groups." />
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24 }}>
+          {TOURS.map(t => <TourCard key={t.id} tour={t} onClick={() => onTour(t)} />)}
+        </div>
+      </div>
+    </section>
+  );
+  else body = <HomeScreen onNav={onNav} onTour={onTour} />;
+
+  return (
+    <>
+      <Navbar active={screen === 'Contact' || screen === 'TourDetail' ? 'Tours' : screen} onNav={onNav} />
+      {body}
+      <Footer />
+    </>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>

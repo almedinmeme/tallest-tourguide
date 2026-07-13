@@ -1,0 +1,193 @@
+/* ============================================
+   TALLEST TOURGUIDE — DESIGN TOKENS
+   Source of truth for colors, type, spacing
+   Mirrors tallest-tourguide/src/index.css
+   ============================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,700;0,9..144,800;1,9..144,300;1,9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  /* ── BRAND COLORS ─────────────────────────────
+     Forest Green is the hero. Mid Green is the
+     brighter tonal partner (used on dark backgrounds,
+     accent icons, uppercase eyebrows on dark hero).
+     Amber is the action color — CTAs, star rating,
+     highlights, "special" items like Personalised.
+     Amber Light is a warm cream used only on dark
+     green backgrounds (hero body copy).           */
+  --color-forest-green: #2E7D5E;
+  --color-mid-green:    #4AA880;
+  --color-deep-green:   #0D1F18;   /* Footer, near-black with green cast */
+  --color-mint-wash:    #F0F7F4;   /* Soft section tint                 */
+  --color-amber:        #F4A130;
+  --color-amber-light:  #FDE9C3;
+
+  /* ── NEUTRAL SCALE ───────────────────────────── */
+  --color-n900: #1A1A2E;   /* Headings                                */
+  --color-n600: #4A5568;   /* Body text, meta                         */
+  --color-n300: #CBD5E0;   /* Hairline borders, dividers              */
+  --color-n100: #F7F9FC;   /* Page background                         */
+  --color-n000: #FFFFFF;   /* Card background                         */
+
+  /* ── SEMANTIC COLORS ─────────────────────────── */
+  --color-success: #38A169;
+  --color-warning: #DD6B20;
+  --color-error:   #E53E3E;
+  --color-info:    #3182CE;
+
+  /* ── FOREGROUND / BACKGROUND ALIASES ────────── */
+  --fg-1: var(--color-n900);   /* Primary text   */
+  --fg-2: var(--color-n600);   /* Secondary text */
+  --fg-3: #8A94A6;             /* Tertiary / placeholder */
+  --bg-1: var(--color-n100);   /* App background */
+  --bg-2: var(--color-n000);   /* Card surface   */
+
+  /* ── TYPOGRAPHY FAMILIES ─────────────────────── */
+  --font-display: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-body:    'Inter',             -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-hero:    'Fraunces', Georgia, serif;   /* Editorial hero headlines */
+
+  /* ── TYPE SCALE ──────────────────────────────── */
+  --text-display: 56px;   /* Editorial hero (Fraunces)       */
+  --text-h1:      40px;   /* Page headers                    */
+  --text-h2:      32px;   /* Section titles                  */
+  --text-h3:      22px;   /* Card titles                     */
+  --text-body-l:  18px;   /* Subheadings                     */
+  --text-body:    16px;
+  --text-small:   14px;
+  --text-tiny:    12px;
+  --text-micro:   11px;   /* Eyebrow labels                  */
+
+  /* ── LINE HEIGHTS ────────────────────────────── */
+  --leading-display: 1.1;
+  --leading-h1:      1.2;
+  --leading-h2:      1.25;
+  --leading-body:    1.6;
+  --leading-tight:   1.3;
+
+  /* ── LETTER SPACING ──────────────────────────── */
+  --tracking-eyebrow: 2px;      /* Uppercase "What We Offer"     */
+  --tracking-eyebrow-wide: 3px; /* Hero section eyebrow           */
+  --tracking-label:   0.5px;
+
+  /* ── SPACING SCALE (8pt) ────────────────────── */
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  20px;
+  --space-6:  24px;
+  --space-8:  32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-20: 80px;
+  --space-24: 96px;
+
+  /* ── RADII ───────────────────────────────────── */
+  /* CANONICAL SCALE — every element maps to exactly one step.
+     The #1 consistency rule: ACTION BUTTONS ALWAYS USE --radius (8px),
+     never the pill. The pill (--radius-pill) is reserved for non-action
+     chips: tags, filters, location/price overlays, the live indicator. */
+  --radius-sm:   4px;    /* Badges, status chips                       */
+  --radius:      8px;    /* ALL buttons + inputs (canonical action radius) */
+  --radius-md:  12px;    /* Cards                                       */
+  --radius-lg:  14px;    /* Dropdowns, large panels                     */
+  --radius-pill:100px;   /* Tags, filters, chips, indicators — NOT buttons */
+
+  /* ── ELEVATION ──────────────────────────────── */
+  --shadow-card:        0 2px 16px rgba(0,0,0,0.08);
+  --shadow-card-hover:  0 12px 40px rgba(0,0,0,0.16);
+  --shadow-dropdown:    0 12px 40px rgba(0,0,0,0.12);
+  --shadow-nav:         0 8px 24px rgba(0,0,0,0.10);
+  --shadow-button-amber:0 2px 8px rgba(244,161,48,0.20);
+  --shadow-button-amber-hover: 0 8px 24px rgba(244,161,48,0.45);
+
+  /* ── MOTION ─────────────────────────────────── */
+  --ease-out-quart: cubic-bezier(0.25, 0.46, 0.45, 0.94);  /* @kind other */
+  --dur-fast: 0.15s;  /* @kind other */
+  --dur-base: 0.2s;   /* @kind other */
+  --dur-slow: 0.35s;  /* @kind other */
+
+  /* ── FORM / TOUCH ───────────────────────────── */
+  --touch-target: 44px;
+
+  /* ── BUTTON SYSTEM (canonical) ───────────────────
+     THREE heights only. THREE variants only. ONE radius (--radius).
+     Reach for md by default; sm in dense rows (cards, nav); lg for hero
+     and page-level primary CTAs. Never invent a fourth size.
+       primary   = amber fill, --color-n900 text   (one per view)
+       secondary = forest-green ghost → fills on hover
+       tertiary  = text link with underline reveal
+     Horizontal padding pairs with height per the --btn-pad-* tokens. */
+  --btn-sm: 44px;   --btn-pad-sm: 18px;   --btn-font-sm: 13px;
+  --btn-md: 48px;   --btn-pad-md: 24px;   --btn-font-md: 15px;
+  --btn-lg: 56px;   --btn-pad-lg: 32px;   --btn-font-lg: 16px;
+  --btn-radius: var(--radius);   /* 8px — the single source of truth */
+  --btn-gap: 10px;               /* icon ↔ label spacing               */
+}
+
+/* ── SEMANTIC ELEMENT STYLES ──────────────────── */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  color: var(--fg-2);
+  background: var(--bg-1);
+  line-height: var(--leading-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  color: var(--fg-1);
+  line-height: var(--leading-tight);
+}
+
+h1 { font-size: var(--text-h1);     font-weight: 700; line-height: var(--leading-h1); }
+h2 { font-size: var(--text-h2);     font-weight: 700; line-height: var(--leading-h2); }
+h3 { font-size: var(--text-h3);     font-weight: 700; }
+p  { font-size: var(--text-body);   color: var(--fg-2); }
+
+/* Editorial hero — Fraunces serif, used only in hero sections */
+.tt-editorial {
+  font-family: var(--font-hero);
+  font-weight: 800;
+  line-height: var(--leading-display);
+  color: var(--color-n000);
+}
+.tt-editorial-thin {
+  font-family: var(--font-hero);
+  font-weight: 300;
+  font-style: italic;
+  opacity: 0.9;
+}
+
+/* The signature "eyebrow" — uppercase, tracked, small, often green */
+.tt-eyebrow {
+  display: inline-block;
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: var(--text-small);
+  color: var(--color-forest-green);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-eyebrow);
+}
+
+/* Column label inside footer/dark surfaces */
+.tt-column-label {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: var(--text-micro);
+  color: rgba(255,255,255,0.3);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+/* MOBILE — h1/h2 shrink */
+@media (max-width: 768px) {
+  h1 { font-size: 28px; }
+  h2 { font-size: 24px; }
+}

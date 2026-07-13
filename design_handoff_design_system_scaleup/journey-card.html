@@ -1,0 +1,103 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; padding: 20px; background: var(--color-n100); font-family: var(--font-body); color: var(--fg-1); display: flex; justify-content: center; }
+
+  .card {
+    width: 680px;
+    display: grid; grid-template-columns: 280px 1fr;
+    background: #fff;
+    border: 1px solid var(--color-n300);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 4px 24px rgba(13,31,24,0.08);
+    text-decoration: none;
+  }
+  .media { position: relative; overflow: hidden; }
+  .media img { width: 100%; height: 100%; object-fit: cover; }
+  .badge {
+    position: absolute; top: 14px; left: 14px;
+    background: var(--color-amber); color: var(--color-n900);
+    font-weight: 700; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
+    padding: 5px 11px; border-radius: 4px;
+  }
+  .countries {
+    position: absolute; bottom: 14px; left: 14px;
+    display: inline-flex; align-items: center; gap: 5px;
+    color: #fff; font-size: 12px; font-weight: 500;
+    background: rgba(10,20,15,0.55); backdrop-filter: blur(6px);
+    padding: 5px 11px; border-radius: 100px;
+  }
+  .countries .flags { letter-spacing: -2px; }
+
+  .body { padding: 24px 26px; display: flex; flex-direction: column; }
+  .eyebrow { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--color-forest-green); margin-bottom: 10px; }
+  .title { font-family: var(--font-hero); font-size: 28px; font-weight: 700; line-height: 1.15; color: var(--fg-1); margin: 0 0 6px; letter-spacing: -0.5px; }
+  .subtitle { font-size: 14px; color: var(--fg-2); line-height: 1.5; margin: 0 0 18px; }
+
+  .specs {
+    display: flex; gap: 0; margin-bottom: 18px;
+    border: 1px solid var(--color-n300); border-radius: 10px; overflow: hidden;
+  }
+  .spec { flex: 1; padding: 12px 14px; text-align: center; border-right: 1px solid var(--color-n300); }
+  .spec:last-child { border-right: none; }
+  .spec .v { font-family: var(--font-display); font-weight: 800; font-size: 18px; color: var(--fg-1); line-height: 1; }
+  .spec .l { font-size: 10px; color: var(--fg-2); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 5px; }
+
+  .foot { display: flex; justify-content: space-between; align-items: center; margin-top: auto; padding-top: 18px; border-top: 1px solid var(--color-n300); }
+  .price .from { font-size: 11px; color: var(--fg-2); text-transform: uppercase; letter-spacing: 1px; }
+  .price .big { font-family: var(--font-display); font-weight: 800; font-size: 24px; color: var(--fg-1); }
+  .price .per { font-size: 12px; color: var(--fg-2); }
+  .cta {
+    display: inline-flex; align-items: center; gap: 8px;
+    height: 44px; padding: 0 22px;
+    background: var(--color-forest-green); color: #fff;
+    border-radius: 8px; font-weight: 700; font-size: 14px;
+    text-decoration: none;
+  }
+  .cta svg { width: 15px; height: 15px; }
+</style>
+</head>
+<body>
+
+<a class="card">
+  <div class="media">
+    <img src="../assets/package-2-hero.webp" alt="The Balkans Full Arc">
+    <span class="badge">Signature Journey</span>
+    <span class="countries">
+      <span class="flags">🇧🇦🇭🇷🇲🇪🇷🇸🇽🇰</span>
+      5 countries
+    </span>
+  </div>
+  <div class="body">
+    <div class="eyebrow">Multi-Day Journey</div>
+    <h3 class="title">The Balkans Full Arc</h3>
+    <p class="subtitle">Sarajevo to the Adriatic and back through five countries — empires, mountains and coastline in one continuous thread.</p>
+
+    <div class="specs">
+      <div class="spec"><div class="v">15</div><div class="l">Days</div></div>
+      <div class="spec"><div class="v">12</div><div class="l">Stops</div></div>
+      <div class="spec"><div class="v">Moderate</div><div class="l">Pace</div></div>
+      <div class="spec"><div class="v">Max 8</div><div class="l">Guests</div></div>
+    </div>
+
+    <div class="foot">
+      <span class="price">
+        <span class="from">From</span>
+        <span class="big">€4,490</span>
+        <span class="per">/person</span>
+      </span>
+      <a class="cta">
+        View Journey
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+    </div>
+  </div>
+</a>
+
+</body>
+</html>

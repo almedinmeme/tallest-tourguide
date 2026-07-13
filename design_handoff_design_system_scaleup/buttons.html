@@ -1,0 +1,163 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 20px 22px; background: var(--bg-2);
+    font-family: var(--font-body); color: var(--fg-1);
+  }
+  .section { display: flex; flex-direction: column; gap: 12px; }
+  .section + .section { margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--color-n300); }
+
+  .header {
+    display: flex; align-items: baseline; justify-content: space-between; gap: 16px;
+  }
+  .tier {
+    font-family: var(--font-body);
+    font-size: 11px; font-weight: 700; letter-spacing: 2px;
+    color: var(--color-forest-green); text-transform: uppercase;
+  }
+  .role {
+    font-family: var(--font-body);
+    font-size: 13px; color: var(--fg-2); line-height: 1.5;
+    max-width: 420px;
+  }
+
+  .row {
+    display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+    padding: 4px 2px;
+  }
+  .state-label {
+    font-family: ui-monospace, Menlo, monospace;
+    font-size: 11px; color: var(--fg-3); min-width: 62px;
+  }
+
+  /* ── Primary · AMBER ─────────────────────── */
+  .btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    height: 48px; padding: 0 24px; border-radius: 8px;
+    font-family: var(--font-body); font-weight: 700; font-size: 15px;
+    text-decoration: none; cursor: pointer; border: 1.5px solid transparent;
+    letter-spacing: 0.1px;
+    transition: all 250ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+  .btn .arrow { font-size: 17px; line-height: 1; transform: translateY(-1px); }
+
+  /* Primary — amber */
+  .btn--primary { background: var(--color-amber); color: var(--color-n900); box-shadow: 0 2px 8px rgba(244,161,48,0.25); }
+  .btn--primary.is-hover { background: #E8920A; transform: translateY(-2px); box-shadow: 0 10px 26px rgba(244,161,48,0.50); }
+  .btn--primary.is-disabled { background: var(--color-n300); color: var(--fg-3); box-shadow: none; cursor: not-allowed; }
+
+  /* Secondary — forest green outline */
+  .btn--secondary { background: transparent; color: var(--color-forest-green); border-color: var(--color-forest-green); }
+  .btn--secondary.is-hover { background: var(--color-forest-green); color: #fff; }
+
+  /* Tertiary — text link only */
+  .btn--tertiary {
+    height: auto; padding: 0; background: transparent; color: var(--color-forest-green);
+    font-weight: 700; font-size: 14px; border: none; border-radius: 0;
+    box-shadow: inset 0 -1.5px 0 rgba(46,125,94,0);
+  }
+  .btn--tertiary.is-hover { box-shadow: inset 0 -1.5px 0 rgba(46,125,94,1); }
+
+  /* Sizes — canonical 44 / 48 / 56, radius locked to 8px on all */
+  .btn--sm { height: 44px; padding: 0 18px; font-size: 13px; gap: 8px; }
+  .btn--lg { height: 56px; padding: 0 32px; font-size: 16px; }
+
+  .spec-strip {
+    display: flex; gap: 0; margin-top: 8px;
+    border: 1px solid var(--color-n300); border-radius: 8px; overflow: hidden;
+  }
+  .spec-strip .c { flex: 1; padding: 10px 14px; border-right: 1px solid var(--color-n300); }
+  .spec-strip .c:last-child { border-right: none; }
+  .spec-strip .k { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--fg-3); font-weight: 700; }
+  .spec-strip .v { font-family: ui-monospace, Menlo, monospace; font-size: 12px; color: var(--fg-1); margin-top: 4px; }
+
+  /* Dark surface variant */
+  .dark {
+    background: var(--color-deep-green); border-radius: 12px; padding: 20px 22px;
+    margin-top: 16px;
+  }
+  .dark .tier { color: var(--color-mid-green); }
+  .dark .role { color: rgba(255,255,255,0.55); }
+  .dark .state-label { color: rgba(255,255,255,0.4); }
+  .dark .btn--secondary { color: #fff; border-color: rgba(255,255,255,0.3); }
+  .dark .btn--secondary.is-hover { background: rgba(255,255,255,0.1); border-color: #fff; }
+</style>
+</head>
+<body>
+
+<!-- SPEC -->
+<div class="spec-strip">
+  <div class="c"><div class="k">Radius</div><div class="v">8px · ALL buttons</div></div>
+  <div class="c"><div class="k">Sizes</div><div class="v">44 / 48 / 56</div></div>
+  <div class="c"><div class="k">Variants</div><div class="v">3 only</div></div>
+  <div class="c"><div class="k">Primary</div><div class="v">1 per view</div></div>
+</div>
+<div style="height:20px"></div>
+
+<!-- PRIMARY -->
+<div class="section">
+  <div class="header">
+    <span class="tier">Primary · Amber</span>
+    <span class="role">One per view. Owns the booking action: <em>Book</em>, <em>Explore Tours</em>, <em>Send Message</em>.</span>
+  </div>
+  <div class="row">
+    <span class="state-label">default</span>
+    <a class="btn btn--primary">Explore Tours <span class="arrow">→</span></a>
+    <a class="btn btn--primary btn--sm">Book Now <span class="arrow">→</span></a>
+    <a class="btn btn--primary btn--lg">Request to Book <span class="arrow">→</span></a>
+  </div>
+  <div class="row">
+    <span class="state-label">hover</span>
+    <a class="btn btn--primary is-hover">Explore Tours <span class="arrow">→</span></a>
+    <span class="state-label" style="margin-left: 8px">disabled</span>
+    <a class="btn btn--primary is-disabled">Select a date</a>
+  </div>
+</div>
+
+<!-- SECONDARY -->
+<div class="section">
+  <div class="header">
+    <span class="tier">Secondary · Ghost</span>
+    <span class="role">Alternative actions next to the primary — <em>View All</em>, <em>Contact Us</em>, <em>Learn More</em>. Never amber.</span>
+  </div>
+  <div class="row">
+    <span class="state-label">default</span>
+    <a class="btn btn--secondary">View All Tours</a>
+    <a class="btn btn--secondary btn--sm">Contact Us</a>
+    <span class="state-label" style="margin-left: 8px">hover</span>
+    <a class="btn btn--secondary is-hover">View All Tours</a>
+  </div>
+</div>
+
+<!-- TERTIARY -->
+<div class="section">
+  <div class="header">
+    <span class="tier">Tertiary · Inline Link</span>
+    <span class="role">Quiet navigation inside body copy or card footers — <em>Read more</em>, <em>See itinerary</em>.</span>
+  </div>
+  <div class="row">
+    <a class="btn btn--tertiary">Read more <span class="arrow">→</span></a>
+    <a class="btn btn--tertiary is-hover">Read more <span class="arrow">→</span></a>
+    <a class="btn btn--tertiary" style="color: var(--fg-2)">← Back to all tours</a>
+  </div>
+</div>
+
+<!-- DARK SURFACE -->
+<div class="dark">
+  <div class="header" style="margin-bottom: 14px">
+    <span class="tier">On Dark Surface</span>
+    <span class="role">Hero and footer. Primary stays amber; secondary uses translucent white.</span>
+  </div>
+  <div class="row">
+    <a class="btn btn--primary">Explore Tours <span class="arrow">→</span></a>
+    <a class="btn btn--secondary">Plan a Full Trip</a>
+  </div>
+</div>
+
+</body>
+</html>
