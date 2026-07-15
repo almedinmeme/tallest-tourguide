@@ -280,16 +280,25 @@ function PackageDetail() {
 
   const [expandedBreakdown, setExpandedBreakdown] = useState(new Set())
   const toggleBreakdown = (key) => setExpandedBreakdown(prev => { const s = new Set(prev); s.has(key) ? s.delete(key) : s.add(key); return s })
-  const [openDay, setOpenDay] = useState(1)
+  // Multiple days can be open at once — a Set of open day ids (first day
+  // opens by default). Opening a day scrolls it into view; closing doesn't.
+  const [openDays, setOpenDays] = useState(() => new Set([1]))
   const dayRefs = useRef({})
   const toggleDay = (id) => {
-    setOpenDay(prev => prev === id ? null : id)
-    setTimeout(() => {
-      const el = dayRefs.current[id]
-      if (!el) return
-      const top = el.getBoundingClientRect().top + window.scrollY - 136
-      window.scrollTo({ top, behavior: 'smooth' })
-    }, 260)
+    setOpenDays(prev => {
+      const next = new Set(prev)
+      const willOpen = !next.has(id)
+      willOpen ? next.add(id) : next.delete(id)
+      if (willOpen) {
+        setTimeout(() => {
+          const el = dayRefs.current[id]
+          if (!el) return
+          const top = el.getBoundingClientRect().top + window.scrollY - 136
+          window.scrollTo({ top, behavior: 'smooth' })
+        }, 260)
+      }
+      return next
+    })
   }
   const [openInfo, setOpenInfo] = useState(null)
   const [includedExpanded, setIncludedExpanded] = useState(false)
@@ -941,7 +950,7 @@ function PackageDetail() {
               <h2 style={styles.sectionTitle}>Day by day itinerary</h2>
               <div style={styles.timelineList}>
                 {pkg.days.map((day, index) => {
-                  const isOpen = openDay === day.id
+                  const isOpen = openDays.has(day.id)
                   const isLast = index === pkg.days.length - 1
                   return (
                     <div key={day.id} ref={(el) => { dayRefs.current[day.id] = el }} style={{ ...styles.timelineItem, paddingBottom: isLast ? '0' : '12px' }}>
@@ -951,52 +960,66 @@ function PackageDetail() {
                         style={styles.timelineContent}
                         onClick={() => toggleDay(day.id)}
                       >
-                        {/* Header */}
-                        <div style={styles.timelineHeader}>
-                          <div style={{ flex: 1, minWidth: 0 }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
-                              <span style={styles.dayChip}>Day {index + 1}</span>
-                              <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                                <MapPin size={11} color="var(--color-n400)" />
-                                <span style={styles.cityInline}>{day.city}</span>
+                        {/* Header — when open with a photo, it becomes a hero
+                            banner with the day/city/title/summary laid over the
+                            image (fixes the wide floating-photo ratio). Closed,
+                            or open with no photo, it stays the plain text row. */}
+                        {isOpen && day.photo ? (
+                          <div style={{ ...styles.dayHero, height: isMobile ? '188px' : '240px' }}>
+                            <img
+                              src={day.photo}
+                              alt={day.title}
+                              style={styles.dayHeroImg}
+                              onError={(e) => { e.currentTarget.style.display = 'none' }}
+                            />
+                            <div style={styles.dayHeroScrim} />
+                            <span style={styles.dayHeroChevron}>
+                              <ChevronUp size={17} color="#fff" />
+                            </span>
+                            <div style={styles.dayHeroContent}>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '9px' }}>
+                                <span style={styles.dayChip}>Day {index + 1}</span>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                  <MapPin size={11} color="rgba(255,255,255,0.9)" />
+                                  <span style={styles.cityInlineOnPhoto}>{day.city}</span>
+                                </div>
                               </div>
+                              <span style={styles.dayTitleOnPhoto}>{day.title}</span>
+                              {day.summary && <p style={styles.daySummaryOnPhoto}>{day.summary}</p>}
                             </div>
-                            <span style={styles.dayTitle}>{day.title}</span>
-                            <p style={styles.daySummary}>{day.summary}</p>
                           </div>
-                          <div style={{ flexShrink: 0, alignSelf: 'flex-start', paddingTop: '3px' }}>
-                            {isOpen
-                              ? <ChevronUp size={18} color="var(--color-forest-green)" />
-                              : <ChevronDown size={18} color="var(--color-n600)" />
-                            }
+                        ) : (
+                          <div style={styles.timelineHeader}>
+                            <div style={{ flex: 1, minWidth: 0 }}>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
+                                <span style={styles.dayChip}>Day {index + 1}</span>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                  <MapPin size={11} color="var(--color-n400)" />
+                                  <span style={styles.cityInline}>{day.city}</span>
+                                </div>
+                              </div>
+                              <span style={styles.dayTitle}>{day.title}</span>
+                              <p style={styles.daySummary}>{day.summary}</p>
+                            </div>
+                            <div style={{ flexShrink: 0, alignSelf: 'flex-start', paddingTop: '3px' }}>
+                              {isOpen
+                                ? <ChevronUp size={18} color="var(--color-forest-green)" />
+                                : <ChevronDown size={18} color="var(--color-n600)" />
+                              }
+                            </div>
                           </div>
-                        </div>
+                        )}
 
                         {/* Expanded body */}
                         {isOpen && (
-                          <div className="itinerary-body" style={styles.timelineBody}>
-                            {/* Divider */}
-                            <div style={{ height: '1px', backgroundColor: 'var(--color-n200)', margin: '4px 0 4px' }} />
-
-                            {/* Day photo */}
-                            {day.photo && (
-                              <div style={{ marginBottom: '12px' }}>
-                                <img
-                                  src={day.photo}
-                                  alt={day.title}
-                                  style={styles.dayPhoto}
-                                  onError={(e) => {
-                                    e.currentTarget.style.display = 'none'
-                                    const ph = e.currentTarget.nextSibling
-                                    if (ph) ph.style.display = 'flex'
-                                  }}
-                                />
-                                <div style={{ ...styles.dayPhoto, display: 'none', alignItems: 'center', justifyContent: 'center', backgroundColor: 'var(--color-n100)', color: 'var(--color-n400)', fontSize: '13px', fontFamily: 'var(--font-body)' }}>
-                                  Photo coming soon
-                                </div>
-                              </div>
+                          <div
+                            className="itinerary-body"
+                            style={{ ...styles.timelineBody, paddingTop: day.photo ? '16px' : '0' }}
+                          >
+                            {/* Divider — only when there's no hero photo above */}
+                            {!day.photo && (
+                              <div style={{ height: '1px', backgroundColor: 'var(--color-n200)', margin: '4px 0 4px' }} />
                             )}
-
 
                             {day.morning && (
                               <div style={styles.timeBlock}>
@@ -1889,6 +1912,88 @@ const styles = {
     height: '200px',
     objectFit: 'cover',
     borderRadius: '10px',
+  },
+
+  // Photo-hero header for an open day. Full-bleeds to the card edges by
+  // cancelling timelineContent's padding, rounds the top to sit inside the
+  // card's 1.5px border, and carries a dark green fallback so a missing
+  // image still reads under the overlaid text.
+  dayHero: {
+    position: 'relative',
+    margin: '-16px -18px 0',
+    borderRadius: '14px 14px 0 0',
+    overflow: 'hidden',
+    backgroundColor: 'var(--color-forest-deep)',
+  },
+
+  dayHeroImg: {
+    position: 'absolute',
+    inset: 0,
+    width: '100%',
+    height: '100%',
+    objectFit: 'cover',
+    display: 'block',
+  },
+
+  dayHeroScrim: {
+    position: 'absolute',
+    inset: 0,
+    background:
+      'linear-gradient(to top, rgba(12,24,18,0.88) 0%, rgba(12,24,18,0.55) 38%, rgba(12,24,18,0.12) 66%, rgba(12,24,18,0.30) 100%)',
+  },
+
+  dayHeroChevron: {
+    position: 'absolute',
+    top: '12px',
+    right: '12px',
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '30px',
+    height: '30px',
+    borderRadius: '50%',
+    backgroundColor: 'rgba(10,20,15,0.4)',
+    backdropFilter: 'blur(4px)',
+    WebkitBackdropFilter: 'blur(4px)',
+    border: '1px solid rgba(255,255,255,0.25)',
+  },
+
+  dayHeroContent: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
+    padding: '18px',
+  },
+
+  cityInlineOnPhoto: {
+    fontFamily: 'var(--font-body)',
+    fontSize: '12px',
+    fontWeight: '500',
+    color: 'rgba(255,255,255,0.9)',
+  },
+
+  dayTitleOnPhoto: {
+    display: 'block',
+    fontFamily: 'var(--font-display)',
+    fontWeight: '700',
+    fontSize: '19px',
+    color: '#fff',
+    lineHeight: '1.25',
+    textShadow: '0 1px 12px rgba(0,0,0,0.35)',
+  },
+
+  daySummaryOnPhoto: {
+    fontFamily: 'var(--font-body)',
+    fontSize: '13px',
+    color: 'rgba(255,255,255,0.85)',
+    margin: '7px 0 0 0',
+    lineHeight: '1.5',
+    textShadow: '0 1px 10px rgba(0,0,0,0.3)',
+    display: '-webkit-box',
+    WebkitLineClamp: 2,
+    WebkitBoxOrient: 'vertical',
+    overflow: 'hidden',
   },
 
   logisticsBar: {
