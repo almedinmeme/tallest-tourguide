@@ -2,10 +2,10 @@
 // Channels-first contact page: WhatsApp and email are presented as
 // first-class ways to reach us, with the form as the third option.
 // Topic chips replace the free-text subject so messages arrive
-// pre-triaged (they feed the same EmailJS template via tour_name).
+// pre-triaged (they feed the enquiry template via subject).
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import emailjs from '@emailjs/browser'
+import { sendEmail } from '../utils/email'
 import { MapPin, Mail, Clock, Globe, CheckCircle, ArrowRight } from 'lucide-react'
 import SEO from '../components/SEO'
 import Button from '../components/Button'
@@ -58,20 +58,13 @@ export default function Contact() {
     setIsSending(true)
     setIsError(false)
 
-    const templateParams = {
-      type: 'Contact',
-      tour_name: topic || 'General Enquiry',
-      guest_name: name.trim(),
-      guest_email: email.trim(),
+    sendEmail('enquiry', {
+      enquiry_type: 'Contact',
+      subject: topic || 'General Enquiry',
+      from_name: name.trim(),
+      from_email: email.trim(),
       message: message.trim(),
-    }
-
-    emailjs.send(
-      import.meta.env.VITE_EMAILJS_SERVICE_ID,
-      import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
-      templateParams,
-      import.meta.env.VITE_EMAILJS_PUBLIC_KEY
-    )
+    })
       .then(() => {
         setIsSending(false)
         setIsSuccess(true)

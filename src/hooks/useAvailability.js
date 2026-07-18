@@ -1,8 +1,8 @@
+// Live "spots left" data via /api/availability (a Netlify Function in
+// production, admin-server/dev-api.js in dev). The endpoint aggregates
+// confirmed future bookings server-side and the CDN caches it, so visitors
+// never call Airtable directly and no token ships in the bundle.
 import { useState, useEffect } from 'react'
-
-const TOKEN = import.meta.env.VITE_AIRTABLE_TOKEN
-const BASE_ID = import.meta.env.VITE_AIRTABLE_BASE_ID
-const TABLE = 'Bookings'
 
 let cache = null
 
@@ -11,35 +11,19 @@ export function useAvailability() {
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    if (!TOKEN || !BASE_ID) return
-    if (import.meta.env.DEV) return
     if (cache) { setBookings(cache); return }
     const controller = new AbortController()
 
     async function fetchBookings() {
       setLoading(true)
-      const today = new Date().toISOString().split('T')[0]
-      const filter = encodeURIComponent(
-        `AND({Status}='Confirmed',IS_AFTER({TourDate},'${today}'))`
-      )
-      const url = `https://api.airtable.com/v0/${BASE_ID}/${TABLE}?filterByFormula=${filter}&fields[]=TourSlug&fields[]=TourDate&fields[]=NumPeople&fields[]=Language`
       try {
-        const res = await fetch(url, {
-          headers: { Authorization: `Bearer ${TOKEN}` },
-          signal: controller.signal,
-        })
-        if (!res.ok) throw new Error(`Airtable error: ${res.status}`)
-        const data = await res.json()
-        const map = {}
-        ;(data.records || []).forEach((r) => {
-          const { TourSlug, TourDate, NumPeople, Language } = r.fields
-          if (!TourSlug || !TourDate) return
-          const key = `${TourSlug}_${TourDate}_${(Language || '').toLowerCase()}`
-          map[key] = (map[key] || 0) + (NumPeople || 0)
-        })
+        const res = await fetch('/api/availability', { signal: controller.signal })
+        if (!res.ok) throw new Error(`availability error: ${res.status}`)
+        const map = await res.json()
         cache = map
         setBookings(map)
       } catch (err) {
+        // Fail open: an empty map means full availability is shown.
         if (err.name !== 'AbortError') console.warn('useAvailability:', err)
       } finally {
         setLoading(false)

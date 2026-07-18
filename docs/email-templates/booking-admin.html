@@ -1,0 +1,112 @@
+<!-- EmailJS template: Booking — admin notification (account 1, replaces the
+     current content of VITE_EMAILJS_TEMPLATE_ID). Paste into the EmailJS code editor.
+     Params: {{tour_name}} {{tour_date}} {{start_time}} {{num_people}} {{tour_type}}
+             {{language}} {{extras}} {{payment_method}} {{total_price}}
+             {{guest_name}} {{guest_email}} {{guest_phone}} {{discount_code}}
+     Settings: Subject "Booking: {{tour_name}} — {{tour_date}}" · Reply-To "{{guest_email}}" -->
+<div style="margin:0;padding:24px 12px;background-color:#F7F9FC;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;margin:0 auto;">
+    <!-- Header band -->
+    <tr>
+      <td style="background-color:#2E7D5E;border-radius:12px 12px 0 0;padding:22px 28px;">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+          <tr>
+            <td style="font-family:Georgia,'Times New Roman',serif;font-size:19px;font-weight:bold;color:#ffffff;">
+              Tallest Tourguide
+            </td>
+            <td align="right">
+              <span style="display:inline-block;background-color:#F4A130;color:#1A1A2E;font-family:Arial,Helvetica,sans-serif;font-size:11px;font-weight:bold;letter-spacing:0.06em;text-transform:uppercase;padding:5px 12px;border-radius:99px;">
+                New&nbsp;Booking
+              </span>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+
+    <!-- Body card -->
+    <tr>
+      <td style="background-color:#ffffff;border:1px solid #CBD5E0;border-top:none;border-radius:0 0 12px 12px;padding:28px;">
+
+        <h1 style="margin:0 0 18px;font-family:Georgia,'Times New Roman',serif;font-size:22px;line-height:1.3;color:#1A1A2E;">
+          {{tour_name}}
+        </h1>
+
+        <!-- Guest row -->
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#F7F9FC;border-radius:8px;">
+          <tr>
+            <td style="padding:14px 16px;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.6;color:#1A1A2E;">
+              <strong>{{guest_name}}</strong><br>
+              <a href="mailto:{{guest_email}}" style="color:#2E7D5E;text-decoration:none;">{{guest_email}}</a>
+              &nbsp;·&nbsp; {{guest_phone}}
+            </td>
+          </tr>
+        </table>
+
+        <!-- Booking details -->
+        <h2 style="margin:24px 0 10px;font-family:Arial,Helvetica,sans-serif;font-size:12px;font-weight:bold;letter-spacing:0.08em;text-transform:uppercase;color:#2E7D5E;">
+          Booking details
+        </h2>
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#1A1A2E;">
+          <tr>
+            <td width="42%" style="padding:8px 0;border-bottom:1px solid #F7F9FC;color:#4A5568;">Date</td>
+            <td style="padding:8px 0;border-bottom:1px solid #F7F9FC;"><strong>{{tour_date}}</strong></td>
+          </tr>
+          <tr>
+            <td style="padding:8px 0;border-bottom:1px solid #F7F9FC;color:#4A5568;">Start time</td>
+            <td style="padding:8px 0;border-bottom:1px solid #F7F9FC;"><strong>{{start_time}}</strong></td>
+          </tr>
+          <tr>
+            <td style="padding:8px 0;border-bottom:1px solid #F7F9FC;color:#4A5568;">People</td>
+            <td style="padding:8px 0;border-bottom:1px solid #F7F9FC;"><strong>{{num_people}}</strong></td>
+          </tr>
+          <tr>
+            <td style="padding:8px 0;border-bottom:1px solid #F7F9FC;color:#4A5568;">Type</td>
+            <td style="padding:8px 0;border-bottom:1px solid #F7F9FC;"><strong>{{tour_type}}</strong></td>
+          </tr>
+          <tr>
+            <td style="padding:8px 0;border-bottom:1px solid #F7F9FC;color:#4A5568;">Language</td>
+            <td style="padding:8px 0;border-bottom:1px solid #F7F9FC;"><strong>{{language}}</strong></td>
+          </tr>
+          <tr>
+            <td style="padding:8px 0;border-bottom:1px solid #F7F9FC;color:#4A5568;">Extras</td>
+            <td style="padding:8px 0;border-bottom:1px solid #F7F9FC;"><strong>{{extras}}</strong></td>
+          </tr>
+          <tr>
+            <td style="padding:8px 0;border-bottom:1px solid #F7F9FC;color:#4A5568;">Discount code</td>
+            <td style="padding:8px 0;border-bottom:1px solid #F7F9FC;"><strong>{{discount_code}}</strong></td>
+          </tr>
+          <tr>
+            <td style="padding:8px 0;color:#4A5568;">Payment</td>
+            <td style="padding:8px 0;"><strong>{{payment_method}}</strong></td>
+          </tr>
+        </table>
+
+        <!-- Total -->
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:18px;background-color:#2E7D5E;border-radius:8px;">
+          <tr>
+            <td style="padding:14px 16px;font-family:Arial,Helvetica,sans-serif;font-size:13px;font-weight:bold;letter-spacing:0.06em;text-transform:uppercase;color:#ffffff;">
+              Total
+            </td>
+            <td align="right" style="padding:14px 16px;font-family:Georgia,'Times New Roman',serif;font-size:20px;font-weight:bold;color:#F4A130;">
+              {{total_price}}
+            </td>
+          </tr>
+        </table>
+
+        <!-- Divider + action hint -->
+        <div style="margin-top:26px;padding-top:16px;border-top:1px solid #CBD5E0;font-family:Arial,Helvetica,sans-serif;font-size:12px;color:#4A5568;">
+          The booking is saved as <strong>Pending</strong> in Airtable — confirm it there, then hit
+          <strong style="color:#2E7D5E;">Reply</strong> to answer {{guest_name}} directly.
+        </div>
+      </td>
+    </tr>
+
+    <!-- Footer -->
+    <tr>
+      <td style="padding:16px 8px 0;text-align:center;font-family:Arial,Helvetica,sans-serif;font-size:11px;color:#4A5568;">
+        Sent automatically from the checkout on tallesttourguide.com
+      </td>
+    </tr>
+  </table>
+</div>

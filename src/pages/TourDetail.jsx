@@ -331,15 +331,18 @@ function TourDetail() {
 
     // Base submission data — guest contact, chosen extras and the final total
     // are filled in on the checkout screen.
+    // Same key set as the journey flow in PackageDetail.jsx — the two
+    // booking email templates (docs/email-templates/booking-*.html) render
+    // one shared layout, so both flows must fill every key.
     const templateParams = {
       type: 'Booking',
       tour_name: tour.title,
       tour_date: selectedDate,
-      tour_start_time: startTime || 'Not specified',
+      start_time: startTime || 'Not specified',
       num_people: numPeople,
       total_price: isQuote ? 'Private tour — quote requested' : `€${totalPrice}`,
       tour_type: isQuote ? 'Private Tour' : 'Shared Tour',
-      tour_language: selectedLanguageLabel,
+      language: selectedLanguageLabel,
     }
 
     const airtableFields = {

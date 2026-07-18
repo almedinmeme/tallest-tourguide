@@ -469,8 +469,8 @@ function Home() {
 
       {/* ═══════════════════════════════
           BLOG PREVIEW — latest 3 posts
-          Only renders when Airtable has
-          published posts to show.
+          Only renders when the Journal
+          has published posts to show.
           ═══════════════════════════════ */}
       {posts.length > 0 && (() => {
         const blogPosts = posts.slice(0, 6)

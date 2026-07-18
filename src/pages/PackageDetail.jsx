@@ -14,7 +14,7 @@ import {
   Swords, Mountain, Camera, Landmark, ShoppingBag,
   Moon, Bike, Tent, TreePine, Sailboat, Flame,
 } from 'lucide-react'
-import emailjs from '@emailjs/browser'
+import { sendEmail } from '../utils/email'
 import useWindowWidth from '../hooks/useWindowWidth'
 import { useAvailability } from '../hooks/useAvailability'
 import { usePackageDates } from '../hooks/usePackageDates'
@@ -390,18 +390,13 @@ function PackageDetail() {
     }
     setIsEnquirySending(true)
     setIsEnquiryError(false)
-    emailjs.send(
-      import.meta.env.VITE_EMAILJS_SERVICE_ID,
-      import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
-      {
-        tour_name: `${pkg.name} — ${pkg.subtitle}`,
-        guest_name: enquiryName,
-        guest_email: enquiryEmail,
-        message: enquiryText,
-        type: 'Enquiry',
-      },
-      import.meta.env.VITE_EMAILJS_PUBLIC_KEY
-    )
+    sendEmail('enquiry', {
+      enquiry_type: 'Journey Enquiry',
+      subject: `${pkg.name} — ${pkg.subtitle}`,
+      from_name: enquiryName,
+      from_email: enquiryEmail,
+      message: enquiryText,
+    })
     .then(() => { setIsEnquirySending(false); setIsEnquirySuccess(true) })
     .catch(() => { setIsEnquirySending(false); setIsEnquiryError(true) })
   }
@@ -429,14 +424,18 @@ function PackageDetail() {
     const languageLabel = selectedLanguage.charAt(0).toUpperCase() + selectedLanguage.slice(1)
 
     // Base submission data — guest contact fields are added on the checkout screen.
+    // Same key set as the day-tour flow in TourDetail.jsx (see note there).
+    // Accommodation folds into tour_type so the shared email layout needs no
+    // journey-only row.
     const templateParams = {
       type: 'Booking',
       tour_name: `${pkg.name} — ${pkg.subtitle}`,
       tour_date: selectedDate,
+      start_time: 'Multi-day journey',
       num_people: numPeople,
-      total_price: totalPrice,
+      total_price: `€${totalPrice}`,
+      tour_type: `Journey · ${accommodationLabel}`,
       language: selectedLanguage,
-      accommodation: accommodationLabel,
     }
 
     const airtableFields = {

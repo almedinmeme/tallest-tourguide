@@ -1,16 +1,13 @@
 // ReviewForm.jsx
 // Star rating + review submission form.
-// Submits directly to Airtable. Approved defaults to false (unchecked).
-// You tick Approved in Airtable → review appears on site instantly.
+// Submits via /api/submit (server-side Airtable write — no token in the
+// bundle). The server marks reviews Approved, so they appear on the site
+// after the next deploy's Airtable sync.
 
 import { useState } from 'react'
 import { Star } from 'lucide-react'
 import countries from '../data/countries'
 import Button from './Button'
-
-const TOKEN = import.meta.env.VITE_AIRTABLE_TOKEN
-const BASE_ID = import.meta.env.VITE_AIRTABLE_BASE_ID
-const TABLE = 'Reviews'
 
 function StarInput({ value, onChange }) {
   const [hovered, setHovered] = useState(0)
@@ -52,12 +49,11 @@ function ReviewForm({ tourId, tourName }) {
   const [title, setTitle] = useState('')
   const [review, setReview] = useState('')
   const [rating, setRating] = useState(0)
+  const [website, setWebsite] = useState('') // honeypot — humans never see it
   const [status, setStatus] = useState('idle') // idle | sending | success | error
   const [errorDetail, setErrorDetail] = useState('')
 
   const handleSubmit = async () => {
-    // Temporary debug — add before the POST fetch
-
     if (!name.trim() || !review.trim() || rating === 0) {
       alert('Please fill in your name, review, and select a star rating.')
       return
@@ -66,47 +62,28 @@ function ReviewForm({ tourId, tourName }) {
     setStatus('sending')
     setErrorDetail('')
 
-    // Airtable requires the table name to be URL-encoded if it has spaces.
-    // Checkbox fields: omit the field entirely rather than sending false —
-    // Airtable treats a missing checkbox as unchecked automatically.
-    const payload = {
-      fields: {
-        Name: name.trim(),
-        Country: country.trim() || undefined,
-        Title: title.trim() || undefined,
-        Review: review.trim(),
-        Rating: Number(rating),
-        TourId: Number(tourId),
-        TourName: tourName,
-        Date: new Date().toISOString().slice(0, 10),
-        Approved: true,
-      },
+    const fields = {
+      Name: name.trim(),
+      Country: country.trim(),
+      Title: title.trim(),
+      Review: review.trim(),
+      Rating: Number(rating),
+      TourId: Number(tourId),
+      TourName: tourName,
+      Date: new Date().toISOString().slice(0, 10),
     }
 
-    // Remove undefined fields (Title if empty)
-    Object.keys(payload.fields).forEach(
-      (k) => payload.fields[k] === undefined && delete payload.fields[k]
-    )
-
     try {
-      const res = await fetch(
-        `https://api.airtable.com/v0/${BASE_ID}/${encodeURIComponent(TABLE)}`,
-        {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${TOKEN}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(payload),
-        }
-      )
+      const res = await fetch('/api/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ table: 'Reviews', fields, website }),
+      })
 
-      const data = await res.json()
+      const data = await res.json().catch(() => ({}))
 
       if (!res.ok) {
-        // Log full Airtable error to console for debugging
-        console.error('Airtable error response:', data)
-        const msg = data?.error?.message || data?.message || `HTTP ${res.status}`
+        const msg = data?.error || `HTTP ${res.status}`
         setErrorDetail(msg)
         throw new Error(msg)
       }
@@ -194,6 +171,18 @@ function ReviewForm({ tourId, tourName }) {
           className="booking-input"
         />
       </div>
+
+      {/* Honeypot — hidden from humans; bots that fill it are dropped server-side */}
+      <input
+        type="text"
+        name="website"
+        value={website}
+        onChange={(e) => setWebsite(e.target.value)}
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden="true"
+        style={{ position: 'absolute', left: '-9999px', height: 0, width: 0, opacity: 0 }}
+      />
 
       {status === 'error' && (
         <div style={styles.errorBox}>

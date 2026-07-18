@@ -1,0 +1,60 @@
+<!-- EmailJS template: Enquiry (account 2) — paste into the EmailJS code editor.
+     Params: {{enquiry_type}} {{subject}} {{from_name}} {{from_email}} {{message}}
+     Settings: Subject "{{enquiry_type}}: {{subject}}" · Reply-To "{{from_email}}" -->
+<div style="margin:0;padding:24px 12px;background-color:#F7F9FC;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;margin:0 auto;">
+    <!-- Header band -->
+    <tr>
+      <td style="background-color:#2E7D5E;border-radius:12px 12px 0 0;padding:22px 28px;">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+          <tr>
+            <td style="font-family:Georgia,'Times New Roman',serif;font-size:19px;font-weight:bold;color:#ffffff;">
+              Tallest Tourguide
+            </td>
+            <td align="right">
+              <span style="display:inline-block;background-color:#F4A130;color:#1A1A2E;font-family:Arial,Helvetica,sans-serif;font-size:11px;font-weight:bold;letter-spacing:0.06em;text-transform:uppercase;padding:5px 12px;border-radius:99px;">
+                {{enquiry_type}}
+              </span>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+
+    <!-- Body card -->
+    <tr>
+      <td style="background-color:#ffffff;border:1px solid #CBD5E0;border-top:none;border-radius:0 0 12px 12px;padding:28px;">
+
+        <h1 style="margin:0 0 18px;font-family:Georgia,'Times New Roman',serif;font-size:22px;line-height:1.3;color:#1A1A2E;">
+          {{subject}}
+        </h1>
+
+        <!-- Sender row -->
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#F7F9FC;border-radius:8px;">
+          <tr>
+            <td style="padding:14px 16px;font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#1A1A2E;">
+              <strong>{{from_name}}</strong>
+              &nbsp;·&nbsp;
+              <a href="mailto:{{from_email}}" style="color:#2E7D5E;text-decoration:none;">{{from_email}}</a>
+            </td>
+          </tr>
+        </table>
+
+        <!-- Message -->
+        <div style="margin-top:20px;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.65;color:#4A5568;white-space:pre-line;">{{message}}</div>
+
+        <!-- Divider + action hint -->
+        <div style="margin-top:26px;padding-top:16px;border-top:1px solid #CBD5E0;font-family:Arial,Helvetica,sans-serif;font-size:12px;color:#4A5568;">
+          Hit <strong style="color:#2E7D5E;">Reply</strong> to answer {{from_name}} directly — this email's reply address is theirs.
+        </div>
+      </td>
+    </tr>
+
+    <!-- Footer -->
+    <tr>
+      <td style="padding:16px 8px 0;text-align:center;font-family:Arial,Helvetica,sans-serif;font-size:11px;color:#4A5568;">
+        Sent automatically from the enquiry form on tallesttourguide.com
+      </td>
+    </tr>
+  </table>
+</div>

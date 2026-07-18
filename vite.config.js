@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import adminServer from './admin-server/index.js'
+import devApi from './admin-server/dev-api.js'
 
 // The sitemap is written by scripts/sitemap.mjs during the prerender step
 // (scripts/prerender.mjs), from the same route list that drives prerendering.
@@ -10,6 +11,7 @@ import adminServer from './admin-server/index.js'
 export default defineConfig({
   plugins: [
     adminServer(),
+    devApi(),
     react(),
   ],
   build: {

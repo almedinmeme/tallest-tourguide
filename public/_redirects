@@ -9,6 +9,10 @@
 /packages          /multi-day-tours            301
 /packages/*        /multi-day-tours/:splat     301
 
+# Serverless API (availability + form submissions → Airtable). Must sit
+# above the SPA fallback or /api/* would return 200.html instead.
+/api/*    /.netlify/functions/:splat    200
+
 # SPA fallback — let the client router handle everything else.
 # 200.html is the pristine tag-free shell captured by scripts/prerender.mjs;
 # falling back to index.html would serve the prerendered HOMEPAGE (its title,

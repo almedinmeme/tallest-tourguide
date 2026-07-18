@@ -14,7 +14,7 @@ import {
   ArrowRight, ArrowLeft, CheckCircle, Check,
   Sparkles, Users, Heart,
 } from 'lucide-react'
-import emailjs from '@emailjs/browser'
+import { sendEmail } from '../utils/email'
 import useWindowWidth from '../hooks/useWindowWidth'
 import Button from '../components/Button'
 import { sortedDestinations } from '../data/destinations'
@@ -194,30 +194,22 @@ function PersonalisedTour() {
     const travellerLabel = travellerTypes.find(t => t.id === formData.travellerType)?.label || 'Not specified'
     const accommodationLabel = accommodationOptions.find(a => a.id === formData.accommodation)?.label || 'Not specified'
 
-    const templateParams = {
-      contact_name: formData.name,
-      contact_email: formData.email,
-      contact_subject: 'Personalised Tour Request',
-      contact_message:
-        `Traveller type: ${travellerLabel}\n` +
-        `Group size: ${formData.groupSize}\n` +
-        `Dates: ${formData.arrivalDate || 'Flexible'} to ${formData.departureDate || 'Flexible'}\n` +
-        `Duration: ${formData.duration || 'Flexible'}\n` +
-        `Places: ${formData.places.length > 0 ? formData.places.join(', ') : 'Open to suggestions'}\n` +
-        `Budget: ${budgetLabel}\n` +
-        `Accommodation: ${accommodationLabel}\n` +
-        `Phone: ${formData.phone || 'Not provided'}\n\n` +
-        `Interests: ${selectedActivities}\n\n` +
-        `Additional notes: ${formData.otherInfo || 'None'}\n` +
-        `How they heard about us: ${formData.howHeard || 'Not specified'}`,
-    }
-
-    emailjs.send(
-      import.meta.env.VITE_EMAILJS_SERVICE_ID,
-      import.meta.env.VITE_EMAILJS_CONTACT_TEMPLATE_ID,
-      templateParams,
-      import.meta.env.VITE_EMAILJS_PUBLIC_KEY
-    )
+    sendEmail('personalised', {
+      from_name: formData.name,
+      from_email: formData.email,
+      phone: formData.phone || 'Not provided',
+      traveller_type: travellerLabel,
+      group_size: formData.groupSize,
+      arrival_date: formData.arrivalDate || 'Flexible',
+      departure_date: formData.departureDate || 'Flexible',
+      duration: formData.duration || 'Flexible',
+      places: formData.places.length > 0 ? formData.places.join(', ') : 'Open to suggestions',
+      budget: budgetLabel,
+      accommodation: accommodationLabel,
+      interests: selectedActivities,
+      notes: formData.otherInfo || 'None',
+      how_heard: formData.howHeard || 'Not specified',
+    })
     .then(() => { setIsSending(false); setIsSuccess(true) })
     .catch(() => { setIsSending(false); setIsError(true) })
   }

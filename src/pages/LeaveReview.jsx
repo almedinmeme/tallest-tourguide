@@ -7,10 +7,6 @@ import countries from '../data/countries'
 import useWindowWidth from '../hooks/useWindowWidth'
 import Button from '../components/Button'
 
-const TOKEN = import.meta.env.VITE_AIRTABLE_TOKEN
-const BASE_ID = import.meta.env.VITE_AIRTABLE_BASE_ID
-const TABLE = 'Reviews'
-
 function StarInput({ value, onChange }) {
   const [hovered, setHovered] = useState(0)
   const display = hovered || value
@@ -56,6 +52,7 @@ function LeaveReview() {
   const [title, setTitle] = useState('')
   const [review, setReview] = useState('')
   const [rating, setRating] = useState(0)
+  const [website, setWebsite] = useState('') // honeypot — humans never see it
   const [status, setStatus] = useState('idle')
   const [errorDetail, setErrorDetail] = useState('')
 
@@ -68,36 +65,27 @@ function LeaveReview() {
     setStatus('sending')
     setErrorDetail('')
 
-    const payload = {
-      fields: {
-        Name: name.trim(),
-        ...(country.trim() ? { Country: country.trim() } : {}),
-        ...(title.trim() ? { Title: title.trim() } : {}),
-        Review: review.trim(),
-        Rating: Number(rating),
-        TourId: tour ? Number(tour.id) : slug,
-        TourName: displayName,
-        Date: new Date().toISOString().slice(0, 10),
-        Approved: true,
-      },
+    const fields = {
+      Name: name.trim(),
+      Country: country.trim(),
+      Title: title.trim(),
+      Review: review.trim(),
+      Rating: Number(rating),
+      TourId: tour ? Number(tour.id) : slug,
+      TourName: displayName,
+      Date: new Date().toISOString().slice(0, 10),
     }
 
     try {
-      const res = await fetch(
-        `https://api.airtable.com/v0/${BASE_ID}/${encodeURIComponent(TABLE)}`,
-        {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${TOKEN}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(payload),
-        }
-      )
+      const res = await fetch('/api/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ table: 'Reviews', fields, website }),
+      })
 
-      const data = await res.json()
+      const data = await res.json().catch(() => ({}))
       if (!res.ok) {
-        const msg = data?.error?.message || data?.message || `HTTP ${res.status}`
+        const msg = data?.error || `HTTP ${res.status}`
         setErrorDetail(msg)
         throw new Error(msg)
       }
@@ -208,6 +196,18 @@ function LeaveReview() {
                   className="booking-input"
                 />
               </div>
+
+              {/* Honeypot — hidden from humans; bots that fill it are dropped server-side */}
+              <input
+                type="text"
+                name="website"
+                value={website}
+                onChange={(e) => setWebsite(e.target.value)}
+                tabIndex={-1}
+                autoComplete="off"
+                aria-hidden="true"
+                style={{ position: 'absolute', left: '-9999px', height: 0, width: 0, opacity: 0 }}
+              />
 
               {status === 'error' && (
                 <div style={styles.errorBox}>

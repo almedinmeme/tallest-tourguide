@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { CONTACT_EMAIL } from '../data/settings'
-import emailjs from '@emailjs/browser'
+import { sendEmail } from '../utils/email'
 import { Check } from 'lucide-react'
 import SEO from '../components/SEO'
 import { EditorialHero, ProseSection } from '../components/Editorial'
@@ -135,13 +135,13 @@ function PartnerEnquiry({ isMobile, ctaNote }) {
       form.message,
     ].join('\n')
 
-    emailjs
-      .send(
-        import.meta.env.VITE_EMAILJS_SERVICE_ID,
-        import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
-        { type: 'DMC / Trade Enquiry', tour_name: `Trade enquiry — ${form.company}`, guest_name: form.name, guest_email: form.email, message },
-        import.meta.env.VITE_EMAILJS_PUBLIC_KEY,
-      )
+    sendEmail('enquiry', {
+      enquiry_type: 'DMC / Trade Enquiry',
+      subject: `Trade enquiry — ${form.company}`,
+      from_name: form.name,
+      from_email: form.email,
+      message,
+    })
       .then(() => {
         setIsSending(false)
         setIsSuccess(true)
