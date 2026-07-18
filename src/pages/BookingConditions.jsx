@@ -38,11 +38,11 @@ const FAQS = [
     answer: 'Yes — cancel up to 24 hours before the start and you receive a full refund, no questions asked. Inside 24 hours we can\'t refund, but we\'ll always try to move you to another date first.',
   },
   {
-    question: 'How much is the deposit on a multi-day package?',
+    question: 'How much is the deposit on a multi-day journey?',
     answer: `A ${DEPOSIT_PERCENT}% deposit confirms your booking. The remaining balance is due ${BALANCE_DUE_DAYS} days before departure.`,
   },
   {
-    question: 'What refund do I get if I cancel a multi-day package?',
+    question: 'What refund do I get if I cancel a multi-day journey?',
     answer: 'A full refund of everything paid if you cancel more than 30 days before departure, a 50% refund between 15 and 30 days, and no refund inside 15 days — by then the family-owned places we book are already committed.',
   },
   {
@@ -72,7 +72,7 @@ const sections = [
       },
       {
         type: 'p',
-        text: `For multi-day packages, a ${DEPOSIT_PERCENT}% deposit confirms your booking. The remaining balance is due ${BALANCE_DUE_DAYS} days before departure — we'll remind you well in advance.`,
+        text: `For multi-day journeys, a ${DEPOSIT_PERCENT}% deposit confirms your booking. The remaining balance is due ${BALANCE_DUE_DAYS} days before departure — we'll remind you well in advance.`,
       },
       {
         type: 'p',
@@ -114,11 +114,11 @@ const sections = [
   {
     id: 'cancellation-packages',
     number: '04',
-    title: 'Cancelling a multi-day package',
+    title: 'Cancelling a multi-day journey',
     content: [
       {
         type: 'p',
-        text: 'Multi-day packages involve real commitments to the small, family-owned places we book — homestays, agrotourism estates, boutique hotels, drivers. The refund tiers reflect that:',
+        text: 'Multi-day journeys involve real commitments to the small, family-owned places we book — homestays, agrotourism estates, boutique hotels, drivers. The refund tiers reflect that:',
       },
       { type: 'timeline' },
       {
@@ -351,7 +351,7 @@ function BookingConditions() {
     <div style={{ backgroundColor: 'var(--color-n000)', minHeight: '100vh' }}>
       <SEO
         title="Booking Conditions"
-        description="Plain-English booking conditions for Tallest Tourguide — payment schedule, deposits, cancellation and refund policy for day tours and multi-day packages in Bosnia."
+        description="Plain-English booking conditions for Tallest Tourguide — payment schedule, deposits, cancellation and refund policy for day tours and multi-day journeys in Bosnia."
         url="/booking-conditions"
       />
       <FAQSchema tour={{ faqs: FAQS }} />
@@ -379,7 +379,7 @@ function BookingConditions() {
               </ul>
             </div>
             <div>
-              <h3 style={styles.shortColHead}>Multi-day packages</h3>
+              <h3 style={styles.shortColHead}>Multi-day journeys</h3>
               <ul style={styles.shortList}>
                 {SHORT_PACKAGES.map((t) => (
                   <li key={t} style={styles.shortItem}><span style={styles.shortDot} />{t}</li>

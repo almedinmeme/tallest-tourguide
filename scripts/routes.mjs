@@ -40,7 +40,7 @@ const STATIC_ROUTES = [
 
 export function getRoutes() {
   const tours = readJson('src/data/tours.json').map((t) => `/tours/${t.slug}`)
-  const packages = readJson('src/data/packages.json').map((p) => `/packages/${p.slug}`)
+  const packages = readJson('src/data/packages.json').map((p) => `/multi-day-tours/${p.slug}`)
   const destinations = readJson('src/data/destinations.json').map((d) => `/destinations/${d.slug}`)
   const journal = readJson('src/data/journal.json')
     .filter((p) => p.published !== false && p.slug)

@@ -5,6 +5,7 @@ import { HelmetProvider } from 'react-helmet-async'
 import './index.css'
 import App from './App'
 import ScrollToTop from './components/ScrollToTop'
+import { CurrencyProvider } from './context/CurrencyContext'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -16,7 +17,9 @@ createRoot(document.getElementById('root')).render(
           page renders — guaranteeing every page starts
           at the top regardless of where the visitor was. */}
       <ScrollToTop />
-      <App />
+      <CurrencyProvider>
+        <App />
+      </CurrencyProvider>
     </BrowserRouter>
     </HelmetProvider>
   </StrictMode>

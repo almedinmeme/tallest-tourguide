@@ -135,7 +135,7 @@ export default function PackageEditor() {
         </div>
         <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
           {!isNew && pkg.slug && (
-            <a href={`/packages/${pkg.slug}`} target="_blank" rel="noreferrer" style={{ ...s.btn, ...s.btnSecondary, textDecoration: 'none' }}>
+            <a href={`/multi-day-tours/${pkg.slug}`} target="_blank" rel="noreferrer" style={{ ...s.btn, ...s.btnSecondary, textDecoration: 'none' }}>
               View on site ↗
             </a>
           )}
@@ -164,7 +164,7 @@ export default function PackageEditor() {
             titleValue={pkg.name}
             isNew={isNew}
             error={fieldErrors.slug}
-            hint="URL: /packages/your-slug"
+            hint="URL: /multi-day-tours/your-slug"
           />
           <FormField label="Duration">
             <input style={s.input} value={pkg.duration || ''} onChange={(e) => set({ duration: e.target.value })} placeholder="e.g. 5 Days" />

@@ -262,7 +262,7 @@ export function FAQSchema({ tour }) {
 //    rich result). Used in PackageDetail.jsx — one per package page.
 // ----------------------------------------------------------
 export function PackageSchema({ pkg }) {
-  const url = siteUrl(`/packages/${pkg.slug}`)
+  const url = siteUrl(`/multi-day-tours/${pkg.slug}`)
   const price = pkg.price ?? pkg.priceWithout
   const description = pkg.description || 'A multi-day guided tour package in Bosnia and Herzegovina.'
 

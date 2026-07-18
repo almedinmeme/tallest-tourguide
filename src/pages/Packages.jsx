@@ -59,6 +59,7 @@ const DIFFICULTY_COLOR = {
 
 import { packages as standardPackages } from '../data/packages'
 import { getPage } from '../data/pages'
+import { useCurrency } from '../context/CurrencyContext'
 
 // Hero photo and SEO are editable in the admin (Pages → Journeys); empty
 // fields fall back to the built-ins.
@@ -66,6 +67,7 @@ const journeysPage = getPage('journeys')
 const HERO_IMAGE = journeysPage?.extra?.heroImage || '/uploads/balkans-full-arc-803ecks8.webp'
 
 function Packages() {
+  const { format } = useCurrency()
   const width = useWindowWidth()
   const isMobile = width <= 768
   const isTablet = width <= 960
@@ -123,7 +125,7 @@ function Packages() {
 
       <SEO
         title={journeysPage?.seo?.title || 'Multi-day tours'}
-        description={journeysPage?.seo?.description || 'Multi-day tour packages across Bosnia and the Balkans — from the 4-Day Complete Sarajevo Experience to Sarajevo to Dubrovnik and the Balkans Full Arc. Private transfers, meals, and all guided experiences included.'}
+        description={journeysPage?.seo?.description || 'Multi-day tours across Bosnia and the Balkans — from the 4-Day Complete Sarajevo Experience to Sarajevo to Dubrovnik and the Balkans Full Arc. Private transfers, meals, and all guided experiences included.'}
         url="/multi-day-tours"
         image="https://tallesttourguide.com/og-image.jpg"
       />
@@ -226,7 +228,7 @@ function Packages() {
                 </div>
                 <span style={styles.resultCount}>
                   <strong style={styles.resultCountNumber}>{sorted.length}</strong>{' '}
-                  {sorted.length === 1 ? 'package' : 'packages'}
+                  {sorted.length === 1 ? 'journey' : 'journeys'}
                 </span>
               </div>
 
@@ -300,13 +302,13 @@ function Packages() {
       <section style={styles.packagesSection}>
         {sorted.length === 0 ? (
           <div style={styles.noResults}>
-            <p style={styles.noResultsText}>No packages match your filters.</p>
+            <p style={styles.noResultsText}>No journeys match your filters.</p>
             <button style={styles.noResultsClear} onClick={clearFilters}>Clear filters →</button>
           </div>
         ) : (
           <div style={{ ...styles.cardsList, gridTemplateColumns: cols }}>
             {sorted.map((pkg) => (
-              <Link key={pkg.id} to={`/packages/${pkg.slug}`} style={styles.cardLink}>
+              <Link key={pkg.id} to={`/multi-day-tours/${pkg.slug}`} style={styles.cardLink}>
                 <div style={styles.card} className="pkg-card">
                   <div style={styles.imageWrapper}>
                     <img src={pkg.hero} alt={pkg.name} style={styles.photo} className="pkg-card-img" />
@@ -326,10 +328,10 @@ function Packages() {
                       <div style={styles.priceRow}>
                         <div style={styles.priceBlock}>
                           <span style={styles.priceFrom}>from</span>
-                          <span style={styles.price}>€{pkg.price}</span>
+                          <span style={styles.price}>{format(pkg.price)}</span>
                         </div>
                         <button className="btn btn--sm pkg-card-btn">
-                          View package
+                          View journey
                           <ArrowRight size={13} />
                         </button>
                       </div>
@@ -362,7 +364,7 @@ function Packages() {
             <div style={styles.personalisedIconWrapper}>
               <Sparkles size={28} color="var(--color-amber)" strokeWidth={1.5} />
             </div>
-            <h2 style={styles.personalisedTitle}>Personalised Tour Package</h2>
+            <h2 style={styles.personalisedTitle}>Personalised Journey</h2>
             <p style={styles.personalisedTagline}>Your interests. Your pace. Your Bosnia.</p>
             <p style={styles.personalisedDesc}>
               Not every traveller fits a template. If you have specific interests,
@@ -404,7 +406,7 @@ function Packages() {
       <section style={styles.ctaBanner}>
         <div style={styles.ctaBannerInner}>
           <h2 style={styles.ctaBannerTitle}>
-            Not sure which multi-day tour is right for you?
+            Not sure which journey is right for you?
           </h2>
           <p style={styles.ctaBannerText}>
             Send a message and we'll recommend the best option

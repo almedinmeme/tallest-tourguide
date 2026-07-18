@@ -49,7 +49,7 @@ function LeaveReview() {
   const isMobile = width <= 768
   const tour = tours.find((t) => t.slug === slug)
   const displayName = tour ? tour.title : slugToTitle(slug)
-  const backPath = tour ? `/tours/${slug}` : `/packages/${slug}`
+  const backPath = tour ? `/tours/${slug}` : `/multi-day-tours/${slug}`
 
   const [name, setName] = useState('')
   const [country, setCountry] = useState('')

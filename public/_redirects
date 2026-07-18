@@ -4,6 +4,11 @@
 /blog              /journal            301
 /blog/*            /journal/:splat     301
 
+# Journey detail pages moved under their listing: /packages/:slug is now
+# /multi-day-tours/:slug. Same reasoning — preserve rankings and old links.
+/packages          /multi-day-tours            301
+/packages/*        /multi-day-tours/:splat     301
+
 # SPA fallback — let the client router handle everything else.
 # 200.html is the pristine tag-free shell captured by scripts/prerender.mjs;
 # falling back to index.html would serve the prerendered HOMEPAGE (its title,

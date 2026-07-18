@@ -3,8 +3,10 @@ import { EditorialHero, ProseSection, EndCTA, Placeholder } from '../components/
 import Button from '../components/Button'
 import { getPage } from '../data/pages'
 import useWindowWidth from '../hooks/useWindowWidth'
+import { useCurrency } from '../context/CurrencyContext'
 
 export default function Signature() {
+  const { format } = useCurrency()
   const page = getPage('signature') || {}
   const hero = page.hero || {}
   const sections = Array.isArray(page.sections) ? page.sections : []
@@ -81,7 +83,7 @@ export default function Signature() {
                   {j.duration && <Meta label="Length" value={j.duration} />}
                   {j.maxGuests && <Meta label="Group" value={j.maxGuests} />}
                   {j.expert && <Meta label="Led by" value={j.expert} />}
-                  {j.fromPrice && <Meta label="From" value={j.fromPrice === 'On request' ? 'On request' : `€${j.fromPrice} pp`} />}
+                  {j.fromPrice && <Meta label="From" value={isNaN(Number(j.fromPrice)) ? j.fromPrice : `${format(j.fromPrice)} pp`} />}
                 </div>
                 {j.route && (
                   <div style={{ marginTop: 26 }}>

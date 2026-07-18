@@ -11,6 +11,7 @@ import { Link } from 'react-router-dom'
 import { getTourLanguages } from '../data/tourLanguages'
 import { CANCEL_SHORT_TOUR } from '../data/policy'
 import Img from './Img'
+import { useCurrency } from '../context/CurrencyContext'
 
 // Language flags are parked, not deleted: today every tour runs in English
 // and Bosnian, so the flags carry no decision value on the card. Flip this
@@ -18,6 +19,7 @@ import Img from './Img'
 const SHOW_LANGUAGE_FLAGS = false
 
 function TourCard({ id, slug, title, price, oldPrice, rating, reviews, duration, highlights, badge, hero, startingTimes, languages }) {
+  const { format } = useCurrency()
   const supportedLanguages = getTourLanguages(languages)
   const [cardHovered, setCardHovered] = useState(false)
   // Accepts the highlights array or a pre-computed count.
@@ -66,8 +68,8 @@ function TourCard({ id, slug, title, price, oldPrice, rating, reviews, duration,
               through the card details first. */}
           <div style={styles.pricePill}>
             {hasDiscount && <span style={styles.discountTag}>−{discountPct}%</span>}
-            {hasDiscount && <span style={styles.priceWas}>€{oldPrice}</span>}
-            <span style={styles.priceAmount}>€{price}</span>
+            {hasDiscount && <span style={styles.priceWas}>{format(oldPrice)}</span>}
+            <span style={styles.priceAmount}>{format(price)}</span>
             <span style={styles.pricePer}>/person</span>
           </div>
 
@@ -150,7 +152,7 @@ function TourCard({ id, slug, title, price, oldPrice, rating, reviews, duration,
                 the true 24h promise otherwise. */}
             {!SHOW_LANGUAGE_FLAGS && (
               hasDiscount
-                ? <span style={styles.saveNote}>You save €{oldPrice - price}</span>
+                ? <span style={styles.saveNote}>You save {format(oldPrice - price)}</span>
                 : <span style={styles.cancelNote}>{CANCEL_SHORT_TOUR}</span>
             )}
           </div>

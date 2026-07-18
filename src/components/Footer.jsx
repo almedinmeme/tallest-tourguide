@@ -94,10 +94,10 @@ function Footer() {
           <nav style={styles.linkList}>
             {[
               { to: '/tours', label: 'Tours' },
-              { to: '/multi-day-tours', label: 'Multi-day tours' },
+              { to: '/multi-day-tours', label: 'Journeys' },
               { to: '/destinations', label: 'Destinations' },
               { to: '/journal', label: 'The Journal' },
-              { to: '/personalised', label: 'Personalised Tour' },
+              { to: '/personalised', label: 'Personalised Journey' },
             ].map(({ to, label }) => (
               <Link
                 key={to}

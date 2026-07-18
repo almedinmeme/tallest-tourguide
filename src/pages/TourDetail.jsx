@@ -13,16 +13,19 @@ import {
 import Breadcrumbs from '../components/Breadcrumbs'
 import FromTheJournal from '../components/FromTheJournal'
 import Img from '../components/Img'
+import { useCurrency } from '../context/CurrencyContext'
 import { lazy, Suspense, useCallback, useEffect, useRef, useState } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import { trackEvent } from '../utils/analytics'
 import {
   Star, Clock, Users, MapPin, CheckCircle,
   XCircle, ShieldCheck, ChevronDown, ChevronUp,
-  X, Globe, Timer, AlertTriangle, Accessibility
+  X, Globe, Timer, AlertTriangle, Accessibility,
+  Calendar,
 } from 'lucide-react'
 import useWindowWidth from '../hooks/useWindowWidth'
 import tours from '../data/tours'
+import { CANCEL_LINE_TOUR } from '../data/policy'
 import { getTourLanguages } from '../data/tourLanguages'
 import Gallery from '../components/Gallery'
 import Button from '../components/Button'
@@ -185,6 +188,7 @@ const showMoreBtnStyle = {
 }
 
 function TourDetail() {
+  const { format } = useCurrency()
   const { slug } = useParams()
   const navigate = useNavigate()
   const tour = tours.find((t) => t.slug === slug)
@@ -196,6 +200,7 @@ function TourDetail() {
 
   // Booking form state
   const [selectedDate, setSelectedDate] = useState(getTomorrow())
+  const [dateError, setDateError] = useState(false)
   const [startTime, setStartTime] = useState(tour?.startingTimes?.[0] ?? '')
   const [selectedLanguage, setSelectedLanguage] = useState(
     supportedLanguages[0]?.id ?? 'english'
@@ -279,7 +284,7 @@ function TourDetail() {
     ex?.perPerson ? (Number(ex.price) || 0) * numPeople : (Number(ex?.price) || 0)
 
   const totalPrice = tour ? (tourType === 'private' ? 0 : tour.price * numPeople) : 0
-  const bookingPriceLabel = tourType === 'private' ? 'Quote' : `€${totalPrice}`
+  const bookingPriceLabel = tourType === 'private' ? 'Quote' : format(totalPrice)
   const spotsLeft = tour ? getSpotsLeft(tour.slug, selectedDate, selectedLanguage, tour.groupSize) : null
   const maxPeople = tourType === 'private'
     ? 20
@@ -301,7 +306,7 @@ function TourDetail() {
   // reserve & pay later. The Airtable save + emails happen there.
   const handleBooking = () => {
     if (!selectedDate) {
-      alert('Please select a date for your tour.')
+      setDateError(true)
       return
     }
 
@@ -388,7 +393,7 @@ function TourDetail() {
     <div style={{ ...styles.bookingCard, padding: '16px' }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
         <h3 style={{ fontFamily: 'var(--font-display)', fontWeight: '700', fontSize: '17px', color: 'var(--color-n900)', margin: 0 }}>
-          Tour details
+          Book this tour
         </h3>
       </div>
 
@@ -421,10 +426,10 @@ function TourDetail() {
                     <span style={styles.typeOptionPrice}>
                       {Number(tour.oldPrice) > Number(tour.price) && (
                         <span style={{ fontSize: '13px', fontWeight: 500, color: 'var(--color-n400)', textDecoration: 'line-through', marginRight: '5px' }}>
-                          €{tour.oldPrice}
+                          {format(tour.oldPrice)}
                         </span>
                       )}
-                      €{tour.price}
+                      {format(tour.price)}
                       <span style={styles.typePerPerson}>/person</span>
                     </span>
                   </button>
@@ -481,9 +486,14 @@ function TourDetail() {
                     textAlign: 'left',
                     color: 'var(--color-n800)',
                   }}
-                  onClick={() => setCalendarOpen((v) => !v)}
+                  onClick={() => { setDateError(false); setCalendarOpen((v) => !v) }}
                 >
-                  <span>{formatSelectedDate(selectedDate)}</span>
+                  <span style={{ display: 'flex', alignItems: 'center', gap: '7px', minWidth: 0 }}>
+                    <Calendar size={14} color="var(--color-n500)" style={{ flexShrink: 0 }} />
+                    <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      {formatSelectedDate(selectedDate)}
+                    </span>
+                  </span>
                   <ChevronDown
                     size={14}
                     color="var(--color-n500)"
@@ -618,12 +628,24 @@ function TourDetail() {
               </div>
 
               {tourType === 'shared' && (
-                <div style={styles.totalRow}>
-                  <span style={styles.totalLabel}>Total</span>
-                  <span style={styles.totalPrice}>€{totalPrice}</span>
+                <div style={styles.receiptPanel}>
+                  <div style={{ ...styles.totalRow, padding: 0, marginBottom: 0 }}>
+                    <div>
+                      <span style={styles.totalLabel}>Total</span>
+                      {numPeople > 1 && (
+                        <span style={styles.totalBreakdown}>
+                          {format(tour.price)} × {numPeople} people
+                        </span>
+                      )}
+                    </div>
+                    <span style={styles.totalPrice}>{format(totalPrice)}</span>
+                  </div>
                 </div>
               )}
 
+              {dateError && (
+                <p style={styles.dateErrorText}>Please choose a date first.</p>
+              )}
 
               <Button
                 variant="primary"
@@ -631,8 +653,19 @@ function TourDetail() {
                 style={{ marginBottom: 10 }}
                 onClick={handleBooking}
               >
-                {`Continue to checkout — ${bookingPriceLabel}`}
+                {tourType === 'private' ? 'Request a private quote' : `Continue to checkout — ${bookingPriceLabel}`}
               </Button>
+
+              <div style={styles.trustRows}>
+                <div style={styles.trustRow}>
+                  <CheckCircle size={13} color="var(--color-forest-green)" style={{ flexShrink: 0, marginTop: '2px' }} />
+                  <span>{CANCEL_LINE_TOUR}</span>
+                </div>
+                <div style={styles.trustRow}>
+                  <ShieldCheck size={13} color="var(--color-forest-green)" style={{ flexShrink: 0, marginTop: '2px' }} />
+                  <span>Secure checkout — pay by card or bank invoice</span>
+                </div>
+              </div>
           </>
     </div>
   )
@@ -1242,10 +1275,10 @@ function TourDetail() {
           <div style={styles.mobileBottomBarLeft}>
             {Number(tour.oldPrice) > Number(tour.price) && (
               <span style={{ fontFamily: 'var(--font-body)', fontSize: '13px', color: 'var(--color-n400)', textDecoration: 'line-through', marginRight: '2px' }}>
-                €{tour.oldPrice}
+                {format(tour.oldPrice)}
               </span>
             )}
-            <span style={styles.mobilePrice}>€{tour.price}</span>
+            <span style={styles.mobilePrice}>{format(tour.price)}</span>
             <span style={styles.mobilePricePer}>per person</span>
           </div>
           <Button variant="primary" size="sm" onClick={() => setDrawerOpen(true)}>
@@ -1885,6 +1918,46 @@ const styles = {
     fontWeight: '700',
     fontSize: 'var(--text-h3)',
     color: 'var(--color-forest-green)',
+  },
+
+  totalBreakdown: {
+    display: 'block',
+    fontFamily: 'var(--font-body)',
+    fontSize: '12px',
+    color: 'var(--color-n500)',
+    marginTop: '2px',
+  },
+
+  receiptPanel: {
+    backgroundColor: 'var(--color-n100)',
+    borderRadius: '12px',
+    padding: '12px 14px',
+    margin: '4px 0 14px',
+  },
+
+  trustRows: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '7px',
+    marginTop: '4px',
+  },
+
+  trustRow: {
+    display: 'flex',
+    alignItems: 'flex-start',
+    gap: '7px',
+    fontFamily: 'var(--font-body)',
+    fontSize: '12px',
+    lineHeight: '1.45',
+    color: 'var(--color-n600)',
+  },
+
+  dateErrorText: {
+    fontFamily: 'var(--font-body)',
+    fontSize: '12px',
+    fontWeight: '600',
+    color: 'var(--color-error, #C0392B)',
+    margin: '0 0 8px',
   },
 
   buttonRow: {

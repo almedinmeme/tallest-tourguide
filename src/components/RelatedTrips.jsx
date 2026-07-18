@@ -5,6 +5,7 @@
 import { Link } from 'react-router-dom'
 import { tours } from '../data/tours'
 import { packages } from '../data/packages'
+import { useCurrency } from '../context/CurrencyContext'
 
 function resolve(slugs, collection, basePath, kind) {
   if (!Array.isArray(slugs)) return []
@@ -26,9 +27,10 @@ function resolve(slugs, collection, basePath, kind) {
 }
 
 export default function RelatedTrips({ tourSlugs = [], packageSlugs = [], heading = 'Travel here with us', intro }) {
+  const { format } = useCurrency()
   const items = [
     ...resolve(tourSlugs, tours, '/tours', 'Day tour'),
-    ...resolve(packageSlugs, packages, '/packages', 'Multi-day'),
+    ...resolve(packageSlugs, packages, '/multi-day-tours', 'Multi-day'),
   ]
   if (items.length === 0) return null
 
@@ -52,7 +54,7 @@ export default function RelatedTrips({ tourSlugs = [], packageSlugs = [], headin
                 <h3 style={styles.title}>{it.title}</h3>
                 <div style={styles.meta}>
                   {it.duration && <span>{it.duration}</span>}
-                  {it.price != null && <span style={styles.price}>from €{it.price}</span>}
+                  {it.price != null && <span style={styles.price}>from {format(it.price)}</span>}
                 </div>
               </div>
             </Link>

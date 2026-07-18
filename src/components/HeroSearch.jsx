@@ -11,6 +11,7 @@ import tours from '../data/tours'
 import { searchPackageLinks } from '../data/navigation'
 import { posts } from '../data/journal'
 import { SearchGroup, SearchResult } from './nav/SearchResults'
+import { useCurrency } from '../context/CurrencyContext'
 
 function match(query, ...fields) {
   const q = query.toLowerCase()
@@ -27,6 +28,7 @@ const QUICK_LINKS = [
 ]
 
 export default function HeroSearch({ isMobile = false }) {
+  const { format } = useCurrency()
   const navigate = useNavigate()
   const [query, setQuery] = useState('')
   const [focused, setFocused] = useState(false)
@@ -86,7 +88,7 @@ export default function HeroSearch({ isMobile = false }) {
               if (e.key === 'Escape') setFocused(false)
             }}
             placeholder={isMobile ? 'Where to? Try “Mostar”…' : 'Where to? Try “Mostar” or “food tour”…'}
-            aria-label="Search tours and packages"
+            aria-label="Search tours and journeys"
             style={{
               flex: 1,
               minWidth: 0,
@@ -156,14 +158,14 @@ export default function HeroSearch({ isMobile = false }) {
             {tourResults.length > 0 && (
               <SearchGroup label="Day tours">
                 {tourResults.map((t) => (
-                  <SearchResult key={t.id} to={`/tours/${t.slug}`} title={t.title} meta={`${t.duration} · €${t.price}`} />
+                  <SearchResult key={t.id} to={`/tours/${t.slug}`} title={t.title} meta={`${t.duration} · ${format(t.price)}`} />
                 ))}
               </SearchGroup>
             )}
             {packageResults.length > 0 && (
               <SearchGroup label="Multi-day journeys">
                 {packageResults.map((p) => (
-                  <SearchResult key={p.slug} to={p.href} title={p.name} meta={p.meta} />
+                  <SearchResult key={p.slug} to={p.href} title={p.name} meta={p.price != null ? `${p.meta} · from ${format(p.price)}` : p.meta} />
                 ))}
               </SearchGroup>
             )}

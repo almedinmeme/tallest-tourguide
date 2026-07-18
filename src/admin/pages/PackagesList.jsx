@@ -151,7 +151,7 @@ export default function PackagesList() {
                     )}
                     <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginTop: 5 }}>
                       <code style={{ fontSize: 11, color: colors.textMuted, fontFamily: 'ui-monospace, monospace' }}>
-                        /packages/{p.slug}
+                        /multi-day-tours/{p.slug}
                       </code>
                       {p.badge && <span style={s.pill}>{p.badge}</span>}
                       {days != null && (
@@ -178,7 +178,7 @@ export default function PackagesList() {
                         disabled={!canReorder || idx === filtered.length - 1}
                         onClick={() => move(idx, 1)}
                       >↓</button>
-                      <a href={`/packages/${p.slug}`} target="_blank" rel="noreferrer" style={{ ...s.btn, ...s.btnGhost, textDecoration: 'none' }} title="Open public page">↗</a>
+                      <a href={`/multi-day-tours/${p.slug}`} target="_blank" rel="noreferrer" style={{ ...s.btn, ...s.btnGhost, textDecoration: 'none' }} title="Open public page">↗</a>
                       <button style={{ ...s.btn, ...s.btnGhost, padding: '6px 8px' }} title="Duplicate this package" onClick={() => duplicate(p)}>⧉</button>
                       <Link to={`/admin/packages/${p.id}`} style={{ ...s.btn, ...s.btnSecondary, textDecoration: 'none' }}>Edit</Link>
                       <button style={{ ...s.btn, ...s.btnGhost, color: colors.danger }} onClick={() => setPendingDelete({ id: p.id, name: p.name })}>Delete</button>

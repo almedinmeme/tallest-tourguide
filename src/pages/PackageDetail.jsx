@@ -1,5 +1,5 @@
 import SEO from '../components/SEO'
-import { lazy, Suspense, useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import { trackEvent } from '../utils/analytics'
 import {
@@ -23,8 +23,9 @@ import Gallery from '../components/Gallery'
 import Button from '../components/Button'
 import TourReviews from '../components/TourReviews'
 import RichContent from '../components/RichContent'
+import { useCurrency } from '../context/CurrencyContext'
 import AccessibilitySection from '../components/AccessibilitySection'
-const RouteMap = lazy(() => import('../components/RouteMap'))
+import JourneyRoute from '../components/JourneyRoute'
 import { PackageSchema } from '../schema/SchemaMarkup'
 import Breadcrumbs from '../components/Breadcrumbs'
 import FromTheJournal from '../components/FromTheJournal'
@@ -56,7 +57,7 @@ function formatSelectedDate(dateStr) {
 function formatDepartureDate(dateStr) {
   const [y, m, d] = dateStr.split('-').map(Number)
   return new Date(y, m - 1, d).toLocaleDateString('en-GB', {
-    weekday: 'short', day: 'numeric', month: 'short',
+    weekday: 'short', day: 'numeric', month: 'short', year: 'numeric',
   })
 }
 
@@ -105,6 +106,7 @@ const activityIconMap = {
 }
 
 import { packages } from '../data/packages'
+import { DEPOSIT_PERCENT, BALANCE_DUE_DAYS } from '../data/policy'
 
 const BREAKDOWN_CARDS = [
   { key: 'accommodation', label: 'Accommodation',        Icon: BedDouble,  color: '#2e7d5e', bg: 'rgba(46,125,94,0.09)' },
@@ -271,6 +273,7 @@ const DIFF_COLOR = {
 }
 
 function PackageDetail() {
+  const { format } = useCurrency()
   const { slug } = useParams()
   const navigate = useNavigate()
   const pkg = packages.find((p) => p.slug === slug)
@@ -322,6 +325,7 @@ function PackageDetail() {
 
   const [formMode, setFormMode] = useState('booking') // 'booking' | 'enquiry'
   const [selectedDate, setSelectedDate] = useState('')
+  const [dateError, setDateError] = useState(false)
   const [numPeople, setNumPeople] = useState(1)
   const [selectedLanguage, setSelectedLanguage] = useState('english')
   const [withAccommodation, setWithAccommodation] = useState('without')
@@ -369,7 +373,7 @@ function PackageDetail() {
     return (
       <div style={styles.notFound}>
         <h2>Package not found</h2>
-        <Link to="/multi-day-tours" style={styles.backLinkDark}>← Back to packages</Link>
+        <Link to="/multi-day-tours" style={styles.backLinkDark}>← Back to journeys</Link>
       </div>
     )
   }
@@ -407,7 +411,7 @@ function PackageDetail() {
   // or reserve & pay later. The Airtable save + emails happen there.
   const handleBooking = () => {
     if (!selectedDate) {
-      alert('Please select a date for your trip.')
+      setDateError(true)
       return
     }
 
@@ -459,8 +463,8 @@ function PackageDetail() {
         booking: {
           kind: 'package',
           title: `${pkg.name} — ${pkg.subtitle}`,
-          backLink: `/packages/${pkg.slug}`,
-          backLabel: 'Back to package',
+          backLink: `/multi-day-tours/${pkg.slug}`,
+          backLabel: 'Back to journey',
           isQuote: false,
           deposit: true,
           summary: {
@@ -567,18 +571,13 @@ function PackageDetail() {
               {isEnquiryError && (
                 <p style={styles.errorMessage}>Something went wrong. Please try again or email us directly.</p>
               )}
+              <p style={styles.enquiryNote}>We reply within 24 hours — usually much faster.</p>
             </>
           ) : (
           <>
           {/* ── BOOKING MODE ── */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', marginTop: '16px' }}>
-            <span style={{ fontFamily: 'var(--font-body)', fontSize: '13px', fontWeight: '600', color: 'var(--color-n700)' }}>
-              Book a package
-            </span>
-          </div>
-
           <>
-              <div style={{ ...styles.formGroup, marginBottom: '12px' }}>
+              <div style={{ ...styles.formGroup, marginTop: '16px', marginBottom: '12px' }}>
                 <div style={styles.accomGrid}>
                   <button
                     type="button"
@@ -590,10 +589,13 @@ function PackageDetail() {
                     }}
                   >
                     <span style={{ ...styles.accomOptionTitle, color: withAccommodation === 'without' ? 'var(--color-forest-green)' : 'var(--color-n900)' }}>
-                      Accommodation excluded
+                      Journey only
                     </span>
                     <span style={styles.accomOptionPrice}>
-                      €{pkg.priceWithout}<span style={styles.accomPerPerson}>/person</span>
+                      {Number(pkg.originalPrice) > Number(pkg.priceWithout) && (
+                        <span style={styles.accomOldPrice}>{format(pkg.originalPrice)}</span>
+                      )}
+                      {format(pkg.priceWithout)}<span style={styles.accomPerPerson}>/person</span>
                     </span>
                   </button>
                   <button
@@ -606,17 +608,23 @@ function PackageDetail() {
                     }}
                   >
                     <span style={{ ...styles.accomOptionTitle, color: withAccommodation === 'with' ? 'var(--color-forest-green)' : 'var(--color-n900)' }}>
-                      4★ Hotel included
+                      With 4★ hotels
                     </span>
                     <span style={styles.accomOptionPrice}>
-                      €{pkg.priceWith}<span style={styles.accomPerPerson}>/person</span>
+                      {format(pkg.priceWith)}<span style={styles.accomPerPerson}>/person</span>
                     </span>
                   </button>
                 </div>
+                <p style={styles.accomHint}>
+                  {withAccommodation === 'with'
+                    ? 'Everything in Journey only, plus hand-picked 4★ hotels.'
+                    : 'All guiding, transport & experiences — you arrange your stays.'}
+                </p>
               </div>
 
 
-              <div style={{ ...styles.formGroup, position: 'relative' }} ref={calendarWrapperRef}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1.25fr 1fr', gap: '10px', alignItems: 'start', marginBottom: '12px' }}>
+              <div style={{ ...styles.formGroup, position: 'relative', marginBottom: 0 }} ref={calendarWrapperRef}>
                 <label style={styles.label}>Select a Date</label>
                 <button
                   type="button"
@@ -628,15 +636,19 @@ function PackageDetail() {
                     cursor: datesLoading ? 'default' : 'pointer',
                     textAlign: 'left',
                     color: selectedDate ? 'var(--color-n800)' : 'var(--color-n500)',
+                    ...(dateError ? { borderColor: 'var(--color-error, #C0392B)' } : {}),
                   }}
-                  onClick={() => !datesLoading && setCalendarOpen((v) => !v)}
+                  onClick={() => { if (datesLoading) return; setDateError(false); setCalendarOpen((v) => !v) }}
                 >
-                  <span>
-                    {datesLoading
-                      ? 'Loading dates…'
-                      : selectedDate
-                        ? formatDepartureDate(selectedDate)
-                        : 'Select a departure date'}
+                  <span style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0 }}>
+                    <Calendar size={14} color="var(--color-n500)" style={{ flexShrink: 0 }} />
+                    <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      {datesLoading
+                        ? 'Loading dates…'
+                        : selectedDate
+                          ? formatDepartureDate(selectedDate)
+                          : 'Choose a date'}
+                    </span>
                   </span>
                   <ChevronDown
                     size={14}
@@ -665,7 +677,7 @@ function PackageDetail() {
                       position: 'absolute',
                       top: 'calc(100% + 6px)',
                       left: 0,
-                      right: 0,
+                      width: 'min(300px, 82vw)',
                       zIndex: 200,
                     }),
                     backgroundColor: 'var(--color-n000)',
@@ -714,6 +726,7 @@ function PackageDetail() {
                             disabled={isFull}
                             onClick={() => {
                               setSelectedDate(date)
+                              setDateError(false)
                               setCalendarOpen(false)
                               if (spots != null) setNumPeople((n) => Math.min(n, spots))
                             }}
@@ -746,10 +759,19 @@ function PackageDetail() {
                     )}
                   </div>
                 )}
+                {dateError && (
+                  <p style={styles.dateErrorText}>Please choose a departure date first.</p>
+                )}
+                {!dateError && selectedDate && (() => {
+                  const spots = getSpotsLeft(pkg.slug, selectedDate, selectedLanguage, pkg.groupSize)
+                  return spots != null && spots > 0 && spots <= 3 ? (
+                    <p style={styles.spotsHint}>Only {spots} {spots === 1 ? 'spot' : 'spots'} left on this date</p>
+                  ) : null
+                })()}
               </div>
 
-              <div style={{ ...styles.formGroup, marginBottom: '12px' }}>
-                <label style={styles.label}>Number of People</label>
+              <div style={{ ...styles.formGroup, marginBottom: 0 }}>
+                <label style={styles.label}>People</label>
                 <div style={styles.stepper}>
                   <button
                     type="button"
@@ -763,9 +785,7 @@ function PackageDetail() {
                   >
                     −
                   </button>
-                  <span style={styles.stepperValue}>
-                    {numPeople} {numPeople === 1 ? 'person' : 'people'}
-                  </span>
+                  <span style={styles.stepperValue}>{numPeople}</span>
                   <button
                     type="button"
                     disabled={numPeople >= maxPeople}
@@ -780,10 +800,23 @@ function PackageDetail() {
                   </button>
                 </div>
               </div>
+              </div>
 
-              <div style={styles.totalRow}>
-                <span style={styles.totalLabel}>Total</span>
-                <span style={styles.totalPrice}>€{totalPrice}</span>
+              <div style={styles.receiptPanel}>
+                <div style={{ ...styles.totalRow, padding: 0, marginBottom: 0 }}>
+                  <div>
+                    <span style={styles.totalLabel}>Total</span>
+                    {numPeople > 1 && (
+                      <span style={styles.totalBreakdown}>
+                        {format(withAccommodation === 'with' ? pkg.priceWith : pkg.priceWithout)} × {numPeople} people
+                      </span>
+                    )}
+                  </div>
+                  <span style={styles.totalPrice}>{format(totalPrice)}</span>
+                </div>
+                <p style={{ ...styles.depositLine, margin: '8px 0 0' }}>
+                  A {DEPOSIT_PERCENT}% deposit secures your places — the balance is due {BALANCE_DUE_DAYS} days before departure.
+                </p>
               </div>
 
               <Button
@@ -792,8 +825,19 @@ function PackageDetail() {
                 style={{ marginBottom: 10 }}
                 onClick={handleBooking}
               >
-                Continue to checkout — €{totalPrice}
+                Continue to checkout — {format(totalPrice)}
               </Button>
+
+              <div style={styles.trustRows}>
+                <div style={styles.trustRow}>
+                  <CheckCircle size={13} color="var(--color-forest-green)" style={{ flexShrink: 0, marginTop: '2px' }} />
+                  <span>Full refund on cancellations more than {BALANCE_DUE_DAYS} days before departure</span>
+                </div>
+                <div style={styles.trustRow}>
+                  <ShieldCheck size={13} color="var(--color-forest-green)" style={{ flexShrink: 0, marginTop: '2px' }} />
+                  <span>Secure card checkout — pay in full or a {DEPOSIT_PERCENT}% deposit</span>
+                </div>
+              </div>
             </>
           </>
           )}
@@ -811,7 +855,7 @@ function PackageDetail() {
   title={`${pkg.name} — ${pkg.subtitle}`}
   description={(pkg.about || pkg.description || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 155)}
   image={pkg.heroImage || pkg.hero || undefined}
-  url={`/packages/${pkg.slug}`}
+  url={`/multi-day-tours/${pkg.slug}`}
 />
 <PackageSchema pkg={pkg} />
 
@@ -821,8 +865,8 @@ function PackageDetail() {
         <div style={styles.heroGradientTop} />
         <div style={styles.heroBackLink}>
           <Breadcrumbs items={[
-            { name: 'Multi-day tours', path: '/multi-day-tours' },
-            { name: pkg.name, path: `/packages/${pkg.slug}` },
+            { name: 'Journeys', path: '/multi-day-tours' },
+            { name: pkg.name, path: `/multi-day-tours/${pkg.slug}` },
           ]} />
         </div>
       </div>
@@ -904,7 +948,7 @@ function PackageDetail() {
 
             {/* Overview: About + Activities */}
             <div id="overview" style={styles.section}>
-              <h2 style={styles.sectionTitle}>About this package</h2>
+              <h2 style={styles.sectionTitle}>About this journey</h2>
               <RichContent value={pkg.about} paragraphStyle={styles.bodyText} htmlStyle={styles.bodyText} />
             </div>
 
@@ -938,12 +982,8 @@ function PackageDetail() {
               </div>
             </div>
 
-            {/* Route map — only if package has waypoints */}
-            {pkg.mapWaypoints && pkg.mapWaypoints.length > 0 && (
-              <Suspense fallback={null}>
-                <RouteMap waypoints={pkg.mapWaypoints} profile={pkg.mapProfile} />
-              </Suspense>
-            )}
+            {/* Route infographic — derived from the itinerary days */}
+            <JourneyRoute days={pkg.days} isMobile={isMobile} />
 
             {/* Day by Day Itinerary */}
             <div id="itinerary" style={styles.section}>
@@ -1021,33 +1061,18 @@ function PackageDetail() {
                               <div style={{ height: '1px', backgroundColor: 'var(--color-n200)', margin: '4px 0 4px' }} />
                             )}
 
-                            {day.morning && (
-                              <div style={styles.timeBlock}>
-                                <div style={styles.timeLabelRow}>
-                                  <span style={{ ...styles.timeDot, backgroundColor: 'rgba(241,196,15,0.7)' }} />
-                                  <span style={styles.timeLabel}>Morning</span>
+                            {/* One combined day description. Falls back to the
+                                old morning/afternoon/evening fields if a day
+                                somehow still carries them (un-migrated data). */}
+                            {(() => {
+                              const body = day.details
+                                || [day.morning, day.afternoon, day.evening].filter(Boolean).join('')
+                              return body ? (
+                                <div style={styles.timeBlock}>
+                                  <RichContent value={body} paragraphStyle={styles.timeContent} htmlStyle={styles.timeContent} />
                                 </div>
-                                <RichContent value={day.morning} paragraphStyle={styles.timeContent} htmlStyle={styles.timeContent} />
-                              </div>
-                            )}
-                            {day.afternoon && (
-                              <div style={styles.timeBlock}>
-                                <div style={styles.timeLabelRow}>
-                                  <span style={{ ...styles.timeDot, backgroundColor: 'rgba(46,125,94,0.5)' }} />
-                                  <span style={styles.timeLabel}>Afternoon</span>
-                                </div>
-                                <RichContent value={day.afternoon} paragraphStyle={styles.timeContent} htmlStyle={styles.timeContent} />
-                              </div>
-                            )}
-                            {day.evening && (
-                              <div style={styles.timeBlock}>
-                                <div style={styles.timeLabelRow}>
-                                  <span style={{ ...styles.timeDot, backgroundColor: 'rgba(99,102,241,0.5)' }} />
-                                  <span style={styles.timeLabel}>Evening</span>
-                                </div>
-                                <RichContent value={day.evening} paragraphStyle={styles.timeContent} htmlStyle={styles.timeContent} />
-                              </div>
-                            )}
+                              ) : null
+                            })()}
                             {day.note && (
                               <div style={styles.dayNote}>
                                 <p style={styles.dayNoteText}>{day.note}</p>
@@ -1411,7 +1436,7 @@ function PackageDetail() {
 
             {/* Package Reviews — approved reviews from Airtable + submission form */}
        <div id="reviews">
-  <TourReviews tourId={pkg.slug} tourName={pkg.name} tourSlug={pkg.slug} basePath="/packages" />
+  <TourReviews tourId={pkg.slug} tourName={pkg.name} tourSlug={pkg.slug} />
 </div>
 
           </div>
@@ -1446,10 +1471,10 @@ function PackageDetail() {
               padding: isMobile ? '0 20px' : '0',
             }}>
               <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: isMobile ? '22px' : '28px', color: 'var(--color-n900)', margin: 0 }}>
-                More multi-day tours
+                More journeys
               </h2>
               <Link to="/multi-day-tours" style={{ fontFamily: 'var(--font-body)', fontSize: '14px', color: 'var(--color-forest-green)', fontWeight: 600, textDecoration: 'none' }}>
-                View all packages →
+                View all journeys →
               </Link>
             </div>
             {isMobile ? (
@@ -1458,7 +1483,7 @@ function PackageDetail() {
                   const { badge, badgeStyle } = PKG_BADGES[p.slug] || {}
                   const diffCol = DIFF_COLOR[p.difficulty] || DIFF_COLOR.Easy
                   return (
-                    <Link key={p.id} to={`/packages/${p.slug}`} style={{ flex: '0 0 80vw', maxWidth: '340px', scrollSnapAlign: 'start', textDecoration: 'none', display: 'block', borderRadius: '16px', overflow: 'hidden', boxShadow: '0 4px 24px rgba(0,0,0,0.12)' }}>
+                    <Link key={p.id} to={`/multi-day-tours/${p.slug}`} style={{ flex: '0 0 80vw', maxWidth: '340px', scrollSnapAlign: 'start', textDecoration: 'none', display: 'block', borderRadius: '16px', overflow: 'hidden', boxShadow: '0 4px 24px rgba(0,0,0,0.12)' }}>
                       <div style={{ position: 'relative', width: '100%', height: '420px', overflow: 'hidden' }}>
                         <img src={p.heroImage} alt={p.name} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} className="pkg-card-img" />
                         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(0,0,0,0.30) 0%, transparent 28%, transparent 40%, rgba(0,0,0,0.88) 100%)' }} />
@@ -1478,10 +1503,10 @@ function PackageDetail() {
                           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '10px' }}>
                             <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px' }}>
                               <span style={{ fontFamily: 'var(--font-body)', fontSize: '10px', color: 'rgba(255,255,255,0.60)', fontWeight: 500, letterSpacing: '0.3px' }}>from</span>
-                              <span style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '28px', color: 'var(--color-n000)', lineHeight: 1 }}>€{p.priceWithout}</span>
+                              <span style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '28px', color: 'var(--color-n000)', lineHeight: 1 }}>{format(p.priceWithout)}</span>
                             </div>
                             <button className="btn btn--sm pkg-card-btn">
-                              View package <ArrowRight size={13} />
+                              View journey <ArrowRight size={13} />
                             </button>
                           </div>
                         </div>
@@ -1495,7 +1520,7 @@ function PackageDetail() {
                 {relatedPackages.map((p) => {
                   const { badge, badgeStyle } = PKG_BADGES[p.slug] || {}
                   return (
-                    <Link key={p.id} to={`/packages/${p.slug}`} style={{ display: 'block', textDecoration: 'none', borderRadius: '16px' }} className="pkg-card">
+                    <Link key={p.id} to={`/multi-day-tours/${p.slug}`} style={{ display: 'block', textDecoration: 'none', borderRadius: '16px' }} className="pkg-card">
                       <div style={{ borderRadius: '16px', overflow: 'hidden', boxShadow: '0 4px 24px rgba(0,0,0,0.12)' }}>
                         <div style={{ position: 'relative', width: '100%', height: '420px', overflow: 'hidden' }}>
                           <img src={p.heroImage} alt={p.name} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} className="pkg-card-img" />
@@ -1516,10 +1541,10 @@ function PackageDetail() {
                             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '10px' }}>
                               <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px' }}>
                                 <span style={{ fontFamily: 'var(--font-body)', fontSize: '10px', color: 'rgba(255,255,255,0.60)', fontWeight: 500, letterSpacing: '0.3px' }}>from</span>
-                                <span style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '28px', color: 'var(--color-n000)', lineHeight: 1 }}>€{p.priceWithout}</span>
+                                <span style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '28px', color: 'var(--color-n000)', lineHeight: 1 }}>{format(p.priceWithout)}</span>
                               </div>
                               <button className="btn btn--sm pkg-card-btn">
-                                View package <ArrowRight size={13} />
+                                View journey <ArrowRight size={13} />
                               </button>
                             </div>
                           </div>
@@ -1538,7 +1563,7 @@ function PackageDetail() {
       {isMobile && (
         <div style={styles.mobileBottomBar}>
           <div style={styles.mobileBottomBarLeft}>
-            <span style={styles.mobilePrice}>From €{pkg.priceWithout}</span>
+            <span style={styles.mobilePrice}>From {format(pkg.priceWithout)}</span>
             <span style={styles.mobilePricePer}>per person</span>
           </div>
           <Button variant="primary" size="sm" onClick={() => setDrawerOpen(true)}>
@@ -1850,28 +1875,6 @@ const styles = {
   },
 
   timeBlock: { display: 'flex', flexDirection: 'column', gap: '6px' },
-
-  timeLabelRow: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '7px',
-  },
-
-  timeDot: {
-    width: '8px',
-    height: '8px',
-    borderRadius: '50%',
-    flexShrink: 0,
-  },
-
-  timeLabel: {
-    fontFamily: 'var(--font-body)',
-    fontWeight: '700',
-    fontSize: '11px',
-    color: 'var(--color-n700)',
-    letterSpacing: '0.8px',
-    textTransform: 'uppercase',
-  },
 
   timeContent: {
     fontFamily: 'var(--font-body)',
@@ -2322,7 +2325,7 @@ const styles = {
 
   stepperBtn: {
     flexShrink: 0,
-    width: '40px',
+    width: '34px',
     height: '100%',
     border: 'none',
     backgroundColor: 'var(--color-n100)',
@@ -2390,6 +2393,86 @@ const styles = {
     fontWeight: '700',
     fontSize: 'var(--text-h3)',
     color: 'var(--color-forest-green)',
+  },
+
+  totalBreakdown: {
+    display: 'block',
+    fontFamily: 'var(--font-body)',
+    fontSize: '12px',
+    color: 'var(--color-n500)',
+    marginTop: '2px',
+  },
+
+  accomHint: {
+    fontFamily: 'var(--font-body)',
+    fontSize: '12px',
+    lineHeight: '1.45',
+    color: 'var(--color-n500)',
+    margin: '8px 0 0',
+  },
+
+  spotsHint: {
+    fontFamily: 'var(--font-body)',
+    fontSize: '12px',
+    fontWeight: '600',
+    color: 'var(--color-amber-dark, #B36B00)',
+    margin: '6px 0 0',
+  },
+
+  receiptPanel: {
+    backgroundColor: 'var(--color-n100)',
+    borderRadius: '12px',
+    padding: '12px 14px',
+    margin: '4px 0 14px',
+  },
+
+  depositLine: {
+    fontFamily: 'var(--font-body)',
+    fontSize: '12px',
+    lineHeight: '1.5',
+    color: 'var(--color-n500)',
+    margin: '0 0 12px',
+  },
+
+  trustRows: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '7px',
+    marginTop: '4px',
+  },
+
+  trustRow: {
+    display: 'flex',
+    alignItems: 'flex-start',
+    gap: '7px',
+    fontFamily: 'var(--font-body)',
+    fontSize: '12px',
+    lineHeight: '1.45',
+    color: 'var(--color-n600)',
+  },
+
+  dateErrorText: {
+    fontFamily: 'var(--font-body)',
+    fontSize: '12px',
+    fontWeight: '600',
+    color: 'var(--color-error, #C0392B)',
+    margin: '6px 0 0',
+  },
+
+  enquiryNote: {
+    fontFamily: 'var(--font-body)',
+    fontSize: '12px',
+    color: 'var(--color-n500)',
+    textAlign: 'center',
+    margin: '2px 0 0',
+  },
+
+  accomOldPrice: {
+    fontSize: '13px',
+    fontWeight: '500',
+    color: 'var(--color-n400)',
+    textDecoration: 'line-through',
+    marginRight: '5px',
   },
 
   buttonRow: {

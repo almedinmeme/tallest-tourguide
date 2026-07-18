@@ -14,6 +14,8 @@ import {
 } from '../data/navigation'
 import DestinationsMegaMenu from './nav/DestinationsMegaMenu'
 import MobileNavSheet from './nav/MobileNavSheet'
+import CurrencySwitcher from './CurrencySwitcher'
+import { useCurrency } from '../context/CurrencyContext'
 import { SearchGroup, SearchResult } from './nav/SearchResults'
 
 function match(query, ...fields) {
@@ -22,6 +24,7 @@ function match(query, ...fields) {
 }
 
 function Navbar() {
+  const { format } = useCurrency()
   const width = useWindowWidth()
   const isMobile = width <= 768
   const location = useLocation()
@@ -194,7 +197,7 @@ function Navbar() {
   })
 
   const destActive = location.pathname.startsWith('/destinations') || location.pathname.startsWith('/tours')
-  const journeysActive = location.pathname.startsWith('/multi-day-tours') || location.pathname.startsWith('/packages') || location.pathname === '/personalised'
+  const journeysActive = location.pathname.startsWith('/multi-day-tours') || location.pathname === '/personalised'
   const discoverActive = discoverLinks.some((l) => l.href === location.pathname)
 
   return (
@@ -232,7 +235,7 @@ function Navbar() {
               <Search size={15} color="var(--color-n600)" style={{ flexShrink: 0 }} />
               <input
                 type="text"
-                placeholder="Search tours, packages…"
+                placeholder="Search tours, journeys…"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onFocus={() => setSearchFocused(true)}
@@ -261,12 +264,12 @@ function Navbar() {
                 {tourResults.length > 0 && (
                   <SearchGroup label="Tours">
                     {tourResults.map((t) => (
-                      <SearchResult key={t.id} to={`/tours/${t.slug}`} title={t.title} meta={`${t.duration} · €${t.price}`} onClick={handleSearchResultClick} />
+                      <SearchResult key={t.id} to={`/tours/${t.slug}`} title={t.title} meta={`${t.duration} · ${format(t.price)}`} onClick={handleSearchResultClick} />
                     ))}
                   </SearchGroup>
                 )}
                 {packageResults.length > 0 && (
-                  <SearchGroup label="Multi-day tours">
+                  <SearchGroup label="Multi-day journeys">
                     {packageResults.map((p) => (
                       <SearchResult key={p.slug} to={p.href} title={p.name} meta={p.meta} onClick={handleSearchResultClick} />
                     ))}
@@ -384,7 +387,7 @@ function Navbar() {
                       <Sparkles size={14} color="var(--color-amber)" />
                       <div style={styles.dropdownItemContent}>
                         <span style={styles.dropdownSpecialItemLabel}>
-                          Personalised Tour Package
+                          Personalised Journey
                         </span>
                         <span style={styles.dropdownItemDescription}>
                           Built entirely around you
@@ -482,6 +485,8 @@ function Navbar() {
             >
               The Journal
             </Link>
+
+            <CurrencySwitcher />
 
             {/* Lands on the free questionnaire, not the paid consult — a €90
                 price as the first click was scaring warm leads away. The

@@ -5,6 +5,8 @@ import { useBlog } from '../../hooks/useBlog'
 import tours from '../../data/tours'
 import { NAV_RAIL, searchPackageLinks, discoverLinks } from '../../data/navigation'
 import { SearchGroup, SearchResult } from './SearchResults'
+import CurrencySwitcher from '../CurrencySwitcher'
+import { useCurrency } from '../../context/CurrencyContext'
 
 function match(query, ...fields) {
   const q = query.toLowerCase()
@@ -15,6 +17,7 @@ function match(query, ...fields) {
 // expanding to its day tours + journeys, mirroring the desktop mega-menu),
 // the top-level browse links, Discover pages, and the Plan Your Trip CTA.
 function MobileNavSheet({ open, onClose }) {
+  const { format } = useCurrency()
   const location = useLocation()
   const navigate = useNavigate()
   const { posts } = useBlog()
@@ -117,7 +120,7 @@ function MobileNavSheet({ open, onClose }) {
           <Search size={16} color={searchFocused ? 'var(--color-forest-green)' : 'var(--color-n600)'} style={{ flexShrink: 0, transition: 'color 0.15s' }} />
           <input
             type="text"
-            placeholder="Search tours, packages…"
+            placeholder="Search tours, journeys…"
             value={searchQuery}
             onChange={(e) => { setSearchQuery(e.target.value); setSearchFocused(true) }}
             onFocus={() => setSearchFocused(true)}
@@ -145,14 +148,14 @@ function MobileNavSheet({ open, onClose }) {
             {tourResults.length > 0 && (
               <SearchGroup label="Tours">
                 {tourResults.map((t) => (
-                  <SearchResult key={t.id} to={`/tours/${t.slug}`} title={t.title} meta={`${t.duration} · €${t.price}`} onClick={handleLinkClick} />
+                  <SearchResult key={t.id} to={`/tours/${t.slug}`} title={t.title} meta={`${t.duration} · ${format(t.price)}`} onClick={handleLinkClick} />
                 ))}
               </SearchGroup>
             )}
             {packageResults.length > 0 && (
-              <SearchGroup label="Multi-day tours">
+              <SearchGroup label="Multi-day journeys">
                 {packageResults.map((p) => (
-                  <SearchResult key={p.slug} to={p.href} title={p.name} meta={p.meta} onClick={handleLinkClick} />
+                  <SearchResult key={p.slug} to={p.href} title={p.name} meta={p.price != null ? `${p.meta} · from ${format(p.price)}` : p.meta} onClick={handleLinkClick} />
                 ))}
               </SearchGroup>
             )}
@@ -220,7 +223,7 @@ function MobileNavSheet({ open, onClose }) {
               <Map size={16} style={{ flexShrink: 0 }} />
               All day tours
             </Link>
-            <Link to="/multi-day-tours" style={sheetLinkStyle(location.pathname.startsWith('/multi-day-tours') || location.pathname.startsWith('/packages') || location.pathname === '/personalised')} onClick={handleLinkClick}>
+            <Link to="/multi-day-tours" style={sheetLinkStyle(location.pathname.startsWith('/multi-day-tours') || location.pathname === '/personalised')} onClick={handleLinkClick}>
               <CalendarDays size={16} style={{ flexShrink: 0 }} />
               Journeys
             </Link>
@@ -267,6 +270,13 @@ function MobileNavSheet({ open, onClose }) {
               <Link to="/contact" style={styles.contactAlt} onClick={handleLinkClick}>
                 or contact us →
               </Link>
+
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10, marginTop: 18, paddingTop: 16, borderTop: '1px solid var(--color-n200)' }}>
+                <span style={{ fontFamily: 'var(--font-body)', fontSize: 13, fontWeight: 600, color: 'var(--color-n500)' }}>
+                  Show prices in
+                </span>
+                <CurrencySwitcher dropUp />
+              </div>
             </div>
           </div>
         )}

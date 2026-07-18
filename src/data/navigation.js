@@ -14,8 +14,15 @@ function cleanPackageLabel(p) {
 
 // priceWithout is the canonical "from" price; the legacy price field on some
 // packages is stale (e.g. bosnia-deep-dive 759 vs 480).
+function journeyPrice(p) {
+  return p.priceWithout ?? p.price
+}
+
+// Meta strings are built at module load, so they can't know the visitor's
+// currency — they carry no price. Links expose a raw EUR `price` instead and
+// the rendering component formats it via useCurrency().
 function journeyMeta(p) {
-  return `${(p.duration || '').toLowerCase()} · from €${p.priceWithout ?? p.price}`
+  return `${(p.duration || '').toLowerCase()}`
 }
 
 // Menus show only the part before the subtitle separator (":" or "|"),
@@ -24,15 +31,17 @@ const tourLink = (t) => ({
   slug: t.slug,
   title: t.title.split(/[:|]/)[0].trim(),
   href: `/tours/${t.slug}`,
-  meta: `${t.duration} · €${t.price}`,
+  meta: `${t.duration}`,
+  price: t.price,
   hero: t.hero,
 })
 
 const journeyLink = (p) => ({
   slug: p.slug,
   title: cleanPackageLabel(p),
-  href: `/packages/${p.slug}`,
+  href: `/multi-day-tours/${p.slug}`,
   meta: journeyMeta(p),
+  price: journeyPrice(p),
   hero: p.heroImage,
 })
 
@@ -129,14 +138,15 @@ export const journeyNavLinks = packages.map((p) => ({
   id: p.slug,
   label: cleanPackageLabel(p),
   meta: journeyMeta(p),
-  href: `/packages/${p.slug}`,
+  price: journeyPrice(p),
+  href: `/multi-day-tours/${p.slug}`,
 }))
 
 export const NAV_TRUST = '5.0 ★ rating · Genuinely small groups · Year-round'
 
 // Package entries for the search dropdowns (desktop bar + mobile sheet).
 export const searchPackageLinks = [
-  ...packages.map((p) => ({ slug: p.slug, name: p.name || p.title, meta: journeyMeta(p), href: `/packages/${p.slug}` })),
+  ...packages.map((p) => ({ slug: p.slug, name: p.name || p.title, meta: journeyMeta(p), price: journeyPrice(p), href: `/multi-day-tours/${p.slug}` })),
   { slug: 'personalised', name: 'Personalised Tour Package', meta: 'Custom experience', href: '/personalised' },
 ]
 

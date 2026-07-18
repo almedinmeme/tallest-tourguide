@@ -9,4 +9,8 @@ export const WHATSAPP_URL = `https://wa.me/${settings.whatsappNumber}`
 export const INSTAGRAM_URL = settings.instagramUrl
 export const TRIPADVISOR_URL = settings.tripadvisorUrl
 
+// EUR→other exchange rates for the currency switcher. Admin-editable in
+// Settings; sensible defaults so the site works before they're ever touched.
+export const CURRENCY_RATES = settings.currencyRates || { USD: 1.08, GBP: 0.86, BAM: 1.95583 }
+
 export default settings

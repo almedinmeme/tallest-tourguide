@@ -402,7 +402,7 @@
         },
         {
           "q": "Can I book a tour after?",
-          "a": "Yes — and if you book a tour or package with us afterwards, the full consultation fee is credited toward that booking, so the session effectively costs nothing."
+          "a": "Yes — and if you book a tour or journey with us afterwards, the full consultation fee is credited toward that booking, so the session effectively costs nothing."
         },
         {
           "q": "What if I need to reschedule?",
@@ -511,7 +511,7 @@
     "slug": "personalised",
     "title": "Personalised Tour",
     "seo": {
-      "title": "Personalised Tour Package",
+      "title": "Personalised Tours — Your Bosnia, Your Way",
       "description": "Build a custom Bosnia itinerary around your interests. Private guide, flexible dates, accommodation arranged on request. Fill in our short questionnaire."
     },
     "extra": {
@@ -553,7 +553,7 @@
     "slug": "journeys",
     "title": "Journeys (listing)",
     "extra": {
-      "heroImage": "/uploads/balkans-full-arc-803ecks8.webp"
+      "heroImage": "/uploads/journeys-4pmu794i.webp"
     }
   }
 ]

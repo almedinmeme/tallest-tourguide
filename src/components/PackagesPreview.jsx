@@ -6,6 +6,7 @@ import { useAllReviews } from '../hooks/useAllReviews'
 import Img from './Img'
 
 import { packages } from '../data/packages'
+import { useCurrency } from '../context/CurrencyContext'
 
 const DIFFICULTY_COLOR = {
   Easy: { color: 'var(--color-forest-green)', bg: 'rgba(46,125,94,0.10)', border: 'rgba(46,125,94,0.20)' },
@@ -14,6 +15,7 @@ const DIFFICULTY_COLOR = {
 }
 
 function PackagesPreview() {
+  const { format } = useCurrency()
   const width = useWindowWidth()
   const { stats } = useAllReviews()
   const isMobile = width <= 640
@@ -28,9 +30,9 @@ function PackagesPreview() {
 
       <div style={styles.header}>
         <span style={styles.eyebrow}>Curated Experiences</span>
-        <h2 style={styles.title}>Multi-day tours</h2>
+        <h2 style={styles.title}>Multi-day journeys</h2>
         <p style={styles.subtitle}>
-          Want more than a single tour? These packages combine
+          Want more than a single tour? These journeys combine
           our best experiences into a complete story —
           planned, guided, and taken care of from arrival to departure.
         </p>
@@ -64,7 +66,7 @@ function PackagesPreview() {
                 const reviewCount = stats[pkg.slug]?.count ?? pkg.reviews
 
                 return (
-                  <Link key={pkg.id} to={`/packages/${pkg.slug}`} style={styles.cardLink}>
+                  <Link key={pkg.id} to={`/multi-day-tours/${pkg.slug}`} style={styles.cardLink}>
                     <div style={styles.card} className="pkg-card">
                       <div style={styles.imageWrapper}>
                         <Img src={pkg.hero} alt={pkg.name} sizes="(max-width: 768px) 92vw, 420px" style={styles.photo} className="pkg-card-img" />
@@ -106,7 +108,7 @@ function PackagesPreview() {
                           <div style={styles.priceRow}>
                             <div style={styles.priceBlock}>
                               <span style={styles.priceFrom}>from</span>
-                              <span style={styles.price}>€{pkg.price}</span>
+                              <span style={styles.price}>{format(pkg.price)}</span>
                             </div>
                             <button className="btn btn--sm pkg-card-btn">
                               View package
@@ -131,7 +133,7 @@ function PackagesPreview() {
             style={{ ...styles.navBtn, opacity: page === 0 ? 0.35 : 1 }}
             onClick={() => setPage((p) => Math.max(0, p - 1))}
             disabled={page === 0}
-            aria-label="Previous packages"
+            aria-label="Previous journeys"
           >
             <ChevronLeft size={18} color="var(--color-forest-green)" />
           </button>
@@ -155,7 +157,7 @@ function PackagesPreview() {
             style={{ ...styles.navBtn, opacity: page === totalPages - 1 ? 0.35 : 1 }}
             onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
             disabled={page === totalPages - 1}
-            aria-label="Next packages"
+            aria-label="Next journeys"
           >
             <ChevronRight size={18} color="var(--color-forest-green)" />
           </button>
@@ -165,7 +167,7 @@ function PackagesPreview() {
       <div style={styles.bottomRow}>
         <p style={styles.bottomText}>Looking for a longer journey or a private group?</p>
         <Link to="/multi-day-tours" style={styles.bottomLink}>
-          View all 7 packages
+          View all journeys
           <ArrowRight size={14} color="var(--color-forest-green)" />
         </Link>
       </div>

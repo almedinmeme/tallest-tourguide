@@ -21,6 +21,8 @@ export default function SettingsPage() {
   }, [])
 
   const set = (patch) => setItem((t) => ({ ...t, ...patch }))
+  const setRate = (code, v) =>
+    setItem((t) => ({ ...t, currencyRates: { ...(t.currencyRates || {}), [code]: v } }))
 
   const savingRef = useRef(false)
   const onSave = async () => {
@@ -92,6 +94,48 @@ export default function SettingsPage() {
         <FormField label="TripAdvisor URL" hint="Footer, the reviews section's “read all reviews” link, and schema markup.">
           <input style={s.input} value={item.tripadvisorUrl || ''} onChange={(e) => set({ tripadvisorUrl: e.target.value })} />
         </FormField>
+      </section>
+
+      <section style={s.card}>
+        <h2 style={{ ...s.h2, marginTop: 0 }}>Currency</h2>
+        <p style={s.subheadingHint}>
+          All prices are entered and stored in <strong>euros</strong>. The site shows a visitor's
+          own currency automatically — US → dollars, UK → pounds, everywhere else → euros — and
+          they can switch it themselves. These rates do that conversion, so keep them roughly
+          current (check a site like xe.com every few months).
+        </p>
+        <div style={s.grid2}>
+          <FormField label="€1 in US dollars" hint="e.g. 1.08 — a €250 tour then shows as $270.">
+            <input
+              style={s.input}
+              type="number"
+              step="0.01"
+              min="0"
+              value={item.currencyRates?.USD ?? ''}
+              onChange={(e) => setRate('USD', e.target.value === '' ? '' : Number(e.target.value))}
+            />
+          </FormField>
+          <FormField label="€1 in British pounds" hint="e.g. 0.86 — a €250 tour then shows as £215.">
+            <input
+              style={s.input}
+              type="number"
+              step="0.01"
+              min="0"
+              value={item.currencyRates?.GBP ?? ''}
+              onChange={(e) => setRate('GBP', e.target.value === '' ? '' : Number(e.target.value))}
+            />
+          </FormField>
+          <FormField label="€1 in Bosnian marks" hint="Fixed at 1.95583 — the mark is pegged to the euro, so this never needs changing.">
+            <input
+              style={s.input}
+              type="number"
+              step="0.00001"
+              min="0"
+              value={item.currencyRates?.BAM ?? ''}
+              onChange={(e) => setRate('BAM', e.target.value === '' ? '' : Number(e.target.value))}
+            />
+          </FormField>
+        </div>
       </section>
 
       <div style={{ display: 'flex', justifyContent: 'flex-end' }}>

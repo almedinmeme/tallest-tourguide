@@ -228,7 +228,9 @@ const styles = {
     alignItems: 'baseline',
     gap: '16px',
     textDecoration: 'none',
-    padding: '9px 4px',
+    padding: '9px 8px',
+    margin: '0 -8px',
+    borderRadius: '8px',
   },
 
   rowTitle: {

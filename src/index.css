@@ -172,6 +172,21 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* Package card — full-bleed poster hover effects */
+/* Checkout — segmented plan toggle (Pay in full / deposit). The active
+   segment is styled inline (opaque white + shadow); this class only owns
+   the resting/hover/press states of the INACTIVE segment, so a plain
+   background-color here is never fought by an inline style. */
+.checkout-plan-seg {
+  background-color: transparent;
+  transition: background-color 0.15s ease, transform 0.1s ease;
+}
+.checkout-plan-seg:hover {
+  background-color: rgba(255, 255, 255, 0.6);
+}
+.checkout-plan-seg:active {
+  transform: scale(0.97);
+}
+
 .pkg-card {
   transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.3s ease;
 }
@@ -505,8 +520,15 @@ a[href^="/tours/"]:hover .view-tour-pill {
   background-color: var(--color-n100);
 }
 
-/* Mega-menu tour/journey rows — title tints green on hover, long titles
-   truncate with an ellipsis. */
+/* Mega-menu tour/journey rows — same background-fill affordance as the
+   left rail items, so each row reads as clearly clickable, not just a
+   line of text with a thin divider above it. */
+.mega-row {
+  transition: background-color var(--t-fast);
+}
+.mega-row:hover {
+  background-color: var(--color-n100);
+}
 .mega-row-title {
   overflow: hidden;
   text-overflow: ellipsis;

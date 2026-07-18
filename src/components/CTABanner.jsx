@@ -54,6 +54,7 @@ function CTABanner() {
             style={{
               display: 'flex',
               flexDirection: isMobile ? 'column' : 'row',
+              flexWrap: 'wrap',
               gap: '12px',
               width: isMobile ? '100%' : 'auto',
               marginTop: '8px',
@@ -141,6 +142,7 @@ const styles = {
 
   textSide: {
     flex: 1,
+    minWidth: 0,
     display: 'flex',
     flexDirection: 'column',
     gap: '18px',
@@ -219,13 +221,13 @@ const styles = {
     padding: '8px 8px 30px',
     borderRadius: '4px',
     boxShadow: '0 12px 32px rgba(0,0,0,0.35)',
-    width: '168px',
+    width: '192px',
     transition: 'transform 0.25s ease',
   },
 
   snapshotImg: {
     width: '100%',
-    height: '150px',
+    height: '172px',
     objectFit: 'cover',
     display: 'block',
     borderRadius: '2px',

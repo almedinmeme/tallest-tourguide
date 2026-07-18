@@ -225,7 +225,7 @@ function PersonalisedTour() {
   return (
     <div>
       <SEO
-  title={personalisedPage?.seo?.title || 'Personalised Tour Package'}
+  title={personalisedPage?.seo?.title || 'Personalised Tours — Your Bosnia, Your Way'}
   description={personalisedPage?.seo?.description || 'Build a custom Bosnia itinerary around your interests. Private guide, flexible dates, accommodation arranged on request. Fill in our short questionnaire.'}
   url="/personalised"
   image="https://tallesttourguide.com/og-image.jpg"

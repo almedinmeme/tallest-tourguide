@@ -59,14 +59,8 @@ function DayCard({ day, idx, total, slug, onPatch, onRemove, onMove }) {
             <input style={s.input} value={day.accommodation || ''} onChange={(e) => patch('accommodation', e.target.value)} />
           </FormField>
 
-          <FormField label="Morning">
-            <RichTextEditor value={day.morning || ''} onChange={(v) => patch('morning', v)} slug={slug} />
-          </FormField>
-          <FormField label="Afternoon">
-            <RichTextEditor value={day.afternoon || ''} onChange={(v) => patch('afternoon', v)} slug={slug} />
-          </FormField>
-          <FormField label="Evening">
-            <RichTextEditor value={day.evening || ''} onChange={(v) => patch('evening', v)} slug={slug} />
+          <FormField label="What you'll do" hint="The day's plan as one description. Write it however reads best — no fixed morning / afternoon / evening split.">
+            <RichTextEditor value={day.details || ''} onChange={(v) => patch('details', v)} slug={slug} />
           </FormField>
 
           <FormField>
@@ -111,7 +105,7 @@ export default function DayEditor({ value, onChange, slug }) {
   }
   const add = () => {
     const nextId = items.length ? Math.max(...items.map((d) => Number(d.id) || 0)) + 1 : 1
-    onChange([...items, { id: nextId, title: '', city: '', summary: '', morning: '', afternoon: '', evening: '', meals: [], includedActivities: [], optionalActivities: [] }])
+    onChange([...items, { id: nextId, title: '', city: '', summary: '', details: '', meals: [], includedActivities: [], optionalActivities: [] }])
   }
 
   return (

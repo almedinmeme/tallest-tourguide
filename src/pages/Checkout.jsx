@@ -28,6 +28,8 @@ import {
 import useWindowWidth from '../hooks/useWindowWidth'
 import useInView from '../hooks/useInView'
 import Button from '../components/Button'
+import CurrencySwitcher from '../components/CurrencySwitcher'
+import logo from '../assets/logo.svg'
 import {
   submitBooking,
   processCardPayment,
@@ -49,6 +51,7 @@ const NoIndexMeta = () => (
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 import { WHATSAPP_URL, CONTACT_EMAIL } from '../data/settings'
+import { useCurrency } from '../context/CurrencyContext'
 
 // Cosmetic card-field formatting — digits only, grouped like a real card.
 const formatCardNumber = (v) => v.replace(/\D/g, '').slice(0, 19).replace(/(\d{4})(?=\d)/g, '$1 ')
@@ -59,6 +62,7 @@ const formatExpiry = (v) => {
 const formatCvc = (v) => v.replace(/\D/g, '').slice(0, 4)
 
 function Checkout() {
+  const { format } = useCurrency()
   const location = useLocation()
   const booking = location.state?.booking
   const isMobile = useWindowWidth() <= 768
@@ -76,6 +80,8 @@ function Checkout() {
 
   // Payment method: default to card so the payment UI is shown immediately.
   const [method, setMethod] = useState('card')
+  // Journeys can pay the full amount (default) or a deposit ('full' | 'deposit').
+  const [payPlan, setPayPlan] = useState('full')
 
   // Placeholder card fields (cosmetic for now).
   const [cardName, setCardName] = useState('')
@@ -107,9 +113,30 @@ function Checkout() {
   const total = base + extrasTotal
   const discounted = useMemo(() => applyCardDiscount(total), [total])
   const saving = total - discounted
-  // Card discount only applies to a real priced total (not private-tour quotes).
-  const payingByCard = method === 'card' && !isQuote
-  const dueNow = payingByCard ? discounted : total
+  // Journeys (booking.deposit) are card-only — there is no reserve option and
+  // no card discount (the 5% is a tours-only incentive to pick card over
+  // reserve). They pay the list total in full, or a deposit now with the
+  // balance due before departure.
+  const hasDeposit = Boolean(booking?.deposit) && !isQuote
+  const payingByCard = (hasDeposit || method === 'card') && !isQuote
+  // Card discount: tours paying by card only (never quotes, never journeys).
+  const cardDiscountApplies = payingByCard && !hasDeposit
+  const methodTotal = cardDiscountApplies ? discounted : total
+  const depositAmount = Math.round(total * (DEPOSIT_PERCENT / 100))
+  const balanceAmount = total - depositAmount
+  const paySplit = hasDeposit && payPlan === 'deposit'
+  const dueNow = paySplit ? depositAmount : methodTotal
+
+  // The real calendar date the balance falls due, when the departure ISO
+  // date travelled with the booking (packages send airtableFields.TourDate).
+  const departureISO = booking?.airtableFields?.TourDate
+  const balanceDueLabel = useMemo(() => {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(departureISO || '')) return null
+    const [y, m, d] = departureISO.split('-').map(Number)
+    const due = new Date(y, m - 1, d)
+    due.setDate(due.getDate() - BALANCE_DUE_DAYS)
+    return due.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
+  }, [departureISO])
 
   const toggleExtra = (i) =>
     setSelectedExtras((prev) => (prev.includes(i) ? prev.filter((x) => x !== i) : [...prev, i]))
@@ -162,10 +189,17 @@ function Checkout() {
     }
 
     const isCard = payMethod === 'card'
-    const payTotal = isCard ? discounted : total
+    const payTotal = isCard && !hasDeposit ? discounted : total
     const extrasSummary = selectedExtraItems.length
       ? selectedExtraItems.map((e) => `${e.label} (+€${e.amount})`).join(', ')
       : 'None'
+    // Fold the payment plan into the free-text payment_method so existing
+    // email templates and the Airtable schema need no new fields.
+    const planSuffix = hasDeposit
+      ? paySplit
+        ? ` · ${DEPOSIT_PERCENT}% deposit plan (€${depositAmount} now, €${balanceAmount} due ${BALANCE_DUE_DAYS} days before departure)`
+        : ' · paying in full'
+      : ''
 
     const payload = {
       airtableFields: {
@@ -178,9 +212,9 @@ function Checkout() {
         ...guestTemplate,
         extras: extrasSummary,
         ...(isQuote ? {} : { total_price: `€${payTotal}` }),
-        payment_method: isCard
-          ? 'Card — 5% discount (payment to follow)'
-          : isQuote ? 'Quote requested' : 'Reserve & pay later',
+        payment_method: (isCard
+          ? hasDeposit ? 'Card — charged at booking' : 'Card — 5% discount, charged at booking'
+          : isQuote ? 'Quote requested' : 'Reserve & pay later') + planSuffix,
       },
       analytics: booking.analytics
         ? { ...booking.analytics, value: isQuote ? 0 : payTotal }
@@ -213,7 +247,7 @@ function Checkout() {
               <CheckCircle size={46} color="var(--color-forest-green)" strokeWidth={1.6} />
             </span>
             <h1 style={styles.successTitle}>
-              {done === 'card' ? 'Your place is reserved' : isQuote ? 'Request received' : 'Your place is reserved'}
+              {done === 'card' ? 'Booking confirmed' : isQuote ? 'Request received' : 'Your place is reserved'}
             </h1>
             <p style={styles.successLead}>
               Thank you, {name.trim()}. Your booking for <strong>{booking.title}</strong>
@@ -221,10 +255,16 @@ function Checkout() {
             </p>
             <p style={styles.successNote}>
               {done === 'card' ? (
-                <>Online card payment isn't live yet, so nothing was charged. We've held
-                your place at the discounted total of <strong>€{discounted}</strong> and
-                will email <strong>{email.trim()}</strong> to take payment securely before
-                your trip.</>
+                paySplit ? (
+                  <>Your <strong>{format(depositAmount)}</strong> deposit has been charged
+                  securely — a receipt is on its way to <strong>{email.trim()}</strong>. The
+                  balance of <strong>{format(balanceAmount)}</strong> is due {BALANCE_DUE_DAYS}{' '}
+                  days before departure; we'll email you well in advance.</>
+                ) : (
+                  <>Your payment of <strong>{format(hasDeposit ? total : discounted)}</strong> has
+                  been charged securely — a receipt and your booking confirmation are on their
+                  way to <strong>{email.trim()}</strong>.</>
+                )
               ) : (
                 <>We've emailed a confirmation to <strong>{email.trim()}</strong> and will be
                 in touch shortly to finalise the details{isQuote ? ' and send your tailored quote' : ''}.</>
@@ -265,26 +305,32 @@ function Checkout() {
         <>
           {summary?.unitPrice != null && summary?.numPeople != null && (
             <div style={styles.priceRow}>
-              <span style={styles.priceMuted}>€{summary.unitPrice} × {summary.numPeople}</span>
-              <span style={styles.priceMuted}>€{base}</span>
+              <span style={styles.priceMuted}>{format(summary.unitPrice)} × {summary.numPeople}</span>
+              <span style={styles.priceMuted}>{format(base)}</span>
             </div>
           )}
           {selectedExtraItems.map((ex, i) => (
             <div key={i} style={styles.priceRow}>
               <span style={styles.priceMuted}>{ex.label}</span>
-              <span style={styles.priceMuted}>+€{ex.amount}</span>
+              <span style={styles.priceMuted}>+{format(ex.amount)}</span>
             </div>
           ))}
-          {payingByCard && saving > 0 && (
+          {cardDiscountApplies && saving > 0 && (
             <div style={styles.priceRow}>
               <span style={styles.discountText}>Card discount (−5%)</span>
-              <span style={styles.discountText}>−€{saving}</span>
+              <span style={styles.discountText}>−{format(saving)}</span>
             </div>
           )}
           <div style={styles.totalRow}>
-            <span style={styles.totalLabel}>{payingByCard ? 'Pay today' : 'Total'}</span>
-            <span style={styles.totalValue}>€{dueNow}</span>
+            <span style={styles.totalLabel}>{paySplit ? 'Due today' : payingByCard ? 'Pay today' : 'Total'}</span>
+            <span style={styles.totalValue}>{format(dueNow)}</span>
           </div>
+          {paySplit && (
+            <div style={{ ...styles.priceRow, marginTop: 6 }}>
+              <span style={styles.priceMuted}>Balance, due {BALANCE_DUE_DAYS} days before departure</span>
+              <span style={styles.priceMuted}>{format(balanceAmount)}</span>
+            </div>
+          )}
         </>
       )}
     </div>
@@ -318,8 +364,8 @@ function Checkout() {
                 {mobileMeta && <span style={styles.mobileMeta}>{mobileMeta}</span>}
               </div>
               <div style={{ textAlign: 'right', flexShrink: 0 }}>
-                <span style={styles.mobileTotalLabel}>{payingByCard && !isQuote ? 'Pay today' : 'Total'}</span>
-                <span style={styles.mobileTotal}>{isQuote ? 'On request' : `€${dueNow}`}</span>
+                <span style={styles.mobileTotalLabel}>{paySplit ? 'Due today' : payingByCard && !isQuote ? 'Pay today' : 'Total'}</span>
+                <span style={styles.mobileTotal}>{isQuote ? 'On request' : format(dueNow)}</span>
               </div>
             </div>
             <button
@@ -444,7 +490,7 @@ function Checkout() {
                           <span style={styles.optionBody}>
                             <span style={styles.optionTitleRow}>
                               <span style={styles.optionTitle}>{ex.label}</span>
-                              <span style={styles.addonPrice}>+€{ex.amount}</span>
+                              <span style={styles.addonPrice}>+{format(ex.amount)}</span>
                             </span>
                             {ex.description && <span style={styles.optionSub}>{ex.description}</span>}
                           </span>
@@ -468,21 +514,103 @@ function Checkout() {
                 </p>
               ) : (
                 <>
-                  <div style={{ ...styles.options, gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr' }}>
-                    <PayOption
-                      active={method === 'card'}
-                      onSelect={() => setMethod('card')}
-                      title="Pay by card"
-                      subtitle="Pay securely now and save 5%."
-                      badge={`Save 5% · €${discounted}`}
-                    />
-                    <PayOption
-                      active={method === 'reserve'}
-                      onSelect={() => setMethod('reserve')}
-                      title="Reserve & pay later"
-                      subtitle="Hold your place now at full price — pay before your trip."
-                    />
-                  </div>
+                  {hasDeposit && (
+                    <>
+                      {/* Plan: slim segmented toggle instead of option boxes */}
+                      <div style={styles.planToggle} role="radiogroup" aria-label="How much to pay today">
+                        <button
+                          type="button"
+                          role="radio"
+                          aria-checked={!paySplit}
+                          className="checkout-plan-seg"
+                          onClick={() => setPayPlan('full')}
+                          style={{ ...styles.planSeg, ...(!paySplit ? styles.planSegActive : {}) }}
+                        >
+                          <span style={{
+                            ...styles.planRadio,
+                            borderColor: !paySplit ? 'var(--color-forest-green)' : 'var(--color-n400)',
+                            backgroundColor: !paySplit ? 'var(--color-forest-green)' : 'transparent',
+                          }}>
+                            {!paySplit && <Check size={10} color="var(--color-n000)" strokeWidth={3.5} />}
+                          </span>
+                          Pay in full
+                        </button>
+                        <button
+                          type="button"
+                          role="radio"
+                          aria-checked={paySplit}
+                          className="checkout-plan-seg"
+                          onClick={() => { setPayPlan('deposit'); setMethod('card') }}
+                          style={{ ...styles.planSeg, ...(paySplit ? styles.planSegActive : {}) }}
+                        >
+                          <span style={{
+                            ...styles.planRadio,
+                            borderColor: paySplit ? 'var(--color-forest-green)' : 'var(--color-n400)',
+                            backgroundColor: paySplit ? 'var(--color-forest-green)' : 'transparent',
+                          }}>
+                            {paySplit && <Check size={10} color="var(--color-n000)" strokeWidth={3.5} />}
+                          </span>
+                          {DEPOSIT_PERCENT}% deposit today
+                        </button>
+                      </div>
+
+                      {/* Payment timeline — when the money moves, in the same
+                          dots-on-a-dashed-line language as the route strip */}
+                      <div style={styles.payTimeline}>
+                        <div style={styles.tlTrack}>
+                          <span style={styles.tlDash} />
+                          <span style={{ ...styles.tlDotFilled, position: 'absolute', left: 0 }} />
+                          {paySplit || !payingByCard ? (
+                            <span style={{ ...styles.tlDotHollow, position: 'absolute', right: 0 }} />
+                          ) : (
+                            <span style={{ ...styles.tlDotCheck, position: 'absolute', right: 0 }}>
+                              <Check size={9} color="var(--color-n000)" strokeWidth={3.5} />
+                            </span>
+                          )}
+                        </div>
+                        <div style={styles.tlLabels}>
+                          <div style={styles.tlCol}>
+                            <span style={styles.tlWhen}>Today</span>
+                            <span style={styles.tlAmount}>
+                              {format(dueNow)}{paySplit ? ' deposit' : ''}
+                            </span>
+                          </div>
+                          <div style={{ ...styles.tlCol, alignItems: 'flex-end', textAlign: 'right' }}>
+                            {paySplit ? (
+                              <>
+                                <span style={styles.tlWhen}>{balanceDueLabel ? `By ${balanceDueLabel}` : `${BALANCE_DUE_DAYS} days before departure`}</span>
+                                <span style={styles.tlAmountMuted}>{format(balanceAmount)} balance</span>
+                              </>
+                            ) : (
+                              <>
+                                <span style={styles.tlWhen}>After today</span>
+                                <span style={styles.tlAmountMuted}>Nothing left to pay</span>
+                              </>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </>
+                  )}
+                  {/* Method choice is tours-only — journeys are card-only */}
+                  {!hasDeposit && (
+                    <div>
+                      <MethodRow
+                        active={method === 'card'}
+                        onSelect={() => setMethod('card')}
+                        title="Pay by card"
+                        badge={`Save 5% · ${format(discounted)}`}
+                        sub="Pay securely now and save 5%."
+                      />
+                      <div style={styles.methodDivider} />
+                      <MethodRow
+                        active={method === 'reserve'}
+                        onSelect={() => setMethod('reserve')}
+                        title="Reserve & pay later"
+                        sub="Hold your place now at full price — pay before your trip."
+                      />
+                    </div>
+                  )}
 
                   {method === 'card' && (
                     <div style={styles.cardFields}>
@@ -527,8 +655,8 @@ function Checkout() {
                     : isQuote
                       ? 'Request booking'
                       : payingByCard
-                        ? `Pay €${discounted}`
-                        : `Reserve now — pay €${total} later`}
+                        ? `Pay ${format(dueNow)}${paySplit ? ' deposit' : ''}`
+                        : `Reserve now — pay ${format(total)} later`}
                 </Button>
               </div>
 
@@ -537,7 +665,7 @@ function Checkout() {
                 {isQuote
                   ? 'No payment is taken now.'
                   : payingByCard
-                    ? 'Nothing is charged today — we confirm your booking, then take payment securely. Card details are never stored.'
+                    ? `Your card is charged ${format(dueNow)}${paySplit ? ` today — the ${format(balanceAmount)} balance is due later` : ' immediately, securely encrypted'}. Card details are never stored.`
                     : 'No payment is taken now — pay any time before your trip.'}
               </p>
               {!isQuote && (
@@ -564,12 +692,6 @@ function Checkout() {
                 <h3 style={styles.summaryTitle}>{booking.title}</h3>
                 {summaryRows}
                 {priceBlock}
-                {booking.deposit && !isQuote && (
-                  <p style={styles.depositNote}>
-                    A {DEPOSIT_PERCENT}% deposit secures your place; the balance is due{' '}
-                    {BALANCE_DUE_DAYS} days before departure.
-                  </p>
-                )}
               </div>
             )}
 
@@ -608,7 +730,7 @@ function Checkout() {
         <div style={styles.stickyBar}>
           <div style={{ display: 'flex', flexDirection: 'column', minWidth: 0 }}>
             <span style={styles.stickyLabel}>{payingByCard && !isQuote ? 'Pay today' : 'Total'}</span>
-            <span style={styles.stickyTotal}>{isQuote ? 'On request' : `€${dueNow}`}</span>
+            <span style={styles.stickyTotal}>{isQuote ? 'On request' : format(dueNow)}</span>
           </div>
           <Button
             variant="primary"
@@ -618,7 +740,7 @@ function Checkout() {
           >
             {isSending
               ? 'Working…'
-              : isQuote ? 'Request booking' : payingByCard ? `Pay €${discounted}` : 'Reserve now'}
+              : isQuote ? 'Request booking' : payingByCard ? `Pay ${format(dueNow)}` : 'Reserve now'}
           </Button>
         </div>
       )}
@@ -641,16 +763,15 @@ function Field({ label, hint, error, children }) {
   )
 }
 
-function PayOption({ active, onSelect, title, subtitle, badge }) {
+function MethodRow({ active, onSelect, title, sub, badge, disabled }) {
   return (
     <button
       type="button"
-      onClick={onSelect}
+      onClick={disabled ? undefined : onSelect}
+      disabled={disabled}
       style={{
-        ...styles.option,
-        borderColor: active ? 'var(--color-forest-green)' : 'var(--color-n300)',
-        backgroundColor: active ? 'rgba(46,125,94,0.05)' : 'var(--color-n000)',
-        boxShadow: active ? '0 0 0 1px var(--color-forest-green)' : 'none',
+        ...styles.methodRow,
+        ...(disabled ? { opacity: 0.5, cursor: 'default' } : {}),
       }}
     >
       <span style={{
@@ -665,7 +786,7 @@ function PayOption({ active, onSelect, title, subtitle, badge }) {
           <span style={styles.optionTitle}>{title}</span>
           {badge && <span style={styles.badge}>{badge}</span>}
         </span>
-        <span style={styles.optionSub}>{subtitle}</span>
+        <span style={styles.optionSub}>{sub}</span>
       </span>
     </button>
   )
@@ -692,10 +813,15 @@ function Trust({ icon, children }) {
 function TopBar() {
   return (
     <header style={styles.topBar}>
-      <Link to="/" style={styles.brand}>Tallest Tour Guide</Link>
-      <span style={styles.secureBadge}>
-        <Lock size={14} style={{ verticalAlign: '-2px', marginRight: 6 }} />
-        Secure checkout
+      <Link to="/" style={styles.brand} aria-label="Tallest Tourguide — home">
+        <img src={logo} alt="Tallest Tourguide" style={styles.brandLogo} />
+      </Link>
+      <span style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+        <CurrencySwitcher />
+        <span style={styles.secureBadge}>
+          <Lock size={14} style={{ verticalAlign: '-2px', marginRight: 6 }} />
+          Secure checkout
+        </span>
       </span>
     </header>
   )
@@ -735,12 +861,14 @@ const styles = {
     zIndex: 20,
   },
   brand: {
-    fontFamily: 'var(--font-display)',
-    fontWeight: 700,
-    fontSize: '17px',
-    color: 'var(--color-forest-green)',
+    display: 'flex',
+    alignItems: 'center',
     textDecoration: 'none',
-    letterSpacing: '-0.01em',
+  },
+  brandLogo: {
+    height: '32px',
+    width: 'auto',
+    display: 'block',
   },
   secureBadge: {
     display: 'inline-flex',
@@ -867,6 +995,154 @@ const styles = {
 
   // payment options — two cards side by side (stacked on mobile)
   options: { display: 'grid', gap: '12px' },
+
+  payGroupLabel: {
+    fontFamily: 'var(--font-body)',
+    fontSize: '12.5px',
+    fontWeight: '600',
+    color: 'var(--color-n600)',
+    marginBottom: '8px',
+  },
+
+  planToggle: {
+    display: 'flex',
+    gap: '4px',
+    padding: '4px',
+    backgroundColor: 'var(--color-n100)',
+    border: '1px solid var(--color-n200)',
+    borderRadius: 'var(--radius-pill)',
+  },
+
+  planSeg: {
+    flex: 1,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '7px',
+    height: '42px',
+    borderRadius: 'var(--radius-pill)',
+    border: 'none',
+    fontFamily: 'var(--font-body)',
+    fontWeight: '600',
+    fontSize: '13.5px',
+    color: 'var(--color-n700)',
+    cursor: 'pointer',
+    transition: 'background-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease',
+  },
+
+  planSegActive: {
+    backgroundColor: 'var(--color-n000)',
+    color: 'var(--color-forest-green)',
+    fontWeight: '700',
+    boxShadow: '0 2px 6px rgba(0,0,0,0.12)',
+  },
+
+  planRadio: {
+    flexShrink: 0,
+    width: '16px',
+    height: '16px',
+    borderRadius: '50%',
+    border: '2px solid var(--color-n400)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    transition: 'background-color 0.15s ease, border-color 0.15s ease',
+  },
+
+  payTimeline: {
+    margin: '18px 2px 0',
+  },
+
+  tlTrack: {
+    position: 'relative',
+    height: '13px',
+    display: 'flex',
+    alignItems: 'center',
+  },
+
+  tlDash: {
+    width: '100%',
+    borderTop: '2px dashed rgba(46,125,94,0.35)',
+  },
+
+  tlDotFilled: {
+    width: '11px',
+    height: '11px',
+    borderRadius: '50%',
+    backgroundColor: 'var(--color-forest-green)',
+    boxShadow: '0 0 0 3px rgba(46,125,94,0.15)',
+  },
+
+  tlDotHollow: {
+    width: '11px',
+    height: '11px',
+    borderRadius: '50%',
+    border: '2px solid var(--color-n400)',
+    backgroundColor: 'var(--color-n000)',
+    boxSizing: 'border-box',
+  },
+
+  tlDotCheck: {
+    width: '13px',
+    height: '13px',
+    borderRadius: '50%',
+    backgroundColor: 'var(--color-forest-green)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  tlLabels: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    gap: '16px',
+    marginTop: '7px',
+  },
+
+  tlCol: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '2px',
+    minWidth: 0,
+  },
+
+  tlWhen: {
+    fontFamily: 'var(--font-body)',
+    fontSize: '12px',
+    fontWeight: '600',
+    color: 'var(--color-n800)',
+  },
+
+  tlAmount: {
+    fontFamily: 'var(--font-display)',
+    fontSize: '16px',
+    fontWeight: '700',
+    color: 'var(--color-forest-green)',
+  },
+
+  tlAmountMuted: {
+    fontFamily: 'var(--font-body)',
+    fontSize: '12.5px',
+    fontWeight: '500',
+    color: 'var(--color-n500)',
+  },
+
+  methodRow: {
+    display: 'flex',
+    alignItems: 'flex-start',
+    gap: '12px',
+    width: '100%',
+    padding: '13px 2px',
+    backgroundColor: 'transparent',
+    border: 'none',
+    cursor: 'pointer',
+    textAlign: 'left',
+  },
+
+  methodDivider: {
+    height: '1px',
+    backgroundColor: 'var(--color-n200)',
+  },
   option: {
     display: 'flex',
     alignItems: 'flex-start',
@@ -941,7 +1217,9 @@ const styles = {
     lineHeight: 1.5,
   },
   cancelLine: {
-    margin: '8px 0 0',
+    margin: '12px 0 0',
+    paddingTop: '12px',
+    borderTop: '1px solid var(--color-n200)',
     textAlign: 'center',
     fontSize: 'var(--text-small)',
     color: 'var(--color-n500)',
@@ -1015,7 +1293,6 @@ const styles = {
   },
   totalLabel: { fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 'var(--text-body)' },
   totalValue: { fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 'var(--text-h3)', color: 'var(--color-n900)' },
-  depositNote: { marginTop: '14px', fontSize: 'var(--text-small)', color: 'var(--color-n500)', lineHeight: 1.5 },
 
   trustList: {
     listStyle: 'none',

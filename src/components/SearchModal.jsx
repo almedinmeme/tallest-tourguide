@@ -10,14 +10,14 @@ const packages = [
     name: '3-Day Complete Sarajevo Experience: Let us show you our home',
     subtitle: 'Stories, Survival & Soul',
     description: '3 days · From €99',
-    href: '/packages/sarajevo-essential',
+    href: '/multi-day-tours/sarajevo-essential',
   },
   {
     slug: 'bosnia-deep-dive',
     name: 'Bosnia Deep Dive',
     subtitle: 'Real Bosnia, Deeply Experienced',
     description: '5 days · From €759',
-    href: '/packages/bosnia-deep-dive',
+    href: '/multi-day-tours/bosnia-deep-dive',
   },
   {
     slug: 'personalised',
@@ -89,7 +89,7 @@ function SearchModal({ open, onClose }) {
           <input
             ref={inputRef}
             type="text"
-            placeholder="Search tours, packages, blog posts…"
+            placeholder="Search tours, journeys, journal…"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             style={styles.input}

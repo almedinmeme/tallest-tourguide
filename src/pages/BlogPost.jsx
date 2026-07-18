@@ -13,6 +13,7 @@ import { postBlocks } from '../data/journalBlocks'
 // Minimal package data needed for the recommendation card.
 // Full data lives in PackageDetail.jsx.
 import { packages } from '../data/packages'
+import { useCurrency } from '../context/CurrencyContext'
 
 function formatDate(dateStr) {
   if (!dateStr) return ''
@@ -25,6 +26,7 @@ function formatDate(dateStr) {
 }
 
 function BlogPost() {
+  const { format } = useCurrency()
   const { slug } = useParams()
   const { posts, loading, error } = useBlog()
   const width = useWindowWidth()
@@ -294,7 +296,7 @@ function BlogPost() {
                       </div>
                       <div style={styles.experienceFooter}>
                         <div>
-                          <span style={styles.experiencePrice}>€{relatedTour.price}</span>
+                          <span style={styles.experiencePrice}>{format(relatedTour.price)}</span>
                           <span style={styles.experiencePricePer}> /person</span>
                         </div>
                         <span style={styles.experienceBookBtn}>Book now →</span>
@@ -306,7 +308,7 @@ function BlogPost() {
                 {/* Package card */}
                 {relatedPackage && (
                   <Link
-                    to={`/packages/${relatedPackage.slug}`}
+                    to={`/multi-day-tours/${relatedPackage.slug}`}
                     style={styles.experienceCard}
                     className="card-lift"
                   >
@@ -331,7 +333,7 @@ function BlogPost() {
                       </div>
                       <div style={styles.experienceFooter}>
                         <div>
-                          <span style={styles.experiencePrice}>€{relatedPackage.price}</span>
+                          <span style={styles.experiencePrice}>{format(relatedPackage.price)}</span>
                           <span style={styles.experiencePricePer}> /person</span>
                         </div>
                         <span style={styles.experienceBookBtn}>View package →</span>
@@ -994,7 +996,8 @@ const styles = {
 }
 
 function InlinePromoCard({ card, isPackage, isMobile }) {
-  const href = isPackage ? `/packages/${card.slug}` : `/tours/${card.slug}`
+  const { format } = useCurrency()
+  const href = isPackage ? `/multi-day-tours/${card.slug}` : `/tours/${card.slug}`
   const title = isPackage ? card.name : card.title
   const image = isPackage ? card.heroImage : card.hero
   const typeLabel = isPackage ? 'Package' : 'Tour'
@@ -1039,7 +1042,7 @@ function InlinePromoCard({ card, isPackage, isMobile }) {
         </div>
         <div style={cardStyles.footer}>
           <div style={cardStyles.priceBlock}>
-            <span style={cardStyles.priceAmount}>€{card.price}</span>
+            <span style={cardStyles.priceAmount}>{format(card.price)}</span>
             <span style={cardStyles.pricePer}>/person</span>
           </div>
           <div style={cardStyles.cta}>

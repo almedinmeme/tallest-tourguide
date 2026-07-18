@@ -37,9 +37,11 @@ import PackagesPreview from '../components/PackagesPreview'
 import { useBlog } from '../hooks/useBlog'
 import { useAllReviews } from '../hooks/useAllReviews'
 import { TRUST_BAR_CANCEL } from '../data/policy'
+import { useCurrency } from '../context/CurrencyContext'
 
 
 function Home() {
+  const { format } = useCurrency()
   const width = useWindowWidth()
   const { stats } = useAllReviews()
   const isMobile = width <= 768
@@ -203,7 +205,7 @@ function Home() {
                   <span style={styles.heroFeaturedTitle}>{t.title.split(/[:|]/)[0].trim()}</span>
                   <span style={styles.heroFeaturedMeta}>
                     <Star size={11} color="var(--color-amber)" fill="var(--color-amber)" style={{ flexShrink: 0 }} />
-                    {t.rating} · {t.duration} · from €{t.price}
+                    {t.rating} · {t.duration} · from {format(t.price)}
                   </span>
                 </div>
                 <ArrowRight size={15} color="rgba(255,255,255,0.7)" style={{ flexShrink: 0, marginLeft: 'auto' }} />

@@ -41,6 +41,14 @@ function BlogSlugRedirect() {
   return <Navigate to={`/journal/${slug}`} replace />
 }
 
+// Journey detail pages moved from /packages/:slug to /multi-day-tours/:slug
+// so details nest under their listing. Redirect old inbound links.
+// (A host-level 301 also lives in public/_redirects.)
+function PackageSlugRedirect() {
+  const { slug } = useParams()
+  return <Navigate to={`/multi-day-tours/${slug}`} replace />
+}
+
 function NotFound() {
   return (
     <div style={{
@@ -131,7 +139,9 @@ function App() {
           <Route path="/tours/:slug" element={<TourDetail />} />
           <Route path="/multi-day-tours" element={<Packages />} />
           <Route path="/contact" element={<Contact />} />
-          <Route path="/packages/:slug" element={<PackageDetail />} />
+          <Route path="/multi-day-tours/:slug" element={<PackageDetail />} />
+          <Route path="/packages" element={<Navigate to="/multi-day-tours" replace />} />
+          <Route path="/packages/:slug" element={<PackageSlugRedirect />} />
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/personalised" element={<PersonalisedTour />} />
           <Route path="/about" element={<About />} />

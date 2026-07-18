@@ -3,5 +3,10 @@
   "phoneDisplay": "+387 62 664 244",
   "whatsappNumber": "38762664244",
   "instagramUrl": "https://www.instagram.com/tallest.tourguide/",
-  "tripadvisorUrl": "https://www.tripadvisor.com/Attraction_Review-g294450-d14011605-Reviews-Tallest_Tourguide_Tours_and_Excursions-Sarajevo_Sarajevo_Canton_Federation_of_Bo.html"
+  "tripadvisorUrl": "https://www.tripadvisor.com/Attraction_Review-g294450-d14011605-Reviews-Tallest_Tourguide_Tours_and_Excursions-Sarajevo_Sarajevo_Canton_Federation_of_Bo.html",
+  "currencyRates": {
+    "USD": 1.08,
+    "GBP": 0.86,
+    "BAM": 1.95583
+  }
 }

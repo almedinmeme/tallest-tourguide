@@ -20,7 +20,7 @@ export const CANCEL_LINE_TOUR =
 // Compact form for tight surfaces (tour cards).
 export const CANCEL_SHORT_TOUR = 'Free cancellation 24h'
 export const CANCEL_LINE_PACKAGE =
-  'Full refund on packages cancelled more than 30 days before departure.'
+  'Full refund on journeys cancelled more than 30 days before departure.'
 
 // Home trust bar cell — must stay true to the lines above.
 export const TRUST_BAR_CANCEL = { desktop: '24h on day tours', mobile: '24h day tours' }
@@ -33,7 +33,7 @@ export const REFUND_TIMING = 'promptly, to the original payment method'
 export const PAYMENT_METHODS = [
   {
     title: 'Bank transfer (EUR)',
-    body: 'An invoice with IBAN details — the usual route for package deposits and balances.',
+    body: 'An invoice with IBAN details — the usual route for journey deposits and balances.',
   },
   {
     title: 'Secure card payment link',
