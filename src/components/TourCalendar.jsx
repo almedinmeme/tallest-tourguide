@@ -96,11 +96,11 @@ export default function TourCalendar({
   function handleClick(day) {
     if (!day) return
     const state = getCellState(day)
-    // 'full' means this shared slot is sold out, not that we're closed —
-    // stays clickable so the guest can ask about the date instead of
-    // hitting a dead end (the parent decides what "select a full date"
-    // means, e.g. showing a request-this-date CTA).
-    if (state === 'past' || state === 'blocked') return
+    // Neither 'full' (sold out) nor 'blocked' (we're not running shared
+    // groups that day) means "closed" — both stay clickable so the guest
+    // can ask about the date instead of hitting a dead end (the parent
+    // decides what selecting one means, e.g. a request-this-date CTA).
+    if (state === 'past') return
     onChange(toDateString(viewYear, viewMonth, day))
   }
 
@@ -143,8 +143,8 @@ export default function TourCalendar({
           const isSelected = dateStr === selectedDate
           const isToday = dateStr === today
           const spots = tourType === 'shared' && day ? getSpots(day) : null
-          // 'full' stays clickable — see handleClick.
-          const isClickable = day && state !== 'past' && state !== 'blocked'
+          // 'full' and 'blocked' both stay clickable — see handleClick.
+          const isClickable = day && state !== 'past'
 
           return (
             <div
@@ -158,8 +158,8 @@ export default function TourCalendar({
                 <>
                   <span style={getDateNumStyle(state, isSelected)}>{day}</span>
 
-                  {state === 'blocked' && (
-                    <span style={{ ...styles.badge, color: 'var(--color-n400)' }}>Off</span>
+                  {state === 'blocked' && !isSelected && (
+                    <span style={{ ...styles.badge, color: 'var(--color-amber)', fontWeight: '600' }}>Off</span>
                   )}
                   {state === 'full' && !isSelected && (
                     <span style={{ ...styles.badge, color: 'var(--color-amber)', fontWeight: '600' }}>Full</span>
@@ -211,17 +211,10 @@ function getCellStyle(state, isSelected, isToday, hasDay, isClickable, isHovered
     return { ...base, opacity: 0.28, cursor: 'not-allowed' }
   }
 
-  if (state === 'blocked') {
-    return {
-      ...base,
-      backgroundColor: 'var(--color-n200)',
-      cursor: 'not-allowed',
-    }
-  }
-
-  if (state === 'full') {
-    // Sold out, not closed — stays clickable (dashed border reads as "ask
-    // us" rather than the solid grey "we're not operating" look of blocked).
+  if (state === 'blocked' || state === 'full') {
+    // Sold out or not running shared groups that day — neither is "closed",
+    // so both stay clickable (dashed border reads as "ask us" instead of a
+    // dead, solid-grey "unavailable" look).
     return {
       ...base,
       backgroundColor: isHovered ? 'rgba(244,161,48,0.16)' : 'rgba(244,161,48,0.08)',
@@ -254,8 +247,8 @@ function getDateNumStyle(state, isSelected) {
 
   if (isSelected) return { ...base, color: 'var(--color-n000)' }
   if (state === 'past') return { ...base, color: 'var(--color-n600)' }
-  if (state === 'blocked') return { ...base, color: 'var(--color-n400)', textDecoration: 'line-through' }
-  if (state === 'full') return { ...base, color: 'var(--color-n800)' }
+  // blocked, full, low, medium, available all read as normal, un-muted
+  // text — muted/strikethrough implied "dead", and none of these are.
   return { ...base, color: 'var(--color-n800)' }
 }
 

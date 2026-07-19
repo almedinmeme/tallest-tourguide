@@ -286,12 +286,14 @@ function TourDetail() {
   const totalPrice = tour ? (tourType === 'private' ? 0 : tour.price * numPeople) : 0
   const bookingPriceLabel = tourType === 'private' ? 'Quote' : format(totalPrice)
   const spotsLeft = tour ? getSpotsLeft(tour.slug, selectedDate, selectedLanguage, tour.groupSize) : null
-  // The shared slot is sold out for this date — not "closed", so we still
-  // let the guest ask about it instead of dead-ending the booking form.
-  const isSoldOutRequest = tourType === 'shared' && spotsLeft === 0
+  const isDateBlocked = tour ? isBlocked(tour.slug, selectedDate) : false
+  // The shared slot is sold out, or we're not running shared groups this
+  // day — neither is "closed", so we still let the guest ask about it
+  // instead of dead-ending the booking form.
+  const isRequestOnly = tourType === 'shared' && (spotsLeft === 0 || isDateBlocked)
   const maxPeople = tourType === 'private'
     ? 20
-    : isSoldOutRequest
+    : isRequestOnly
       ? tour.groupSize
       : (spotsLeft != null ? Math.min(tour.groupSize, spotsLeft) : tour.groupSize)
 
@@ -316,14 +318,15 @@ function TourDetail() {
     }
 
     const isPrivateQuote = tourType === 'private'
-    // Both a private quote and a sold-out-date request skip payment and go
-    // through Checkout's "we'll be in touch" flow — they just need
+    // A private quote, a sold-out date, and a blocked date all skip payment
+    // and go through Checkout's "we'll be in touch" flow — they just need
     // different wording so admin can tell them apart.
-    const isQuote = isPrivateQuote || isSoldOutRequest
+    const isQuote = isPrivateQuote || isRequestOnly
+    const requestReason = isDateBlocked ? 'Date Blocked' : 'Date Full'
 
     // Available add-ons, with the amount each costs for this party size. The
-    // guest selects/deselects them on the /checkout screen. A sold-out
-    // request is still a normal shared tour pending confirmation, so it
+    // guest selects/deselects them on the /checkout screen. A request-only
+    // booking is still a normal shared tour pending confirmation, so it
     // keeps offering extras — only a true private quote skips them.
     const availableExtras = isPrivateQuote
       ? []
@@ -353,13 +356,13 @@ function TourDetail() {
       num_people: numPeople,
       total_price: isPrivateQuote
         ? 'Private tour — quote requested'
-        : isSoldOutRequest
+        : isRequestOnly
           ? `Requested — €${totalPrice} if confirmed`
           : `€${totalPrice}`,
       tour_type: isPrivateQuote
         ? 'Private Tour'
-        : isSoldOutRequest
-          ? 'Shared Tour — Date Full (Requested)'
+        : isRequestOnly
+          ? `Shared Tour — ${requestReason} (Requested)`
           : 'Shared Tour',
       language: selectedLanguageLabel,
     }
@@ -396,8 +399,8 @@ function TourDetail() {
             startTime: startTime || null,
             tourType: isPrivateQuote
               ? 'Private tour'
-              : isSoldOutRequest
-                ? 'Shared tour — date full, requested'
+              : isRequestOnly
+                ? `Shared tour — ${requestReason.toLowerCase()}, requested`
                 : 'Shared tour',
             language: selectedLanguageLabel,
             numPeople,
@@ -622,10 +625,11 @@ function TourDetail() {
               </div>
               </div>
 
-              {isSoldOutRequest && (
+              {isRequestOnly && (
                 <p style={styles.soldOutNote}>
-                  This date is fully booked as a shared tour. Send a request and we'll get back to
-                  you if a spot opens up or arrange another option for your group.
+                  {isDateBlocked
+                    ? "We're not running shared groups on this date, but send a request and we'll see what we can arrange for your group."
+                    : "This date is fully booked as a shared tour. Send a request and we'll get back to you if a spot opens up or arrange another option for your group."}
                 </p>
               )}
 
@@ -690,7 +694,7 @@ function TourDetail() {
               >
                 {tourType === 'private'
                   ? 'Request a private quote'
-                  : isSoldOutRequest
+                  : isRequestOnly
                     ? 'Request this date'
                     : `Continue to checkout — ${bookingPriceLabel}`}
               </Button>
