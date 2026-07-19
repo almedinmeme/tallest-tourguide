@@ -123,12 +123,15 @@ export function buildAdminRouter() {
   }))
 
   router.put('/availability', asyncHandler(async (req, res) => {
-    const { departureDates, blockedDates } = req.body || {}
+    const { departureDates, blockedDates, manualBookings } = req.body || {}
     if (!departureDates || typeof departureDates !== 'object' || Array.isArray(departureDates)) {
       return res.status(400).json({ error: 'departureDates must be an object of slug → dates' })
     }
     if (!Array.isArray(blockedDates)) {
       return res.status(400).json({ error: 'blockedDates must be an array' })
+    }
+    if (!Array.isArray(manualBookings)) {
+      return res.status(400).json({ error: 'manualBookings must be an array' })
     }
 
     // Normalize: valid ISO dates only, deduped and sorted; drop empty slugs.
@@ -150,7 +153,25 @@ export function buildAdminRouter() {
       })
       .sort((a, b) => a.date.localeCompare(b.date))
 
-    const clean = { departureDates: cleanDeparture, blockedDates: cleanBlocked }
+    // Manual (OTA) bookings: seats sold on external channels that must count
+    // against on-site availability. Multiple entries per tour/date/language
+    // are allowed — they sum.
+    const cleanManual = manualBookings
+      .map((b) => ({
+        tourSlug: String(b?.tourSlug || '').trim(),
+        date: String(b?.date || ''),
+        language: String(b?.language || '').trim().toLowerCase(),
+        numPeople: Math.floor(Number(b?.numPeople) || 0),
+        note: String(b?.note || '').trim().slice(0, 120),
+      }))
+      .filter((b) => b.tourSlug && ISO_DATE.test(b.date) && b.numPeople >= 1 && b.numPeople <= 99)
+      .sort((a, b) => a.date.localeCompare(b.date) || a.tourSlug.localeCompare(b.tourSlug))
+
+    const clean = {
+      departureDates: cleanDeparture,
+      blockedDates: cleanBlocked,
+      manualBookings: cleanManual,
+    }
     await writeAvailability(clean)
     res.json(clean)
   }))

@@ -58,6 +58,9 @@ async function writeJsonAtomic(filePath, data) {
 const AVAILABILITY_PATHS = {
   departureDates: path.join(ROOT, 'src/data/airtable/departure-dates.json'),
   blockedDates: path.join(ROOT, 'src/data/airtable/blocked-dates.json'),
+  // Deliberately OUTSIDE src/data/airtable/: manual (OTA) bookings are
+  // admin-owned and additive — the Airtable sync must never overwrite them.
+  manualBookings: path.join(ROOT, 'src/data/manual-bookings.json'),
 }
 
 export async function readAvailability() {
@@ -71,12 +74,14 @@ export async function readAvailability() {
   return {
     departureDates: await read(AVAILABILITY_PATHS.departureDates, {}),
     blockedDates: await read(AVAILABILITY_PATHS.blockedDates, []),
+    manualBookings: await read(AVAILABILITY_PATHS.manualBookings, []),
   }
 }
 
-export async function writeAvailability({ departureDates, blockedDates }) {
+export async function writeAvailability({ departureDates, blockedDates, manualBookings }) {
   await writeJsonAtomic(AVAILABILITY_PATHS.departureDates, departureDates)
   await writeJsonAtomic(AVAILABILITY_PATHS.blockedDates, blockedDates)
+  await writeJsonAtomic(AVAILABILITY_PATHS.manualBookings, manualBookings)
 }
 
 export function nextId(items) {
