@@ -23,19 +23,22 @@ export function usePackageDates(slug) {
   const dates = useMemo(() => {
     if (!slug) return []
     const today = new Date().toISOString().slice(0, 10)
+    // The sync keeps all records, so filter out past dates here — the JSON
+    // can be up to a week old between rebuilds.
+    const synced = (departureDates[slug] || []).filter((d) => d >= today)
     if (import.meta.env.DEV) {
-      // In dev, mirror the admin-entered dates from packages.json so the
-      // booking card is demoable locally without a fresh Airtable sync.
+      // In dev, also mix in the admin-entered prose dates from packages.json
+      // so the booking card is demoable without a fresh Airtable sync — but
+      // dates saved in /admin/availability must show up too.
       const pkg = packages.find((p) => p.slug === slug)
-      return (pkg?.dates || [])
+      const prose = (pkg?.dates || [])
         .map((d) => proseToISO(d.date))
         .filter((d) => d && d >= today)
-        .sort()
+      return [...new Set([...synced, ...prose])].sort()
     }
-    // Production: dates come from the build-time Airtable sync
-    // (src/data/airtable/departure-dates.json). The sync keeps all records,
-    // so filter out past dates here — the JSON can be up to a week old.
-    return (departureDates[slug] || []).filter((d) => d >= today)
+    // Production: exactly what the build-time sync (or the admin
+    // availability fallback) shipped.
+    return synced
   }, [slug])
 
   return { dates, loading: false }
