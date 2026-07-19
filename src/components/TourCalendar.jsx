@@ -74,8 +74,13 @@ export default function TourCalendar({
       const booked = (bookings && bookings[`${slug}_${dateStr}_${(language || '').toLowerCase()}`]) || 0
       const left = Math.max(0, groupSize - booked)
       if (left === 0) return 'full'
-      if (left <= 3) return 'low'
-      if (left <= 6) return 'medium'
+      // Scarcity badges only once someone has actually booked — otherwise
+      // small-group tours (a 4-person cooking class) would show "X left" in
+      // warning colors on every empty day.
+      if (booked > 0) {
+        if (left <= 3) return 'low'
+        if (left <= 6) return 'medium'
+      }
     }
 
     return 'available'

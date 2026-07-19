@@ -763,7 +763,10 @@ function PackageDetail() {
                 )}
                 {!dateError && selectedDate && (() => {
                   const spots = getSpotsLeft(pkg.slug, selectedDate, selectedLanguage, pkg.groupSize)
-                  return spots != null && spots > 0 && spots <= 3 ? (
+                  // Only urge once someone has booked (spots < groupSize) —
+                  // a small-group journey would otherwise show this at full
+                  // availability.
+                  return spots != null && spots > 0 && spots <= 3 && spots < pkg.groupSize ? (
                     <p style={styles.spotsHint}>Only {spots} {spots === 1 ? 'spot' : 'spots'} left on this date</p>
                   ) : null
                 })()}
