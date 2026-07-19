@@ -10,6 +10,7 @@
 // that reaches it overwrites them. They're the fallback for when Airtable
 // is down or over its API cap.
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 import * as api from '../api'
 import { s, colors } from '../styles'
 import SaveButton from '../components/SaveButton'
@@ -18,6 +19,7 @@ import { useDirtyTracker } from '../hooks/dirtyContext'
 
 const ALL_TOURS = '' // empty tourSlug on a blocked date blocks every tour
 const DEFAULT_LANGUAGES = ['english', 'bosnian']
+const OTA_SOURCES = ['Direct', 'GetYourGuide', 'Viator', 'Other']
 
 // "2026-08-19" → "19 Aug 2026"
 function fmtDate(iso) {
@@ -100,7 +102,9 @@ export default function AvailabilityPage() {
       ...journeys.map((p) => ({
         slug: p.slug,
         label: shortTitle(p.name),
-        languages: DEFAULT_LANGUAGES,
+        // Journeys have no language toggle on the site — capacity is
+        // tracked under 'english' (PackageDetail's fixed selectedLanguage).
+        languages: ['english'],
         groupSize: p.groupSize || null,
         kind: 'journey',
       })),
@@ -429,38 +433,47 @@ function groupRuns(blockedDates) {
   return runs.sort((a, b) => a.dates[0].localeCompare(b.dates[0]))
 }
 
+// Row order (per the owner's workflow): Tour → Date → People → Source → Add.
+// Language folds into the tour dropdown ("Cooking Class — Bosnian") since
+// tours have at most two languages and journeys are English-only.
 function ManualAdder({ bookables, onAdd }) {
-  const [slug, setSlug] = useState('')
+  const [choice, setChoice] = useState('') // "slug|language"
   const [date, setDate] = useState('')
-  const [language, setLanguage] = useState(DEFAULT_LANGUAGES[0])
   const [people, setPeople] = useState(2)
-  const [note, setNote] = useState('')
+  const [source, setSource] = useState(OTA_SOURCES[0])
 
-  const selected = bookables.find((b) => b.slug === slug)
-  const languages = selected?.languages || DEFAULT_LANGUAGES
+  const optionsFor = (kind) =>
+    bookables
+      .filter((b) => b.kind === kind)
+      .flatMap((b) =>
+        b.languages.length > 1
+          ? b.languages.map((lang) => ({
+              value: `${b.slug}|${lang}`,
+              label: `${b.label} — ${cap(lang)}`,
+            }))
+          : [{ value: `${b.slug}|${b.languages[0]}`, label: b.label }]
+      )
 
-  // Keep the language valid when switching tours.
-  const onSlugChange = (value) => {
-    setSlug(value)
-    const langs = bookables.find((b) => b.slug === value)?.languages || DEFAULT_LANGUAGES
-    if (!langs.includes(language)) setLanguage(langs[0])
-  }
-
-  const canAdd = slug && date && Number(people) >= 1
+  const canAdd = choice && date && Number(people) >= 1
 
   return (
     <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center' }}>
       <select
-        value={slug}
-        onChange={(e) => onSlugChange(e.target.value)}
-        style={{ ...s.input, width: 280, padding: '6px 10px', color: slug ? undefined : colors.textMuted }}
+        value={choice}
+        onChange={(e) => setChoice(e.target.value)}
+        style={{ ...s.input, width: 300, padding: '6px 10px', color: choice ? undefined : colors.textMuted }}
       >
         <option value="">Choose a tour or journey…</option>
-        {bookables.map((b) => (
-          <option key={b.slug} value={b.slug}>
-            {b.label}{b.kind === 'journey' ? ' (journey)' : ''}
-          </option>
-        ))}
+        <optgroup label="Day tours">
+          {optionsFor('tour').map((o) => (
+            <option key={o.value} value={o.value}>{o.label}</option>
+          ))}
+        </optgroup>
+        <optgroup label="Journeys">
+          {optionsFor('journey').map((o) => (
+            <option key={o.value} value={o.value}>{o.label}</option>
+          ))}
+        </optgroup>
       </select>
       <input
         type="date"
@@ -468,15 +481,6 @@ function ManualAdder({ bookables, onAdd }) {
         onChange={(e) => setDate(e.target.value)}
         style={{ ...s.input, width: 165, padding: '6px 10px' }}
       />
-      <select
-        value={language}
-        onChange={(e) => setLanguage(e.target.value)}
-        style={{ ...s.input, width: 120, padding: '6px 10px' }}
-      >
-        {languages.map((l) => (
-          <option key={l} value={l}>{cap(l)}</option>
-        ))}
-      </select>
       <input
         type="number"
         min="1"
@@ -486,28 +490,29 @@ function ManualAdder({ bookables, onAdd }) {
         aria-label="Number of people"
         style={{ ...s.input, width: 70, padding: '6px 10px' }}
       />
-      <input
-        type="text"
-        value={note}
-        onChange={(e) => setNote(e.target.value)}
-        placeholder="Source, e.g. GetYourGuide"
-        maxLength={120}
-        style={{ ...s.input, width: 190, padding: '6px 10px' }}
-      />
+      <select
+        value={source}
+        onChange={(e) => setSource(e.target.value)}
+        style={{ ...s.input, width: 150, padding: '6px 10px' }}
+      >
+        {OTA_SOURCES.map((src) => (
+          <option key={src} value={src}>{src}</option>
+        ))}
+      </select>
       <button
         type="button"
         disabled={!canAdd}
         onClick={() => {
+          const [tourSlug, language] = choice.split('|')
           onAdd({
-            tourSlug: slug,
+            tourSlug,
             date,
             language,
             numPeople: Math.floor(Number(people)),
-            note: note.trim(),
+            note: source,
           })
           setDate('')
           setPeople(2)
-          setNote('')
         }}
         style={{ ...s.btnSecondary, opacity: canAdd ? 1 : 0.5, cursor: canAdd ? 'pointer' : 'not-allowed' }}
       >
@@ -518,30 +523,27 @@ function ManualAdder({ bookables, onAdd }) {
 }
 
 function DepartureRow({ label, dates, onAdd, onRemove }) {
-  const [draft, setDraft] = useState('')
+  const [pickerOpen, setPickerOpen] = useState(false)
   return (
     <div style={{ padding: '14px 0', borderBottom: `1px solid ${colors.border}` }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
         <strong style={{ fontSize: 14 }}>{label}</strong>
-        <span style={{ display: 'inline-flex', gap: 8 }}>
-          <input
-            type="date"
-            value={draft}
-            onChange={(e) => setDraft(e.target.value)}
-            style={{ ...s.input, width: 165, padding: '6px 10px' }}
-          />
-          <button
-            type="button"
-            onClick={() => {
-              onAdd(draft)
-              setDraft('')
-            }}
-            style={s.btnSecondary}
-          >
-            Add date
-          </button>
-        </span>
+        <button
+          type="button"
+          onClick={() => setPickerOpen((open) => !open)}
+          style={pickerOpen ? { ...s.btn, padding: '6px 14px' } : s.btnSecondary}
+        >
+          {pickerOpen ? 'Done' : dates.length ? 'Edit dates' : 'Pick dates'}
+        </button>
       </div>
+
+      {pickerOpen && (
+        <MultiDateCalendar
+          selected={dates}
+          onToggle={(date) => (dates.includes(date) ? onRemove(date) : onAdd(date))}
+        />
+      )}
+
       {dates.length > 0 && (
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 10 }}>
           {dates.map((d) => (
@@ -580,6 +582,121 @@ function DepartureRow({ label, dates, onAdd, onRemove }) {
           ))}
         </div>
       )}
+    </div>
+  )
+}
+
+// Compact multi-select month calendar: click days to toggle them on/off in
+// one sitting, then hit the global Save. Past days are disabled; selecting
+// applies immediately to the unsaved state (chips update live below).
+function MultiDateCalendar({ selected, onToggle }) {
+  const now = new Date()
+  const [viewYear, setViewYear] = useState(now.getFullYear())
+  const [viewMonth, setViewMonth] = useState(now.getMonth())
+
+  const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`
+  const toDateString = (day) =>
+    `${viewYear}-${String(viewMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`
+
+  const cells = useMemo(() => {
+    const startDow = (new Date(viewYear, viewMonth, 1).getDay() + 6) % 7 // Mon-first
+    const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate()
+    const result = []
+    for (let i = 0; i < startDow; i++) result.push(null)
+    for (let d = 1; d <= daysInMonth; d++) result.push(d)
+    while (result.length % 7 !== 0) result.push(null)
+    return result
+  }, [viewYear, viewMonth])
+
+  const monthOffset = (viewYear - now.getFullYear()) * 12 + (viewMonth - now.getMonth())
+  const canGoPrev = monthOffset > 0
+  const canGoNext = monthOffset < 24
+
+  const shiftMonth = (delta) => {
+    const next = new Date(viewYear, viewMonth + delta, 1)
+    setViewYear(next.getFullYear())
+    setViewMonth(next.getMonth())
+  }
+
+  const monthLabel = new Date(viewYear, viewMonth, 1).toLocaleDateString('en-GB', {
+    month: 'long',
+    year: 'numeric',
+  })
+
+  const navBtn = (enabled) => ({
+    background: 'none',
+    border: `1px solid ${colors.border}`,
+    borderRadius: 6,
+    width: 26,
+    height: 26,
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    cursor: enabled ? 'pointer' : 'not-allowed',
+    opacity: enabled ? 1 : 0.3,
+    color: colors.text,
+  })
+
+  return (
+    <div
+      style={{
+        marginTop: 12,
+        padding: 14,
+        border: `1px solid ${colors.border}`,
+        borderRadius: 8,
+        backgroundColor: colors.panelMuted,
+        maxWidth: 340,
+        userSelect: 'none',
+      }}
+    >
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
+        <button type="button" onClick={() => canGoPrev && shiftMonth(-1)} style={navBtn(canGoPrev)} aria-label="Previous month">
+          <ChevronLeft size={14} />
+        </button>
+        <span style={{ fontSize: 13.5, fontWeight: 600 }}>{monthLabel}</span>
+        <button type="button" onClick={() => canGoNext && shiftMonth(1)} style={navBtn(canGoNext)} aria-label="Next month">
+          <ChevronRight size={14} />
+        </button>
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 3 }}>
+        {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((d) => (
+          <div key={d} style={{ textAlign: 'center', fontSize: 10.5, fontWeight: 600, color: colors.textMuted, padding: '2px 0' }}>
+            {d}
+          </div>
+        ))}
+        {cells.map((day, i) => {
+          if (!day) return <div key={`e${i}`} />
+          const dateStr = toDateString(day)
+          const isPast = dateStr <= today
+          const isSelected = selected.includes(dateStr)
+          return (
+            <button
+              key={dateStr}
+              type="button"
+              disabled={isPast}
+              onClick={() => onToggle(dateStr)}
+              style={{
+                height: 32,
+                borderRadius: 6,
+                border: `1px solid ${isSelected ? colors.primary : 'transparent'}`,
+                backgroundColor: isSelected ? colors.primary : 'transparent',
+                color: isPast ? colors.textMuted : isSelected ? '#fff' : colors.text,
+                fontSize: 12.5,
+                fontWeight: isSelected ? 700 : 500,
+                cursor: isPast ? 'not-allowed' : 'pointer',
+                opacity: isPast ? 0.4 : 1,
+              }}
+            >
+              {day}
+            </button>
+          )
+        })}
+      </div>
+
+      <div style={{ marginTop: 10, fontSize: 11.5, color: colors.textSubtle }}>
+        Click dates to add or remove them, then Save (top right) to keep the changes.
+      </div>
     </div>
   )
 }
