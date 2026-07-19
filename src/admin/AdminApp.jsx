@@ -13,6 +13,7 @@ import PagesList from './pages/PagesList'
 import PageEditor from './pages/PageEditor'
 import JournalList from './pages/JournalList'
 import JournalEditor from './pages/JournalEditor'
+import AvailabilityPage from './pages/AvailabilityPage'
 import SettingsPage from './pages/SettingsPage'
 import * as api from './api'
 import { s, colors, adminGlobalCSS } from './styles'
@@ -93,6 +94,13 @@ const Icon = {
     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
       <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+    </svg>
+  ),
+  availability: (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="3" y="4" width="18" height="18" rx="2" />
+      <path d="M16 2v4M8 2v4M3 10h18" />
+      <path d="m9 16 2 2 4-4" />
     </svg>
   ),
   settings: (
@@ -311,6 +319,7 @@ export default function AdminApp() {
             <NavItem to="/admin/accommodations" icon={Icon.accommodations}>Accommodations</NavItem>
             <NavItem to="/admin/pages" icon={Icon.pages}>Pages</NavItem>
             <NavItem to="/admin/journal" icon={Icon.journal}>Journal</NavItem>
+            <NavItem to="/admin/availability" icon={Icon.availability}>Availability</NavItem>
             <NavItem to="/admin/settings" icon={Icon.settings}>Settings</NavItem>
           </nav>
           <div style={{ marginTop: 'auto', borderTop: `1px solid rgba(255,255,255,0.06)`, paddingTop: 14, marginLeft: -2, marginRight: -2 }}>
@@ -357,6 +366,7 @@ export default function AdminApp() {
             <Route path="journal" element={<JournalList />} />
             <Route path="journal/new" element={<JournalEditor />} />
             <Route path="journal/:id" element={<JournalEditor />} />
+            <Route path="availability" element={<AvailabilityPage />} />
             <Route path="settings" element={<SettingsPage />} />
             <Route path="*" element={<Navigate to="/admin" replace />} />
           </Routes>

@@ -40,10 +40,43 @@ export async function readCollection(name) {
 export async function writeCollection(name, data) {
   const filePath = PATHS[name]
   if (!filePath) throw new Error(`unknown collection: ${name}`)
+  await writeJsonAtomic(filePath, data)
+}
+
+async function writeJsonAtomic(filePath, data) {
   await fs.mkdir(path.dirname(filePath), { recursive: true })
   const tmp = `${filePath}.tmp-${process.pid}-${Date.now()}`
   await fs.writeFile(tmp, JSON.stringify(data, null, 2) + '\n', 'utf-8')
   await fs.rename(tmp, filePath)
+}
+
+// Availability fallback editor — reads/writes the same files the Airtable
+// sync (scripts/sync-airtable.mjs) regenerates at build time. Airtable stays
+// the source of truth: whenever it's reachable during a build, it overwrites
+// these files; admin edits only ship while Airtable is down or over its
+// API cap.
+const AVAILABILITY_PATHS = {
+  departureDates: path.join(ROOT, 'src/data/airtable/departure-dates.json'),
+  blockedDates: path.join(ROOT, 'src/data/airtable/blocked-dates.json'),
+}
+
+export async function readAvailability() {
+  const read = async (filePath, fallback) => {
+    try {
+      return JSON.parse(await fs.readFile(filePath, 'utf-8'))
+    } catch {
+      return fallback
+    }
+  }
+  return {
+    departureDates: await read(AVAILABILITY_PATHS.departureDates, {}),
+    blockedDates: await read(AVAILABILITY_PATHS.blockedDates, []),
+  }
+}
+
+export async function writeAvailability({ departureDates, blockedDates }) {
+  await writeJsonAtomic(AVAILABILITY_PATHS.departureDates, departureDates)
+  await writeJsonAtomic(AVAILABILITY_PATHS.blockedDates, blockedDates)
 }
 
 export function nextId(items) {

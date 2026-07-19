@@ -45,6 +45,13 @@ export const settings = {
   update: (body) => jsonFetch(`${BASE}/settings`, { method: 'PUT', body: JSON.stringify(body) }),
 }
 
+// Availability fallback (departure dates + blocked dates) — singleton like
+// settings. Airtable overwrites these files on every build it can reach.
+export const availability = {
+  get: () => jsonFetch(`${BASE}/availability`),
+  update: (body) => jsonFetch(`${BASE}/availability`, { method: 'PUT', body: JSON.stringify(body) }),
+}
+
 // Commit all content changes (src/data + public/uploads) and, unless
 // push:false, push — which is what deploys the site (Netlify builds on push).
 export const publish = (message, { push = true } = {}) =>

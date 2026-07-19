@@ -1,6 +1,6 @@
 import express from 'express'
 import { execFile } from 'node:child_process'
-import { readCollection, writeCollection, nextId } from './storage.js'
+import { readCollection, writeCollection, nextId, readAvailability, writeAvailability } from './storage.js'
 import { upload, processUpload } from './upload.js'
 import { renameUpload } from './rename.js'
 
@@ -110,6 +110,49 @@ export function buildAdminRouter() {
     const body = req.body || {}
     await writeCollection('settings', body)
     res.json(body)
+  }))
+
+  // Availability fallback — journey departure dates + blocked dates, backed
+  // by the same src/data/airtable/*.json files the build-time Airtable sync
+  // regenerates. Airtable wins whenever a build can reach it; these edits
+  // ship only while it's down or over its API cap.
+  const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/
+
+  router.get('/availability', asyncHandler(async (_req, res) => {
+    res.json(await readAvailability())
+  }))
+
+  router.put('/availability', asyncHandler(async (req, res) => {
+    const { departureDates, blockedDates } = req.body || {}
+    if (!departureDates || typeof departureDates !== 'object' || Array.isArray(departureDates)) {
+      return res.status(400).json({ error: 'departureDates must be an object of slug → dates' })
+    }
+    if (!Array.isArray(blockedDates)) {
+      return res.status(400).json({ error: 'blockedDates must be an array' })
+    }
+
+    // Normalize: valid ISO dates only, deduped and sorted; drop empty slugs.
+    const cleanDeparture = {}
+    for (const [slug, dates] of Object.entries(departureDates)) {
+      if (!slug.trim() || !Array.isArray(dates)) continue
+      const clean = [...new Set(dates.filter((d) => ISO_DATE.test(d)))].sort()
+      if (clean.length) cleanDeparture[slug.trim()] = clean
+    }
+    const seen = new Set()
+    const cleanBlocked = blockedDates
+      .map((b) => ({ date: String(b?.date || ''), tourSlug: String(b?.tourSlug || '').trim() }))
+      .filter((b) => ISO_DATE.test(b.date))
+      .filter((b) => {
+        const key = `${b.date}|${b.tourSlug}`
+        if (seen.has(key)) return false
+        seen.add(key)
+        return true
+      })
+      .sort((a, b) => a.date.localeCompare(b.date))
+
+    const clean = { departureDates: cleanDeparture, blockedDates: cleanBlocked }
+    await writeAvailability(clean)
+    res.json(clean)
   }))
 
   const git = (args) =>
