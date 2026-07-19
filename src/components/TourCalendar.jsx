@@ -96,7 +96,11 @@ export default function TourCalendar({
   function handleClick(day) {
     if (!day) return
     const state = getCellState(day)
-    if (state === 'past' || state === 'blocked' || state === 'full') return
+    // 'full' means this shared slot is sold out, not that we're closed —
+    // stays clickable so the guest can ask about the date instead of
+    // hitting a dead end (the parent decides what "select a full date"
+    // means, e.g. showing a request-this-date CTA).
+    if (state === 'past' || state === 'blocked') return
     onChange(toDateString(viewYear, viewMonth, day))
   }
 
@@ -139,7 +143,8 @@ export default function TourCalendar({
           const isSelected = dateStr === selectedDate
           const isToday = dateStr === today
           const spots = tourType === 'shared' && day ? getSpots(day) : null
-          const isClickable = day && state !== 'past' && state !== 'blocked' && state !== 'full'
+          // 'full' stays clickable — see handleClick.
+          const isClickable = day && state !== 'past' && state !== 'blocked'
 
           return (
             <div
@@ -156,8 +161,8 @@ export default function TourCalendar({
                   {state === 'blocked' && (
                     <span style={{ ...styles.badge, color: 'var(--color-n400)' }}>Off</span>
                   )}
-                  {state === 'full' && (
-                    <span style={{ ...styles.badge, color: 'var(--color-n400)' }}>Full</span>
+                  {state === 'full' && !isSelected && (
+                    <span style={{ ...styles.badge, color: 'var(--color-amber)', fontWeight: '600' }}>Full</span>
                   )}
                   {state === 'low' && spots !== null && !isSelected && (
                     <span style={{ ...styles.badge, color: '#c0392b', fontWeight: '700' }}>
@@ -206,11 +211,21 @@ function getCellStyle(state, isSelected, isToday, hasDay, isClickable, isHovered
     return { ...base, opacity: 0.28, cursor: 'not-allowed' }
   }
 
-  if (state === 'blocked' || state === 'full') {
+  if (state === 'blocked') {
     return {
       ...base,
       backgroundColor: 'var(--color-n200)',
       cursor: 'not-allowed',
+    }
+  }
+
+  if (state === 'full') {
+    // Sold out, not closed — stays clickable (dashed border reads as "ask
+    // us" rather than the solid grey "we're not operating" look of blocked).
+    return {
+      ...base,
+      backgroundColor: isHovered ? 'rgba(244,161,48,0.16)' : 'rgba(244,161,48,0.08)',
+      border: '1px dashed rgba(244,161,48,0.5)',
     }
   }
 
@@ -240,7 +255,7 @@ function getDateNumStyle(state, isSelected) {
   if (isSelected) return { ...base, color: 'var(--color-n000)' }
   if (state === 'past') return { ...base, color: 'var(--color-n600)' }
   if (state === 'blocked') return { ...base, color: 'var(--color-n400)', textDecoration: 'line-through' }
-  if (state === 'full') return { ...base, color: 'var(--color-n400)' }
+  if (state === 'full') return { ...base, color: 'var(--color-n800)' }
   return { ...base, color: 'var(--color-n800)' }
 }
 

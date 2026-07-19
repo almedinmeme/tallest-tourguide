@@ -286,9 +286,14 @@ function TourDetail() {
   const totalPrice = tour ? (tourType === 'private' ? 0 : tour.price * numPeople) : 0
   const bookingPriceLabel = tourType === 'private' ? 'Quote' : format(totalPrice)
   const spotsLeft = tour ? getSpotsLeft(tour.slug, selectedDate, selectedLanguage, tour.groupSize) : null
+  // The shared slot is sold out for this date — not "closed", so we still
+  // let the guest ask about it instead of dead-ending the booking form.
+  const isSoldOutRequest = tourType === 'shared' && spotsLeft === 0
   const maxPeople = tourType === 'private'
     ? 20
-    : (spotsLeft != null ? Math.min(tour.groupSize, spotsLeft) : tour.groupSize)
+    : isSoldOutRequest
+      ? tour.groupSize
+      : (spotsLeft != null ? Math.min(tour.groupSize, spotsLeft) : tour.groupSize)
 
   if (!tour) {
     return (
@@ -310,11 +315,17 @@ function TourDetail() {
       return
     }
 
-    const isQuote = tourType === 'private'
+    const isPrivateQuote = tourType === 'private'
+    // Both a private quote and a sold-out-date request skip payment and go
+    // through Checkout's "we'll be in touch" flow — they just need
+    // different wording so admin can tell them apart.
+    const isQuote = isPrivateQuote || isSoldOutRequest
 
     // Available add-ons, with the amount each costs for this party size. The
-    // guest selects/deselects them on the /checkout screen.
-    const availableExtras = isQuote
+    // guest selects/deselects them on the /checkout screen. A sold-out
+    // request is still a normal shared tour pending confirmation, so it
+    // keeps offering extras — only a true private quote skips them.
+    const availableExtras = isPrivateQuote
       ? []
       : tourExtras.map((ex) => ({
           label: ex.label,
@@ -340,8 +351,16 @@ function TourDetail() {
       tour_date: selectedDate,
       start_time: startTime || 'Not specified',
       num_people: numPeople,
-      total_price: isQuote ? 'Private tour — quote requested' : `€${totalPrice}`,
-      tour_type: isQuote ? 'Private Tour' : 'Shared Tour',
+      total_price: isPrivateQuote
+        ? 'Private tour — quote requested'
+        : isSoldOutRequest
+          ? `Requested — €${totalPrice} if confirmed`
+          : `€${totalPrice}`,
+      tour_type: isPrivateQuote
+        ? 'Private Tour'
+        : isSoldOutRequest
+          ? 'Shared Tour — Date Full (Requested)'
+          : 'Shared Tour',
       language: selectedLanguageLabel,
     }
 
@@ -353,7 +372,7 @@ function TourDetail() {
       NumPeople: numPeople,
       TourType: tourType,
       Language: selectedLanguageLabel,
-      TotalPrice: isQuote ? 0 : totalPrice,
+      TotalPrice: isPrivateQuote ? 0 : totalPrice,
       Status: 'Pending',
     }
 
@@ -375,10 +394,14 @@ function TourDetail() {
           summary: {
             date: formatSelectedDate(selectedDate),
             startTime: startTime || null,
-            tourType: isQuote ? 'Private tour' : 'Shared tour',
+            tourType: isPrivateQuote
+              ? 'Private tour'
+              : isSoldOutRequest
+                ? 'Shared tour — date full, requested'
+                : 'Shared tour',
             language: selectedLanguageLabel,
             numPeople,
-            unitPrice: isQuote ? null : tour.price,
+            unitPrice: isPrivateQuote ? null : tour.price,
             total: totalPrice,
           },
           availableExtras,
@@ -558,7 +581,9 @@ function TourDetail() {
                         setSelectedDate(date)
                         setCalendarOpen(false)
                         const spots = getSpotsLeft(tour.slug, date, selectedLanguage, tour.groupSize)
-                        if (spots != null) setNumPeople((n) => Math.min(n, spots))
+                        // A sold-out date (spots === 0) is a request, not a
+                        // hard cap — don't collapse the party size to zero.
+                        if (spots) setNumPeople((n) => Math.min(n, spots))
                       }}
                       isBlocked={isBlocked}
                       bookings={bookings}
@@ -596,6 +621,13 @@ function TourDetail() {
                 </div>
               </div>
               </div>
+
+              {isSoldOutRequest && (
+                <p style={styles.soldOutNote}>
+                  This date is fully booked as a shared tour. Send a request and we'll get back to
+                  you if a spot opens up or arrange another option for your group.
+                </p>
+              )}
 
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px', marginTop: '16px', marginBottom: '8px' }}>
                 <label style={styles.label}>Number of People</label>
@@ -656,7 +688,11 @@ function TourDetail() {
                 style={{ marginBottom: 10 }}
                 onClick={handleBooking}
               >
-                {tourType === 'private' ? 'Request a private quote' : `Continue to checkout — ${bookingPriceLabel}`}
+                {tourType === 'private'
+                  ? 'Request a private quote'
+                  : isSoldOutRequest
+                    ? 'Request this date'
+                    : `Continue to checkout — ${bookingPriceLabel}`}
               </Button>
 
               <div style={styles.trustRows}>
@@ -1808,6 +1844,17 @@ const styles = {
     borderRadius: '6px',
     padding: '8px 10px',
     margin: '0 0 8px 0',
+    lineHeight: '1.5',
+  },
+
+  soldOutNote: {
+    fontFamily: 'var(--font-body)',
+    fontSize: '12px',
+    color: '#8a5a00',
+    backgroundColor: 'rgba(244,161,48,0.1)',
+    borderRadius: '6px',
+    padding: '8px 10px',
+    margin: '12px 0 0 0',
     lineHeight: '1.5',
   },
 
