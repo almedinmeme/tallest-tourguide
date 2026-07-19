@@ -322,7 +322,7 @@ export default function AvailabilityPage() {
                   <button
                     type="button"
                     onClick={() => removeManual(i)}
-                    style={{ ...s.btnGhost, color: colors.danger, padding: '2px 8px' }}
+                    style={{ ...s.btn, ...s.btnGhost, color: colors.danger, padding: '4px 10px', boxShadow: 'none' }}
                   >
                     Remove
                   </button>
@@ -372,7 +372,7 @@ export default function AvailabilityPage() {
                 <button
                   type="button"
                   onClick={() => removeBlocked(run.dates, run.tourSlug)}
-                  style={{ ...s.btnGhost, color: colors.danger, padding: '2px 8px' }}
+                  style={{ ...s.btn, ...s.btnGhost, color: colors.danger, padding: '4px 10px', boxShadow: 'none' }}
                 >
                   Remove
                 </button>
@@ -514,7 +514,7 @@ function ManualAdder({ bookables, onAdd }) {
           setDate('')
           setPeople(2)
         }}
-        style={{ ...s.btnSecondary, opacity: canAdd ? 1 : 0.5, cursor: canAdd ? 'pointer' : 'not-allowed' }}
+        style={{ ...s.btn, opacity: canAdd ? 1 : 0.5, cursor: canAdd ? 'pointer' : 'not-allowed' }}
       >
         Add booking
       </button>
@@ -531,7 +531,7 @@ function DepartureRow({ label, dates, onAdd, onRemove }) {
         <button
           type="button"
           onClick={() => setPickerOpen((open) => !open)}
-          style={pickerOpen ? { ...s.btn, padding: '6px 14px' } : s.btnSecondary}
+          style={pickerOpen ? s.btn : { ...s.btn, ...s.btnSecondary }}
         >
           {pickerOpen ? 'Done' : dates.length ? 'Edit dates' : 'Pick dates'}
         </button>
@@ -738,7 +738,7 @@ function BlockedAdder({ bookables, onAdd }) {
           setFrom('')
           setTo('')
         }}
-        style={s.btnSecondary}
+        style={s.btn}
       >
         {isRange ? 'Block range' : 'Block date'}
       </button>
