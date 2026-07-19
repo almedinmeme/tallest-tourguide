@@ -1,1 +1,16 @@
-[]
+[
+  {
+    "tourSlug": "home-hosted-dinner",
+    "date": "2026-07-31",
+    "language": "english",
+    "numPeople": 2,
+    "note": "Whatsapp"
+  },
+  {
+    "tourSlug": "jajce-travnik-day-trip-sarajevo",
+    "date": "2026-08-05",
+    "language": "english",
+    "numPeople": 6,
+    "note": "Viator"
+  }
+]
