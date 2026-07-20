@@ -4,6 +4,7 @@ import { ArrowRight, Gauge, MapPin, Globe, ChevronLeft, ChevronRight } from 'luc
 import useWindowWidth from '../hooks/useWindowWidth'
 import { useAllReviews } from '../hooks/useAllReviews'
 import Img from './Img'
+import Button from './Button'
 
 import { packages } from '../data/packages'
 import { useCurrency } from '../context/CurrencyContext'
@@ -39,137 +40,179 @@ function PackagesPreview() {
       </div>
 
       {/* Carousel */}
-      <div
-        style={{ ...styles.carouselWrapper, ...(isMobile ? null : styles.carouselBreathe) }}
-        onTouchStart={(e) => { touchStartX.current = e.touches[0].clientX }}
-        onTouchEnd={(e) => {
-          if (touchStartX.current === null) return
-          const delta = touchStartX.current - e.changedTouches[0].clientX
-          if (Math.abs(delta) > 40) {
-            if (delta > 0) setPage((p) => Math.min(totalPages - 1, p + 1))
-            else setPage((p) => Math.max(0, p - 1))
-          }
-          touchStartX.current = null
-        }}
-      >
-        <div style={{
-          ...styles.carouselTrack,
-          transform: `translateX(calc(${page} * (-100% - 24px)))`,
-        }}>
-          {Array.from({ length: totalPages }).map((_, pageIdx) => (
-            <div key={pageIdx} style={{
-              ...styles.carouselPage,
-              gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)',
-            }}>
-              {packages.slice(pageIdx * visibleCount, (pageIdx + 1) * visibleCount).map((pkg) => {
-                const avgRating = stats[pkg.slug]?.avgRating ?? pkg.rating
-                const reviewCount = stats[pkg.slug]?.count ?? pkg.reviews
+      <div style={styles.carouselOuter}>
+        <div
+          style={{ ...styles.carouselWrapper, ...(isMobile ? null : styles.carouselBreathe) }}
+          onTouchStart={(e) => { touchStartX.current = e.touches[0].clientX }}
+          onTouchEnd={(e) => {
+            if (touchStartX.current === null) return
+            const delta = touchStartX.current - e.changedTouches[0].clientX
+            if (Math.abs(delta) > 40) {
+              if (delta > 0) setPage((p) => Math.min(totalPages - 1, p + 1))
+              else setPage((p) => Math.max(0, p - 1))
+            }
+            touchStartX.current = null
+          }}
+        >
+          <div style={{
+            ...styles.carouselTrack,
+            transform: `translateX(calc(${page} * (-100% - 24px)))`,
+          }}>
+            {Array.from({ length: totalPages }).map((_, pageIdx) => (
+              <div key={pageIdx} style={{
+                ...styles.carouselPage,
+                gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)',
+              }}>
+                {packages.slice(pageIdx * visibleCount, (pageIdx + 1) * visibleCount).map((pkg) => {
+                  const avgRating = stats[pkg.slug]?.avgRating ?? pkg.rating
+                  const reviewCount = stats[pkg.slug]?.count ?? pkg.reviews
 
-                return (
-                  <Link key={pkg.id} to={`/multi-day-tours/${pkg.slug}`} style={styles.cardLink}>
-                    <div style={styles.card} className="pkg-card">
-                      <div style={styles.imageWrapper}>
-                        <Img src={pkg.hero} alt={pkg.name} sizes="(max-width: 768px) 92vw, 420px" style={styles.photo} className="pkg-card-img" />
-                        <div style={styles.imageGradient} />
+                  return (
+                    <Link key={pkg.id} to={`/multi-day-tours/${pkg.slug}`} style={styles.cardLink}>
+                      <div style={styles.card} className="pkg-card">
+                        <div style={styles.imageWrapper}>
+                          <Img src={pkg.hero} alt={pkg.name} sizes="(max-width: 768px) 92vw, 420px" style={styles.photo} className="pkg-card-img" />
+                          <div style={styles.imageGradient} />
 
-                        <div style={styles.imageTop}>
-                          <span style={{
-                            ...styles.badge,
-                            ...(pkg.badgeColor
-                              ? { backgroundColor: pkg.badgeColor, color: pkg.badgeTextColor || 'var(--color-n000)' }
-                              : pkg.badgeStyle === 'amber'
-                              ? { backgroundColor: 'var(--color-amber)', color: 'var(--color-n900)' }
-                              : pkg.badgeStyle === 'green'
-                              ? { backgroundColor: 'var(--color-forest-green)', color: 'var(--color-n000)' }
-                              : { backgroundColor: 'rgba(0,0,0,0.55)', color: 'var(--color-n000)' }),
-                          }}>
-                            {pkg.badge}
-                          </span>
-                          <span style={styles.daysPill}>{pkg.duration}</span>
-                        </div>
-
-                        <div style={styles.imageBottom}>
-                          <h3 style={styles.packageName}>{pkg.name}</h3>
-                          <p style={styles.packageSubtitle}>{pkg.subtitle}</p>
-                          <div style={styles.statPills}>
-                            <span style={styles.statPill}>
-                              <Gauge size={11} />
-                              {pkg.difficulty}
+                          <div style={styles.imageTop}>
+                            <span style={{
+                              ...styles.badge,
+                              ...(pkg.badgeColor
+                                ? { backgroundColor: pkg.badgeColor, color: pkg.badgeTextColor || 'var(--color-n000)' }
+                                : pkg.badgeStyle === 'amber'
+                                ? { backgroundColor: 'var(--color-amber)', color: 'var(--color-n900)' }
+                                : pkg.badgeStyle === 'green'
+                                ? { backgroundColor: 'var(--color-forest-green)', color: 'var(--color-n000)' }
+                                : { backgroundColor: 'rgba(0,0,0,0.55)', color: 'var(--color-n000)' }),
+                            }}>
+                              {pkg.badge}
                             </span>
-                            <span style={styles.statPill}>
-                              <MapPin size={11} />
-                              {pkg.locations} stops
-                            </span>
-                            <span style={styles.statPill}>
-                              <Globe size={11} />
-                              {pkg.countries} {pkg.countries === 1 ? 'country' : 'countries'}
-                            </span>
+                            <span style={styles.daysPill}>{pkg.duration}</span>
                           </div>
-                          <div style={styles.priceRow}>
-                            <div style={styles.priceBlock}>
-                              <span style={styles.priceFrom}>from</span>
-                              <span style={styles.price}>{format(pkg.price)}</span>
+
+                          <div style={styles.imageBottom}>
+                            <h3 style={styles.packageName}>{pkg.name}</h3>
+                            <p style={styles.packageSubtitle}>{pkg.subtitle}</p>
+                            <div style={styles.statPills}>
+                              <span style={styles.statPill}>
+                                <Gauge size={11} />
+                                {pkg.difficulty}
+                              </span>
+                              <span style={styles.statPill}>
+                                <MapPin size={11} />
+                                {pkg.locations} stops
+                              </span>
+                              <span style={styles.statPill}>
+                                <Globe size={11} />
+                                {pkg.countries} {pkg.countries === 1 ? 'country' : 'countries'}
+                              </span>
                             </div>
-                            <button className="btn btn--sm pkg-card-btn">
-                              View package
-                              <ArrowRight size={13} />
-                            </button>
+                            <div style={styles.priceRow}>
+                              <div style={styles.priceBlock}>
+                                <span style={styles.priceFrom}>from</span>
+                                <span style={styles.price}>{format(pkg.price)}</span>
+                              </div>
+                              <button className="btn btn--sm pkg-card-btn">
+                                View package
+                                <ArrowRight size={13} />
+                              </button>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  </Link>
-                )
-              })}
-            </div>
-          ))}
+                    </Link>
+                  )
+                })}
+              </div>
+            ))}
+          </div>
         </div>
+
+        {/* Desktop only: arrows float at the vertical center of the
+            carousel, on either side, instead of stacking below it with the
+            dots. Mobile keeps swipe + the arrow/dot row below untouched. */}
+        {!isMobile && totalPages > 1 && (
+          <>
+            <button
+              style={{ ...styles.sideNavBtn, ...styles.sideNavBtnLeft, opacity: page === 0 ? 0.35 : 1 }}
+              onClick={() => setPage((p) => Math.max(0, p - 1))}
+              disabled={page === 0}
+              aria-label="Previous journeys"
+            >
+              <ChevronLeft size={22} color="var(--color-forest-green)" />
+            </button>
+            <button
+              style={{ ...styles.sideNavBtn, ...styles.sideNavBtnRight, opacity: page === totalPages - 1 ? 0.35 : 1 }}
+              onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
+              disabled={page === totalPages - 1}
+              aria-label="Next journeys"
+            >
+              <ChevronRight size={22} color="var(--color-forest-green)" />
+            </button>
+          </>
+        )}
       </div>
 
       {/* Controls */}
       {totalPages > 1 && (
-        <div style={styles.controls}>
-          <button
-            style={{ ...styles.navBtn, opacity: page === 0 ? 0.35 : 1 }}
-            onClick={() => setPage((p) => Math.max(0, p - 1))}
-            disabled={page === 0}
-            aria-label="Previous journeys"
-          >
-            <ChevronLeft size={18} color="var(--color-forest-green)" />
-          </button>
+        isMobile ? (
+          <div style={styles.controls}>
+            <button
+              style={{ ...styles.navBtn, opacity: page === 0 ? 0.35 : 1 }}
+              onClick={() => setPage((p) => Math.max(0, p - 1))}
+              disabled={page === 0}
+              aria-label="Previous journeys"
+            >
+              <ChevronLeft size={18} color="var(--color-forest-green)" />
+            </button>
 
-          <div style={styles.dots}>
-            {Array.from({ length: totalPages }).map((_, i) => (
-              <button
-                key={i}
-                onClick={() => setPage(i)}
-                style={{
-                  ...styles.dot,
-                  width: page === i ? '24px' : '8px',
-                  backgroundColor: page === i ? 'var(--color-forest-green)' : 'var(--color-n300)',
-                }}
-                aria-label={`Go to page ${i + 1}`}
-              />
-            ))}
+            <div style={styles.dots}>
+              {Array.from({ length: totalPages }).map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setPage(i)}
+                  style={{
+                    ...styles.dot,
+                    width: page === i ? '24px' : '8px',
+                    backgroundColor: page === i ? 'var(--color-forest-green)' : 'var(--color-n300)',
+                  }}
+                  aria-label={`Go to page ${i + 1}`}
+                />
+              ))}
+            </div>
+
+            <button
+              style={{ ...styles.navBtn, opacity: page === totalPages - 1 ? 0.35 : 1 }}
+              onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
+              disabled={page === totalPages - 1}
+              aria-label="Next journeys"
+            >
+              <ChevronRight size={18} color="var(--color-forest-green)" />
+            </button>
           </div>
-
-          <button
-            style={{ ...styles.navBtn, opacity: page === totalPages - 1 ? 0.35 : 1 }}
-            onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
-            disabled={page === totalPages - 1}
-            aria-label="Next journeys"
-          >
-            <ChevronRight size={18} color="var(--color-forest-green)" />
-          </button>
-        </div>
+        ) : (
+          <div style={styles.controlsDesktop}>
+            <div style={styles.dots}>
+              {Array.from({ length: totalPages }).map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setPage(i)}
+                  style={{
+                    ...styles.dot,
+                    width: page === i ? '24px' : '8px',
+                    backgroundColor: page === i ? 'var(--color-forest-green)' : 'var(--color-n300)',
+                  }}
+                  aria-label={`Go to page ${i + 1}`}
+                />
+              ))}
+            </div>
+          </div>
+        )
       )}
 
       <div style={styles.bottomRow}>
         <p style={styles.bottomText}>Looking for a longer journey or a private group?</p>
-        <Link to="/multi-day-tours" style={styles.bottomLink}>
-          View all journeys
-          <ArrowRight size={14} color="var(--color-forest-green)" />
-        </Link>
+        <Button to="/multi-day-tours" variant="secondary" arrow>View All Journeys</Button>
       </div>
 
     </section>
@@ -214,6 +257,10 @@ const styles = {
     lineHeight: 'var(--leading-body)',
   },
 
+  carouselOuter: {
+    position: 'relative',
+  },
+
   carouselWrapper: {
     maxWidth: '1160px',
     margin: '0 auto',
@@ -254,6 +301,15 @@ const styles = {
     marginTop: '32px',
   },
 
+  // Desktop-only row below the carousel once the side arrows take over
+  // navigation — just the page dots, still centered.
+  controlsDesktop: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: '32px',
+  },
+
   navBtn: {
     width: '40px',
     height: '40px',
@@ -266,6 +322,35 @@ const styles = {
     cursor: 'pointer',
     transition: 'opacity 0.2s ease',
     flexShrink: 0,
+  },
+
+  // Desktop: arrows float at the vertical center of the carousel,
+  // overlapping in from the edge toward the carousel's center rather than
+  // stacking below it with the dots.
+  sideNavBtn: {
+    position: 'absolute',
+    top: '50%',
+    transform: 'translateY(-50%)',
+    width: '52px',
+    height: '52px',
+    borderRadius: '50%',
+    border: '1.5px solid var(--color-n300)',
+    backgroundColor: 'var(--color-n000)',
+    boxShadow: '0 4px 16px rgba(0,0,0,0.16)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    cursor: 'pointer',
+    transition: 'opacity 0.2s ease',
+    zIndex: 2,
+  },
+
+  sideNavBtnLeft: {
+    left: '8px',
+  },
+
+  sideNavBtnRight: {
+    right: '8px',
   },
 
   dots: {
@@ -298,7 +383,7 @@ const styles = {
   imageWrapper: {
     position: 'relative',
     width: '100%',
-    height: '420px',
+    height: '483px',
     overflow: 'hidden',
   },
 
@@ -426,13 +511,15 @@ const styles = {
     lineHeight: 1,
   },
 
+  // Standardized with the "View All Tours" row on Home — same pitch-line +
+  // shared <Button> pattern on both sections.
   bottomRow: {
     textAlign: 'center',
-    marginTop: '36px',
+    marginTop: '40px',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    gap: '8px',
+    gap: '16px',
   },
 
   bottomText: {
@@ -440,17 +527,6 @@ const styles = {
     fontSize: 'var(--text-body)',
     color: 'var(--color-n600)',
     margin: 0,
-  },
-
-  bottomLink: {
-    display: 'inline-flex',
-    alignItems: 'center',
-    gap: '6px',
-    fontFamily: 'var(--font-body)',
-    fontWeight: '700',
-    fontSize: 'var(--text-body)',
-    color: 'var(--color-forest-green)',
-    textDecoration: 'none',
   },
 }
 

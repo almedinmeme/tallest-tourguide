@@ -10,6 +10,7 @@ import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { Compass, ArrowRight, Star, ChevronDown, ChevronLeft, ChevronRight, Users, UserCheck, ShieldCheck } from 'lucide-react'
 import TourCard from '../components/TourCard'
+import Button from '../components/Button'
 import HeroSearch from '../components/HeroSearch'
 import tours from '../data/tours'
 import useWindowWidth from '../hooks/useWindowWidth'
@@ -347,116 +348,147 @@ function Home() {
 
         {/* Tour carousel */}
         {(() => {
-          const tourList = tours.slice(0, 6)
-          const visibleCount = isMobile ? 1 : 3
+          const tourList = tours
+          const visibleCount = isMobile ? 1 : 6
           const totalPages = Math.ceil(tourList.length / visibleCount)
           return (
             <>
-              <div
-                style={{ ...styles.carouselWrapper, ...(isMobile ? null : styles.carouselBreathe) }}
-                onTouchStart={(e) => { tourTouchStartX.current = e.touches[0].clientX }}
-                onTouchEnd={(e) => {
-                  if (tourTouchStartX.current === null) return
-                  const delta = tourTouchStartX.current - e.changedTouches[0].clientX
-                  if (Math.abs(delta) > 40) {
-                    if (delta > 0) setTourPage((p) => Math.min(totalPages - 1, p + 1))
-                    else setTourPage((p) => Math.max(0, p - 1))
-                  }
-                  tourTouchStartX.current = null
-                }}
-              >
-                <div style={{
-                  ...styles.carouselTrack,
-                  transform: `translateX(calc(${tourPage} * (-100% - 24px)))`,
-                }}>
-                  {Array.from({ length: totalPages }).map((_, pageIdx) => (
-                    <div key={pageIdx} style={{
-                      ...styles.carouselPage,
-                      gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)',
-                    }}>
-                      {tourList.slice(pageIdx * visibleCount, (pageIdx + 1) * visibleCount).map((tour) => (
-                        <TourCard
-                          key={tour.id}
-                          id={tour.id}
-                          slug={tour.slug}
-                          title={tour.title}
-                          price={tour.price}
-                          oldPrice={tour.oldPrice}
-                          rating={stats[String(tour.id)]?.avgRating ?? tour.rating}
-                          reviews={stats[String(tour.id)]?.count ?? tour.reviews}
-                          duration={tour.duration}
-                          highlights={tour.highlights}
-                          badge={tour.badge}
-                          hero={tour.hero}
-                          startingTimes={tour.startingTimes}
-                          languages={tour.languages}
-                        />
-                      ))}
-                    </div>
-                  ))}
+              <div style={styles.carouselOuter}>
+                <div
+                  style={{ ...styles.carouselWrapper, ...(isMobile ? null : styles.carouselBreathe) }}
+                  onTouchStart={(e) => { tourTouchStartX.current = e.touches[0].clientX }}
+                  onTouchEnd={(e) => {
+                    if (tourTouchStartX.current === null) return
+                    const delta = tourTouchStartX.current - e.changedTouches[0].clientX
+                    if (Math.abs(delta) > 40) {
+                      if (delta > 0) setTourPage((p) => Math.min(totalPages - 1, p + 1))
+                      else setTourPage((p) => Math.max(0, p - 1))
+                    }
+                    tourTouchStartX.current = null
+                  }}
+                >
+                  <div style={{
+                    ...styles.carouselTrack,
+                    transform: `translateX(calc(${tourPage} * (-100% - 24px)))`,
+                  }}>
+                    {Array.from({ length: totalPages }).map((_, pageIdx) => (
+                      <div key={pageIdx} style={{
+                        ...styles.carouselPage,
+                        gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)',
+                      }}>
+                        {tourList.slice(pageIdx * visibleCount, (pageIdx + 1) * visibleCount).map((tour) => (
+                          <TourCard
+                            key={tour.id}
+                            id={tour.id}
+                            slug={tour.slug}
+                            title={tour.title}
+                            price={tour.price}
+                            oldPrice={tour.oldPrice}
+                            rating={stats[String(tour.id)]?.avgRating ?? tour.rating}
+                            reviews={stats[String(tour.id)]?.count ?? tour.reviews}
+                            duration={tour.duration}
+                            highlights={tour.highlights}
+                            badge={tour.badge}
+                            hero={tour.hero}
+                            startingTimes={tour.startingTimes}
+                            languages={tour.languages}
+                          />
+                        ))}
+                      </div>
+                    ))}
+                  </div>
                 </div>
+
+                {/* Desktop only: arrows float at the vertical center of the
+                    carousel, on either side, instead of stacking below it
+                    with the dots. Mobile keeps swipe + the arrow/dot row
+                    below (see carouselControls further down) untouched. */}
+                {!isMobile && totalPages > 1 && (
+                  <>
+                    <button
+                      style={{ ...styles.carouselSideNav, ...styles.carouselSideNavLeft, opacity: tourPage === 0 ? 0.35 : 1 }}
+                      onClick={() => setTourPage((p) => Math.max(0, p - 1))}
+                      disabled={tourPage === 0}
+                      aria-label="Previous tours"
+                    >
+                      <ChevronLeft size={22} color="var(--color-forest-green)" />
+                    </button>
+                    <button
+                      style={{ ...styles.carouselSideNav, ...styles.carouselSideNavRight, opacity: tourPage === totalPages - 1 ? 0.35 : 1 }}
+                      onClick={() => setTourPage((p) => Math.min(totalPages - 1, p + 1))}
+                      disabled={tourPage === totalPages - 1}
+                      aria-label="Next tours"
+                    >
+                      <ChevronRight size={22} color="var(--color-forest-green)" />
+                    </button>
+                  </>
+                )}
               </div>
 
               {/* Carousel controls */}
               {totalPages > 1 && (
-                <div style={styles.carouselControls}>
-                  <button
-                    style={{ ...styles.carouselNavBtn, opacity: tourPage === 0 ? 0.35 : 1 }}
-                    onClick={() => setTourPage((p) => Math.max(0, p - 1))}
-                    disabled={tourPage === 0}
-                    aria-label="Previous tours"
-                  >
-                    <ChevronLeft size={18} color="var(--color-forest-green)" />
-                  </button>
+                isMobile ? (
+                  <div style={styles.carouselControls}>
+                    <button
+                      style={{ ...styles.carouselNavBtn, opacity: tourPage === 0 ? 0.35 : 1 }}
+                      onClick={() => setTourPage((p) => Math.max(0, p - 1))}
+                      disabled={tourPage === 0}
+                      aria-label="Previous tours"
+                    >
+                      <ChevronLeft size={18} color="var(--color-forest-green)" />
+                    </button>
 
-                  <div style={styles.carouselDots}>
-                    {Array.from({ length: totalPages }).map((_, i) => (
-                      <button
-                        key={i}
-                        onClick={() => setTourPage(i)}
-                        style={{
-                          ...styles.carouselDot,
-                          width: tourPage === i ? '24px' : '8px',
-                          backgroundColor: tourPage === i ? 'var(--color-forest-green)' : 'var(--color-n300)',
-                        }}
-                        aria-label={`Go to page ${i + 1}`}
-                      />
-                    ))}
+                    <div style={styles.carouselDots}>
+                      {Array.from({ length: totalPages }).map((_, i) => (
+                        <button
+                          key={i}
+                          onClick={() => setTourPage(i)}
+                          style={{
+                            ...styles.carouselDot,
+                            width: tourPage === i ? '24px' : '8px',
+                            backgroundColor: tourPage === i ? 'var(--color-forest-green)' : 'var(--color-n300)',
+                          }}
+                          aria-label={`Go to page ${i + 1}`}
+                        />
+                      ))}
+                    </div>
+
+                    <button
+                      style={{ ...styles.carouselNavBtn, opacity: tourPage === totalPages - 1 ? 0.35 : 1 }}
+                      onClick={() => setTourPage((p) => Math.min(totalPages - 1, p + 1))}
+                      disabled={tourPage === totalPages - 1}
+                      aria-label="Next tours"
+                    >
+                      <ChevronRight size={18} color="var(--color-forest-green)" />
+                    </button>
                   </div>
-
-                  <button
-                    style={{ ...styles.carouselNavBtn, opacity: tourPage === totalPages - 1 ? 0.35 : 1 }}
-                    onClick={() => setTourPage((p) => Math.min(totalPages - 1, p + 1))}
-                    disabled={tourPage === totalPages - 1}
-                    aria-label="Next tours"
-                  >
-                    <ChevronRight size={18} color="var(--color-forest-green)" />
-                  </button>
-                </div>
+                ) : (
+                  <div style={styles.carouselControlsDesktop}>
+                    <div style={styles.carouselDots}>
+                      {Array.from({ length: totalPages }).map((_, i) => (
+                        <button
+                          key={i}
+                          onClick={() => setTourPage(i)}
+                          style={{
+                            ...styles.carouselDot,
+                            width: tourPage === i ? '24px' : '8px',
+                            backgroundColor: tourPage === i ? 'var(--color-forest-green)' : 'var(--color-n300)',
+                          }}
+                          aria-label={`Go to page ${i + 1}`}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )
               )}
             </>
           )
         })()}
 
-        {/* View all tours button */}
-        <div style={{ textAlign: 'center', marginTop: '40px' }}>
-          <Link
-            to="/tours"
-            style={styles.viewAllBtn}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = 'var(--color-forest-green)'
-              e.currentTarget.style.color = 'var(--color-n000)'
-              e.currentTarget.style.transform = 'translateY(-2px)'
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = 'transparent'
-              e.currentTarget.style.color = 'var(--color-forest-green)'
-              e.currentTarget.style.transform = 'translateY(0)'
-            }}
-          >
-            View All Tours
-            <ArrowRight size={16} style={{ marginLeft: '8px' }} />
-          </Link>
+        {/* View all tours */}
+        <div style={styles.bottomRow}>
+          <p style={styles.bottomText}>Looking for something else? Browse every tour we run.</p>
+          <Button to="/tours" variant="secondary" arrow>View All Tours</Button>
         </div>
 
 
@@ -490,8 +522,9 @@ function Home() {
               </div>
 
               {/* Carousel track */}
+              <div style={blogStyles.carouselOuter}>
               <div
-                style={{ ...blogStyles.carouselWrapper, ...(isMobile ? null : styles.carouselBreathe) }}
+                style={{ ...blogStyles.carouselWrapper, ...(isMobile ? null : blogStyles.carouselBreathe) }}
                 onTouchStart={(e) => { touchStartX.current = e.touches[0].clientX }}
                 onTouchEnd={(e) => {
                   if (touchStartX.current === null) return
@@ -540,50 +573,97 @@ function Home() {
                 </div>
               </div>
 
-              {/* Controls */}
-              {totalPages > 1 && (
-                <div style={blogStyles.controls}>
+              {/* Desktop only: arrows float at the vertical center of the
+                  carousel, on either side, instead of stacking below it
+                  with the dots. Mobile keeps swipe + the arrow/dot row
+                  below untouched. */}
+              {!isMobile && totalPages > 1 && (
+                <>
                   <button
-                    style={{
-                      ...blogStyles.navBtn,
-                      opacity: blogPage === 0 ? 0.35 : 1,
-                    }}
+                    style={{ ...blogStyles.sideNavBtn, ...blogStyles.sideNavBtnLeft, opacity: blogPage === 0 ? 0.35 : 1 }}
                     onClick={() => setBlogPage((p) => Math.max(0, p - 1))}
                     disabled={blogPage === 0}
                     aria-label="Previous posts"
                   >
-                    <ChevronLeft size={18} color="var(--color-forest-green)" />
+                    <ChevronLeft size={22} color="var(--color-forest-green)" />
                   </button>
-
-                  <div style={blogStyles.dots}>
-                    {Array.from({ length: totalPages }).map((_, i) => (
-                      <button
-                        key={i}
-                        onClick={() => setBlogPage(i)}
-                        style={{
-                          ...blogStyles.dot,
-                          width: blogPage === i ? '24px' : '8px',
-                          backgroundColor: blogPage === i
-                            ? 'var(--color-forest-green)'
-                            : 'var(--color-n300)',
-                        }}
-                        aria-label={`Go to page ${i + 1}`}
-                      />
-                    ))}
-                  </div>
-
                   <button
-                    style={{
-                      ...blogStyles.navBtn,
-                      opacity: blogPage === totalPages - 1 ? 0.35 : 1,
-                    }}
+                    style={{ ...blogStyles.sideNavBtn, ...blogStyles.sideNavBtnRight, opacity: blogPage === totalPages - 1 ? 0.35 : 1 }}
                     onClick={() => setBlogPage((p) => Math.min(totalPages - 1, p + 1))}
                     disabled={blogPage === totalPages - 1}
                     aria-label="Next posts"
                   >
-                    <ChevronRight size={18} color="var(--color-forest-green)" />
+                    <ChevronRight size={22} color="var(--color-forest-green)" />
                   </button>
-                </div>
+                </>
+              )}
+              </div>
+
+              {/* Controls */}
+              {totalPages > 1 && (
+                isMobile ? (
+                  <div style={blogStyles.controls}>
+                    <button
+                      style={{
+                        ...blogStyles.navBtn,
+                        opacity: blogPage === 0 ? 0.35 : 1,
+                      }}
+                      onClick={() => setBlogPage((p) => Math.max(0, p - 1))}
+                      disabled={blogPage === 0}
+                      aria-label="Previous posts"
+                    >
+                      <ChevronLeft size={18} color="var(--color-forest-green)" />
+                    </button>
+
+                    <div style={blogStyles.dots}>
+                      {Array.from({ length: totalPages }).map((_, i) => (
+                        <button
+                          key={i}
+                          onClick={() => setBlogPage(i)}
+                          style={{
+                            ...blogStyles.dot,
+                            width: blogPage === i ? '24px' : '8px',
+                            backgroundColor: blogPage === i
+                              ? 'var(--color-forest-green)'
+                              : 'var(--color-n300)',
+                          }}
+                          aria-label={`Go to page ${i + 1}`}
+                        />
+                      ))}
+                    </div>
+
+                    <button
+                      style={{
+                        ...blogStyles.navBtn,
+                        opacity: blogPage === totalPages - 1 ? 0.35 : 1,
+                      }}
+                      onClick={() => setBlogPage((p) => Math.min(totalPages - 1, p + 1))}
+                      disabled={blogPage === totalPages - 1}
+                      aria-label="Next posts"
+                    >
+                      <ChevronRight size={18} color="var(--color-forest-green)" />
+                    </button>
+                  </div>
+                ) : (
+                  <div style={blogStyles.controlsDesktop}>
+                    <div style={blogStyles.dots}>
+                      {Array.from({ length: totalPages }).map((_, i) => (
+                        <button
+                          key={i}
+                          onClick={() => setBlogPage(i)}
+                          style={{
+                            ...blogStyles.dot,
+                            width: blogPage === i ? '24px' : '8px',
+                            backgroundColor: blogPage === i
+                              ? 'var(--color-forest-green)'
+                              : 'var(--color-n300)',
+                          }}
+                          aria-label={`Go to page ${i + 1}`}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )
               )}
             </section>
             <Divider />
@@ -652,8 +732,14 @@ const styles = {
     margin: '0 auto',
   },
 
+  carouselOuter: {
+    position: 'relative',
+  },
+
+  // Matches the Journeys carousel's width (PackagesPreview) — standardized
+  // so the two sections don't visibly differ in card size.
   carouselWrapper: {
-    maxWidth: '1100px',
+    maxWidth: '1160px',
     margin: '0 auto',
     overflow: 'hidden',
   },
@@ -665,13 +751,17 @@ const styles = {
   // (carouselPage marginRight + the calc() stride on the track) keeps the
   // next page fully outside the padded clip window — no peeking.
   carouselBreathe: {
-    maxWidth: '1124px',
+    maxWidth: '1184px',
     padding: '24px 12px 32px',
     margin: '-24px auto -32px',
   },
 
   carouselTrack: {
     display: 'flex',
+    // Cross-axis default (stretch) is kept intentionally: every page div
+    // fills the height of the tallest page so switching pages doesn't jump
+    // the carousel's height. alignContent below handles a partial page's
+    // own content inside that shared height.
     transition: 'transform 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
   },
 
@@ -680,8 +770,13 @@ const styles = {
     gap: '28px',
     minWidth: '100%',
     alignItems: 'stretch',
+    // center, not the stretch default — a partial last row (e.g. 1 card of
+    // a 3-column grid) would otherwise stretch tall to fill the page div's
+    // full height (which itself is held to the tallest page — see
+    // carouselTrack). Centering lets it float in that space instead.
+    alignContent: 'center',
     // Spacer between pages — paired with the track's calc() stride, it keeps
-    // the next page clear of the padded clip window (carouselBreathe).
+    // the next page fully outside the padded clip window (carouselBreathe).
     marginRight: '24px',
   },
 
@@ -690,6 +785,15 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center',
     gap: '16px',
+    marginTop: '32px',
+  },
+
+  // Desktop-only row below the carousel once the side arrows take over
+  // navigation — just the page dots, still centered.
+  carouselControlsDesktop: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
     marginTop: '32px',
   },
 
@@ -707,6 +811,35 @@ const styles = {
     flexShrink: 0,
   },
 
+  // Desktop: arrows float at the vertical center of the whole carousel
+  // (both card rows), overlapping in from the edge toward the carousel's
+  // center rather than stacked below it with the dots.
+  carouselSideNav: {
+    position: 'absolute',
+    top: '50%',
+    transform: 'translateY(-50%)',
+    width: '52px',
+    height: '52px',
+    borderRadius: '50%',
+    border: '1.5px solid var(--color-n300)',
+    backgroundColor: 'var(--color-n000)',
+    boxShadow: '0 4px 16px rgba(0,0,0,0.16)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    cursor: 'pointer',
+    transition: 'opacity 0.2s ease',
+    zIndex: 2,
+  },
+
+  carouselSideNavLeft: {
+    left: '8px',
+  },
+
+  carouselSideNavRight: {
+    right: '8px',
+  },
+
   carouselDots: {
     display: 'flex',
     alignItems: 'center',
@@ -722,20 +855,22 @@ const styles = {
     transition: 'width 0.3s ease, background-color 0.3s ease',
   },
 
-  viewAllBtn: {
-    display: 'inline-flex',
+  // Standardized with the "View All Journeys" row on PackagesPreview —
+  // same pitch-line + shared <Button> pattern on both sections.
+  bottomRow: {
+    textAlign: 'center',
+    marginTop: '40px',
+    display: 'flex',
+    flexDirection: 'column',
     alignItems: 'center',
-    height: '44px',
-    padding: '0 32px',
-    backgroundColor: 'transparent',
-    color: 'var(--color-forest-green)',
+    gap: '16px',
+  },
+
+  bottomText: {
     fontFamily: 'var(--font-body)',
-    fontWeight: '700',
     fontSize: 'var(--text-body)',
-    borderRadius: 'var(--radius)',
-    textDecoration: 'none',
-    border: '2px solid var(--color-forest-green)',
-    transition: 'all 0.2s ease',
+    color: 'var(--color-n600)',
+    margin: 0,
   },
   // Trust Bar styles
 trustBar: {
@@ -1111,6 +1246,10 @@ const blogStyles = {
     textDecoration: 'none',
     whiteSpace: 'nowrap',
   },
+  carouselOuter: {
+    position: 'relative',
+  },
+
   carouselWrapper: {
     maxWidth: '1100px',
     margin: '0 auto',
@@ -1127,6 +1266,44 @@ const blogStyles = {
     maxWidth: '1124px',
     padding: '24px 12px 32px',
     margin: '-24px auto -32px',
+  },
+
+  // Desktop: arrows float at the vertical center of the carousel,
+  // overlapping in from the edge toward the carousel's center rather than
+  // stacking below it with the dots.
+  sideNavBtn: {
+    position: 'absolute',
+    top: '50%',
+    transform: 'translateY(-50%)',
+    width: '52px',
+    height: '52px',
+    borderRadius: '50%',
+    border: '1.5px solid var(--color-n300)',
+    backgroundColor: 'var(--color-n000)',
+    boxShadow: '0 4px 16px rgba(0,0,0,0.16)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    cursor: 'pointer',
+    transition: 'opacity 0.2s ease',
+    zIndex: 2,
+  },
+
+  sideNavBtnLeft: {
+    left: '8px',
+  },
+
+  sideNavBtnRight: {
+    right: '8px',
+  },
+
+  // Desktop-only row below the carousel once the side arrows take over
+  // navigation — just the page dots, still centered.
+  controlsDesktop: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: '32px',
   },
 
   carouselTrack: {
