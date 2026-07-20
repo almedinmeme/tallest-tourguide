@@ -379,7 +379,7 @@
       {
         "id": "ujjjn8",
         "type": "text",
-        "html": "<h2>Starting at Gazi Husrev-beg Mosque</h2><p>I usually start here because it's the oldest of the group. It was built in 1531, during Ottoman rule, and it's still the largest mosque in Bosnia and Herzegovina. What I like pointing out to guests is the courtyard — the fountain, the plane trees, the quiet. It doesn't feel like you're in the middle of a busy market street, even though you are. The mosque was funded by Gazi Husrev-beg, an Ottoman governor who shaped a huge amount of what Sarajevo's old town looks like today, including the covered bazaar nearby.</p><p></p>"
+        "html": "<h2>Starting at Gazi Husrev-beg Mosque</h2><p>I usually start here because it's the oldest of the group. It was built in 1531, during Ottoman rule, and it's still one of the largest mosques in Bosnia and Herzegovina. What I like pointing out to guests is the courtyard — the fountain, the plane trees, the quiet. It doesn't feel like you're in the middle of a busy market street, even though you are. The mosque was funded by Gazi Husrev-beg, an Ottoman governor who shaped a huge amount of what Sarajevo's old town looks like today, including the covered bazaar nearby.</p><p></p>"
       },
       {
         "id": "0xpwd2",
@@ -418,7 +418,12 @@
       {
         "id": "3r0cgm",
         "type": "text",
-        "html": "<h2>Finishing at the Old Orthodox Church</h2><p>The last stop is the Old Orthodox Church, tucked into a nearby street. It's one of the oldest Orthodox churches in the region, with parts dated to the 16th century — though historians still debate exactly how old the original structure is. I mention that uncertainty to guests, because I think it's more honest than pretending we have a clean answer.</p><h2>What This Walk Actually Teaches You</h2><p>I don't do this walk to say \"look how tolerant everyone always was\" — that's too simple, and not fully true. Sarajevo has had hard chapters, including recent ones. But the physical closeness of these buildings tells you something real: for a long time, people here built their lives next to each other, not apart from each other.</p><p></p>"
+        "html": "<h2>Finishing at the Old Orthodox Church</h2><p>The last stop is the Old Orthodox Church, tucked into a nearby street. It's one of the oldest Orthodox churches in the region, with parts dated to the 16th century — though historians still debate exactly how old the original structure is. I mention that uncertainty to guests, because I think it's more honest than pretending we have a clean answer.</p><h2></h2><p></p>"
+      },
+      {
+        "id": "pn2yok",
+        "type": "text",
+        "html": "<h2>What This Walk Actually Teaches You</h2><p>I don't do this walk to say \"look how tolerant everyone always was\" — that's too simple, and not fully true. Sarajevo has had hard chapters, including recent ones. But the physical closeness of these buildings tells you something real: for a long time, people here built their lives next to each other, not apart from each other.</p><p></p>"
       }
     ]
   },

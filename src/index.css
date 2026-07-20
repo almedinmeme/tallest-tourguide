@@ -641,6 +641,31 @@ a[href^="/tours/"]:hover .view-tour-pill {
   box-shadow: 0 6px 24px rgba(46, 125, 94, 0.09);
 }
 
+/* Journey route trail — clickable stops */
+.route-stop { cursor: pointer; }
+.route-stop .route-disc {
+  transition: transform var(--t-base), box-shadow var(--t-base);
+}
+.route-stop:hover .route-disc {
+  transform: translateY(-3px);
+  box-shadow: 0 0 0 1px rgba(46, 125, 94, 0.35), 0 8px 20px rgba(0, 0, 0, 0.16);
+}
+.route-stop:focus-visible {
+  outline: 2px solid var(--color-forest-green);
+  outline-offset: 4px;
+  border-radius: var(--radius);
+}
+.route-row { cursor: pointer; transition: background-color var(--t-fast); }
+.route-row:hover { background-color: var(--color-n100); }
+.route-row:focus-visible {
+  outline: 2px solid var(--color-forest-green);
+  outline-offset: 2px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .route-stop .route-disc { transition: none; }
+  .route-stop:hover .route-disc { transform: none; }
+}
+
 @keyframes itineraryExpand {
   from { opacity: 0; transform: translateY(-6px); }
   to   { opacity: 1; transform: translateY(0); }

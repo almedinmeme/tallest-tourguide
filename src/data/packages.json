@@ -7,8 +7,8 @@
     "duration": "4 Days",
     "groupSize": 12,
     "difficulty": "Easy",
-    "priceWithout": 250,
-    "priceWith": 400,
+    "priceWithout": 300,
+    "priceWith": 450,
     "rating": 5,
     "reviews": 1,
     "heroImage": "/uploads/4-day-sarajevo-experience-hero.webp",
@@ -329,7 +329,7 @@
       "Full refund if cancelled 30+ days before departure"
     ],
     "hero": "/uploads/4-day-sarajevo-experience-hero.webp",
-    "price": 250,
+    "price": 300,
     "gallery": [
       "/uploads/4-day-sarajevo-experience.webp",
       "/uploads/4-days-sarajevo-experience-home-hosted-meal.webp",

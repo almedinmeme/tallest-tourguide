@@ -287,21 +287,26 @@ function PackageDetail() {
   // opens by default). Opening a day scrolls it into view; closing doesn't.
   const [openDays, setOpenDays] = useState(() => new Set([1]))
   const dayRefs = useRef({})
+  const scrollToDay = (id) => {
+    setTimeout(() => {
+      const el = dayRefs.current[id]
+      if (!el) return
+      const top = el.getBoundingClientRect().top + window.scrollY - 136
+      window.scrollTo({ top, behavior: 'smooth' })
+    }, 260)
+  }
   const toggleDay = (id) => {
     setOpenDays(prev => {
       const next = new Set(prev)
       const willOpen = !next.has(id)
       willOpen ? next.add(id) : next.delete(id)
-      if (willOpen) {
-        setTimeout(() => {
-          const el = dayRefs.current[id]
-          if (!el) return
-          const top = el.getBoundingClientRect().top + window.scrollY - 136
-          window.scrollTo({ top, behavior: 'smooth' })
-        }, 260)
-      }
+      if (willOpen) scrollToDay(id)
       return next
     })
+  }
+  const openDay = (id) => {
+    setOpenDays(prev => new Set(prev).add(id))
+    scrollToDay(id)
   }
   const [openInfo, setOpenInfo] = useState(null)
   const [includedExpanded, setIncludedExpanded] = useState(false)
@@ -985,7 +990,14 @@ function PackageDetail() {
             </div>
 
             {/* Route infographic — derived from the itinerary days */}
-            <JourneyRoute days={pkg.days} isMobile={isMobile} />
+            <JourneyRoute
+              days={pkg.days}
+              isMobile={isMobile}
+              onStopClick={(startDay) => {
+                const day = pkg.days[startDay - 1]
+                if (day) openDay(day.id)
+              }}
+            />
 
             {/* Day by Day Itinerary */}
             <div id="itinerary" style={styles.section}>
