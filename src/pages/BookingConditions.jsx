@@ -78,6 +78,10 @@ const sections = [
         type: 'p',
         text: 'Every booking is confirmed personally by email, with exact payment instructions and everything you need to know before the day.',
       },
+      {
+        type: 'p',
+        text: 'For groups of 8 or more, deposit and balance terms may be adjusted case by case — we\'ll confirm this in writing before you pay anything, as part of your booking confirmation.',
+      },
     ],
   },
   {
@@ -94,6 +98,10 @@ const sections = [
         type: 'p',
         text: 'Refunds are always returned promptly, to the original payment method. If a refund is ever due to you, you will not have to chase it.',
       },
+      {
+        type: 'callout',
+        text: 'A note on bank transfers: transfers to Bosnia sometimes get flagged or delayed by guests\' home banks, simply because BiH is outside the EU/SEPA transfer zone. If your transfer hasn\'t arrived within 3–5 business days, contact us — we\'ll confirm receipt and help you sort out the delay with your bank if needed. This is more common than you\'d think and is not a sign anything has gone wrong on our end.',
+      },
     ],
   },
   {
@@ -108,6 +116,10 @@ const sections = [
       {
         type: 'p',
         text: 'Inside 24 hours we can\'t offer a refund — your guide and any hosts have already committed their day. Tell us as soon as you know, and we will always try to move you to another date first.',
+      },
+      {
+        type: 'p',
+        text: 'If your flight is delayed or cancelled, tell us as soon as you know your flight status has changed — we will always try to shift your tour to a later time or another day first, before any cancellation terms apply.',
       },
     ],
   },

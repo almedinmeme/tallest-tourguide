@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { ChevronDown, Search, X, Map, CalendarDays, BookOpen, Info, Sparkles, Compass } from 'lucide-react'
+import { ChevronDown, Search, X, Map, CalendarDays, BookOpen, Info, Sparkles, Compass, MessageCircle } from 'lucide-react'
 import { useBlog } from '../../hooks/useBlog'
 import tours from '../../data/tours'
-import { NAV_RAIL, searchPackageLinks, discoverLinks } from '../../data/navigation'
+import { DAY_TOURS_RAIL, JOURNEYS_RAIL, searchPackageLinks, discoverContact, discoverLinks } from '../../data/navigation'
 import { SearchGroup, SearchResult } from './SearchResults'
+import Button from '../Button'
 import CurrencySwitcher from '../CurrencySwitcher'
 import { useCurrency } from '../../context/CurrencyContext'
 
@@ -13,9 +14,12 @@ function match(query, ...fields) {
   return fields.some((f) => f && f.toLowerCase().includes(q))
 }
 
-// Mobile bottom-sheet navigation: search, an accordion of places (each
-// expanding to its day tours + journeys, mirroring the desktop mega-menu),
-// the top-level browse links, Discover pages, and the Plan Your Trip CTA.
+const dayTourCategories = DAY_TOURS_RAIL.flatMap((g) => g.items)
+const journeyDestinations = JOURNEYS_RAIL.find((g) => g.group === 'By destination')?.items || []
+
+// Mobile bottom-sheet navigation: search, an accordion of tour categories and
+// journey destinations (mirroring the desktop mega-menus), the top-level
+// browse links, Discover pages, and the Plan Your Trip CTA.
 function MobileNavSheet({ open, onClose }) {
   const { format } = useCurrency()
   const location = useLocation()
@@ -25,13 +29,13 @@ function MobileNavSheet({ open, onClose }) {
   const [searchQuery, setSearchQuery] = useState('')
   const [searchFocused, setSearchFocused] = useState(false)
   const [expandedId, setExpandedId] = useState(null)
-  const [balkansOpen, setBalkansOpen] = useState(false)
+  const [journeysOpen, setJourneysOpen] = useState(false)
   const [discoverOpen, setDiscoverOpen] = useState(false)
 
   // Self-close on route change so taps on links always dismiss the sheet.
   useEffect(() => {
     setExpandedId(null)
-    setBalkansOpen(false)
+    setJourneysOpen(false)
     setDiscoverOpen(false)
     setSearchQuery('')
     onClose()
@@ -170,12 +174,10 @@ function MobileNavSheet({ open, onClose }) {
         ) : (
           <div style={styles.nav}>
 
-            {/* Places accordion — mirrors the desktop mega-menu. The wider
-                Balkan destinations sit behind their own dropdown so the core
-                Bosnia places stay front and centre without a long list. */}
-            {NAV_RAIL.map((group) => {
-              const isBalkans = group.group === 'Across the Balkans'
-              const places = group.items.map((place) => (
+            {/* Tour-category accordions — mirror the desktop Day Tours rail. */}
+            <div>
+              <span style={styles.groupLabel}>Day tours & trips</span>
+              {dayTourCategories.map((place) => (
                 <PlaceAccordion
                   key={place.id}
                   place={place}
@@ -183,39 +185,43 @@ function MobileNavSheet({ open, onClose }) {
                   onToggle={() => setExpandedId(expandedId === place.id ? null : place.id)}
                   onLinkClick={handleLinkClick}
                   linkStyle={sheetLinkStyle}
-                  indent={isBalkans}
                 />
-              ))
-              if (!isBalkans) {
-                return (
-                  <div key={group.group}>
-                    <span style={styles.groupLabel}>{group.group}</span>
-                    {places}
-                  </div>
-                )
-              }
-              // Its own section, separated from the Bosnia group so it reads
-              // as a sibling — not another Bosnian place.
-              return (
-                <div key={group.group}>
-                  <div style={styles.divider} />
-                  <span style={styles.groupLabel}>Beyond Bosnia</span>
-                  <button
-                    style={{ ...sheetLinkStyle(balkansOpen), width: 'calc(100% - 16px)', border: 'none', background: balkansOpen ? 'rgba(46,125,94,0.08)' : 'transparent', cursor: 'pointer', justifyContent: 'space-between', textAlign: 'left' }}
-                    onClick={() => setBalkansOpen((o) => !o)}
-                    aria-expanded={balkansOpen}
-                    aria-controls="acc-balkans"
-                  >
-                    <span style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                      <Compass size={16} style={{ flexShrink: 0 }} />
-                      Across the Balkans
-                    </span>
-                    <ChevronDown size={16} style={{ flexShrink: 0, transform: balkansOpen ? 'rotate(180deg)' : 'rotate(0)', transition: 'transform var(--t-fast)' }} />
-                  </button>
-                  {balkansOpen && <div id="acc-balkans">{places}</div>}
+              ))}
+            </div>
+
+            {/* Journeys by destination — behind one dropdown so the sheet
+                stays short, mirroring the desktop Journeys mega-menu. */}
+            <div>
+              <div style={styles.divider} />
+              <span style={styles.groupLabel}>Journeys</span>
+              <button
+                style={{ ...sheetLinkStyle(journeysOpen), width: 'calc(100% - 16px)', border: 'none', background: journeysOpen ? 'rgba(46,125,94,0.08)' : 'transparent', cursor: 'pointer', justifyContent: 'space-between', textAlign: 'left' }}
+                onClick={() => setJourneysOpen((o) => !o)}
+                aria-expanded={journeysOpen}
+                aria-controls="acc-journeys"
+              >
+                <span style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <Compass size={16} style={{ flexShrink: 0 }} />
+                  By destination
+                </span>
+                <ChevronDown size={16} style={{ flexShrink: 0, transform: journeysOpen ? 'rotate(180deg)' : 'rotate(0)', transition: 'transform var(--t-fast)' }} />
+              </button>
+              {journeysOpen && (
+                <div id="acc-journeys">
+                  {journeyDestinations.map((place) => (
+                    <PlaceAccordion
+                      key={place.id}
+                      place={place}
+                      expanded={expandedId === place.id}
+                      onToggle={() => setExpandedId(expandedId === place.id ? null : place.id)}
+                      onLinkClick={handleLinkClick}
+                      linkStyle={sheetLinkStyle}
+                      indent
+                    />
+                  ))}
                 </div>
-              )
-            })}
+              )}
+            </div>
 
             <div style={styles.divider} />
             <span style={styles.groupLabel}>Browse</span>
@@ -248,7 +254,9 @@ function MobileNavSheet({ open, onClose }) {
             </button>
             {discoverOpen && (
               <div id="acc-discover" style={{ paddingLeft: '14px' }}>
-                {discoverLinks.map((item) => (
+                {/* Contact is excluded here — it has its own always-visible
+                    button below the Plan Your Trip CTA. */}
+                {discoverLinks.filter((item) => item.id !== discoverContact.id).map((item) => (
                   <Link
                     key={item.id}
                     to={item.href}
@@ -267,9 +275,10 @@ function MobileNavSheet({ open, onClose }) {
                 <Sparkles size={16} style={{ flexShrink: 0 }} />
                 Plan Your Trip
               </Link>
-              <Link to="/contact" style={styles.contactAlt} onClick={handleLinkClick}>
-                or contact us →
-              </Link>
+              <Button to="/contact" variant="secondary" full style={{ marginTop: '10px', borderRadius: '14px' }} onClick={handleLinkClick}>
+                <MessageCircle size={16} style={{ flexShrink: 0 }} />
+                Contact Us
+              </Button>
 
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10, marginTop: 18, paddingTop: 16, borderTop: '1px solid var(--color-n200)' }}>
                 <span style={{ fontFamily: 'var(--font-body)', fontSize: 13, fontWeight: 600, color: 'var(--color-n500)' }}>
@@ -286,10 +295,12 @@ function MobileNavSheet({ open, onClose }) {
   )
 }
 
-// One expandable place row (day tours + journeys + explore link) — used for
-// the Bosnia cities at the top level and, indented, inside "Across the
-// Balkans".
+// One expandable row (day tours + journeys + explore link) — used for the
+// tour categories at the top level and, indented, inside "Journeys → By
+// destination".
 function PlaceAccordion({ place, expanded, onToggle, onLinkClick, linkStyle, indent = false }) {
+  const { format } = useCurrency()
+  const rowMeta = (r) => (r.price != null ? `${r.meta} · ${format(r.price)}` : r.meta)
   return (
     <div style={indent ? { paddingLeft: '14px' } : undefined}>
       <button
@@ -309,7 +320,7 @@ function PlaceAccordion({ place, expanded, onToggle, onLinkClick, linkStyle, ind
               {place.dayTours.slice(0, 4).map((t, i) => (
                 <Link key={t.slug} to={t.href} style={{ ...styles.accRow, borderTop: i ? '1px solid var(--color-n200)' : 'none' }} onClick={onLinkClick}>
                   <span style={styles.accRowTitle}>{t.title}</span>
-                  <span style={styles.accRowMeta}>{t.meta}</span>
+                  <span style={styles.accRowMeta}>{rowMeta(t)}</span>
                 </Link>
               ))}
             </>
@@ -320,7 +331,7 @@ function PlaceAccordion({ place, expanded, onToggle, onLinkClick, linkStyle, ind
               {place.journeys.slice(0, 3).map((j, i) => (
                 <Link key={j.slug} to={j.href} style={{ ...styles.accRow, borderTop: i ? '1px solid var(--color-n200)' : 'none' }} onClick={onLinkClick}>
                   <span style={styles.accRowTitle}>{j.title}</span>
-                  <span style={styles.accRowMeta}>{j.meta}</span>
+                  <span style={styles.accRowMeta}>{rowMeta(j)}</span>
                 </Link>
               ))}
             </>
@@ -474,16 +485,6 @@ const styles = {
     backgroundColor: 'var(--color-amber)',
   },
 
-  contactAlt: {
-    display: 'block',
-    textAlign: 'center',
-    fontFamily: 'var(--font-body)',
-    fontSize: '13px',
-    fontWeight: 600,
-    color: 'var(--color-n600)',
-    textDecoration: 'none',
-    padding: '12px 0 0',
-  },
 }
 
 export default MobileNavSheet

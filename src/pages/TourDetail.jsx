@@ -283,8 +283,31 @@ function TourDetail() {
   const extraAmount = (ex) =>
     ex?.perPerson ? (Number(ex.price) || 0) * numPeople : (Number(ex?.price) || 0)
 
-  const totalPrice = tour ? (tourType === 'private' ? 0 : tour.price * numPeople) : 0
-  const bookingPriceLabel = tourType === 'private' ? 'Quote' : format(totalPrice)
+  // Private pricing set per tour in the admin (Basics → Private tour price):
+  // quote (default), one fixed group price, or tiers by group size. A party
+  // larger than the biggest tier falls back to the quote flow.
+  const privatePricing = tour?.privatePricing || { mode: 'quote' }
+  const privateTiers = [...(privatePricing.tiers || [])]
+    .filter((t) => Number(t.maxPeople) >= 1 && Number(t.price) > 0)
+    .sort((a, b) => Number(a.maxPeople) - Number(b.maxPeople))
+  const privateTotal =
+    privatePricing.mode === 'fixed' && Number(privatePricing.fixedPrice) > 0
+      ? Number(privatePricing.fixedPrice)
+      : privatePricing.mode === 'tiered'
+        ? (privateTiers.find((t) => numPeople <= Number(t.maxPeople))?.price ?? null)
+        : null
+  // What the Private Tour toggle shows before a party size is relevant.
+  const privateToggleLabel =
+    privatePricing.mode === 'fixed' && Number(privatePricing.fixedPrice) > 0
+      ? format(privatePricing.fixedPrice)
+      : privatePricing.mode === 'tiered' && privateTiers.length > 0
+        ? `From ${format(privateTiers[0].price)}`
+        : 'Quote'
+
+  const totalPrice = tour ? (tourType === 'private' ? (privateTotal ?? 0) : tour.price * numPeople) : 0
+  const bookingPriceLabel = tourType === 'private'
+    ? (privateTotal != null ? format(privateTotal) : 'Quote')
+    : format(totalPrice)
   const spotsLeft = tour ? getSpotsLeft(tour.slug, selectedDate, selectedLanguage, tour.groupSize) : null
   const isDateBlocked = tour ? isBlocked(tour.slug, selectedDate) : false
   // The shared slot is sold out, or we're not running shared groups this
@@ -317,7 +340,9 @@ function TourDetail() {
       return
     }
 
-    const isPrivateQuote = tourType === 'private'
+    // Only an unpriced private booking is a quote — a private tour with a
+    // fixed or tiered price goes through the normal payment flow.
+    const isPrivateQuote = tourType === 'private' && privateTotal == null
     // A private quote, a sold-out date, and a blocked date all skip payment
     // and go through Checkout's "we'll be in touch" flow — they just need
     // different wording so admin can tell them apart.
@@ -359,7 +384,7 @@ function TourDetail() {
         : isRequestOnly
           ? `Requested — €${totalPrice} if confirmed`
           : `€${totalPrice}`,
-      tour_type: isPrivateQuote
+      tour_type: tourType === 'private'
         ? 'Private Tour'
         : isRequestOnly
           ? `Shared Tour — ${requestReason} (Requested)`
@@ -397,14 +422,16 @@ function TourDetail() {
           summary: {
             date: formatSelectedDate(selectedDate),
             startTime: startTime || null,
-            tourType: isPrivateQuote
+            tourType: tourType === 'private'
               ? 'Private tour'
               : isRequestOnly
                 ? `Shared tour — ${requestReason.toLowerCase()}, requested`
                 : 'Shared tour',
             language: selectedLanguageLabel,
             numPeople,
-            unitPrice: isPrivateQuote ? null : tour.price,
+            // A private group price has no per-person unit — the summary just
+            // shows the group total.
+            unitPrice: tourType === 'private' ? null : tour.price,
             total: totalPrice,
           },
           availableExtras,
@@ -484,7 +511,7 @@ function TourDetail() {
                       Private Tour
                     </span>
                     <span style={styles.typeOptionPrice}>
-                      Quote
+                      {privateToggleLabel}
                       <span style={styles.typePerPerson}>/group</span>
                     </span>
                   </button>
@@ -493,8 +520,13 @@ function TourDetail() {
 
                 {tourType === 'private' && (
                   <p style={styles.privateNote}>
-                    We'll send you a custom quote within 24 hours
-                    based on your group size and dates.
+                    {privateTotal == null
+                      ? privatePricing.mode === 'tiered'
+                        ? 'For a group this size we\'ll send a custom quote within 24 hours.'
+                        : 'We\'ll send you a custom quote within 24 hours based on your group size and dates.'
+                      : privatePricing.mode === 'tiered'
+                        ? 'One price for your whole private group — it updates with the number of guests.'
+                        : 'One fixed price for your whole private group, whatever the size.'}
                   </p>
                 )}
               </div>
@@ -666,14 +698,19 @@ function TourDetail() {
                 </div>
               </div>
 
-              {tourType === 'shared' && (
+              {(tourType === 'shared' || (tourType === 'private' && privateTotal != null)) && (
                 <div style={styles.receiptPanel}>
                   <div style={{ ...styles.totalRow, padding: 0, marginBottom: 0 }}>
                     <div>
                       <span style={styles.totalLabel}>Total</span>
-                      {numPeople > 1 && (
+                      {tourType === 'shared' && numPeople > 1 && (
                         <span style={styles.totalBreakdown}>
                           {format(tour.price)} × {numPeople} people
+                        </span>
+                      )}
+                      {tourType === 'private' && (
+                        <span style={styles.totalBreakdown}>
+                          Private group · {numPeople} {numPeople === 1 ? 'person' : 'people'}
                         </span>
                       )}
                     </div>
@@ -692,7 +729,7 @@ function TourDetail() {
                 style={{ marginBottom: 10 }}
                 onClick={handleBooking}
               >
-                {tourType === 'private'
+                {tourType === 'private' && privateTotal == null
                   ? 'Request a private quote'
                   : isRequestOnly
                     ? 'Request this date'
@@ -781,8 +818,8 @@ function TourDetail() {
         { id: 'highlights', label: 'Highlights' },
         { id: 'included', label: "What's included" },
         ...(tour.rightFor || tour.notRightFor ? [{ id: 'suitability', label: 'Is this for you?' }] : []),
-        ...(hasAccessibilityContent(tour.accessibility) ? [{ id: 'accessibility', label: 'Accessibility' }] : []),
         { id: 'info', label: 'Important information' },
+        ...(hasAccessibilityContent(tour.accessibility) ? [{ id: 'accessibility', label: 'Accessibility' }] : []),
         { id: 'reviews', label: 'Reviews' },
       ]} />
 

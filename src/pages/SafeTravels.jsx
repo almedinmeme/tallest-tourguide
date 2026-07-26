@@ -27,24 +27,29 @@ const GROUND_ROWS = [
     title: 'Our commitment to you',
     body: (
       <>
-        Your safety — and the safety of the communities we visit — is our first priority.
-        Every tour is led by a local guide with 14+ years on this terrain, who knows the
-        culture and the people. And we keep every group genuinely small: small enough for
-        faster decisions, personal attention, and a lighter footprint on the villages,
-        trails and living rooms we're invited into.
+        Your safety — and the safety of the communities we visit — comes first. Every
+        guide knows this terrain personally: not from a manual, but from living here.
+        And we keep every group genuinely small on purpose — small enough to change
+        plans in minutes, not hours, and light enough not to overwhelm the villages,
+        trails and living rooms we're welcomed into.
       </>
     ),
   },
   {
     img: guide5,
     tag: 'On tour',
-    title: 'We are here the whole way',
+    title: 'If something goes wrong on tour',
     body: (
       <>
-        Our guide carries emergency contacts at all times. If you feel unwell, unsafe, or
-        uncomfortable at any point, tell us immediately. We would rather pause, adapt the
-        route, or end the day early than push through something that is not working for
-        you. Your comfort matters more than any itinerary.
+        Tell your guide immediately if you feel unwell, unsafe, or uncomfortable — we
+        would rather stop, adapt, or end the day early than push through. Practically:
+        your guide carries a phone with the local emergency numbers saved — 112
+        (general), 124 (ambulance) — and speaks the language needed to get you help
+        fast. In Sarajevo, the main hospital for visitors needing urgent care is Koševo
+        University Clinical Center, and pharmacies (apoteka) throughout the centre are
+        used to helping tourists. On multi-day trips, your guide knows the nearest
+        clinic for that specific route before you leave — ask, if it would put your
+        mind at ease.
       </>
     ),
   },
@@ -54,10 +59,14 @@ const GROUND_ROWS = [
     title: 'Reading the mountain',
     body: (
       <>
-        Bosnia's mountain weather can shift quickly — especially in spring and autumn. We
-        monitor forecasts closely and will adjust routes or timing when safety demands it.
-        In rare cases where conditions make a tour genuinely unsafe, we reschedule or issue
-        a full refund — <Link to="/booking-conditions" style={inlineLink}>see how refunds work</Link>.
+        Weather in the Bosnian mountains can change faster than the forecast updates —
+        especially in Lukomir and on Trebević in spring and autumn. A route gets adjusted
+        or postponed when visibility drops enough that marked trails become hard to
+        follow, when temperatures make exposed sections genuinely risky, or when local
+        shepherds and rangers flag conditions we can't see from the trailhead. That call
+        isn't made from an office — it's made on the ground, the morning of. If a tour is
+        called off for safety, we reschedule or issue a full refund —{' '}
+        <Link to="/booking-conditions" style={inlineLink}>see how refunds work</Link>.
         The mountain will still be there next time.
       </>
     ),
@@ -69,17 +78,17 @@ const BEFORE_COLUMNS = [
   {
     icon: Mountain,
     title: 'Know before you go',
-    body: 'Some of our tours involve mountain terrain, uneven paths, or long drives. We include honest fitness advisories on every tour page that requires one. If you have doubts about whether a tour suits your needs, reach out — we will give you a straight answer, not a sales pitch.',
+    body: 'Some tours involve mountain terrain, uneven paths, or long drives. Every tour page that needs one carries an honest fitness advisory — written by the guide who leads it, not marketing copy. If you\'re unsure whether a tour suits you, ask before booking. You\'ll get a straight answer, not a sales pitch.',
   },
   {
     icon: HeartHandshake,
     title: 'Difficult history, handled with care',
-    body: 'Several of our tours engage directly with trauma — the Siege of Sarajevo, the Srebrenica genocide, the Yugoslav wars. These are handled with full respect and depth. But they are emotionally demanding by nature. We encourage guests to review tour descriptions carefully and consider this before booking.',
+    body: 'Several tours engage directly with trauma — the Siege of Sarajevo, the Srebrenica genocide, the Yugoslav wars. These are subjects real people in this city lived through, and they\'re handled with the weight they deserve, not performed for effect. They are also emotionally demanding by nature. Read the tour description carefully, and know that it\'s fine to ask questions beforehand — including "is this too much for my kids" or "will there be time to step away if I need to."',
   },
   {
     icon: Umbrella,
     title: 'Travel insurance',
-    body: 'We strongly recommend comprehensive travel insurance before joining any of our tours — covering medical expenses, emergency evacuation, trip cancellation, and personal liability. If something unexpected happens, insurance protects you in ways we simply cannot. Please arrange this before you travel.',
+    body: 'We strongly recommend comprehensive travel insurance before joining any tour — medical expenses, emergency evacuation, trip cancellation, personal liability. One detail worth knowing: EU/UK health cards (EHIC/GHIC) do not cover Bosnia, since it isn\'t in the EU. Standard travel insurance is genuinely necessary here, not just a formality. Please arrange it before you travel.',
   },
 ]
 
@@ -99,7 +108,7 @@ function SafeTravels() {
         kicker="Safety & peace of mind"
         title="Safe travels"
         lede="We take your safety — and your trust — seriously, before, during and after every tour. Here is exactly how."
-        chips={['14+ years on this terrain', 'Genuinely small groups', 'Full refund if we ever cancel']}
+        chips={['Genuinely small groups', 'Guide-led emergency response, not a call center', 'Full refund if we ever cancel']}
       />
 
       {/* On the ground — alternating photo + text rows */}

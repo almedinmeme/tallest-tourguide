@@ -1,11 +1,15 @@
-// Availability — three jobs in one screen, ordered by how often they're used:
+// Availability — four jobs in one screen, ordered by how often they're used:
 //   1. External (OTA) bookings — seats sold on GetYourGuide/Viator/etc. that
 //      must count against on-site availability. Admin-owned and additive:
 //      stored in src/data/manual-bookings.json, which the Airtable sync
 //      NEVER touches.
-//   2. Blocked dates — single days or ranges when tours can't run.
-//   3. Journey departure dates.
-// 2 and 3 edit the same src/data/airtable/*.json files the build-time sync
+//   2. Weekly schedule — a day tour's fixed recurring days (e.g. only Monday
+//      and Tuesday). Admin-owned, stored in src/data/weekly-availability.json
+//      (also never touched by Airtable), and read by useBlockedDates on the
+//      public site to grey out every day not in the set.
+//   3. Blocked dates — single days or ranges when tours can't run.
+//   4. Journey departure dates.
+// 3 and 4 edit the same src/data/airtable/*.json files the build-time sync
 // regenerates, so for those AIRTABLE STAYS THE PRIORITY SOURCE: any build
 // that reaches it overwrites them. They're the fallback for when Airtable
 // is down or over its API cap.
@@ -20,6 +24,18 @@ import { useDirtyTracker } from '../hooks/dirtyContext'
 const ALL_TOURS = '' // empty tourSlug on a blocked date blocks every tour
 const DEFAULT_LANGUAGES = ['english', 'bosnian']
 const OTA_SOURCES = ['Direct', 'GetYourGuide', 'Viator', 'Other']
+
+// JS Date#getDay() convention (0=Sun…6=Sat), ordered Mon-first to match the
+// rest of the admin's calendars.
+const WEEKDAYS = [
+  { value: 1, label: 'Mon' },
+  { value: 2, label: 'Tue' },
+  { value: 3, label: 'Wed' },
+  { value: 4, label: 'Thu' },
+  { value: 5, label: 'Fri' },
+  { value: 6, label: 'Sat' },
+  { value: 0, label: 'Sun' },
+]
 
 // "2026-08-19" → "19 Aug 2026"
 function fmtDate(iso) {
@@ -76,13 +92,15 @@ export default function AvailabilityPage() {
   const [tours, setTours] = useState([])
   const [err, setErr] = useState(null)
   const [saving, setSaving] = useState(false)
+  const [weeklyEditing, setWeeklyEditing] = useState(null) // slug being edited, or null
+  const [weeklyAddSlug, setWeeklyAddSlug] = useState('') // adder dropdown selection
   const toast = useToast()
   const { dirty, markSaved } = useDirtyTracker(item)
 
   useEffect(() => {
     Promise.all([api.availability.get(), api.packages.list(), api.tours.list()])
       .then(([availability, pkgs, trs]) => {
-        setItem({ manualBookings: [], ...availability })
+        setItem({ manualBookings: [], weeklyAvailability: {}, ...availability })
         setJourneys(pkgs)
         setTours(trs)
       })
@@ -114,6 +132,23 @@ export default function AvailabilityPage() {
   const bookableBySlug = useMemo(
     () => new Map(bookables.map((b) => [b.slug, b])),
     [bookables]
+  )
+
+  // Only tours with an actual restriction get a row — most tours run every
+  // day and have no entry, so they stay out of the list entirely.
+  const restrictedTours = useMemo(
+    () =>
+      tours
+        .filter((t) => item?.weeklyAvailability?.[t.slug])
+        .map((t) => ({ slug: t.slug, label: shortTitle(t.title) })),
+    [tours, item?.weeklyAvailability]
+  )
+  const unrestrictedTours = useMemo(
+    () =>
+      tours
+        .filter((t) => !item?.weeklyAvailability?.[t.slug])
+        .map((t) => ({ slug: t.slug, label: shortTitle(t.title) })),
+    [tours, item?.weeklyAvailability]
   )
 
   // ---- Manual (OTA) bookings ----------------------------------------------
@@ -161,6 +196,40 @@ export default function AvailabilityPage() {
       else delete departureDates[slug]
       return { ...t, departureDates }
     })
+  }
+
+  // ---- Weekly schedule -------------------------------------------------------
+
+  // No entry for a slug means "every day" (the default) — only tours with an
+  // actual restriction get an entry, so a tour stays out of the list until
+  // one is deliberately set.
+  const startWeeklySchedule = (slug) => {
+    setItem((t) => ({
+      ...t,
+      weeklyAvailability: { ...t.weeklyAvailability, [slug]: [1, 2, 3, 4, 5] }, // default: weekdays
+    }))
+    setWeeklyEditing(slug)
+    setWeeklyAddSlug('')
+  }
+
+  const toggleWeeklyDay = (slug, day) => {
+    setItem((t) => {
+      const base = t.weeklyAvailability[slug] || WEEKDAYS.map((d) => d.value)
+      const next = base.includes(day) ? base.filter((d) => d !== day) : [...base, day].sort()
+      const weeklyAvailability = { ...t.weeklyAvailability }
+      if (next.length === 7) delete weeklyAvailability[slug] // back to "every day" — drop the entry
+      else weeklyAvailability[slug] = next
+      return { ...t, weeklyAvailability }
+    })
+  }
+
+  const clearWeeklySchedule = (slug) => {
+    setItem((t) => {
+      const weeklyAvailability = { ...t.weeklyAvailability }
+      delete weeklyAvailability[slug]
+      return { ...t, weeklyAvailability }
+    })
+    setWeeklyEditing((cur) => (cur === slug ? null : cur))
   }
 
   // ---- Blocked dates --------------------------------------------------------
@@ -239,6 +308,10 @@ export default function AvailabilityPage() {
   const today = new Date().toISOString().slice(0, 10)
   const scopeName = (slug) =>
     slug === ALL_TOURS ? 'All tours' : bookableBySlug.get(slug)?.label || slug
+  // Past blocked dates have already done their job — don't clutter the list
+  // with them (matches the public site's useBlockedDates, which drops them
+  // the same way).
+  const futureBlockedDates = item.blockedDates.filter((b) => b.date >= today)
 
   return (
     <div>
@@ -333,7 +406,58 @@ export default function AvailabilityPage() {
         )}
       </section>
 
-      {/* ── 2 · Blocked dates ───────────────────────────────────────────── */}
+      {/* ── 2 · Weekly schedule ──────────────────────────────────────────── */}
+      <section style={{ ...s.card, marginTop: 20 }}>
+        <h2 style={{ ...s.h2, marginTop: 0 }}>Weekly schedule</h2>
+        <SectionHint>
+          Only needed for a tour with fixed running days (e.g. Monday and Tuesday only) — every
+          other day greys out on the calendar automatically, no blocked dates to add one by one.
+          Tours with no entry below run every day.
+        </SectionHint>
+
+        {restrictedTours.length === 0 ? (
+          <div style={{ ...s.subtle, marginTop: 6 }}>All tours currently run every day.</div>
+        ) : (
+          <div style={{ marginTop: 6, display: 'flex', flexDirection: 'column', gap: 6 }}>
+            {restrictedTours.map((t) => (
+              <WeeklyScheduleRow
+                key={t.slug}
+                label={t.label}
+                days={item.weeklyAvailability[t.slug]}
+                editing={weeklyEditing === t.slug}
+                onEditToggle={() => setWeeklyEditing((cur) => (cur === t.slug ? null : t.slug))}
+                onToggleDay={(day) => toggleWeeklyDay(t.slug, day)}
+                onClear={() => clearWeeklySchedule(t.slug)}
+              />
+            ))}
+          </div>
+        )}
+
+        {unrestrictedTours.length > 0 && (
+          <div style={{ marginTop: 14, display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
+            <select
+              value={weeklyAddSlug}
+              onChange={(e) => setWeeklyAddSlug(e.target.value)}
+              style={{ ...s.input, width: 280, padding: '6px 10px', color: weeklyAddSlug ? undefined : colors.textMuted }}
+            >
+              <option value="">Give a tour fixed running days…</option>
+              {unrestrictedTours.map((t) => (
+                <option key={t.slug} value={t.slug}>{t.label}</option>
+              ))}
+            </select>
+            <button
+              type="button"
+              disabled={!weeklyAddSlug}
+              onClick={() => startWeeklySchedule(weeklyAddSlug)}
+              style={{ ...s.btn, ...s.btnSecondary, opacity: weeklyAddSlug ? 1 : 0.5, cursor: weeklyAddSlug ? 'pointer' : 'not-allowed' }}
+            >
+              Set schedule
+            </button>
+          </div>
+        )}
+      </section>
+
+      {/* ── 3 · Blocked dates ───────────────────────────────────────────── */}
       <section style={{ ...s.card, marginTop: 20 }}>
         <h2 style={{ ...s.h2, marginTop: 0 }}>Blocked dates</h2>
         <SectionHint tone="warn">
@@ -344,11 +468,11 @@ export default function AvailabilityPage() {
 
         <BlockedAdder bookables={bookables} onAdd={addBlocked} />
 
-        {item.blockedDates.length === 0 ? (
-          <div style={{ ...s.subtle, marginTop: 14 }}>No blocked dates.</div>
+        {futureBlockedDates.length === 0 ? (
+          <div style={{ ...s.subtle, marginTop: 14 }}>No upcoming blocked dates.</div>
         ) : (
           <div style={{ marginTop: 14, display: 'flex', flexDirection: 'column', gap: 6 }}>
-            {groupRuns(item.blockedDates).map((run) => (
+            {groupRuns(futureBlockedDates).map((run) => (
               <div
                 key={`${run.dates[0]}|${run.tourSlug}`}
                 style={{
@@ -382,7 +506,7 @@ export default function AvailabilityPage() {
         )}
       </section>
 
-      {/* ── 3 · Journey departure dates ─────────────────────────────────── */}
+      {/* ── 4 · Journey departure dates ─────────────────────────────────── */}
       <section style={{ ...s.card, marginTop: 20 }}>
         <h2 style={{ ...s.h2, marginTop: 0 }}>Journey departure dates</h2>
         <SectionHint tone="warn">
@@ -522,12 +646,95 @@ function ManualAdder({ bookables, onAdd }) {
   )
 }
 
+// Collapsed one-line summary by default ("Tour name — Mon, Tue"); the 7-day
+// toggle row only appears once "Edit" is clicked, so a page with a handful
+// of restricted tours doesn't turn into a wall of day buttons.
+function WeeklyScheduleRow({ label, days, editing, onEditToggle, onToggleDay, onClear }) {
+  const dayList = WEEKDAYS.filter((d) => days.includes(d.value)).map((d) => d.label).join(', ')
+  return (
+    <div
+      style={{
+        padding: '9px 12px',
+        backgroundColor: colors.panelMuted,
+        border: `1px solid ${colors.border}`,
+        borderRadius: 6,
+        fontSize: 13,
+      }}
+    >
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
+        <span>
+          <strong>{label}</strong>
+          <span style={{ color: colors.textSubtle }}> — {dayList || 'closed every day'}</span>
+        </span>
+        <div style={{ display: 'flex', gap: 8 }}>
+          <button
+            type="button"
+            onClick={onEditToggle}
+            style={editing ? s.btn : { ...s.btn, ...s.btnSecondary }}
+          >
+            {editing ? 'Done' : 'Edit'}
+          </button>
+          <button
+            type="button"
+            onClick={onClear}
+            style={{ ...s.btn, ...s.btnGhost, color: colors.danger, padding: '4px 10px', boxShadow: 'none' }}
+          >
+            Remove
+          </button>
+        </div>
+      </div>
+
+      {editing && (
+        <div style={{ display: 'flex', gap: 6, marginTop: 10 }}>
+          {WEEKDAYS.map((d) => {
+            const active = days.includes(d.value)
+            return (
+              <button
+                key={d.value}
+                type="button"
+                onClick={() => onToggleDay(d.value)}
+                style={{
+                  width: 42,
+                  padding: '6px 0',
+                  borderRadius: 6,
+                  border: `1px solid ${active ? colors.primary : colors.border}`,
+                  backgroundColor: active ? colors.primarySoft : 'transparent',
+                  color: active ? colors.primary : colors.textMuted,
+                  fontWeight: 600,
+                  fontSize: 12.5,
+                  cursor: 'pointer',
+                }}
+              >
+                {d.label}
+              </button>
+            )
+          })}
+        </div>
+      )}
+    </div>
+  )
+}
+
+// Collapsed by default to a one-line summary ("14 dates · next 9 Jul 2026")
+// — the full pill list of every departure date (dozens, for a busy journey)
+// only renders while actively editing, instead of permanently on screen.
 function DepartureRow({ label, dates, onAdd, onRemove }) {
   const [pickerOpen, setPickerOpen] = useState(false)
+  const today = new Date().toISOString().slice(0, 10)
+  const nextUpcoming = dates.find((d) => d >= today) // dates arrive pre-sorted
+
   return (
     <div style={{ padding: '14px 0', borderBottom: `1px solid ${colors.border}` }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
-        <strong style={{ fontSize: 14 }}>{label}</strong>
+        <span>
+          <strong style={{ fontSize: 14 }}>{label}</strong>
+          <span style={{ color: colors.textSubtle, fontSize: 13 }}>
+            {' — '}
+            {dates.length === 0
+              ? 'no dates set'
+              : `${dates.length} date${dates.length === 1 ? '' : 's'}${nextUpcoming ? ` · next ${fmtDate(nextUpcoming)}` : ''}`}
+          </span>
+        </span>
         <button
           type="button"
           onClick={() => setPickerOpen((open) => !open)}
@@ -538,49 +745,51 @@ function DepartureRow({ label, dates, onAdd, onRemove }) {
       </div>
 
       {pickerOpen && (
-        <MultiDateCalendar
-          selected={dates}
-          onToggle={(date) => (dates.includes(date) ? onRemove(date) : onAdd(date))}
-        />
-      )}
+        <>
+          <MultiDateCalendar
+            selected={dates}
+            onToggle={(date) => (dates.includes(date) ? onRemove(date) : onAdd(date))}
+          />
 
-      {dates.length > 0 && (
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 10 }}>
-          {dates.map((d) => (
-            <span
-              key={d}
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: 6,
-                padding: '4px 8px 4px 12px',
-                backgroundColor: colors.primarySoft,
-                color: colors.primary,
-                borderRadius: 99,
-                fontSize: 13,
-                fontWeight: 600,
-              }}
-            >
-              {fmtDate(d)}
-              <button
-                type="button"
-                onClick={() => onRemove(d)}
-                aria-label={`Remove ${fmtDate(d)}`}
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  cursor: 'pointer',
-                  color: colors.primary,
-                  fontSize: 15,
-                  lineHeight: 1,
-                  padding: '0 4px',
-                }}
-              >
-                ×
-              </button>
-            </span>
-          ))}
-        </div>
+          {dates.length > 0 && (
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 10 }}>
+              {dates.map((d) => (
+                <span
+                  key={d}
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: 6,
+                    padding: '4px 8px 4px 12px',
+                    backgroundColor: colors.primarySoft,
+                    color: colors.primary,
+                    borderRadius: 99,
+                    fontSize: 13,
+                    fontWeight: 600,
+                  }}
+                >
+                  {fmtDate(d)}
+                  <button
+                    type="button"
+                    onClick={() => onRemove(d)}
+                    aria-label={`Remove ${fmtDate(d)}`}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      cursor: 'pointer',
+                      color: colors.primary,
+                      fontSize: 15,
+                      lineHeight: 1,
+                      padding: '0 4px',
+                    }}
+                  >
+                    ×
+                  </button>
+                </span>
+              ))}
+            </div>
+          )}
+        </>
       )}
     </div>
   )

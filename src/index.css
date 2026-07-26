@@ -9,9 +9,12 @@
    every single component in the app can access them */
 :root {
 
-  /* --- PRIMARY COLORS --- */
-  --color-forest-green: #2E7D5E;
-  --color-mid-green: #4AA880;
+  /* --- PRIMARY COLORS ---
+     Deepened 2026-07 for contrast: forest 4.99→6.06:1 on white,
+     mid 2.92→4.41:1 (passes AA large/icons; 3.9:1 on the dark footer,
+     still above the 3:1 non-text minimum). */
+  --color-forest-green: #236F52;
+  --color-mid-green: #2F8763;
 
   /* --- ACCENT COLORS --- */
   --color-amber: #F4A130;
@@ -22,9 +25,9 @@
   --color-n800: #2D3748;   /* Dark text */
   --color-n700: #3B4658;   /* Strong body text */
   --color-n600: #4A5568;   /* Body text */
-  --color-n500: #718096;   /* Secondary text */
+  --color-n500: #5C6B80;   /* Secondary text (5.43:1 on white) */
   --color-n400: #A0AEC0;   /* Placeholder / muted */
-  --color-n300: #CBD5E0;   /* Borders */
+  --color-n300: #B7C3D2;   /* Borders */
   --color-n200: #E2E8F0;   /* Subtle dividers */
   --color-n100: #F7F9FC;   /* Page background */
   --color-n000: #FFFFFF;   /* Card background */
@@ -259,6 +262,12 @@ a[href^="/tours/"]:hover .view-tour-pill {
   background-color: rgba(244,161,48,0.10);
 }
 
+/* Emphasized contact row at the bottom of the Discover dropdown */
+.dropdown-contact-cta:hover {
+  background-color: rgba(46,125,94,0.13) !important;
+  border-color: rgba(46,125,94,0.35) !important;
+}
+
 .search-result-item:hover {
   background-color: var(--color-n100);
 }
@@ -270,7 +279,7 @@ a[href^="/tours/"]:hover .view-tour-pill {
 }
 
 .hero-featured-card:hover {
-  background-color: rgba(12, 22, 17, 0.78) !important;
+  background-color: rgba(12, 22, 17, 0.9) !important;
   transform: translateX(-3px);
 }
 
@@ -436,6 +445,34 @@ a[href^="/tours/"]:hover .view-tour-pill {
 /* Green glow — add alongside btn-lift on green buttons */
 .btn-glow-green:hover {
   box-shadow: 0 6px 20px rgba(46,125,94,0.35);
+}
+
+/* Announcement bar dismiss button — always sits on the deep forest bar. */
+.announcement-dismiss {
+  transition: background-color var(--t-fast), color var(--t-fast);
+}
+.announcement-dismiss:hover {
+  background-color: rgba(255,255,255,0.14);
+  color: #fff;
+}
+
+/* Announcement bar "Details" trigger — quiet underlined text that firms up
+   on hover. */
+.announcement-details {
+  transition: color var(--t-fast), text-decoration-color var(--t-fast);
+}
+.announcement-details:hover {
+  color: #fff;
+  text-decoration-color: rgba(255,255,255,0.8);
+}
+
+/* Click-to-copy promo code chip in the announcement details modal */
+.promo-code-chip {
+  transition: background-color var(--t-fast), border-color var(--t-fast);
+}
+.promo-code-chip:hover {
+  background-color: rgba(244,161,48,0.16);
+  border-color: var(--color-amber);
 }
 
 /* Semi-transparent overlay buttons (nav arrows, review buttons) */

@@ -1,23 +1,26 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { NAV_RAIL, NAV_PLACES, DEFAULT_PLACE_ID, NAV_TRUST } from '../../data/navigation'
+import { Sparkles } from 'lucide-react'
+import { railPlaces, NAV_TRUST } from '../../data/navigation'
+import { useCurrency } from '../../context/CurrencyContext'
 
-// Desktop-only Destinations panel: a left rail of places; hovering/focusing a
-// place swaps the middle column to its day tours + journeys and the photo
-// column to its image. Rendered as a direct child of <nav> so it anchors to
-// the full bar width — centering is done with flex, never translateX, because
-// the .nav-dropdown keyframe ends in a transform that would override it.
+// Desktop-only mega panel shared by the Day Tours and Journeys menus: a left
+// rail of items; hovering/focusing one swaps the middle column to its day
+// tours + journeys and the photo column to its image. Rendered as a direct
+// child of <nav> so it anchors to the full bar width — centering is done with
+// flex, never translateX, because the .nav-dropdown keyframe ends in a
+// transform that would override it.
 
-function DestinationsMegaMenu({ width, onNavigate, onClose, onMouseEnter, onMouseLeave }) {
-  const [activeId, setActiveId] = useState(DEFAULT_PLACE_ID)
-  const active = NAV_PLACES.find((p) => p.id === activeId) || NAV_PLACES[0]
+function MegaMenu({ rail, defaultId, footerLinks = [], label, width, onNavigate, onClose, onMouseEnter, onMouseLeave }) {
+  const { format } = useCurrency()
+  const places = railPlaces(rail)
+  const [activeId, setActiveId] = useState(defaultId)
+  const active = places.find((p) => p.id === activeId) || places[0]
   const showPhoto = width >= 1024
 
-  const tourCap = 5
-  const visibleTours = active.dayTours.slice(0, tourCap)
-  const moreTours = active.dayTours.length > tourCap
-  const visibleJourneys = active.journeys.slice(0, tourCap)
-  const journeysLabel = active.dayTours.length ? 'Journeys' : `Journeys through ${active.label}`
+  const rowCap = 5
+  // "Full day · from €85" — meta is currency-agnostic, price formats live.
+  const rowMeta = (r) => (r.price != null ? `${r.meta} · from ${format(r.price)}` : r.meta)
 
   return (
     <div
@@ -26,15 +29,15 @@ function DestinationsMegaMenu({ width, onNavigate, onClose, onMouseEnter, onMous
       onMouseLeave={onMouseLeave}
       onKeyDown={(e) => { if (e.key === 'Escape') onClose() }}
     >
-      <div className="nav-mega" style={styles.panel}>
+      <div className="nav-mega" style={styles.panel} role="region" aria-label={label}>
         {/* minmax(0, 1fr): a plain 1fr's auto minimum would let a long tour
             title widen the middle column and push the photo column out of
             reach — this keeps it shrinkable so titles ellipsize instead. */}
         <div style={{ ...styles.grid, gridTemplateColumns: showPhoto ? '230px minmax(0, 1fr) 280px' : '230px minmax(0, 1fr)' }}>
 
-          {/* Left rail — places */}
+          {/* Left rail */}
           <div style={styles.rail}>
-            {NAV_RAIL.map((group, gi) => (
+            {rail.map((group, gi) => (
               <div key={group.group} style={{ marginTop: gi ? 14 : 0 }}>
                 <span style={styles.groupLabel}>{group.group}</span>
                 {group.items.map((place) => {
@@ -46,6 +49,7 @@ function DestinationsMegaMenu({ width, onNavigate, onClose, onMouseEnter, onMous
                       className="mega-rail-item"
                       style={{
                         ...styles.railItem,
+                        ...(place.icon ? styles.railItemWithIcon : {}),
                         color: isActive ? 'var(--color-forest-green)' : 'var(--color-n600)',
                         fontWeight: isActive ? 600 : 500,
                         boxShadow: isActive ? 'inset 2px 0 0 var(--color-forest-green)' : 'none',
@@ -55,6 +59,7 @@ function DestinationsMegaMenu({ width, onNavigate, onClose, onMouseEnter, onMous
                       onFocus={() => setActiveId(place.id)}
                       onClick={onNavigate}
                     >
+                      {place.icon === 'sparkles' && <Sparkles size={13} color="var(--color-amber)" style={{ flexShrink: 0 }} />}
                       {place.label}
                     </Link>
                   )
@@ -63,49 +68,89 @@ function DestinationsMegaMenu({ width, onNavigate, onClose, onMouseEnter, onMous
             ))}
           </div>
 
-          {/* Middle — the active place's tours & journeys */}
+          {/* Middle — every item's tours & journeys, stacked in one grid
+              cell. Inactive layers are visibility:hidden but still size the
+              cell, so the panel holds the height of the most populated item
+              instead of jumping as the hover moves down the rail. */}
           <div style={styles.content}>
-            <h3 style={styles.placeTitle}>{active.label}</h3>
-            {active.blurb && <p style={styles.placeBlurb}>{active.blurb}</p>}
+            {places.map((place) => {
+              const isActive = place.id === active.id
+              const visibleTours = place.dayTours.slice(0, rowCap)
+              const moreTours = place.dayTours.length > rowCap
+              const visibleJourneys = place.journeys.slice(0, rowCap)
+              const moreJourneys = place.journeys.length > rowCap
+              const journeysLabel =
+                place.journeysLabel || (place.dayTours.length ? 'Journeys' : `Journeys through ${place.label}`)
 
-            {visibleTours.length > 0 && (
-              <>
-                <span style={{ ...styles.groupLabel, padding: '14px 0 2px' }}>Day tours</span>
-                <div>
-                  {visibleTours.map((t, i) => (
-                    <Link key={t.slug} to={t.href} className="mega-row" style={{ ...styles.row, borderTop: i ? '1px solid var(--color-n200)' : 'none' }} onClick={onNavigate}>
-                      <span className="mega-row-title" style={styles.rowTitle}>{t.title}</span>
-                      <span style={styles.rowMeta}>{t.meta}</span>
-                    </Link>
-                  ))}
+              return (
+                <div key={place.id} style={{ gridArea: '1 / 1', visibility: isActive ? 'visible' : 'hidden' }}>
+                  <h3 style={styles.placeTitle}>{place.label}</h3>
+                  {place.blurb && <p style={styles.placeBlurb}>{place.blurb}</p>}
+
+                  {visibleTours.length > 0 && (
+                    <>
+                      {/* Count only when capped — it signals there's more than shown. */}
+                      <span style={{ ...styles.groupLabel, padding: '14px 0 2px' }}>
+                        {moreTours ? `${place.dayTours.length} day tours` : 'Day tours'}
+                      </span>
+                      <div>
+                        {visibleTours.map((t, i) => (
+                          <Link key={t.slug} to={t.href} className="mega-row" style={{ ...styles.row, borderTop: i ? '1px solid var(--color-n200)' : 'none' }} onClick={onNavigate}>
+                            <span className="mega-row-title" style={styles.rowTitle}>{t.title}</span>
+                            <span style={styles.rowMeta}>{rowMeta(t)}</span>
+                          </Link>
+                        ))}
+                      </div>
+                      {moreTours && (
+                        <Link to={place.href} style={styles.moreLink} onClick={onNavigate}>
+                          +{place.dayTours.length - rowCap} more →
+                        </Link>
+                      )}
+                    </>
+                  )}
+
+                  {visibleJourneys.length > 0 && (
+                    <>
+                      <span style={{ ...styles.groupLabel, padding: '14px 0 2px' }}>
+                        {moreJourneys ? `${place.journeys.length} ${journeysLabel.toLowerCase()}` : journeysLabel}
+                      </span>
+                      <div>
+                        {visibleJourneys.map((j, i) => (
+                          <Link key={j.slug} to={j.href} className="mega-row" style={{ ...styles.row, borderTop: i ? '1px solid var(--color-n200)' : 'none' }} onClick={onNavigate}>
+                            <span className="mega-row-title" style={styles.rowTitle}>{j.title}</span>
+                            <span style={styles.rowMeta}>{rowMeta(j)}</span>
+                          </Link>
+                        ))}
+                      </div>
+                      {moreJourneys && (
+                        <Link to={place.href} style={styles.moreLink} onClick={onNavigate}>
+                          +{place.journeys.length - rowCap} more →
+                        </Link>
+                      )}
+                    </>
+                  )}
+
+                  {visibleTours.length === 0 && visibleJourneys.length === 0 && (
+                    <>
+                      {(place.details || []).map((d, i) => (
+                        <p key={d} style={{ ...styles.detailRow, borderTop: i ? '1px solid var(--color-n200)' : 'none', marginTop: i ? 0 : 14 }}>
+                          {d}
+                        </p>
+                      ))}
+                      {place.cta ? (
+                        <Link to={place.cta.href} style={styles.moreLink} onClick={onNavigate}>
+                          {place.cta.label} →
+                        </Link>
+                      ) : (
+                        <Link to="/consult" style={styles.moreLink} onClick={onNavigate}>
+                          Ask us about {place.label} →
+                        </Link>
+                      )}
+                    </>
+                  )}
                 </div>
-                {moreTours && (
-                  <Link to={active.href} style={styles.moreLink} onClick={onNavigate}>
-                    All {active.label} day tours →
-                  </Link>
-                )}
-              </>
-            )}
-
-            {visibleJourneys.length > 0 && (
-              <>
-                <span style={{ ...styles.groupLabel, padding: '14px 0 2px' }}>{journeysLabel}</span>
-                <div>
-                  {visibleJourneys.map((j, i) => (
-                    <Link key={j.slug} to={j.href} className="mega-row" style={{ ...styles.row, borderTop: i ? '1px solid var(--color-n200)' : 'none' }} onClick={onNavigate}>
-                      <span className="mega-row-title" style={styles.rowTitle}>{j.title}</span>
-                      <span style={styles.rowMeta}>{j.meta}</span>
-                    </Link>
-                  ))}
-                </div>
-              </>
-            )}
-
-            {visibleTours.length === 0 && visibleJourneys.length === 0 && (
-              <Link to="/consult" style={styles.moreLink} onClick={onNavigate}>
-                Ask us about {active.label} →
-              </Link>
-            )}
+              )
+            })}
           </div>
 
           {/* Photo column */}
@@ -133,8 +178,9 @@ function DestinationsMegaMenu({ width, onNavigate, onClose, onMouseEnter, onMous
           <div style={styles.footer}>
             <span style={styles.trust}>{NAV_TRUST}</span>
             <div style={styles.footerLinks}>
-              <Link to="/destinations" style={styles.footerLink} onClick={onNavigate}>All destinations →</Link>
-              <Link to="/contact" style={styles.footerLink} onClick={onNavigate}>Contact</Link>
+              {footerLinks.map((l) => (
+                <Link key={l.href} to={l.href} style={styles.footerLink} onClick={onNavigate}>{l.label}</Link>
+              ))}
             </div>
           </div>
 
@@ -189,7 +235,16 @@ const styles = {
     lineHeight: 1.35,
   },
 
+  railItemWithIcon: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '6px',
+  },
+
+  // A grid so the stacked place layers share one cell (gridArea 1/1) and the
+  // tallest one sets the column height.
   content: {
+    display: 'grid',
     padding: '20px 28px 16px',
     minHeight: '300px',
   },
@@ -260,6 +315,16 @@ const styles = {
     padding: '8px 4px 0',
   },
 
+  // Quiet explainer rows for items with no list (Personalised Journey).
+  detailRow: {
+    fontFamily: 'var(--font-body)',
+    fontSize: '13.5px',
+    color: 'var(--color-n700)',
+    lineHeight: 1.5,
+    margin: 0,
+    padding: '10px 0',
+  },
+
   photoCol: {
     padding: '20px 24px 16px',
     borderLeft: '1px solid var(--color-n200)',
@@ -321,4 +386,4 @@ const styles = {
   },
 }
 
-export default DestinationsMegaMenu
+export default MegaMenu

@@ -4,6 +4,7 @@ import useWindowWidth from '../hooks/useWindowWidth'
 import { Link } from 'react-router-dom'
 import { CONTACT_EMAIL, PHONE_DISPLAY, WHATSAPP_URL, INSTAGRAM_URL, TRIPADVISOR_URL } from '../data/settings'
 import { MapPin, Mail, Phone, ArrowUpRight } from 'lucide-react'
+import Button from './Button'
 import logo from '../assets/logo.svg'
 
 function Footer() {
@@ -50,7 +51,7 @@ function Footer() {
               rel="noopener noreferrer"
               style={{
                 ...styles.socialLink,
-                color: igHovered ? 'var(--color-amber)' : 'rgba(255,255,255,0.6)',
+                color: igHovered ? 'var(--color-amber)' : 'rgba(255,255,255,0.78)',
               }}
               onMouseEnter={() => setIgHovered(true)}
               onMouseLeave={() => setIgHovered(false)}
@@ -64,7 +65,7 @@ function Footer() {
               rel="noopener noreferrer"
               style={{
                 ...styles.socialLink,
-                color: taHovered ? 'var(--color-amber)' : 'rgba(255,255,255,0.6)',
+                color: taHovered ? 'var(--color-amber)' : 'rgba(255,255,255,0.78)',
               }}
               onMouseEnter={() => setTaHovered(true)}
               onMouseLeave={() => setTaHovered(false)}
@@ -78,7 +79,7 @@ function Footer() {
               rel="noopener noreferrer"
               style={{
                 ...styles.socialLink,
-                color: waHovered ? 'var(--color-amber)' : 'rgba(255,255,255,0.6)',
+                color: waHovered ? 'var(--color-amber)' : 'rgba(255,255,255,0.78)',
               }}
               onMouseEnter={() => setWaHovered(true)}
               onMouseLeave={() => setWaHovered(false)}
@@ -104,7 +105,7 @@ function Footer() {
                 to={to}
                 style={{
                   ...styles.footerLink,
-                  color: hoveredLink === to ? 'var(--color-amber)' : 'rgba(255,255,255,0.55)',
+                  color: hoveredLink === to ? 'var(--color-amber)' : 'rgba(255,255,255,0.78)',
                 }}
                 onMouseEnter={() => setHoveredLink(to)}
                 onMouseLeave={() => setHoveredLink(null)}
@@ -132,7 +133,7 @@ function Footer() {
                 to={to}
                 style={{
                   ...styles.footerLink,
-                  color: hoveredLink === to ? 'var(--color-amber)' : 'rgba(255,255,255,0.55)',
+                  color: hoveredLink === to ? 'var(--color-amber)' : 'rgba(255,255,255,0.78)',
                 }}
                 onMouseEnter={() => setHoveredLink(to)}
                 onMouseLeave={() => setHoveredLink(null)}
@@ -162,7 +163,7 @@ function Footer() {
           >
             <div style={styles.tripAdvisorTop}>
               <span style={styles.tripAdvisorBrand}>TripAdvisor</span>
-              <ArrowUpRight size={16} color="rgba(255,255,255,0.4)" />
+              <ArrowUpRight size={16} color="rgba(255,255,255,0.6)" />
             </div>
             <p style={styles.tripAdvisorRating}>★★★★★</p>
             <p style={styles.tripAdvisorCount}>180 reviews</p>
@@ -172,40 +173,52 @@ function Footer() {
 
       </div>
 
-      {/* ── FIND US BAR ── */}
+      {/* ── GET IN TOUCH ── */}
       <div style={styles.findUsBar}>
         <div style={styles.bottomDivider} />
         <div style={{
           display: 'flex',
-          flexWrap: 'wrap',
-          alignItems: 'center',
-          gap: isMobile ? '16px' : '32px',
-          justifyContent: isMobile ? 'center' : 'flex-start',
+          flexDirection: isMobile ? 'column' : 'row',
+          alignItems: isMobile ? 'stretch' : 'center',
+          justifyContent: 'space-between',
+          gap: isMobile ? '20px' : '40px',
         }}>
-          <span style={styles.columnLabel}>Find Us</span>
-          <div style={styles.contactItem}>
-            <MapPin size={13} color="var(--color-mid-green)" style={{ flexShrink: 0 }} />
-            <a
-              href="https://www.google.com/maps/place/Tallest+Tourguide+%26+Friends/@43.8568344,18.4235815,17z/data=!3m1!4b1!4m6!3m5!1s0x4758c99dd99dd453:0xdf1f0c03f4626494!8m2!3d43.8568344!4d18.4265152!16s%2Fg%2F11nc0x5ysx?entry=ttu&g_ep=EgoyMDI2MDQxNS4wIKXMDSoASAFQAw%3D%3D"
-              target="_blank"
-              rel="noopener noreferrer"
-              style={styles.contactLink}
-            >
-              Hamdije Kreševljakovića 61, Sarajevo
-            </a>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            <span style={styles.columnLabel}>Get in Touch</span>
+            <div style={{
+              display: 'flex',
+              flexDirection: isMobile ? 'column' : 'row',
+              flexWrap: 'wrap',
+              gap: isMobile ? '10px' : '24px',
+            }}>
+              <div style={styles.contactItem}>
+                <MapPin size={13} color="var(--color-mid-green)" style={{ flexShrink: 0 }} />
+                <a
+                  href="https://www.google.com/maps/place/Tallest+Tourguide+%26+Friends/@43.8568344,18.4235815,17z/data=!3m1!4b1!4m6!3m5!1s0x4758c99dd99dd453:0xdf1f0c03f4626494!8m2!3d43.8568344!4d18.4265152!16s%2Fg%2F11nc0x5ysx?entry=ttu&g_ep=EgoyMDI2MDQxNS4wIKXMDSoASAFQAw%3D%3D"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={styles.contactLink}
+                >
+                  Hamdije Kreševljakovića 61, Sarajevo
+                </a>
+              </div>
+              <div style={styles.contactItem}>
+                <Mail size={13} color="var(--color-mid-green)" style={{ flexShrink: 0 }} />
+                <a href={`mailto:${CONTACT_EMAIL}`} style={styles.contactLink}>
+                  {CONTACT_EMAIL}
+                </a>
+              </div>
+              <div style={styles.contactItem}>
+                <Phone size={13} color="var(--color-mid-green)" style={{ flexShrink: 0 }} />
+                <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" style={styles.contactLink}>
+                  {PHONE_DISPLAY}
+                </a>
+              </div>
+            </div>
           </div>
-          <div style={styles.contactItem}>
-            <Mail size={13} color="var(--color-mid-green)" style={{ flexShrink: 0 }} />
-            <a href={`mailto:${CONTACT_EMAIL}`} style={styles.contactLink}>
-              {CONTACT_EMAIL}
-            </a>
-          </div>
-          <div style={styles.contactItem}>
-            <Phone size={13} color="var(--color-mid-green)" style={{ flexShrink: 0 }} />
-            <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" style={styles.contactLink}>
-              {PHONE_DISPLAY}
-            </a>
-          </div>
+          <Button to="/contact" variant="primary" arrow full={isMobile} style={{ flexShrink: 0 }}>
+            Contact Us
+          </Button>
         </div>
       </div>
 
@@ -220,7 +233,6 @@ function Footer() {
           marginBottom: '20px',
         }}>
           {[
-            { to: '/contact', label: 'Contact' },
             { to: '/safe-travels', label: 'Safe Travels' },
             { to: '/booking-conditions', label: 'Booking Conditions' },
             { to: '/practical-info', label: 'Practical Info' },
@@ -229,7 +241,7 @@ function Footer() {
             <Link
               key={to}
               to={to}
-              style={{ ...styles.legalLink, color: hoveredLink === to ? 'var(--color-amber)' : 'rgba(255,255,255,0.35)' }}
+              style={{ ...styles.legalLink, color: hoveredLink === to ? 'var(--color-amber)' : 'rgba(255,255,255,0.55)' }}
               onMouseEnter={() => setHoveredLink(to)}
               onMouseLeave={() => setHoveredLink(null)}
             >
@@ -292,7 +304,7 @@ const styles = {
   brandStatement: {
     fontFamily: 'var(--font-body)',
     fontSize: 'var(--text-small)',
-    color: 'rgba(255,255,255,0.4)',
+    color: 'rgba(255,255,255,0.6)',
     lineHeight: '1.7',
     margin: 0,
   },
@@ -328,7 +340,7 @@ const styles = {
     fontFamily: 'var(--font-body)',
     fontWeight: '600',
     fontSize: '11px',
-    color: 'rgba(255,255,255,0.3)',
+    color: 'rgba(255,255,255,0.48)',
     letterSpacing: '2px',
     textTransform: 'uppercase',
   },
@@ -342,7 +354,7 @@ const styles = {
   footerLink: {
     fontFamily: 'var(--font-body)',
     fontSize: 'var(--text-small)',
-    color: 'rgba(255,255,255,0.55)',
+    color: 'rgba(255,255,255,0.78)',
     textDecoration: 'none',
     transition: 'color 0.2s ease',
   },
@@ -362,14 +374,14 @@ const styles = {
   contactText: {
     fontFamily: 'var(--font-body)',
     fontSize: 'var(--text-small)',
-    color: 'rgba(255,255,255,0.55)',
+    color: 'rgba(255,255,255,0.78)',
     lineHeight: '1.5',
   },
 
   contactLink: {
     fontFamily: 'var(--font-body)',
     fontSize: 'var(--text-small)',
-    color: 'rgba(255,255,255,0.55)',
+    color: 'rgba(255,255,255,0.78)',
     textDecoration: 'none',
   },
 
@@ -417,7 +429,7 @@ const styles = {
   tripAdvisorLabel: {
     fontFamily: 'var(--font-body)',
     fontSize: 'var(--text-small)',
-    color: 'rgba(255,255,255,0.4)',
+    color: 'rgba(255,255,255,0.6)',
     margin: 0,
   },
 
@@ -459,7 +471,7 @@ const styles = {
   legalLink: {
     fontFamily: 'var(--font-body)',
     fontSize: 'var(--text-tiny)',
-    color: 'rgba(255,255,255,0.35)',
+    color: 'rgba(255,255,255,0.55)',
     textDecoration: 'none',
     transition: 'color 0.15s',
   },

@@ -40,9 +40,3 @@ export function processCardPayment() {
   return new Promise((resolve) => setTimeout(resolve, 700))
 }
 
-// 5% discount offered when the customer chooses to pay by card up front.
-export const CARD_DISCOUNT_RATE = 0.05
-
-export function applyCardDiscount(total) {
-  return Math.round(total * (1 - CARD_DISCOUNT_RATE))
-}

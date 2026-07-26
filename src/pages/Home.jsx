@@ -8,7 +8,7 @@
 import SEO from '../components/SEO'
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { Compass, ArrowRight, Star, ChevronDown, ChevronLeft, ChevronRight, Users, UserCheck, ShieldCheck } from 'lucide-react'
+import { Compass, ArrowRight, Star, ChevronDown, ChevronLeft, ChevronRight, Users, UserCheck, ShieldCheck, Heart } from 'lucide-react'
 import TourCard from '../components/TourCard'
 import Button from '../components/Button'
 import HeroSearch from '../components/HeroSearch'
@@ -198,7 +198,10 @@ function Home() {
             rail sits right below the fold there. */}
         {!isMobile && (
           <div style={styles.heroFeatured}>
-            <span style={styles.heroFeaturedLabel}>Traveller favourites</span>
+            <span style={{ ...styles.heroFeaturedLabel, display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+              <Heart size={12} color="var(--color-amber)" fill="var(--color-amber)" />
+              Traveller favourites
+            </span>
             {FEATURED_TOURS.map((t) => (
               <Link key={t.slug} to={`/tours/${t.slug}`} style={styles.heroFeaturedCard} className="hero-featured-card">
                 <img src={t.hero} alt="" style={styles.heroFeaturedThumb} />
@@ -1013,9 +1016,12 @@ hero: {
     letterSpacing: '1.6px',
     color: 'var(--color-amber)',
     marginBottom: '2px',
-    textShadow: '0 1px 8px rgba(0,0,0,0.4)',
+    textShadow: '0 1px 3px rgba(0,0,0,0.6), 0 1px 10px rgba(0,0,0,0.4)',
   },
 
+  // Dark enough (0.6) that the white title stays readable over the lightest
+  // of the rotating hero photos — this corner is where the left-dark gradient
+  // has fully faded out, so the card supplies its own contrast.
   heroFeaturedCard: {
     display: 'flex',
     alignItems: 'center',
@@ -1023,7 +1029,7 @@ hero: {
     padding: '10px',
     borderRadius: '14px',
     textDecoration: 'none',
-    backgroundColor: 'rgba(12, 22, 17, 0.55)',
+    backgroundColor: 'rgba(12, 22, 17, 0.6)',
     border: '1px solid rgba(255,255,255,0.16)',
     backdropFilter: 'blur(10px)',
     WebkitBackdropFilter: 'blur(10px)',
@@ -1049,6 +1055,7 @@ hero: {
     display: '-webkit-box',
     WebkitLineClamp: 2,
     WebkitBoxOrient: 'vertical',
+    textShadow: '0 1px 3px rgba(0,0,0,0.45)',
   },
 
   heroFeaturedMeta: {

@@ -245,7 +245,12 @@
       }
     ],
     "oldPrice": 30,
-    "journalPosts": []
+    "journalPosts": [],
+    "privatePricing": {
+      "mode": "fixed",
+      "fixedPrice": 120
+    },
+    "extraCategories": []
   },
   {
     "id": 3,
@@ -403,7 +408,7 @@
     "rating": 5,
     "reviews": 18,
     "duration": "Full day",
-    "groupSize": 12,
+    "groupSize": 16,
     "badge": "Bestseller",
     "hero": "/uploads/mostar-day-trip-from-sarajevo-6qc2ulct.webp",
     "detailHero": "/uploads/tour-5-hero.webp",
@@ -544,17 +549,35 @@
       {
         "label": "Kravice Waterfalls entry ticket",
         "description": "Skip the queue at the falls.",
-        "price": 5,
+        "price": 10,
         "perPerson": true
       },
       {
         "label": "Traditional Herzegovinian lunch",
-        "description": "Three courses at a local family restaurant.",
+        "description": "",
         "price": 18,
         "perPerson": true
       }
     ],
-    "oldPrice": 85
+    "oldPrice": 85,
+    "privatePricing": {
+      "mode": "tiered",
+      "tiers": [
+        {
+          "maxPeople": 2,
+          "price": 200
+        },
+        {
+          "maxPeople": 7,
+          "price": 420
+        },
+        {
+          "maxPeople": 16,
+          "price": 850
+        }
+      ]
+    },
+    "extraCategories": []
   },
   {
     "id": 5,
@@ -707,9 +730,9 @@
     "rating": 5,
     "reviews": 4,
     "duration": "2 hours",
-    "groupSize": 8,
-    "hero": "/uploads/home-hosted-dinner-37rhoiaq.webp",
-    "detailHero": "/uploads/home-hosted-dinner-jo91k279.webp",
+    "groupSize": 6,
+    "hero": "/uploads/home-hosted-dinner-ncci3p8s.webp",
+    "detailHero": "/uploads/home-hosted-dinner-gqqnbhal.webp",
     "description": "<p>There is a version of travel where you eat well but never really connect. This is not that. This evening opens a genuine Sarajevo home for a dinner built around food, conversation, and the kind of hospitality Bosnia has always been quietly known for. No restaurant can recreate it, because it was never designed to be replicated — only shared.</p><p>Your host shapes the menu around the season and your preferences, but two dishes anchor every table: burek, the hand-stretched meat pastry that defines Bosnian baking, and klepe, delicate dumplings served with garlic yogurt. Around them, expect slow-cooked dishes, homemade preserves, and a dessert that closes the evening properly. You leave the way guests in Bosnia always leave — full, welcomed, and already telling someone about it.</p>",
     "highlights": [
       "A Genuine Local Home — Not a restaurant, not a staged setting. A real Sarajevo household opens its doors for the evening.",
@@ -788,19 +811,45 @@
     "fitnessNote": null,
     "gallery": [
       "/uploads/home-hosted-dinner-b1dtwgcd.webp",
-      "/uploads/home-hosted-dinner-ni5ri4l6.webp",
+      "/uploads/home-hosted-dinner-k581dcge.webp",
       "/uploads/home-hosted-dinner-lc2mgl7t.webp",
+      "/uploads/home-hosted-dinner-5lfufa6f.webp",
       "/uploads/home-hosted-dinner-prf3e7wc.webp",
       "/uploads/home-hosted-dinner-tgj2w1ce.webp"
     ],
     "mapWaypoints": [],
     "mapProfile": "foot-walking",
     "id": 10,
-    "oldPrice": null,
-    "extras": [],
+    "oldPrice": 40,
+    "extras": [
+      {
+        "label": "Accomodation Pick-Up & Drop Off",
+        "description": "The price is per ride and not per person. It covers locations in Sarajevo.",
+        "price": 20,
+        "perPerson": false
+      }
+    ],
     "journalPosts": [
       "bosnian-food-guide-cuisine"
-    ]
+    ],
+    "privatePricing": {
+      "mode": "tiered",
+      "tiers": [
+        {
+          "maxPeople": 1,
+          "price": 55
+        },
+        {
+          "maxPeople": 3,
+          "price": 95
+        },
+        {
+          "maxPeople": 6,
+          "price": 150
+        }
+      ]
+    },
+    "extraCategories": []
   },
   {
     "id": 8,
@@ -951,7 +1000,10 @@
         "label": "Cold Creek"
       }
     ],
-    "mapProfile": "foot-hiking"
+    "mapProfile": "foot-hiking",
+    "extraCategories": [
+      "day-trips"
+    ]
   },
   {
     "id": 6,
@@ -1111,7 +1163,7 @@
     "rating": 5,
     "reviews": 2,
     "duration": "Full day",
-    "groupSize": 12,
+    "groupSize": 16,
     "badge": "Emotional",
     "hero": "/uploads/srebrenica-7.webp",
     "detailHero": "/uploads/srebrenica-7.webp",
@@ -1227,7 +1279,364 @@
       "srebrenica-what-i-carried-and-what-history-still-carries"
     ],
     "oldPrice": null,
-    "extras": []
+    "extras": [],
+    "extraCategories": [
+      "day-trips"
+    ],
+    "privatePricing": {
+      "mode": "tiered",
+      "tiers": [
+        {
+          "maxPeople": 3,
+          "price": 240
+        },
+        {
+          "maxPeople": 7,
+          "price": 400
+        },
+        {
+          "maxPeople": 16,
+          "price": 600
+        }
+      ]
+    }
+  },
+  {
+    "id": 14,
+    "slug": "sarajevo-sketch-tour",
+    "category": "city-walks",
+    "city": "Sarajevo",
+    "region": "Bosnia & Herzegovina",
+    "title": "Sarajevo Sketch and Paint Tour: Draw the City with a Local Illustrator",
+    "price": 55,
+    "rating": 5,
+    "reviews": 0,
+    "duration": "3 hours",
+    "groupSize": 6,
+    "badge": "New",
+    "hero": "/uploads/sarajevo-sketch-tour-osauti7o.webp",
+    "detailHero": "/uploads/sarajevo-sketch-tour-ziu2s6nh.webp",
+    "description": "Most tours give you Sarajevo to look at. This one gives you Sarajevo to draw. You choose three locations from a curated list — an Ottoman fortress, a bridge with a spiral in its centre, a 15th-century mosque, a neo-Moorish city hall — and at each one, you sit down and sketch it. Your guide is a working illustrator who grew up here. They’ll show you how to look at a building before you draw it, tell you its story while you do, and make sure you leave each location with something worth keeping. All materials are provided. No experience is required.\n\nUrban sketching is the practice of drawing places as you find them — outdoors, in real time, with the sounds and light of the city around you. It slows you down in a way that photographs can’t. When you draw a minaret, you have to look at it for several minutes, and you notice things a camera misses. Sarajevo is one of the most visually layered cities in Europe, and this tour was built around that fact.\n\nBefore the tour starts, you choose three locations from the five below. At each one, you spend up to 45 minutes sketching and painting with guidance — technique hints, compositional suggestions, historical context. Between locations, the walk itself is its own short tour: Sarajevo’s streets are full of things to point at, and your guide knows all of them. Refreshments are included along the way, and the pace is unhurried throughout.\n\nAt the end of three hours, you have a sketchbook with three drawings of Sarajevo made by you, in the places themselves. Most guests say it’s the souvenir they were most glad to have — not a photograph taken of something, but a record of actually looking at it. The quality of the drawing matters far less than the quality of the attention, and your guide’s job is to help you pay that attention.",
+    "highlights": [
+      "Yellow Fortress (Žuta Tabija) — The widest panoramic view of Sarajevo on foot: minarets, red rooftops and the hills closing in from every side. Good for beginners who want a clear subject with real depth.",
+      "Academy of Fine Arts & Festina Lente Bridge — Four eras in one small stretch: an Austro-Hungarian academy, a spiral pedestrian bridge, a modern square and one of Bosnia’s best-known public sculptures. Good for architectural detail and mixed-era composition.",
+      "Emperor’s Mosque (Careva Džamija) — One of the oldest standing buildings in the city, built in the 15th century, with a courtyard, fountain and stonework that reward careful, symmetrical composition.",
+      "City Hall & the House of Spite — The neo-Moorish Vijećnica, burned in the siege and painstakingly rebuilt, standing across from Inat Kuća, a Bosnian home relocated stone by stone in defiance. Two buildings, one of the best stories in Sarajevo.",
+      "Mejdan & the Musical Pavilion — A quieter, greener stretch of the Miljacka, ideal for sketching at a slower pace among trees and water rather than the busier streets."
+    ],
+    "includes": [
+      "Guided route between all three chosen locations",
+      "Full urban sketching kit: sketchbook, pencils, fineliner pens, travel watercolour set, brushes",
+      "Technique guidance and compositional hints at every stop",
+      "Historical context at each location",
+      "Short walking tour between locations",
+      "Refreshments during the tour"
+    ],
+    "excludes": [
+      "Personal travel insurance",
+      "Gratuities (appreciated, never expected)",
+      "Additional food or drinks beyond the included refreshments"
+    ],
+    "faqs": [
+      {
+        "question": "Do I need to know how to draw?",
+        "answer": "No. The tour is designed for complete beginners and experienced sketchers equally. The guidance adjusts to whoever is holding the pencil. You are not being assessed — the point is to look carefully and put something down on paper, not to produce a finished artwork."
+      },
+      {
+        "question": "What materials are provided?",
+        "answer": "A sketchbook, pencils, fineliner pens, a travel watercolour set, brushes, and a small water container. Everything is yours to keep at the end of the tour."
+      },
+      {
+        "question": "Can I bring my own materials?",
+        "answer": "Yes — if you sketch regularly and prefer your own kit, bring it. The included materials are there to remove the barrier, not to replace preference."
+      },
+      {
+        "question": "How do we choose the three locations?",
+        "answer": "You choose before the tour, either when you book or by contacting us directly. Your guide then builds the walking route and narrative around your selection. If you can’t decide, we’ll suggest a combination based on the time of day and what’s worth seeing that week."
+      },
+      {
+        "question": "Is this suitable for children?",
+        "answer": "Yes, from age 8 upward with an adult. Younger children who are interested in drawing are welcome — the guidance adapts. The tour is slow-paced and non-strenuous."
+      },
+      {
+        "question": "What happens if it rains?",
+        "answer": "Some locations have covered or sheltered areas and the tour continues. In heavy rain, we’ll adjust the route to prioritise sheltered spots or reschedule. We’ll contact you in advance if conditions are likely to be a problem."
+      },
+      {
+        "question": "Is this a class or a tour?",
+        "answer": "Both. You’re moving through the city with a guide who knows it well — that’s the tour. At each location you’re also receiving individual guidance on how to approach what you’re drawing — that’s the instruction. Neither element dominates the other."
+      },
+      {
+        "question": "Can I book this for a group — a birthday, corporate event, or hen party?",
+        "answer": "Yes. Private bookings for groups are available — contact us directly and we’ll discuss the format, location combinations, and any specific preferences."
+      }
+    ],
+    "meetingPoint": "In front of the Tallest Tourguide & Friends office, Hamdije Kresevljakovica 61, Sarajevo. Right next to the Viking Pub.",
+    "startingTimes": [
+      "10 AM"
+    ],
+    "languages": [
+      "english",
+      "bosnian"
+    ],
+    "rightFor": [
+      "Complete beginners who’ve never sketched, and experienced artists alike",
+      "Guests who want a slower, more attentive way to see Sarajevo",
+      "Families with children aged 8 and up who enjoy hands-on activities",
+      "Anyone who’d rather take home a drawing than another photograph"
+    ],
+    "notRightFor": [
+      "Guests looking for a fast-paced sightseeing tour rather than time to sit and draw",
+      "Young children without an accompanying adult",
+      "Anyone who’d rather not sit and work outdoors for stretches of up to 45 minutes"
+    ],
+    "accessibility": {
+      "walkingDistanceKm": null,
+      "drivingDistanceKm": null,
+      "walkingDurationMin": null,
+      "drivingDurationMin": null,
+      "durationMin": 180,
+      "elevationGainM": null,
+      "effortLevel": "low",
+      "suitability": {
+        "wheelchair": null,
+        "stroller": null,
+        "smallChildren": "partial",
+        "children": "yes",
+        "pregnancy": "yes",
+        "seniors": "yes",
+        "pets": null
+      },
+      "requirements": [],
+      "terrain": "Mostly seated at each sketching stop, with short walks between locations on paved city streets",
+      "notes": "Light physical demand — mostly seated at each location, with short walks between. Suitable for age 8+ with an accompanying adult. Some locations have covered or sheltered spots if it rains."
+    },
+    "subtitle": "Three locations, three hours, and a sketchbook full of the city — guided by a local illustrator. No experience needed.",
+    "gallery": [],
+    "mapWaypoints": [
+      {
+        "lat": 43.85696584469741,
+        "lng": 18.427094566825225,
+        "label": "Tallest Tourguide & Friends Office"
+      },
+      {
+        "lat": 43.8615,
+        "lng": 18.4373,
+        "label": "Yellow Fortress — Žuta Tabija"
+      },
+      {
+        "lat": 43.8583,
+        "lng": 18.4308,
+        "label": "Emperor's Mosque — Careva Džamija"
+      },
+      {
+        "lat": 43.8590211484846,
+        "lng": 18.43406468291093,
+        "label": "City Hall (Vijećnica) & Inat Kuća"
+      },
+      {
+        "lat": 43.8556,
+        "lng": 18.4189,
+        "label": "Academy of Fine Arts & Festina Lente Bridge"
+      },
+      {
+        "lat": 43.8570431536568,
+        "lng": 18.428447488310436,
+        "label": "Mejdan & Musical Pavilion"
+      }
+    ],
+    "mapProfile": "foot-walking",
+    "fitnessNote": {
+      "type": "physical",
+      "level": "Easy — suitable for all fitness levels",
+      "detail": "Light physical demand: mostly seated at each location, with short walks between on paved city streets. Suitable for complete beginners to experienced sketchers, and children aged 8+ with an accompanying adult."
+    },
+    "extras": [],
+    "oldPrice": null,
+    "journalPosts": [],
+    "extraCategories": [
+      "food-culture"
+    ],
+    "privatePricing": {
+      "mode": "quote"
+    }
+  },
+  {
+    "id": 11,
+    "slug": "trebevic-hiking-tour-sarajevo",
+    "category": "adventure",
+    "city": "Sarajevo",
+    "region": "Bosnia & Herzegovina",
+    "title": "Trebević Full Day Hike: Olympic Mountain & a Local Lunch",
+    "price": 53,
+    "rating": 5,
+    "reviews": 3,
+    "duration": "Full day",
+    "groupSize": 12,
+    "badge": "Active",
+    "hero": "/uploads/trebevic-hiking-tour-sarajevo-cyfvle7k.webp",
+    "detailHero": "/uploads/trebevic-hiking-tour-sarajevo-4d96mp82.webp",
+    "description": "<p>Trebević rises directly above Sarajevo's old town — you can see the ridge from Baščaršija on a clear day, and most visitors never go up. This tour puts you on it for a full day: a well-marked trail that passes through 1984 Olympic history, the silence of the summit, and a home-cooked lunch in the first neighbourhood on the descent back into the city. The hike follows well-marked trails up through Trebević's beech and pine forest. Your local guide walks with you the entire day — not as a commentary track, but as the kind of person who actually grew up here and has something to say. The stories start on the trail and don't stop until the food arrives. Halfway up, you reach the 1984 Winter Olympics bobsleigh and luge track — a long concrete shell now threaded with graffiti and wild vegetation. It's one of the most photographed spots in Bosnia and one of the least understood. Your guide carries three chapters of its story: the Games, the siege, and what it means to Sarajevans today. This stop changes the rest of the hike. The trail continues to Trebević's high point, where Sarajevo spreads out below in full — minarets, red rooftops, the surrounding hills. After that, the path leads down into the first traditional mahala at the city's edge, where a local woman opens her door and serves a meal she's been making since morning. No restaurant logic. Just Bosnian home food, eaten the right way.</p>",
+    "highlights": [
+      "Minibus from City Center — We meet at a central Sarajevo location and drive up to the starting hill. A short ride that saves your legs for the mountain ahead.",
+      "The Forest Trail — A steady, well-marked climb through Trebević's beech and pine forest, with your local guide beside you the entire way — not narrating, just talking, the way someone who actually grew up here does.",
+      "The Olympic Bobsleigh Track — Halfway up, the 1984 Winter Olympics bobsled and luge track appears: a long concrete shell now threaded with graffiti and wild vegetation. Your guide carries three chapters of its story — the Games, the siege, and what it means to Sarajevans today.",
+      "Planinska Kuća (Mountain House) — A rest stop for coffee, juice, or a light snack, included and optional. A chance to catch your breath before the final push.",
+      "Trebević Summit — The highest point on the route, with Sarajevo's minarets, red rooftops, and surrounding hills spread out below in full.",
+      "Descent into the Mahala — The path down leads into the first traditional neighbourhood on the route: stone houses, quiet lanes, a Sarajevo most guests never see.",
+      "Home-Hosted Lunch — A local woman has been cooking since morning. You sit at her table for a home-cooked Bosnian meal — no restaurant logic, just food made the right way."
+    ],
+    "fitnessNote": {
+      "type": "physical",
+      "level": "Moderate fitness required",
+      "detail": "This tour involves 8–10 km of hiking with roughly 600 m of elevation gain on well-marked forest trails. Guests should be comfortable walking for several hours at a steady pace. Not recommended for guests with significant mobility limitations or heart conditions."
+    },
+    "includes": [
+      "Minibus transfer from city center to trailhead",
+      "Professional hiking guide",
+      "Local cultural guide throughout the full day",
+      "Home-hosted dinner in a Sarajevo mahala",
+      "Optional refreshments at the mountain house"
+    ],
+    "excludes": [
+      "Personal travel insurance",
+      "Gratuities (appreciated, never expected)",
+      "Additional food or drinks beyond what's listed"
+    ],
+    "faqs": [
+      {
+        "question": "Do I need to be an experienced hiker?",
+        "answer": "No. The trail is well-established and the pace is relaxed. If you can walk for a few hours without difficulty, this tour is within reach. We're not racing anyone."
+      },
+      {
+        "question": "What should I wear and bring?",
+        "answer": "Sturdy walking shoes or hiking boots, layered clothing, and something waterproof. In summer: sunscreen, a hat, and water. In winter: warm layers and sole grip. We'll send a full kit list when you book."
+      },
+      {
+        "question": "Is the home dinner suitable for dietary restrictions?",
+        "answer": "Yes — tell us when you book. Our host can accommodate vegetarian meals and most common dietary needs with advance notice. We pass the information along directly."
+      },
+      {
+        "question": "How large are the groups?",
+        "answer": "<p>Eight people is the maximum, and two people is the minimum. That's a deliberate limit — small enough that the guides can actually talk to each person, and small enough that dinner at someone's home still feels like dinner at someone's home.</p>"
+      },
+      {
+        "question": "Can one person book?",
+        "answer": "<p>Yes, but the minimum for the tour start is two people. Private bookings are also available — contact us directly for pricing.</p>"
+      },
+      {
+        "question": "Is this suitable for children?",
+        "answer": "We recommend this tour for ages 10 and up, accompanied by an adult. The trail is not technical, but it is a full day of walking."
+      },
+      {
+        "question": "What happens if the weather is bad?",
+        "answer": "Trebević in light rain is fine — we go. In serious weather, we contact you in advance with options to reschedule. We don't cancel lightly."
+      },
+      {
+        "question": "Where exactly does the tour start?",
+        "answer": "In front of the Tallest Tourguide & Friends office, Hamdije Kreševljakovića 61, Sarajevo — right next to the Viking Pub. The minibus departs from there."
+      }
+    ],
+    "meetingPoint": "In front of the Tallest Tourguide & Friends office, Hamdije Kresevljakovica 61, Sarajevo. Right next to the Viking Pub.",
+    "startingTimes": [
+      "08 AM"
+    ],
+    "languages": [
+      "english",
+      "bosnian"
+    ],
+    "rightFor": [
+      "Active travelers wanting Olympic history and mountain views in one day",
+      "Anyone who wants a real Bosnian home meal, not a restaurant stop",
+      "Guests comfortable with a full day of moderate walking",
+      "Groups or couples wanting a small-group, story-led hike"
+    ],
+    "notRightFor": [
+      "Guests wanting a short or easy stroll",
+      "Children under 10",
+      "Those with significant mobility limitations or heart conditions"
+    ],
+    "accessibility": {
+      "walkingDistanceKm": 9,
+      "drivingDistanceKm": 5,
+      "walkingDurationMin": 300,
+      "drivingDurationMin": 15,
+      "durationMin": 420,
+      "elevationGainM": 320,
+      "effortLevel": "high",
+      "suitability": {
+        "wheelchair": "no",
+        "stroller": "no",
+        "smallChildren": "no",
+        "children": "partial",
+        "pregnancy": "no",
+        "seniors": "partial",
+        "pets": "yes"
+      },
+      "requirements": [
+        {
+          "key": "walkingKm",
+          "label": "Walk a minimum distance on uneven ground",
+          "detail": ""
+        },
+        {
+          "key": "sun",
+          "label": "Tolerate prolonged sun exposure",
+          "detail": ""
+        }
+      ],
+      "terrain": "Forested mountain trail with a steady, well-marked climb; no technical climbing",
+      "notes": "Walking: 8–10 km round trip with roughly 600 m of elevation gain over a full day\n\nNot suitable for guests with significant mobility limitations or heart conditions. Sturdy walking shoes and layered clothing are essential, with extra grip and waterproofs recommended in autumn and spring. "
+    },
+    "subtitle": "From the Bobsleigh Track to a Neighbour's Kitchen — a Full Mountain Day Above Sarajevo",
+    "gallery": [
+      "/uploads/trebevic-hiking-tour-sarajevo-xm2kl4e0.webp",
+      "/uploads/trebevic-hiking-tour-sarajevo-zfxz286j.webp",
+      "/uploads/trebevic-hiking-tour-sarajevo-stfemfp5.webp",
+      "/uploads/trebevic-hiking-tour-sarajevo-a9jtugxs.webp",
+      "/uploads/trebevic-hiking-tour-sarajevo-8udmvsen.webp",
+      "/uploads/trebevic-hiking-tour-sarajevo-2fuks9e6.webp",
+      "/uploads/trebevic-hiking-tour-sarajevo-ds8yskfv.webp",
+      "/uploads/trebevic-hiking-tour-sarajevo-c7swvl4m.webp",
+      "/uploads/trebevic-hiking-tour-sarajevo-r40q0uwn.webp",
+      "/uploads/trebevic-hiking-tour-sarajevo-bbyogtsb.webp"
+    ],
+    "mapWaypoints": [
+      {
+        "lat": 43.8563,
+        "lng": 18.4131,
+        "label": "Sarajevo"
+      },
+      {
+        "lat": 43.8306,
+        "lng": 18.4531,
+        "label": "Olympic Bobsleigh Track"
+      },
+      {
+        "lat": 43.833,
+        "lng": 18.4604,
+        "label": "Trebević Summit"
+      },
+      {
+        "lat": 43.84735001760639,
+        "lng": 18.43515025727637,
+        "label": "Spomen Obiljezje Kazani"
+      },
+      {
+        "lat": 43.84718817338949,
+        "lng": 18.431551721528532,
+        "label": "Bistrik Mahala Lunch"
+      },
+      {
+        "lat": 43.850071639285126,
+        "lng": 18.430876052305187,
+        "label": "Bistrik Creek"
+      }
+    ],
+    "mapProfile": "foot-hiking",
+    "oldPrice": 59,
+    "extras": [],
+    "extraCategories": []
   },
   {
     "id": 12,
@@ -1530,7 +1939,17 @@
     "extras": [],
     "journalPosts": [
       "bosnian-food-guide-cuisine"
-    ]
+    ],
+    "privatePricing": {
+      "mode": "tiered",
+      "tiers": [
+        {
+          "maxPeople": 4,
+          "price": 180
+        }
+      ]
+    },
+    "extraCategories": []
   },
   {
     "id": 7,
@@ -1666,183 +2085,10 @@
         "label": "Jewish Cemetery"
       }
     ],
-    "mapProfile": "foot-walking"
-  },
-  {
-    "id": 11,
-    "slug": "trebevic-hiking-tour-sarajevo",
-    "category": "adventure",
-    "city": "Sarajevo",
-    "region": "Bosnia & Herzegovina",
-    "title": "Trebević Full Day Hike: Olympic Trails & a Home Dinner",
-    "price": 53,
-    "rating": 5,
-    "reviews": 3,
-    "duration": "Full day",
-    "groupSize": 12,
-    "badge": "Active",
-    "hero": "/uploads/trebevic-hiking-tour-sarajevo-cyfvle7k.webp",
-    "detailHero": "/uploads/trebevic-hiking-tour-sarajevo-4d96mp82.webp",
-    "description": "Trebević rises directly above Sarajevo's old town — you can see the ridge from Baščaršija on a clear day, and most visitors never go up. This tour puts you on it for a full day: a well-marked trail that passes through 1984 Olympic history, the silence of the summit, and a home-cooked dinner in the first neighbourhood on the descent back into the city.\n\nThe hike follows well-marked trails up through Trebević's beech and pine forest. Your local guide walks with you the entire day — not as a commentary track, but as the kind of person who actually grew up here and has something to say. The stories start on the trail and don't stop until the food arrives.\n\nHalfway up, you reach the 1984 Winter Olympics bobsleigh and luge track — a long concrete shell now threaded with graffiti and wild vegetation. It's one of the most photographed spots in Bosnia and one of the least understood. Your guide carries three chapters of its story: the Games, the siege, and what it means to Sarajevans today. This stop changes the rest of the hike.\n\nThe trail continues to Trebević's high point, where Sarajevo spreads out below in full — minarets, red rooftops, the surrounding hills. After that, the path leads down into the first traditional mahala at the city's edge, where a local woman opens her door and serves a meal she's been making since morning. No restaurant logic. Just Bosnian home food, eaten the right way.",
-    "highlights": [
-      "Minibus from City Center — We meet at a central Sarajevo location and drive up to the starting hill. A short ride that saves your legs for the mountain ahead.",
-      "The Forest Trail — A steady, well-marked climb through Trebević's beech and pine forest, with your local guide beside you the entire way — not narrating, just talking, the way someone who actually grew up here does.",
-      "The Olympic Bobsleigh Track — Halfway up, the 1984 Winter Olympics bobsled and luge track appears: a long concrete shell now threaded with graffiti and wild vegetation. Your guide carries three chapters of its story — the Games, the siege, and what it means to Sarajevans today.",
-      "Planinska Kuća (Mountain House) — A rest stop for coffee, juice, or a light snack, included and optional. A chance to catch your breath before the final push.",
-      "Trebević Summit — The highest point on the route, with Sarajevo's minarets, red rooftops, and surrounding hills spread out below in full.",
-      "Descent into the Mahala — The path down leads into the first traditional neighbourhood on the route: stone houses, quiet lanes, a Sarajevo most guests never see.",
-      "Home-Hosted Dinner — A local woman has been cooking since morning. You sit at her table for a home-cooked Bosnian meal — no restaurant logic, just food made the right way."
-    ],
-    "fitnessNote": {
-      "type": "physical",
-      "level": "Moderate fitness required",
-      "detail": "This tour involves 8–10 km of hiking with roughly 600 m of elevation gain on well-marked forest trails. Guests should be comfortable walking for several hours at a steady pace. Not recommended for guests with significant mobility limitations or heart conditions."
-    },
-    "includes": [
-      "Minibus transfer from city center to trailhead",
-      "Professional hiking guide",
-      "Local cultural guide throughout the full day",
-      "Home-hosted dinner in a Sarajevo mahala",
-      "Optional refreshments at the mountain house"
-    ],
-    "excludes": [
-      "Personal travel insurance",
-      "Gratuities (appreciated, never expected)",
-      "Additional food or drinks beyond what's listed"
-    ],
-    "faqs": [
-      {
-        "question": "Do I need to be an experienced hiker?",
-        "answer": "No. The trail is well-established and the pace is relaxed. If you can walk for a few hours without difficulty, this tour is within reach. We're not racing anyone."
-      },
-      {
-        "question": "What should I wear and bring?",
-        "answer": "Sturdy walking shoes or hiking boots, layered clothing, and something waterproof. In summer: sunscreen, a hat, and water. In winter: warm layers and sole grip. We'll send a full kit list when you book."
-      },
-      {
-        "question": "Is the home dinner suitable for dietary restrictions?",
-        "answer": "Yes — tell us when you book. Our host can accommodate vegetarian meals and most common dietary needs with advance notice. We pass the information along directly."
-      },
-      {
-        "question": "How large are the groups?",
-        "answer": "<p>Eight people is the maximum, and two people is the minimum. That's a deliberate limit — small enough that the guides can actually talk to each person, and small enough that dinner at someone's home still feels like dinner at someone's home.</p>"
-      },
-      {
-        "question": "Can one person book?",
-        "answer": "<p>Yes, but the minimum for the tour start is two people. Private bookings are also available — contact us directly for pricing.</p>"
-      },
-      {
-        "question": "Is this suitable for children?",
-        "answer": "We recommend this tour for ages 10 and up, accompanied by an adult. The trail is not technical, but it is a full day of walking."
-      },
-      {
-        "question": "What happens if the weather is bad?",
-        "answer": "Trebević in light rain is fine — we go. In serious weather, we contact you in advance with options to reschedule. We don't cancel lightly."
-      },
-      {
-        "question": "Where exactly does the tour start?",
-        "answer": "In front of the Tallest Tourguide & Friends office, Hamdije Kreševljakovića 61, Sarajevo — right next to the Viking Pub. The minibus departs from there."
-      }
-    ],
-    "meetingPoint": "In front of the Tallest Tourguide & Friends office, Hamdije Kresevljakovica 61, Sarajevo. Right next to the Viking Pub.",
-    "startingTimes": [
-      "08 AM"
-    ],
-    "languages": [
-      "english",
-      "bosnian"
-    ],
-    "rightFor": [
-      "Active travelers wanting Olympic history and mountain views in one day",
-      "Anyone who wants a real Bosnian home meal, not a restaurant stop",
-      "Guests comfortable with a full day of moderate walking",
-      "Groups or couples wanting a small-group, story-led hike"
-    ],
-    "notRightFor": [
-      "Guests wanting a short or easy stroll",
-      "Children under 10",
-      "Those with significant mobility limitations or heart conditions"
-    ],
-    "accessibility": {
-      "walkingDistanceKm": 9,
-      "drivingDistanceKm": 5,
-      "walkingDurationMin": 300,
-      "drivingDurationMin": 15,
-      "durationMin": 420,
-      "elevationGainM": 320,
-      "effortLevel": "high",
-      "suitability": {
-        "wheelchair": "no",
-        "stroller": "no",
-        "smallChildren": "no",
-        "children": "partial",
-        "pregnancy": "no",
-        "seniors": "partial",
-        "pets": "yes"
-      },
-      "requirements": [
-        {
-          "key": "walkingKm",
-          "label": "Walk a minimum distance on uneven ground",
-          "detail": ""
-        },
-        {
-          "key": "sun",
-          "label": "Tolerate prolonged sun exposure",
-          "detail": ""
-        }
-      ],
-      "terrain": "Forested mountain trail with a steady, well-marked climb; no technical climbing",
-      "notes": "Walking: 8–10 km round trip with roughly 600 m of elevation gain over a full day\n\nNot suitable for guests with significant mobility limitations or heart conditions. Sturdy walking shoes and layered clothing are essential, with extra grip and waterproofs recommended in autumn and spring. "
-    },
-    "subtitle": "From the Bobsleigh Track to a Neighbour's Kitchen — a Full Mountain Day Above Sarajevo",
-    "gallery": [
-      "/uploads/trebevic-hiking-tour-sarajevo-xm2kl4e0.webp",
-      "/uploads/trebevic-hiking-tour-sarajevo-zfxz286j.webp",
-      "/uploads/trebevic-hiking-tour-sarajevo-stfemfp5.webp",
-      "/uploads/trebevic-hiking-tour-sarajevo-a9jtugxs.webp",
-      "/uploads/trebevic-hiking-tour-sarajevo-8udmvsen.webp",
-      "/uploads/trebevic-hiking-tour-sarajevo-2fuks9e6.webp",
-      "/uploads/trebevic-hiking-tour-sarajevo-ds8yskfv.webp",
-      "/uploads/trebevic-hiking-tour-sarajevo-c7swvl4m.webp",
-      "/uploads/trebevic-hiking-tour-sarajevo-r40q0uwn.webp",
-      "/uploads/trebevic-hiking-tour-sarajevo-bbyogtsb.webp"
-    ],
-    "mapWaypoints": [
-      {
-        "lat": 43.8563,
-        "lng": 18.4131,
-        "label": "Sarajevo"
-      },
-      {
-        "lat": 43.8306,
-        "lng": 18.4531,
-        "label": "Olympic Bobsleigh Track"
-      },
-      {
-        "lat": 43.833,
-        "lng": 18.4604,
-        "label": "Trebević Summit"
-      },
-      {
-        "lat": 43.84735001760639,
-        "lng": 18.43515025727637,
-        "label": "Spomen Obiljezje Kazani"
-      },
-      {
-        "lat": 43.84718817338949,
-        "lng": 18.431551721528532,
-        "label": "Bistrik Mahala Lunch"
-      },
-      {
-        "lat": 43.850071639285126,
-        "lng": 18.430876052305187,
-        "label": "Bistrik Creek"
-      }
-    ],
-    "mapProfile": "foot-hiking",
-    "oldPrice": 59,
-    "extras": []
+    "mapProfile": "foot-walking",
+    "extraCategories": [
+      "city-walks"
+    ]
   },
   {
     "id": 13,
@@ -2021,5 +2267,180 @@
       }
     ],
     "oldPrice": null
+  },
+  {
+    "id": 15,
+    "slug": "sarajevo-century-study-tour",
+    "category": "history",
+    "extraCategories": [
+      "city-walks"
+    ],
+    "city": "Sarajevo",
+    "region": "Bosnia & Herzegovina",
+    "title": "The Sarajevo Century: From 1914 to Yugoslavia",
+    "subtitle": "A study tour across three chapters of the 20th century — the empire, the occupation, and the country that no longer exists.",
+    "price": 60,
+    "rating": 5,
+    "reviews": 0,
+    "duration": "3–4 hours",
+    "groupSize": 12,
+    "badge": "New",
+    "hero": "/uploads/journal-world-war-one-sarajevo-assassination-franz-ferdinand-hero.webp",
+    "detailHero": "/uploads/journal-world-war-one-sarajevo-assassination-franz-ferdinand-hero.webp",
+    "description": "Sarajevo is where the 20th century began. On 28 June 1914, on a street corner beside the Latin Bridge, a shot was fired that ended one empire and started a war that reordered the world. This tour begins at that corner and walks west, following the century forward — through the Austro-Hungarian city, the occupation of 1941–1945, the founding of a country, and forty-five years of Yugoslavia. It ends inside the Historical Museum of Bosnia and Herzegovina, in a modernist building purpose-built to house that story.\n\nThis is a study tour. It is designed for people who want the detail, the dates, the contested interpretations, and the honest gaps — delivered clearly and in sequence, not as anecdote. It moves slowly, stops for long explanations, names the historians who disagree with each other, and tells you where the evidence is thin.\n\nIf you want a light, entertaining introduction to Sarajevo, we have other tours and we'll happily point you to them. This one is dry by design and well arranged by intention.",
+    "highlights": [
+      "Museum of Sarajevo 1878–1918 — Austro-Hungarian Sarajevo and the assassination, told with original artefacts, Young Bosnia mugshots and period press coverage. Entry included.",
+      "The assassination corner and the Latin Bridge — The exact spot where Gavrilo Princip fired, the motorcade's wrong turn, and which parts of the popular version are myth.",
+      "The Austro-Hungarian city — Vijećnica, the Landesbank and the tram line, read as the built argument of a colonial administration that expected to stay.",
+      "Vječna vatra, the Eternal Flame — The WWII memorial's inscription read in full and unpacked line by line: the occupation, the Holocaust in Sarajevo, and the liberation of 6 April 1945.",
+      "Maršala Tita street — The main artery of socialist Sarajevo: Yugoslav-era institutions and the visible layering of three states on one street.",
+      "Marijin Dvor and Parliament Square — Juraj Neidhardt's socialist-modernist plan for a new civic centre, partially realised and readable as both ambition and its limits.",
+      "Historical Museum of Bosnia and Herzegovina — The tour's conclusion inside a 1963 modernist landmark: the Yugoslav-era collection and life in socialist Bosnia. Entry included.",
+      "ZAVNOBiH, 1943 — The founding of modern Bosnian statehood, and why 25 November still matters more than most visitors ever hear.",
+      "Yugonostalgia, addressed directly — The survey data and the scholarship, the warm version and the other side of the ledger. You do the concluding."
+    ],
+    "includes": [
+      "Entry to the Museum of Sarajevo 1878–1918",
+      "Entry to the Historical Museum of Bosnia and Herzegovina",
+      "Expert guided interpretation throughout (3–4 hours)",
+      "Refreshment stop en route",
+      "Printed source and reading list to take away",
+      "Small group, max 12",
+      "Free cancellation up to 24h before"
+    ],
+    "excludes": [
+      "Personal travel insurance",
+      "Gratuities (appreciated, never expected)",
+      "Food and drinks beyond the included refreshment"
+    ],
+    "faqs": [
+      {
+        "question": "How detailed is “detailed”?",
+        "answer": "Dates, names, primary documents, and competing historiography. You will hear the text of the ZAVNOBiH resolution and the Eternal Flame inscription, and which claims about 1914 are securely established versus contested. If a question has no settled answer, your guide will say so rather than pick one."
+      },
+      {
+        "question": "Do I need to know Balkan history beforehand?",
+        "answer": "No. The tour is built as a sequence and assumes no prior knowledge. It does assume you want the full version rather than the summary. Guests who have read Rebecca West, Misha Glenny, Noel Malcolm, or Marko Attila Hoare will find plenty to push back on — which we welcome."
+      },
+      {
+        "question": "Are both museum entries really included in the €60?",
+        "answer": "Yes. The price covers entry to the Museum of Sarajevo 1878–1918 and the Historical Museum of Bosnia and Herzegovina, plus the full guided programme."
+      },
+      {
+        "question": "Is this a war tour?",
+        "answer": "No. This tour covers the two world wars and the Yugoslav period, and it ends in 1992. The siege is referenced where it bears on the sites, but it is the subject of our separate Sarajevo War Tour, not this one."
+      },
+      {
+        "question": "Will I get a political line pushed at me?",
+        "answer": "No. The Yugoslav period is genuinely contested in Bosnia, and we treat that as a fact to be explained rather than a debate to be won. You will get the survey data, the scholarly interpretations, and the counterarguments. What you make of it is yours."
+      },
+      {
+        "question": "How much walking?",
+        "answer": "About 2.5 km over 3–4 hours, entirely flat and paved, with two extended indoor museum stops and a refreshment break. This is a slow tour. Physical demand is low."
+      },
+      {
+        "question": "Can I book this privately or for a group?",
+        "answer": "Yes. Private bookings, academic groups, and institutional visits are all available, including extended and customised versions. Contact us directly."
+      },
+      {
+        "question": "Is there anything to read beforehand?",
+        "answer": "You don't need to prepare. But we're happy to send a short reading list on request when you book, and every guest receives a printed source list at the end of the tour."
+      }
+    ],
+    "meetingPoint": "Museum of Sarajevo 1878–1918, Zelenih beretki 1, Old Town — on the corner by the Latin Bridge.",
+    "startingTimes": [
+      "10 AM"
+    ],
+    "languages": [
+      "english",
+      "bosnian"
+    ],
+    "rightFor": [
+      "Readers — people who arrive having already read about Sarajevo and want more than the four points every walking tour makes",
+      "History teachers, graduate students, journalists, and retired academics",
+      "Anyone who wants the dates, the contested interpretations, and the honest gaps, in sequence",
+      "Guests extending Chapter Two — pairs naturally with our Jewish Heritage Tour"
+    ],
+    "notRightFor": [
+      "Anyone wanting a light, entertaining first introduction to Sarajevo — our Essential Walking Tour is the better fit",
+      "Younger children — the pace is slow and the content dense by design",
+      "Those expecting siege history — the 1992–95 siege is our separate Sarajevo War Tour"
+    ],
+    "fitnessNote": {
+      "type": "physical",
+      "level": "Easy — slow pace, low physical demand",
+      "detail": "About 2.5 km over 3–4 hours, entirely flat and paved, with two extended indoor museum stops and a refreshment break. This is a slow tour by design."
+    },
+    "accessibility": {
+      "walkingDistanceKm": 2.5,
+      "drivingDistanceKm": null,
+      "walkingDurationMin": 90,
+      "drivingDurationMin": null,
+      "durationMin": 240,
+      "elevationGainM": null,
+      "effortLevel": "low",
+      "suitability": {
+        "wheelchair": "partial",
+        "stroller": "yes",
+        "smallChildren": "no",
+        "children": "partial",
+        "pregnancy": "yes",
+        "seniors": "yes",
+        "pets": "no"
+      },
+      "requirements": [
+        {
+          "key": "stairs",
+          "label": "Climb a flight of stairs",
+          "detail": "Both museums are historic buildings with internal stairs."
+        }
+      ],
+      "terrain": "Flat, paved, city centre throughout — about 2.5 km west along the Miljacka valley, with two extended indoor museum stops.",
+      "notes": "Walking: ~2.5 km over 3–4 hours at a deliberately slow pace. Museum opening hours apply; year-round departures."
+    },
+    "gallery": [
+      "/uploads/journal-world-war-one-sarajevo-assassination-franz-ferdinand-hero.webp",
+      "/uploads/journal-world-war-one-sarajevo-assassination-franz-ferdinand-inline1.webp",
+      "/uploads/journal-world-war-one-sarajevo-assassination-franz-ferdinand-inline2.webp"
+    ],
+    "mapWaypoints": [
+      {
+        "lat": 43.85776,
+        "lng": 18.42875,
+        "label": "Start @ Museum of Sarajevo 1878–1918"
+      },
+      {
+        "lat": 43.85756,
+        "lng": 18.42893,
+        "label": "Assassination corner & Latin Bridge"
+      },
+      {
+        "lat": 43.85905,
+        "lng": 18.4254,
+        "label": "Ferhadija — the Austro-Hungarian city"
+      },
+      {
+        "lat": 43.85918,
+        "lng": 18.42126,
+        "label": "Vječna vatra — the Eternal Flame"
+      },
+      {
+        "lat": 43.8563,
+        "lng": 18.4133,
+        "label": "Maršala Tita street"
+      },
+      {
+        "lat": 43.85269,
+        "lng": 18.40699,
+        "label": "Marijin Dvor & Parliament Square"
+      },
+      {
+        "lat": 43.8547,
+        "lng": 18.403,
+        "label": "Historical Museum of Bosnia and Herzegovina"
+      }
+    ],
+    "mapProfile": "foot-walking",
+    "extras": []
   }
 ]

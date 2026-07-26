@@ -1,18 +1,21 @@
 import { useState, useRef, useEffect } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { ChevronDown, Sparkles, Search, X, Menu } from 'lucide-react'
+import { ChevronDown, Search, X, Menu, MessageCircle } from 'lucide-react'
 import useWindowWidth from '../hooks/useWindowWidth'
 import logo from '../assets/logo.svg'
 import { useBlog } from '../hooks/useBlog'
 import tours from '../data/tours'
 import {
-  journeyNavLinks,
+  DAY_TOURS_RAIL,
+  DAY_TOURS_DEFAULT_ID,
+  JOURNEYS_RAIL,
+  JOURNEYS_DEFAULT_ID,
   searchPackageLinks,
   discoverGroups,
+  discoverContact,
   discoverLinks,
-  NAV_TRUST,
 } from '../data/navigation'
-import DestinationsMegaMenu from './nav/DestinationsMegaMenu'
+import MegaMenu from './nav/MegaMenu'
 import MobileNavSheet from './nav/MobileNavSheet'
 import CurrencySwitcher from './CurrencySwitcher'
 import { useCurrency } from '../context/CurrencyContext'
@@ -196,8 +199,8 @@ function Navbar() {
     fontWeight: location.pathname === path ? '700' : '500',
   })
 
-  const destActive = location.pathname.startsWith('/destinations') || location.pathname.startsWith('/tours')
-  const journeysActive = location.pathname.startsWith('/multi-day-tours') || location.pathname === '/personalised'
+  const destActive = location.pathname.startsWith('/tours')
+  const journeysActive = location.pathname.startsWith('/multi-day-tours') || location.pathname === '/personalised' || location.pathname.startsWith('/destinations')
   const discoverActive = discoverLinks.some((l) => l.href === location.pathname)
 
   return (
@@ -291,7 +294,7 @@ function Navbar() {
         {!isMobile && (
           <div style={styles.links}>
 
-            {/* Destinations — opens the mega menu */}
+            {/* Day Tours — opens the experience-led mega menu */}
             <div
               style={styles.dropdownWrapper}
               onMouseEnter={openDest}
@@ -310,7 +313,7 @@ function Navbar() {
                   fontWeight: destActive ? '700' : '500',
                 }}
               >
-                Destinations
+                Day Tours
                 <ChevronDown
                   size={14}
                   style={{
@@ -322,7 +325,7 @@ function Navbar() {
               </button>
             </div>
 
-            {/* Journeys dropdown */}
+            {/* Journeys — opens the destination-led mega menu */}
             <div
               style={styles.dropdownWrapper}
               onMouseEnter={openPackages}
@@ -351,76 +354,6 @@ function Navbar() {
                   }}
                 />
               </button>
-
-              {packagesDropdownOpen && (
-                <div
-                  style={{ ...styles.dropdown, minWidth: 360 }}
-                  className="nav-dropdown"
-                  onMouseEnter={() =>
-                    clearTimeout(packagesTimer.current)
-                  }
-                  onMouseLeave={closePackages}
-                >
-                  <div style={styles.dropdownHeader}>
-                    <span style={styles.dropdownHeaderTitle}>
-                      Journeys
-                    </span>
-                    <Link
-                      to="/multi-day-tours"
-                      style={styles.dropdownViewAll}
-                      onClick={handleLinkClick}
-                    >
-                      View all →
-                    </Link>
-                  </div>
-
-                  <div style={styles.dropdownDivider} />
-
-                  {/* Personalised — special highlighted item */}
-                  <Link
-                    to="/personalised"
-                    style={styles.dropdownSpecialItem}
-                    className="dropdown-special-item"
-                    onClick={handleLinkClick}
-                  >
-                    <div style={styles.dropdownSpecialItemLeft}>
-                      <Sparkles size={14} color="var(--color-amber)" />
-                      <div style={styles.dropdownItemContent}>
-                        <span style={styles.dropdownSpecialItemLabel}>
-                          Personalised Journey
-                        </span>
-                        <span style={styles.dropdownItemDescription}>
-                          Built entirely around you
-                        </span>
-                      </div>
-                    </div>
-                  </Link>
-
-                  <div style={styles.dropdownDivider} />
-
-                  <div style={styles.dropdownItems}>
-                    {journeyNavLinks.map((pkg, i) => (
-                      <Link
-                        key={pkg.id}
-                        to={pkg.href}
-                        style={{
-                          ...styles.dropdownItem,
-                          borderTop: i ? '1px solid var(--color-n200)' : 'none',
-                          borderRadius: 0,
-                        }}
-                        className="dropdown-item"
-                        onClick={handleLinkClick}
-                      >
-                        <span style={styles.dropdownItemLabel}>{pkg.label}</span>
-                        <span style={styles.dropdownItemMeta}>{pkg.meta}</span>
-                      </Link>
-                    ))}
-                  </div>
-
-                  <div style={styles.dropdownDivider} />
-                  <span style={styles.dropdownTrustLine}>{NAV_TRUST}</span>
-                </div>
-              )}
             </div>
 
             {/* Discover dropdown — brand & service pages */}
@@ -474,6 +407,25 @@ function Navbar() {
                       </div>
                     </div>
                   ))}
+
+                  {/* Emphasized contact CTA — kept visually distinct from the
+                      plain page links so it can't be missed. */}
+                  <Link
+                    to={discoverContact.href}
+                    className="dropdown-contact-cta"
+                    style={styles.dropdownContactCta}
+                    onClick={handleLinkClick}
+                  >
+                    <span style={styles.dropdownContactIcon}>
+                      <MessageCircle size={16} color="var(--color-forest-green)" />
+                    </span>
+                    <div style={styles.dropdownItemContent}>
+                      <span style={{ ...styles.dropdownItemLabel, fontWeight: '700', color: 'var(--color-forest-green)' }}>
+                        {discoverContact.label}
+                      </span>
+                      <span style={styles.dropdownItemDescription}>{discoverContact.description}</span>
+                    </div>
+                  </Link>
                 </div>
               )}
             </div>
@@ -521,14 +473,37 @@ function Navbar() {
 
       </div>
 
-      {/* Destinations mega menu — anchored to the full nav width */}
+      {/* Mega menus — anchored to the full nav width */}
       {!isMobile && destDropdownOpen && (
-        <DestinationsMegaMenu
+        <MegaMenu
+          label="Day tours menu"
+          rail={DAY_TOURS_RAIL}
+          defaultId={DAY_TOURS_DEFAULT_ID}
+          footerLinks={[
+            { label: 'All day tours →', href: '/tours' },
+            { label: 'Contact', href: '/contact' },
+          ]}
           width={width}
           onNavigate={handleLinkClick}
           onClose={() => setDestDropdownOpen(false)}
           onMouseEnter={() => clearTimeout(destTimer.current)}
           onMouseLeave={closeDest}
+        />
+      )}
+      {!isMobile && packagesDropdownOpen && (
+        <MegaMenu
+          label="Journeys menu"
+          rail={JOURNEYS_RAIL}
+          defaultId={JOURNEYS_DEFAULT_ID}
+          footerLinks={[
+            { label: 'All journeys →', href: '/multi-day-tours' },
+            { label: 'All destinations →', href: '/destinations' },
+          ]}
+          width={width}
+          onNavigate={handleLinkClick}
+          onClose={() => setPackagesDropdownOpen(false)}
+          onMouseEnter={() => clearTimeout(packagesTimer.current)}
+          onMouseLeave={closePackages}
         />
       )}
 
@@ -624,36 +599,6 @@ const styles = {
     zIndex: 200,
   },
 
-  dropdownHeader: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    padding: '4px 4px 8px 4px',
-  },
-
-  dropdownHeaderTitle: {
-    fontFamily: 'var(--font-display)',
-    fontWeight: '700',
-    fontSize: '11px',
-    color: 'var(--color-n600)',
-    textTransform: 'uppercase',
-    letterSpacing: '1px',
-  },
-
-  dropdownViewAll: {
-    fontFamily: 'var(--font-body)',
-    fontWeight: '700',
-    fontSize: '12px',
-    color: 'var(--color-forest-green)',
-    textDecoration: 'none',
-  },
-
-  dropdownDivider: {
-    height: '1px',
-    backgroundColor: 'var(--color-n300)',
-    margin: '4px 0',
-  },
-
   dropdownItems: {
     display: 'flex',
     flexDirection: 'column',
@@ -689,14 +634,28 @@ const styles = {
     color: 'var(--color-n600)',
   },
 
-  // Duration · price on multi-day rows — muted so the menu stays calm.
-  dropdownItemMeta: {
-    fontFamily: 'var(--font-body)',
-    fontWeight: '600',
-    fontSize: '12px',
-    color: 'var(--color-n500)',
-    whiteSpace: 'nowrap',
-    marginLeft: '12px',
+  dropdownContactCta: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '10px',
+    marginTop: '12px',
+    padding: '11px 12px',
+    borderRadius: '10px',
+    backgroundColor: 'rgba(46,125,94,0.07)',
+    border: '1px solid rgba(46,125,94,0.18)',
+    textDecoration: 'none',
+    transition: 'background-color var(--t-fast), border-color var(--t-fast)',
+  },
+
+  dropdownContactIcon: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '32px',
+    height: '32px',
+    borderRadius: '50%',
+    backgroundColor: 'rgba(46,125,94,0.10)',
+    flexShrink: 0,
   },
 
   // Small-caps section label inside the Discover menu.
@@ -709,38 +668,6 @@ const styles = {
     textTransform: 'uppercase',
     letterSpacing: '1.2px',
     padding: '8px 8px 4px',
-  },
-
-  dropdownSpecialItem: {
-    display: 'flex',
-    alignItems: 'center',
-    textDecoration: 'none',
-    padding: '10px 8px',
-    borderRadius: '8px',
-    backgroundColor: 'rgba(244,161,48,0.06)',
-    margin: '4px 0',
-  },
-
-  dropdownSpecialItemLeft: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '10px',
-  },
-
-  dropdownSpecialItemLabel: {
-    fontFamily: 'var(--font-body)',
-    fontWeight: '700',
-    fontSize: 'var(--text-small)',
-    color: 'var(--color-n900)',
-  },
-
-  // Quiet social-proof footer line inside the Journeys dropdown.
-  dropdownTrustLine: {
-    display: 'block',
-    fontFamily: 'var(--font-body)',
-    fontSize: '12px',
-    color: 'var(--color-n500)',
-    padding: '8px 8px 2px',
   },
 
   searchWrapper: {

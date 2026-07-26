@@ -9,7 +9,7 @@ import Button from '../components/Button'
 import InfoHero from '../components/InfoHero'
 import {
   Banknote, CreditCard, Coffee, Car,
-  Smartphone, MessageSquare, BookOpen, Phone, ArrowRight,
+  Smartphone, Wifi, MessageSquare, BookOpen, Phone, ArrowRight,
 } from 'lucide-react'
 
 const CLUSTERS = [
@@ -21,17 +21,17 @@ const CLUSTERS = [
       {
         icon: Banknote,
         title: 'Currency',
-        body: 'Bosnia uses the Convertible Mark (BAM / KM). The exchange rate is fixed: 1 EUR = 1.95583 BAM. Cards are widely accepted in Sarajevo — smaller towns and local markets prefer cash. It is worth having some BAM on hand at all times.',
+        body: 'Bosnia uses the Convertible Mark (BAM, locally "KM"). The rate is fixed by law: 1 EUR = 1.95583 BAM — a mental shortcut: roughly 2 KM per euro. Cards are widely accepted in Sarajevo — smaller towns and local markets prefer cash. It is worth having some BAM on hand at all times.',
       },
       {
         icon: CreditCard,
-        title: 'ATMs & cash',
-        body: 'ATMs are plentiful throughout Sarajevo, including at the airport, in the old town, and along main shopping streets. You can withdraw BAM directly — no need to exchange euros first. Check your bank\'s international withdrawal fees before travelling.',
+        title: 'ATMs & cash — avoid the DCC trap',
+        body: 'ATMs are plentiful throughout Sarajevo, including at the airport and the old town. One thing worth knowing: many ATMs and card machines will ask "charge in EUR or BAM?" — this is Dynamic Currency Conversion, and it almost always gives you a worse rate than your own bank. Always choose BAM; your bank converts at the real rate. Check your bank\'s international withdrawal fee before you travel.',
       },
       {
         icon: Coffee,
         title: 'Tipping',
-        body: 'Tipping is not mandatory but it is appreciated. Around 10% in restaurants is standard. For guides, tips are always welcome and never included in the tour price — they are a meaningful way to show appreciation for a good experience.',
+        body: 'Tipping is not mandatory but genuinely appreciated. Around 10% in restaurants is standard, and rounding up is fine if you\'d rather keep it simple. Guide tips are never included in tour prices and are a meaningful gesture, not an expectation.',
       },
     ],
   },
@@ -43,12 +43,17 @@ const CLUSTERS = [
       {
         icon: Car,
         title: 'Getting around',
-        body: 'The Bolt taxi app works well in Sarajevo and is the safest, most transparent option. Trams and trolleybuses are cheap and cover the main corridors. The old town (Baščaršija) is best explored entirely on foot — most of what you want is within easy walking distance.',
+        body: 'Bolt is the easiest and most transparent way to get around Sarajevo — fares are fixed in-app, no negotiation needed. Street taxis exist, but agreeing a price upfront (or insisting on the meter) avoids the classic tourist markup. Trams and trolleybuses are cheap and cover the main routes; buy your ticket from a kiosk before boarding where possible. The old town (Baščaršija) is entirely walkable — most of what visitors want is within 15 minutes on foot.',
       },
       {
         icon: Smartphone,
         title: 'SIM cards',
-        body: 'BH Telecom and m:tel SIM cards are available at Sarajevo Airport and in mobile shops throughout the city. Both offer affordable data plans. EU citizens travelling with an EU SIM card should check whether their roaming package covers Bosnia — it is not an EU member state.',
+        body: 'Three carriers cover the country: BH Telecom (strongest in Sarajevo and the Federation generally), m:tel (strongest in Republika Srpska — Banja Luka, Trebinje, the east), and HT Eronet (strongest around Mostar and Herzegovina). If your route includes both Sarajevo and Mostar, BH Telecom covers most of it, with a few weak patches on the drive between the two. Buying a physical SIM requires your passport — a legal requirement in Bosnia, not optional. Kiosks exist at Sarajevo Airport and throughout the centre; tourist data packages run roughly €5–20.',
+      },
+      {
+        icon: Wifi,
+        title: 'eSIM & roaming',
+        body: 'If you\'d rather skip the kiosk line entirely, an eSIM activated before you land is a straightforward alternative for most modern phones — though data-only eSIMs won\'t give you a local phone number if you need one. EU citizens: your EU roaming plan does not cover Bosnia, since it isn\'t an EU or Schengen member. Check this before you arrive, not after the bill.',
       },
     ],
   },
@@ -60,17 +65,17 @@ const CLUSTERS = [
       {
         icon: MessageSquare,
         title: 'Language',
-        body: 'The official languages are Bosnian, Croatian, and Serbian — they are mutually intelligible. English is widely spoken in Sarajevo, especially in hospitality and tourism. A few phrases go a long way: hvala (thank you), dobar dan (good day), molim (please / you\'re welcome), izvolite (here you are).',
+        body: 'The official languages are Bosnian, Croatian, and Serbian — mutually intelligible, differing mainly by political label rather than substance. English is widely spoken in Sarajevo\'s hospitality sector, especially among anyone under 40. A few words go further than you\'d expect: hvala (thank you), dobar dan (good day), molim (please / you\'re welcome), izvolite (here you are), doviđenja (goodbye).',
       },
       {
         icon: BookOpen,
         title: 'Religious customs',
-        body: 'Bosnia is religiously diverse — Muslim, Orthodox Christian, and Catholic communities all have a visible presence. When visiting mosques, remove your shoes and dress modestly (shoulders and knees covered). Friday midday prayer means brief closures of some mosques between roughly 12:00 and 13:00.',
+        body: 'Bosnia is religiously diverse — Muslim, Orthodox Christian, and Catholic communities all have a visible presence. When visiting mosques, remove your shoes and dress modestly (shoulders and knees covered). Friday midday prayer (Jumu\'ah) brings brief closures at active mosques — the exact time shifts with the season since it follows solar noon, so treat "around midday" as the rule rather than a fixed clock time.',
       },
       {
         icon: Phone,
         title: 'Emergency numbers',
-        body: 'General emergency: 112. Police: 122. Ambulance: 124. Fire: 123. Sarajevo is a safe city and standard European travel precautions apply. Keep a copy of your travel insurance details and your accommodation address accessible at all times.',
+        body: 'General emergency: 112. Police: 122. Ambulance: 124. Fire: 123. Sarajevo is a safe city by any normal European standard — the usual precautions (watch belongings in crowds, don\'t leave bags unattended) are all that\'s needed. Keep your travel insurance details and accommodation address accessible at all times, ideally saved offline on your phone in case you lose signal.',
       },
     ],
   },

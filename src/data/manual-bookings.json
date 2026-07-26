@@ -12,5 +12,19 @@
     "language": "english",
     "numPeople": 6,
     "note": "Viator"
+  },
+  {
+    "tourSlug": "lukomir-hike-bosnia",
+    "date": "2026-08-06",
+    "language": "english",
+    "numPeople": 2,
+    "note": "Direct"
+  },
+  {
+    "tourSlug": "jajce-travnik-day-trip-sarajevo",
+    "date": "2026-08-08",
+    "language": "english",
+    "numPeople": 2,
+    "note": "Viator"
   }
 ]

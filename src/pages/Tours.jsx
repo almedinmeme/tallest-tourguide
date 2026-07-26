@@ -6,6 +6,7 @@ import PageHero from '../components/PageHero'
 import TourCard from '../components/TourCard'
 import useWindowWidth from '../hooks/useWindowWidth'
 import tours from '../data/tours'
+import { TOUR_CATEGORY_LABELS, TOUR_CATEGORY_IDS, tourCategories } from '../data/tourCategories'
 import { useAllReviews } from '../hooks/useAllReviews'
 import { getPage } from '../data/pages'
 
@@ -14,15 +15,8 @@ import { getPage } from '../data/pages'
 const toursPage = getPage('tours')
 const HERO_IMAGE = toursPage?.extra?.heroImage || '/uploads/bosnia-and-herzegovina-sarajevo.webp'
 
-const CATEGORY_LABELS = {
-  'city-walks':   'City Walks',
-  'day-trips':    'Day Trips',
-  'history':      'History & War',
-  'food-culture': 'Food & Culture',
-  'adventure':    'Adventure',
-}
-
-const CATEGORIES = Object.keys(CATEGORY_LABELS)
+const CATEGORY_LABELS = TOUR_CATEGORY_LABELS
+const CATEGORIES = TOUR_CATEGORY_IDS
 
 const LENGTH_OPTIONS = [
   { value: 'all',      label: 'Any' },
@@ -113,11 +107,11 @@ function Tours() {
   const searchQuery = searchInput.trim().toLowerCase()
   const filtered = tours.filter((tour) => {
     if (activeCity && (tour.city || '').toLowerCase() !== activeCity.toLowerCase()) return false
-    if (activeCategory !== 'all' && tour.category !== activeCategory) return false
+    if (activeCategory !== 'all' && !tourCategories(tour).includes(activeCategory)) return false
     if (activeLength !== 'all' && getLengthBucket(tour.duration) !== activeLength) return false
     if (
       searchQuery &&
-      ![tour.title, tour.subtitle, tour.city, tour.category, tour.badge].some(
+      ![tour.title, tour.subtitle, tour.city, tourCategories(tour).join(' '), tour.badge].some(
         (f) => f && f.toLowerCase().includes(searchQuery),
       )
     )

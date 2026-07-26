@@ -2,6 +2,7 @@ import { lazy, Suspense } from 'react'
 import { Routes, Route, useLocation, useParams, Navigate } from 'react-router-dom'
 import { LocalBusinessSchema, OrganizationSchema } from './schema/SchemaMarkup'
 import Navbar from './components/Navbar'
+import AnnouncementBar from './components/AnnouncementBar'
 import Footer from './components/Footer'
 import ScrollToTopButton from './components/ScrollToTopButton'
 import WhatsAppButton from './components/WhatsAppButton'
@@ -130,6 +131,7 @@ function App() {
       <LocalBusinessSchema />
       <OrganizationSchema />
 
+      {!isCheckout && <AnnouncementBar />}
       {!isCheckout && <Navbar />}
 
       <Suspense fallback={null}>

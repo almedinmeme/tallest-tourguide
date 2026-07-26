@@ -1,11 +1,13 @@
-// Precomputed data for the header navigation: the place-led mega-menu rail
-// (Bosnian cities with day tours, then the wider Balkan destinations) and the
-// Journeys menu links. Everything derives from the JSON collections so the
-// menus always match /tours, /packages and /destinations.
+// Precomputed data for the header navigation: the experience-led Day Tours
+// mega-menu rail (mirrors the /tours category filters) and the Journeys
+// mega-menu rail (all journeys, plus the destinations they run through).
+// Everything derives from the JSON collections so the menus always match
+// /tours, /multi-day-tours and /destinations.
 
 import tours from './tours'
 import packages from './packages'
 import { sortedDestinations } from './destinations'
+import { TOUR_CATEGORY_LABELS, tourCategories } from './tourCategories'
 
 // "4-Days Complete Sarajevo Experience: Let us show you our home" → "Complete Sarajevo Experience"
 function cleanPackageLabel(p) {
@@ -45,8 +47,44 @@ const journeyLink = (p) => ({
   hero: p.heroImage,
 })
 
-const toursForCities = (cities) =>
-  tours.filter((t) => cities.includes(t.city)).map(tourLink)
+// ---------------------------------------------------------------------------
+// Day Tours rail — one row per experience category. Ids, labels and order come
+// from tourCategories.js; multi-category membership comes from each tour's
+// `extraCategories` (admin: Basics → "Also show in").
+
+// Menu-only extras per category: a one-line blurb and a hand-picked photo
+// (falls back to the first tour's hero).
+const CATEGORY_META = {
+  'day-trips':    { blurb: 'Full days out from Sarajevo — Mostar, Srebrenica, Jajce & more', image: '/uploads/mostar-day-trip-from-sarajevo-6qc2ulct.webp' },
+  'city-walks':   { blurb: 'Sarajevo on foot, from Baščaršija to Austro-Hungarian avenues', image: '/uploads/tour-1-hero.webp' },
+  'history':      { blurb: 'The siege, the war, and how Bosnia remembers', image: '/uploads/srebrenica-7.webp' },
+  'food-culture': { blurb: 'Cooking classes and home-hosted dinners', image: '/uploads/cooking-4-class.webp' },
+  'adventure':    { blurb: 'Highland villages, mountain trails and fresh air', image: '/uploads/lukomir-1.webp' },
+}
+
+function categoryPlace([id, label]) {
+  const { blurb, image } = CATEGORY_META[id] || {}
+  const dayTours = tours.filter((t) => tourCategories(t).includes(id)).map(tourLink)
+  return {
+    id,
+    label,
+    blurb,
+    href: `/tours?category=${id}`,
+    exploreHref: `/tours?category=${id}`,
+    exploreLabel: `All ${label.toLowerCase()}`,
+    image: image || dayTours[0]?.hero || null,
+    dayTours,
+    journeys: [],
+  }
+}
+
+export const DAY_TOURS_RAIL = [
+  { group: 'By experience', items: Object.entries(TOUR_CATEGORY_LABELS).map(categoryPlace) },
+]
+export const DAY_TOURS_DEFAULT_ID = 'day-trips'
+
+// ---------------------------------------------------------------------------
+// Journeys rail — start-here entries, then one row per destination.
 
 // Package itinerary city strings are free-form ("Konjic & Jablanica",
 // "Čapljina / Neum / Pelješac"), so match by substring.
@@ -78,27 +116,6 @@ function imageForDestination(dest, journeys) {
   )
 }
 
-const BIH_SLUG = 'bosnia-and-herzegovina'
-const bih = sortedDestinations.find((d) => d.slug === BIH_SLUG)
-const bihFeaturedImage = (name) =>
-  (bih?.featured || []).find((f) => (f.name || '').trim() === name)?.image || null
-
-function cityPlace({ id, label, cities, blurb, image }) {
-  const dayTours = toursForCities(cities)
-  const journeys = journeysThroughCities(cities)
-  return {
-    id,
-    label,
-    blurb,
-    href: cities.length === 1 ? `/tours?city=${encodeURIComponent(cities[0])}` : '/tours',
-    exploreHref: `/destinations/${BIH_SLUG}`,
-    exploreLabel: 'Explore Bosnia & Herzegovina',
-    image: image || dayTours[0]?.hero || bih?.hero || null,
-    dayTours,
-    journeys,
-  }
-}
-
 function countryPlace(dest) {
   const journeys = journeysForDestination(dest)
   return {
@@ -109,38 +126,63 @@ function countryPlace(dest) {
     exploreHref: `/destinations/${dest.slug}`,
     exploreLabel: `Explore ${dest.name}`,
     image: imageForDestination(dest, journeys),
-    dayTours: tours.filter((t) => (dest.relatedTours || []).includes(t.slug)).map(tourLink),
+    dayTours: [],
     journeys,
   }
 }
 
-export const NAV_RAIL = [
+const allJourneys = packages.map(journeyLink)
+const bih = sortedDestinations.find((d) => d.slug === 'bosnia-and-herzegovina')
+
+export const JOURNEYS_RAIL = [
   {
-    group: 'Bosnia & Herzegovina',
+    group: 'Start here',
     items: [
-      cityPlace({ id: 'sarajevo', label: 'Sarajevo', cities: ['Sarajevo'], blurb: 'The capital — where our day tours run', image: bihFeaturedImage('Sarajevo') }),
-      cityPlace({ id: 'mostar', label: 'Mostar', cities: ['Mostar'], blurb: 'Old Bridge & Herzegovina', image: bihFeaturedImage('Mostar') }),
-      cityPlace({ id: 'srebrenica', label: 'Srebrenica', cities: ['Srebrenica'], blurb: 'Memorial & history' }),
-      cityPlace({ id: 'highlands', label: 'Lukomir & Jajce', cities: ['Lukomir', 'Jajce'], blurb: 'Highland villages & waterfalls' }),
+      {
+        id: 'all-journeys',
+        label: 'All Journeys',
+        blurb: 'Multi-day trips across the Balkans, hosted end to end',
+        journeysLabel: 'Multi-day journeys',
+        href: '/multi-day-tours',
+        exploreHref: '/multi-day-tours',
+        exploreLabel: 'All journeys',
+        image: allJourneys[0]?.hero || null,
+        dayTours: [],
+        journeys: allJourneys,
+      },
+      {
+        id: 'personalised',
+        label: 'Personalised Journey',
+        icon: 'sparkles',
+        blurb: 'A journey built entirely around you — route, pace and stays',
+        href: '/personalised',
+        exploreHref: '/personalised',
+        exploreLabel: 'Plan a personalised journey',
+        image: bih?.hero || null,
+        dayTours: [],
+        journeys: [],
+        // Rendered as quiet rows in the middle column (no tour list to show).
+        details: [
+          'Tell us who is coming and what you love',
+          'We design the route, stays and pace',
+          'You get a full plan with a fixed price',
+        ],
+        cta: { label: 'Start the questionnaire', href: '/personalised' },
+      },
     ],
   },
   {
-    group: 'Across the Balkans',
-    items: sortedDestinations.filter((d) => d.slug !== BIH_SLUG).map(countryPlace),
+    // Destinations with no journeys yet (currently Slovenia) stay out of the
+    // rail until they have something to show.
+    group: 'By destination',
+    items: sortedDestinations.map(countryPlace).filter((p) => p.journeys.length > 0),
   },
 ]
+export const JOURNEYS_DEFAULT_ID = 'all-journeys'
 
-export const NAV_PLACES = NAV_RAIL.flatMap((g) => g.items)
-export const DEFAULT_PLACE_ID = 'sarajevo'
-
-// Flat package links for the Journeys dropdown.
-export const journeyNavLinks = packages.map((p) => ({
-  id: p.slug,
-  label: cleanPackageLabel(p),
-  meta: journeyMeta(p),
-  price: journeyPrice(p),
-  href: `/multi-day-tours/${p.slug}`,
-}))
+// Flat item list for a rail — used for active-item lookup in the mega menu
+// and the mobile sheet.
+export const railPlaces = (rail) => rail.flatMap((g) => g.items)
 
 export const NAV_TRUST = '5.0 ★ rating · Genuinely small groups · Year-round'
 
@@ -167,10 +209,14 @@ export const discoverGroups = [
       { id: 'signature', label: 'Signature Experiences', description: 'Private, expert-led journeys', href: '/signature' },
       { id: 'consult', label: 'Trip Consultation', description: '60-minute planning call', href: '/consult' },
       { id: 'partners', label: 'For Travel Professionals', description: 'Our DMC services', href: '/partners' },
-      { id: 'contact', label: 'Contact', description: 'Email, WhatsApp, or the form', href: '/contact' },
     ],
   },
 ]
 
+// Contact is pulled out of the groups and rendered as an emphasized CTA row
+// at the bottom of the Discover dropdown (and as buttons in the footer and
+// mobile sheet) — it was too easy to miss as a plain list item.
+export const discoverContact = { id: 'contact', label: 'Contact Us', description: 'Email, WhatsApp, or the form — we reply within a day', href: '/contact' }
+
 // Flat list kept for active-state checks and the mobile sheet.
-export const discoverLinks = discoverGroups.flatMap((g) => g.items)
+export const discoverLinks = [...discoverGroups.flatMap((g) => g.items), discoverContact]

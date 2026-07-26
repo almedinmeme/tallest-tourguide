@@ -112,6 +112,19 @@ export function buildAdminRouter() {
     res.json(body)
   }))
 
+  // Announcement bar is also a singleton — plain read/write of
+  // src/data/announcement.json.
+  router.get('/announcement', asyncHandler(async (_req, res) => {
+    const data = await readCollection('announcement')
+    res.json(Array.isArray(data) ? {} : data)
+  }))
+
+  router.put('/announcement', asyncHandler(async (req, res) => {
+    const body = req.body || {}
+    await writeCollection('announcement', body)
+    res.json(body)
+  }))
+
   // Availability fallback — journey departure dates + blocked dates, backed
   // by the same src/data/airtable/*.json files the build-time Airtable sync
   // regenerates. Airtable wins whenever a build can reach it; these edits
@@ -123,7 +136,7 @@ export function buildAdminRouter() {
   }))
 
   router.put('/availability', asyncHandler(async (req, res) => {
-    const { departureDates, blockedDates, manualBookings } = req.body || {}
+    const { departureDates, blockedDates, manualBookings, weeklyAvailability } = req.body || {}
     if (!departureDates || typeof departureDates !== 'object' || Array.isArray(departureDates)) {
       return res.status(400).json({ error: 'departureDates must be an object of slug → dates' })
     }
@@ -132,6 +145,9 @@ export function buildAdminRouter() {
     }
     if (!Array.isArray(manualBookings)) {
       return res.status(400).json({ error: 'manualBookings must be an array' })
+    }
+    if (!weeklyAvailability || typeof weeklyAvailability !== 'object' || Array.isArray(weeklyAvailability)) {
+      return res.status(400).json({ error: 'weeklyAvailability must be an object of slug → weekday numbers' })
     }
 
     // Normalize: valid ISO dates only, deduped and sorted; drop empty slugs.
@@ -167,10 +183,22 @@ export function buildAdminRouter() {
       .filter((b) => b.tourSlug && ISO_DATE.test(b.date) && b.numPeople >= 1 && b.numPeople <= 99)
       .sort((a, b) => a.date.localeCompare(b.date) || a.tourSlug.localeCompare(b.tourSlug))
 
+    // Weekly recurring schedule: slug → array of allowed weekday numbers
+    // (0=Sun…6=Sat, JS Date#getDay convention). A full or empty-after-clean
+    // set is dropped — "every day" is the implicit default when a slug has
+    // no entry at all, so storing all 7 would be redundant.
+    const cleanWeekly = {}
+    for (const [slug, days] of Object.entries(weeklyAvailability)) {
+      if (!slug.trim() || !Array.isArray(days)) continue
+      const clean = [...new Set(days.filter((d) => Number.isInteger(d) && d >= 0 && d <= 6))].sort()
+      if (clean.length < 7) cleanWeekly[slug.trim()] = clean
+    }
+
     const clean = {
       departureDates: cleanDeparture,
       blockedDates: cleanBlocked,
       manualBookings: cleanManual,
+      weeklyAvailability: cleanWeekly,
     }
     await writeAvailability(clean)
     res.json(clean)

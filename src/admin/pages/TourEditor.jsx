@@ -8,6 +8,7 @@ import ImageGalleryEditor from '../components/ImageGalleryEditor'
 import ListEditor from '../components/ListEditor'
 import HighlightsEditor from '../components/HighlightsEditor'
 import ExtrasEditor from '../components/ExtrasEditor'
+import PrivatePricingEditor from '../components/PrivatePricingEditor'
 import FAQEditor from '../components/FAQEditor'
 import WaypointEditor from '../components/WaypointEditor'
 import JsonField from '../components/JsonField'
@@ -21,6 +22,7 @@ import RelationPicker from '../components/RelationPicker'
 import { useEditorForm } from '../hooks/useEditorForm'
 import { invalidateOptionsCache } from '../hooks/useCollectionOptions'
 import { toNumberOrNull } from '../utils/validate'
+import { TOUR_CATEGORY_LABELS } from '../../data/tourCategories'
 
 const SECTIONS = [
   { id: 'basics', label: 'Basics' },
@@ -42,8 +44,10 @@ const EMPTY = {
   title: '',
   subtitle: '',
   category: '',
+  extraCategories: [],
   badge: '',
   price: 0,
+  privatePricing: { mode: 'quote', fixedPrice: null, tiers: [] },
   rating: 5,
   reviews: 0,
   duration: '',
@@ -69,10 +73,33 @@ const EMPTY = {
   journalPosts: [],
 }
 
+// Normalises the private-pricing block for saving: quote mode carries no
+// numbers, fixed keeps one group price, tiered keeps valid tiers sorted by
+// group size so the site can pick the first tier that fits.
+function cleanPrivatePricing(pp) {
+  const mode = pp?.mode || 'quote'
+  if (mode === 'fixed') return { mode, fixedPrice: Number(pp.fixedPrice) || 0 }
+  if (mode === 'tiered') {
+    const tiers = (pp.tiers || [])
+      .map((t) => ({ maxPeople: Number(t.maxPeople) || 0, price: Number(t.price) || 0 }))
+      .filter((t) => t.maxPeople >= 1 && t.price > 0)
+      .sort((a, b) => a.maxPeople - b.maxPeople)
+    return { mode, tiers }
+  }
+  return { mode: 'quote' }
+}
+
 function validateTour(t) {
   const errors = {}
   const price = toNumberOrNull(t.price)
   if (price == null || price < 0) errors.price = 'Price must be a number ≥ 0.'
+  const pp = t.privatePricing
+  if (pp?.mode === 'fixed' && !(toNumberOrNull(pp.fixedPrice) > 0)) {
+    errors.privatePricing = 'Enter the fixed price for a private group.'
+  }
+  if (pp?.mode === 'tiered' && !(pp.tiers || []).some((tier) => toNumberOrNull(tier.maxPeople) >= 1 && toNumberOrNull(tier.price) > 0)) {
+    errors.privatePricing = 'Add at least one complete tier (group size + price).'
+  }
   if (t.oldPrice !== '' && t.oldPrice != null && toNumberOrNull(t.oldPrice) == null) errors.oldPrice = 'Must be a number.'
   const rating = toNumberOrNull(t.rating)
   if (t.rating !== '' && t.rating != null && (rating == null || rating < 0 || rating > 5)) errors.rating = 'Rating must be between 0 and 5.'
@@ -93,7 +120,9 @@ export default function TourEditor() {
     clean: (t) => ({
       ...t,
       slug: t.slug.trim(),
+      extraCategories: [...new Set(t.extraCategories || [])].filter((c) => c && c !== t.category),
       price: Number(t.price),
+      privatePricing: cleanPrivatePricing(t.privatePricing),
       oldPrice: toNumberOrNull(t.oldPrice),
       rating: toNumberOrNull(t.rating),
       reviews: toNumberOrNull(t.reviews) ?? 0,
@@ -160,7 +189,23 @@ export default function TourEditor() {
         </FormField>
         <div style={s.grid3}>
           <FormField label="Category">
-            <input style={s.input} value={tour.category || ''} onChange={(e) => set({ category: e.target.value })} placeholder="city-walks, day-trips, …" />
+            <select
+              style={s.input}
+              value={tour.category || ''}
+              onChange={(e) => set({
+                category: e.target.value,
+                // The primary can't also be an extra — drop it if it was ticked.
+                extraCategories: (tour.extraCategories || []).filter((c) => c !== e.target.value),
+              })}
+            >
+              <option value="">— pick a category —</option>
+              {Object.entries(TOUR_CATEGORY_LABELS).map(([id, label]) => (
+                <option key={id} value={id}>{label}</option>
+              ))}
+              {tour.category && !TOUR_CATEGORY_LABELS[tour.category] && (
+                <option value={tour.category}>{tour.category} (unknown)</option>
+              )}
+            </select>
           </FormField>
           <FormField label="Badge">
             <input style={s.input} value={tour.badge || ''} onChange={(e) => set({ badge: e.target.value })} placeholder="Bestseller, Essential, …" />
@@ -169,6 +214,30 @@ export default function TourEditor() {
             <input style={s.input} value={tour.duration || ''} onChange={(e) => set({ duration: e.target.value })} placeholder="3 hours, Full day, …" />
           </FormField>
         </div>
+        <FormField
+          label="Also show in"
+          hint="Extra categories this tour also belongs to — it appears in those rows of the Day Tours menu and under those filters on /tours (e.g. Srebrenica is History & War and a Day Trip)."
+        >
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px 20px', padding: '6px 0 2px' }}>
+            {Object.entries(TOUR_CATEGORY_LABELS).filter(([id]) => id !== tour.category).map(([id, label]) => {
+              const checked = (tour.extraCategories || []).includes(id)
+              return (
+                <label key={id} style={{ display: 'flex', alignItems: 'center', gap: 7, fontSize: 13, color: colors.text, cursor: 'pointer' }}>
+                  <input
+                    type="checkbox"
+                    checked={checked}
+                    onChange={(e) => set({
+                      extraCategories: e.target.checked
+                        ? [...(tour.extraCategories || []), id]
+                        : (tour.extraCategories || []).filter((c) => c !== id),
+                    })}
+                  />
+                  {label}
+                </label>
+              )
+            })}
+          </div>
+        </FormField>
         <div style={s.grid3}>
           <FormField label="Price (€)" error={fieldErrors.price}>
             <input type="number" min="0" style={s.input} value={tour.price ?? ''} onChange={(e) => set({ price: e.target.value })} />
@@ -183,6 +252,11 @@ export default function TourEditor() {
             <input type="number" min="0" style={s.input} value={tour.reviews ?? ''} onChange={(e) => set({ reviews: e.target.value })} />
           </FormField>
         </div>
+        <PrivatePricingEditor
+          value={tour.privatePricing}
+          onChange={(v) => set({ privatePricing: v })}
+          error={fieldErrors.privatePricing}
+        />
         <div style={s.grid2}>
           <FormField label="Capacity" error={fieldErrors.groupSize} hint="Internal booking cap — the number is never shown on the site; pages say “Small group”.">
             <input type="number" min="1" style={s.input} value={tour.groupSize ?? ''} onChange={(e) => set({ groupSize: e.target.value })} />

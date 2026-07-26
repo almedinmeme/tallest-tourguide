@@ -14,6 +14,7 @@ import PageEditor from './pages/PageEditor'
 import JournalList from './pages/JournalList'
 import JournalEditor from './pages/JournalEditor'
 import AvailabilityPage from './pages/AvailabilityPage'
+import AnnouncementPage from './pages/AnnouncementPage'
 import SettingsPage from './pages/SettingsPage'
 import * as api from './api'
 import { s, colors, adminGlobalCSS } from './styles'
@@ -107,6 +108,12 @@ const Icon = {
     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <circle cx="12" cy="12" r="3" />
       <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h.01a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h.01a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v.01a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+    </svg>
+  ),
+  announcement: (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M3 11v2a2 2 0 0 0 2 2h1l2.5 5h2L8.5 15H11l7 4V5l-7 4H5a2 2 0 0 0-2 2z" />
+      <path d="M18 9a4 4 0 0 1 0 6" />
     </svg>
   ),
   external: (
@@ -320,6 +327,7 @@ export default function AdminApp() {
             <NavItem to="/admin/pages" icon={Icon.pages}>Pages</NavItem>
             <NavItem to="/admin/journal" icon={Icon.journal}>Journal</NavItem>
             <NavItem to="/admin/availability" icon={Icon.availability}>Availability</NavItem>
+            <NavItem to="/admin/announcement" icon={Icon.announcement}>Promotions</NavItem>
             <NavItem to="/admin/settings" icon={Icon.settings}>Settings</NavItem>
           </nav>
           <div style={{ marginTop: 'auto', borderTop: `1px solid rgba(255,255,255,0.06)`, paddingTop: 14, marginLeft: -2, marginRight: -2 }}>
@@ -367,6 +375,7 @@ export default function AdminApp() {
             <Route path="journal/new" element={<JournalEditor />} />
             <Route path="journal/:id" element={<JournalEditor />} />
             <Route path="availability" element={<AvailabilityPage />} />
+            <Route path="announcement" element={<AnnouncementPage />} />
             <Route path="settings" element={<SettingsPage />} />
             <Route path="*" element={<Navigate to="/admin" replace />} />
           </Routes>

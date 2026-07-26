@@ -5,7 +5,7 @@
 // React Router location.state.
 //
 // Here the customer enters their contact details and chooses how to pay:
-//   • Pay by card  → the (placeholder) card form, with a 5% incentive discount.
+//   • Pay by card  → the (placeholder) card form; the booking confirms instantly.
 //                    The Pay button calls processCardPayment() — the single
 //                    seam to replace with a real gateway later.
 //   • Reserve & pay later → the frictionless flow, full price.
@@ -30,11 +30,8 @@ import useInView from '../hooks/useInView'
 import Button from '../components/Button'
 import CurrencySwitcher from '../components/CurrencySwitcher'
 import logo from '../assets/logo.svg'
-import {
-  submitBooking,
-  processCardPayment,
-  applyCardDiscount,
-} from '../utils/booking'
+import { submitBooking, processCardPayment } from '../utils/booking'
+import { findPromoCode, promoSavingFor } from '../utils/promo'
 import {
   CANCEL_LINE_TOUR,
   CANCEL_LINE_PACKAGE,
@@ -110,22 +107,26 @@ function Checkout() {
   const availableExtras = booking?.availableExtras || []
   const selectedExtraItems = selectedExtras.map((i) => availableExtras[i]).filter(Boolean)
   const extrasTotal = selectedExtraItems.reduce((s, ex) => s + (ex.amount || 0), 0)
-  const total = base + extrasTotal
-  const discounted = useMemo(() => applyCardDiscount(total), [total])
-  const saving = total - discounted
-  // Journeys (booking.deposit) are card-only — there is no reserve option and
-  // no card discount (the 5% is a tours-only incentive to pick card over
-  // reserve). They pay the list total in full, or a deposit now with the
-  // balance due before departure.
+  const listTotal = base + extrasTotal
+  // Promo code — validated live as the guest types, so a matching code shows
+  // its discount immediately, while unknown codes stay quiet (they're still
+  // forwarded on the booking as partner-attribution text, never rejected).
+  const promo = useMemo(() => findPromoCode(discount), [discount])
+  // Promo discounts apply to the tour price only — add-ons are charged in
+  // full (owner decision, 2026-07).
+  const promoSaving = isQuote ? 0 : promoSavingFor(promo, base)
+  // Everything downstream (card discount, deposit split, totals) works from
+  // the promo-reduced total.
+  const total = listTotal - promoSaving
+  // Journeys (booking.deposit) are card-only — there is no reserve option.
+  // They pay the list total in full, or a deposit now with the balance due
+  // before departure.
   const hasDeposit = Boolean(booking?.deposit) && !isQuote
   const payingByCard = (hasDeposit || method === 'card') && !isQuote
-  // Card discount: tours paying by card only (never quotes, never journeys).
-  const cardDiscountApplies = payingByCard && !hasDeposit
-  const methodTotal = cardDiscountApplies ? discounted : total
   const depositAmount = Math.round(total * (DEPOSIT_PERCENT / 100))
   const balanceAmount = total - depositAmount
   const paySplit = hasDeposit && payPlan === 'deposit'
-  const dueNow = paySplit ? depositAmount : methodTotal
+  const dueNow = paySplit ? depositAmount : total
 
   // The real calendar date the balance falls due, when the departure ISO
   // date travelled with the booking (packages send airtableFields.TourDate).
@@ -151,6 +152,12 @@ function Checkout() {
     if (!name.trim()) e.name = 'Please enter your name'
     if (!email.trim()) e.email = 'Please enter your email'
     else if (!EMAIL_RE.test(email.trim())) e.email = 'Please enter a valid email'
+    // Phone stays optional, but when given it must be the full international
+    // form — leading + and country code — so we can actually reach guests
+    // on WhatsApp/Viber wherever they're from.
+    if (phone.trim() && !/^\+\d{6,15}$/.test(phone.replace(/[\s\-().]/g, ''))) {
+      e.phone = 'Include your country code, e.g. +387 62 123 456'
+    }
     if (payingByCard) {
       if (!cardName.trim()) e.cardName = 'Please enter the name on the card'
       const digits = cardNumber.replace(/\D/g, '')
@@ -169,27 +176,32 @@ function Checkout() {
     if (Object.keys(e).some((k) => e[k])) {
       // Contact fields live at the top of the page; card errors are already
       // next to the button, so only scroll when the top fields are wrong.
-      if (e.name || e.email) window.scrollTo({ top: 0, behavior: 'smooth' })
+      if (e.name || e.email || e.phone) window.scrollTo({ top: 0, behavior: 'smooth' })
       return
     }
     setIsSending(true)
     setIsError(false)
 
+    // A redeemed promo shows its effect on the booking record; any other
+    // code travels as plain attribution text.
+    const codeLine = promo && promoSaving > 0
+      ? `${promo.code} — €${promoSaving} discount applied`
+      : discount.trim()
     const guestTemplate = {
       guest_name: name.trim(),
       guest_email: email.trim(),
       guest_phone: phone.trim() || 'Not provided',
-      discount_code: discount.trim() || 'None',
+      discount_code: codeLine || 'None',
     }
     const guestAirtable = {
       GuestName: name.trim(),
       GuestEmail: email.trim(),
       GuestPhone: phone.trim(),
-      DiscountCode: discount.trim(),
+      DiscountCode: codeLine,
     }
 
     const isCard = payMethod === 'card'
-    const payTotal = isCard && !hasDeposit ? discounted : total
+    const payTotal = total
     const extrasSummary = selectedExtraItems.length
       ? selectedExtraItems.map((e) => `${e.label} (+€${e.amount})`).join(', ')
       : 'None'
@@ -213,7 +225,7 @@ function Checkout() {
         extras: extrasSummary,
         ...(isQuote ? {} : { total_price: `€${payTotal}` }),
         payment_method: (isCard
-          ? hasDeposit ? 'Card — charged at booking' : 'Card — 5% discount, charged at booking'
+          ? 'Card — charged at booking'
           : isQuote ? 'Quote requested' : 'Reserve & pay later') + planSuffix,
       },
       analytics: booking.analytics
@@ -261,7 +273,7 @@ function Checkout() {
                   balance of <strong>{format(balanceAmount)}</strong> is due {BALANCE_DUE_DAYS}{' '}
                   days before departure; we'll email you well in advance.</>
                 ) : (
-                  <>Your payment of <strong>{format(hasDeposit ? total : discounted)}</strong> has
+                  <>Your payment of <strong>{format(total)}</strong> has
                   been charged securely — a receipt and your booking confirmation are on their
                   way to <strong>{email.trim()}</strong>.</>
                 )
@@ -309,18 +321,22 @@ function Checkout() {
               <span style={styles.priceMuted}>{format(base)}</span>
             </div>
           )}
+          {/* The promo line sits directly under the tour price — before any
+              add-ons — because that's all it discounts. */}
+          {promoSaving > 0 && (
+            <div style={styles.priceRow}>
+              <span style={styles.discountText}>
+                Code {promo.code} ({promo.type === 'percent' ? `−${promo.value}%` : `−€${promo.value}`} on the tour)
+              </span>
+              <span style={styles.discountText}>−{format(promoSaving)}</span>
+            </div>
+          )}
           {selectedExtraItems.map((ex, i) => (
             <div key={i} style={styles.priceRow}>
               <span style={styles.priceMuted}>{ex.label}</span>
               <span style={styles.priceMuted}>+{format(ex.amount)}</span>
             </div>
           ))}
-          {cardDiscountApplies && saving > 0 && (
-            <div style={styles.priceRow}>
-              <span style={styles.discountText}>Card discount (−5%)</span>
-              <span style={styles.discountText}>−{format(saving)}</span>
-            </div>
-          )}
           <div style={styles.totalRow}>
             <span style={styles.totalLabel}>{paySplit ? 'Due today' : payingByCard ? 'Pay today' : 'Total'}</span>
             <span style={styles.totalValue}>{format(dueNow)}</span>
@@ -407,7 +423,7 @@ function Checkout() {
                     style={inputStyle(errors.name)}
                     value={name}
                     onChange={(e) => { setName(e.target.value); clearError('name') }}
-                    placeholder="e.g. Amila Hodžić"
+                    placeholder="John Doe"
                     autoComplete="name"
                   />
                 </Field>
@@ -418,26 +434,26 @@ function Checkout() {
                     style={inputStyle(errors.email)}
                     value={email}
                     onChange={(e) => { setEmail(e.target.value); clearError('email') }}
-                    placeholder="you@example.com"
+                    placeholder="john.doe@example.com"
                     type="email"
                     autoComplete="email"
                   />
                 </Field>
 
-                <Field label="Phone" hint="optional">
+                <Field label="Phone" hint="optional, with country code" error={errors.phone}>
                   <input
                     className="booking-input"
-                    style={inputStyle()}
+                    style={inputStyle(errors.phone)}
                     value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    placeholder="+387 ..."
+                    onChange={(e) => { setPhone(e.target.value); clearError('phone') }}
+                    placeholder="+387 62 123 456"
                     type="tel"
                     autoComplete="tel"
                   />
                 </Field>
 
                 {(showReferral || discount) && (
-                  <Field label="Referral code" hint="optional">
+                  <Field label="Referral or promo code" hint="optional">
                     <input
                       className="booking-input"
                       style={inputStyle()}
@@ -446,6 +462,12 @@ function Checkout() {
                       placeholder="e.g. HOTEL123"
                       autoFocus={showReferral}
                     />
+                    {promo && !isQuote && (
+                      <span style={styles.promoApplied}>
+                        <Check size={13} strokeWidth={3} />
+                        {promo.code} applied — {promo.type === 'percent' ? `${promo.value}% off` : `€${promo.value} off`} the tour price
+                      </span>
+                    )}
                   </Field>
                 )}
               </div>
@@ -454,7 +476,7 @@ function Checkout() {
                   hunting for a code they don't have. */}
               {!showReferral && !discount && (
                 <button type="button" onClick={() => setShowReferral(true)} style={styles.referralToggle}>
-                  Have a referral code?
+                  Have a referral or promo code?
                 </button>
               )}
             </div>
@@ -599,15 +621,14 @@ function Checkout() {
                         active={method === 'card'}
                         onSelect={() => setMethod('card')}
                         title="Pay by card"
-                        badge={`Save 5% · ${format(discounted)}`}
-                        sub="Pay securely now and save 5%."
+                        sub="Pay securely now — your booking is confirmed instantly."
                       />
                       <div style={styles.methodDivider} />
                       <MethodRow
                         active={method === 'reserve'}
                         onSelect={() => setMethod('reserve')}
                         title="Reserve & pay later"
-                        sub="Hold your place now at full price — pay before your trip."
+                        sub="Hold your place now — pay before your trip."
                       />
                     </div>
                   )}
@@ -979,6 +1000,15 @@ const styles = {
     color: 'var(--color-error)',
   },
   detailsGrid: { display: 'grid', columnGap: '16px' },
+  promoApplied: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: '5px',
+    marginTop: '6px',
+    fontSize: 'var(--text-small)',
+    fontWeight: 600,
+    color: 'var(--color-forest-green)',
+  },
   referralToggle: {
     padding: 0,
     border: 'none',

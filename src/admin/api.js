@@ -47,6 +47,11 @@ export const settings = {
 
 // Availability fallback (departure dates + blocked dates) — singleton like
 // settings. Airtable overwrites these files on every build it can reach.
+export const announcement = {
+  get: () => jsonFetch(`${BASE}/announcement`),
+  update: (body) => jsonFetch(`${BASE}/announcement`, { method: 'PUT', body: JSON.stringify(body) }),
+}
+
 export const availability = {
   get: () => jsonFetch(`${BASE}/availability`),
   update: (body) => jsonFetch(`${BASE}/availability`, { method: 'PUT', body: JSON.stringify(body) }),

@@ -13,6 +13,7 @@ export const PATHS = {
   pages: path.join(ROOT, 'src/data/pages.json'),
   journal: path.join(ROOT, 'src/data/journal.json'),
   settings: path.join(ROOT, 'src/data/settings.json'),
+  announcement: path.join(ROOT, 'src/data/announcement.json'),
   uploads: path.join(ROOT, 'public/uploads'),
 }
 
@@ -61,6 +62,10 @@ const AVAILABILITY_PATHS = {
   // Deliberately OUTSIDE src/data/airtable/: manual (OTA) bookings are
   // admin-owned and additive — the Airtable sync must never overwrite them.
   manualBookings: path.join(ROOT, 'src/data/manual-bookings.json'),
+  // Also outside src/data/airtable/: a day tour's fixed weekly schedule (e.g.
+  // "only runs Monday and Tuesday") has no Airtable equivalent, so it lives
+  // here permanently rather than as a sync fallback.
+  weeklyAvailability: path.join(ROOT, 'src/data/weekly-availability.json'),
 }
 
 export async function readAvailability() {
@@ -75,13 +80,15 @@ export async function readAvailability() {
     departureDates: await read(AVAILABILITY_PATHS.departureDates, {}),
     blockedDates: await read(AVAILABILITY_PATHS.blockedDates, []),
     manualBookings: await read(AVAILABILITY_PATHS.manualBookings, []),
+    weeklyAvailability: await read(AVAILABILITY_PATHS.weeklyAvailability, {}),
   }
 }
 
-export async function writeAvailability({ departureDates, blockedDates, manualBookings }) {
+export async function writeAvailability({ departureDates, blockedDates, manualBookings, weeklyAvailability }) {
   await writeJsonAtomic(AVAILABILITY_PATHS.departureDates, departureDates)
   await writeJsonAtomic(AVAILABILITY_PATHS.blockedDates, blockedDates)
   await writeJsonAtomic(AVAILABILITY_PATHS.manualBookings, manualBookings)
+  await writeJsonAtomic(AVAILABILITY_PATHS.weeklyAvailability, weeklyAvailability)
 }
 
 export function nextId(items) {

@@ -227,8 +227,12 @@ const sections = [
         text: 'Sarajevo is a safe city by any reasonable European standard. Petty crime exists — watch your belongings in crowded markets and on public transport. Violent crime against tourists is rare.',
       },
       {
+        type: 'p',
+        text: 'Landmines remain a real legacy of the 1992–95 war, concentrated in areas that saw front lines: parts of the confrontation zones around Sarajevo\'s former siege perimeter, sections of eastern Bosnia, and rural stretches near the old inter-entity boundary line. This is not a concern in Sarajevo itself or on any of our tour routes — all marked and maintained.',
+      },
+      {
         type: 'callout',
-        text: 'Landmines remain in rural and mountainous areas — a legacy of the war that will take decades to fully clear. This is not a concern in Sarajevo or on any standard tourist route. If hiking off-trail in rural areas, stay on marked paths and heed warning signs.',
+        text: 'The practical rule for independent hikers: stay on marked trails and don\'t cross fences, overgrown fields, or abandoned buildings in rural areas, especially anywhere that saw fighting. Signage (a red skull-and-crossbones sign, sometimes just red-and-white tape) marks known risk zones — take it seriously even if the area looks harmless. If you\'re planning to hike somewhere off our tours, check with your accommodation host first; locals know which specific fields and forests to avoid far better than any general guide can tell you.',
       },
       {
         type: 'p',
@@ -242,6 +246,26 @@ const sections = [
             <Link to="/safe-travels" style={inlineLink}>Safe travels</Link>.
           </>
         ),
+      },
+    ],
+  },
+  {
+    id: 'details',
+    number: '11',
+    title: 'Details nobody tells you',
+    content: [
+      {
+        type: 'p',
+        text: 'A short list of things that save time or money and aren\'t obvious from outside:',
+      },
+      {
+        type: 'bullets',
+        items: [
+          'Museum combo tickets — several Sarajevo museums (War Childhood Museum, Tunnel of Hope, History Museum) don\'t advertise combined tickets loudly; asking at the first one you visit sometimes surfaces a discount for the others.',
+          'Friday and Saturday nights get genuinely busy in Baščaršija — if you want a quiet dinner without a wait, eat earlier (before 7:30pm) or later (after 9:30pm).',
+          'Public holidays matter more here than elsewhere. Bosnia observes separate holidays for different communities (Orthodox and Catholic Christmas, Eid al-Fitr, Eid al-Adha, Statehood Day) — some shops and offices close on days that wouldn\'t register as holidays in Western Europe. Check the dates before you plan errands around a specific day.',
+          'Border crossings by bus (to/from Croatia or Serbia) can add 1–2 hours unpredictably at peak summer weekends — build slack into any onward travel booked for the same day.',
+        ],
       },
     ],
   },
@@ -307,7 +331,7 @@ function BosniaCulturalGuide() {
         kicker="Before you go"
         title="The Bosnia travel guide"
         lede="Not a logistics checklist. A genuine guide to the country you are about to visit — its food, politics, history, and people. It's the context we build every small-group tour on."
-        meta="Written by your guide · 10 topics · 10 min read"
+        meta="Written by your guide · 11 topics · 11 min read"
       />
 
       {/* Sticky section nav */}
