@@ -10,6 +10,7 @@
     "sync:google": "node scripts/sync-google-reviews.mjs",
     "build:spa": "vite build",
     "prerender": "node scripts/prerender.mjs",
+    "test:gcal": "node scripts/test-gcal.mjs",
     "lint": "eslint .",
     "preview": "vite preview",
     "migrate": "node scripts/migrate-data.mjs",
