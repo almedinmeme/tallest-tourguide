@@ -1255,10 +1255,11 @@ function TourDetail() {
               </div>
             )}
 
-            {/* Tour Reviews — approved reviews from Airtable + submission form */}
+            {/* Curated highlights for this tour + links to review us on
+                Google/Tripadvisor, where a review actually counts. */}
             <div id="reviews">
-  <TourReviews tourId={tour.id} tourName={tour.title} tourSlug={tour.slug} basePath="/tours" />
-</div>
+              <TourReviews tourSlug={tour.slug} />
+            </div>
 
           </div>
 

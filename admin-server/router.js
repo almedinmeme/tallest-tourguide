@@ -134,10 +134,10 @@ export function buildAdminRouter() {
     res.json(body)
   }))
 
-  // Availability fallback — journey departure dates + blocked dates, backed
-  // by the same src/data/airtable/*.json files the build-time Airtable sync
-  // regenerates. Airtable wins whenever a build can reach it; these edits
-  // ship only while it's down or over its API cap.
+  // Availability — journey departure dates + blocked dates, stored in
+  // src/data/availability/*.json. These edits are authoritative: nothing
+  // regenerates those files, so what's saved here is what ships on the next
+  // publish.
   const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/
 
   router.get('/availability', asyncHandler(async (_req, res) => {

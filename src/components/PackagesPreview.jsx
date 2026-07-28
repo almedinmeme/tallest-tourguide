@@ -2,7 +2,6 @@ import { useState, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { ArrowRight, Gauge, MapPin, Globe, ChevronLeft, ChevronRight } from 'lucide-react'
 import useWindowWidth from '../hooks/useWindowWidth'
-import { useAllReviews } from '../hooks/useAllReviews'
 import Img from './Img'
 import Button from './Button'
 
@@ -18,7 +17,6 @@ const DIFFICULTY_COLOR = {
 function PackagesPreview() {
   const { format } = useCurrency()
   const width = useWindowWidth()
-  const { stats } = useAllReviews()
   const isMobile = width <= 640
   const [page, setPage] = useState(0)
   const touchStartX = useRef(null)
@@ -64,8 +62,8 @@ function PackagesPreview() {
                 gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)',
               }}>
                 {packages.slice(pageIdx * visibleCount, (pageIdx + 1) * visibleCount).map((pkg) => {
-                  const avgRating = stats[pkg.slug]?.avgRating ?? pkg.rating
-                  const reviewCount = stats[pkg.slug]?.count ?? pkg.reviews
+                  const avgRating = pkg.rating
+                  const reviewCount = pkg.reviews
 
                   return (
                     <Link key={pkg.id} to={`/multi-day-tours/${pkg.slug}`} style={styles.cardLink}>

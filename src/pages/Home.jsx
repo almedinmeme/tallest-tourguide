@@ -36,7 +36,6 @@ import Reviews from '../components/Reviews'
 import CTABanner from '../components/CTABanner'
 import PackagesPreview from '../components/PackagesPreview'
 import { useBlog } from '../hooks/useBlog'
-import { useAllReviews } from '../hooks/useAllReviews'
 import { TRUST_BAR_CANCEL } from '../data/policy'
 import { useCurrency } from '../context/CurrencyContext'
 
@@ -44,7 +43,6 @@ import { useCurrency } from '../context/CurrencyContext'
 function Home() {
   const { format } = useCurrency()
   const width = useWindowWidth()
-  const { stats } = useAllReviews()
   const isMobile = width <= 768
   const { posts } = useBlog()
   const [blogPage, setBlogPage] = useState(0)
@@ -387,8 +385,8 @@ function Home() {
                             title={tour.title}
                             price={tour.price}
                             oldPrice={tour.oldPrice}
-                            rating={stats[String(tour.id)]?.avgRating ?? tour.rating}
-                            reviews={stats[String(tour.id)]?.count ?? tour.reviews}
+                            rating={tour.rating}
+                            reviews={tour.reviews}
                             duration={tour.duration}
                             highlights={tour.highlights}
                             badge={tour.badge}

@@ -13,9 +13,10 @@
   publish = "dist"
 
 [functions]
-  # /api/availability + /api/submit — the Airtable proxy. Client requests go
+  # /api/availability + /api/submit — the Google Calendar proxy. Client requests go
   # to /api/*, rewritten to /.netlify/functions/* in public/_redirects.
-  # Requires AIRTABLE_TOKEN + AIRTABLE_BASE_ID in the Netlify env.
+  # Requires GOOGLE_SA_KEY_B64 + GOOGLE_CALENDAR_ID (+ GOOGLE_SHEET_ID for
+  # the booking ledger) in the Netlify env.
   directory = "netlify/functions"
 
 [build.environment]

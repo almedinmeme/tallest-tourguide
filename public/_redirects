@@ -9,7 +9,7 @@
 /packages          /multi-day-tours            301
 /packages/*        /multi-day-tours/:splat     301
 
-# Serverless API (availability + form submissions → Airtable). Must sit
+# Serverless API (availability + booking submissions → Google Calendar). Must sit
 # above the SPA fallback or /api/* would return 200.html instead.
 /api/*    /.netlify/functions/:splat    200
 

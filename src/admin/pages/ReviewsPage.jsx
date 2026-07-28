@@ -25,6 +25,10 @@ const SOURCES = [
   { value: 'direct', label: 'Sent to us directly' },
 ]
 
+// Catalogue titles can carry a subtitle after a colon; the dropdown only
+// needs the part before it.
+const shortTitle = (title) => (title || '').split(':')[0].trim()
+
 // New rows get a temporary negative id so React keys stay stable until the
 // server assigns a real one on save.
 let tempId = -1
@@ -33,6 +37,7 @@ export default function ReviewsPage() {
   const [items, setItems] = useState(null)
   const [google, setGoogle] = useState(null)
   const [settings, setSettings] = useState(null)
+  const [bookables, setBookables] = useState([])
   const [err, setErr] = useState(null)
   const [saving, setSaving] = useState(false)
   const [pendingDelete, setPendingDelete] = useState(null)
@@ -49,11 +54,18 @@ export default function ReviewsPage() {
   const { dirty, markSaved } = useDirtyTracker(dirtyState)
 
   useEffect(() => {
-    Promise.all([api.reviews.list(), api.googleReviews.get(), api.settings.get()])
-      .then(([list, g, st]) => {
+    Promise.all([
+      api.reviews.list(), api.googleReviews.get(), api.settings.get(),
+      api.tours.list(), api.packages.list(),
+    ])
+      .then(([list, g, st, trs, pkgs]) => {
         setItems(list)
         setGoogle(g)
         setSettings(st)
+        setBookables([
+          ...trs.map((t) => ({ slug: t.slug, label: shortTitle(t.title) })),
+          ...pkgs.map((p) => ({ slug: p.slug, label: shortTitle(p.name) })),
+        ])
         savedRef.current = { items: list, hidden: st.hiddenGoogleReviewIds || [] }
       })
       .catch((e) => setErr(e.message))
@@ -81,6 +93,7 @@ export default function ReviewsPage() {
         name: '',
         location: '',
         tour: '',
+        tourSlug: '',
         rating: 5,
         date: '',
         text: '',
@@ -254,9 +267,27 @@ export default function ReviewsPage() {
             </div>
 
             <div style={s.grid2}>
-              <FormField label="Tour they took" hint="Optional — shown under their name.">
+              <FormField
+                label="Show on which tour page"
+                hint="Pick the tour and this review appears on that page too. Leave blank and it only shows on the homepage."
+              >
+                <select
+                  style={s.input}
+                  value={r.tourSlug || ''}
+                  onChange={(e) => patch(r.id, { tourSlug: e.target.value })}
+                >
+                  <option value="">— homepage only —</option>
+                  {bookables.map((b) => (
+                    <option key={b.slug} value={b.slug}>{b.label}</option>
+                  ))}
+                </select>
+              </FormField>
+              <FormField label="Tour they took" hint="Optional — the wording shown under their name, e.g. “Sarajevo Siege Tour”.">
                 <input style={s.input} value={r.tour || ''} onChange={(e) => patch(r.id, { tour: e.target.value })} />
               </FormField>
+            </div>
+
+            <div style={s.grid2}>
               <FormField label="Where it was left" hint="Sets the little logo on the card.">
                 <select
                   style={s.input}

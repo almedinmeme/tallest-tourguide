@@ -55,20 +55,23 @@ async function writeJsonAtomic(filePath, data) {
   await fs.rename(tmp, filePath)
 }
 
-// Availability fallback editor — reads/writes the same files the Airtable
-// sync (scripts/sync-airtable.mjs) regenerates at build time. Airtable stays
-// the source of truth: whenever it's reachable during a build, it overwrites
-// these files; admin edits only ship while Airtable is down or over its
-// API cap.
+// Availability editor. These four files ARE the source of truth — there is
+// no longer a build-time sync that can overwrite them. (Departure and
+// blocked dates used to be regenerated from Airtable on every build that
+// could reach it, which meant admin edits survived only until the next
+// deploy. Removing the sync inverted that by construction.)
+//
+// What is NOT here: bookings taken through the site. Those live on the
+// Google Calendar and are read at request time by /api/availability.
 const AVAILABILITY_PATHS = {
-  departureDates: path.join(ROOT, 'src/data/airtable/departure-dates.json'),
-  blockedDates: path.join(ROOT, 'src/data/airtable/blocked-dates.json'),
-  // Deliberately OUTSIDE src/data/airtable/: manual (OTA) bookings are
-  // admin-owned and additive — the Airtable sync must never overwrite them.
+  departureDates: path.join(ROOT, 'src/data/availability/departure-dates.json'),
+  blockedDates: path.join(ROOT, 'src/data/availability/blocked-dates.json'),
+  // Seats sold on OTAs (Viator, GetYourGuide, WhatsApp) that must count
+  // against on-site availability. Additive, and applied client-side even
+  // when /api/availability fails — a seat sold elsewhere must never be
+  // resold just because an endpoint is down.
   manualBookings: path.join(ROOT, 'src/data/manual-bookings.json'),
-  // Also outside src/data/airtable/: a day tour's fixed weekly schedule (e.g.
-  // "only runs Monday and Tuesday") has no Airtable equivalent, so it lives
-  // here permanently rather than as a sync fallback.
+  // A day tour's fixed recurring days, e.g. "only runs Monday and Tuesday".
   weeklyAvailability: path.join(ROOT, 'src/data/weekly-availability.json'),
 }
 

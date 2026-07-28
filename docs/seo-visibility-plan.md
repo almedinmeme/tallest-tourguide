@@ -175,7 +175,6 @@ Also in this bucket: when a post is live, spend 10 minutes adding an internal li
 - Display real guest reviews on tour pages (the `/review/` flow already collects them) with `Review` schema.
 - German landing-page experiment for DACH if GSC shows German queries.
 - Populate `accommodations.json` and make Where We Stay data-driven when real content exists.
-- Move the Airtable token out of the client bundle (it's `VITE_`-prefixed, so it ships in public JS — proxy admin writes through a serverless function instead). Security, not SEO, but do it before the site gets attention.
 
 ---
 

@@ -29,9 +29,16 @@ hosting.
 - **SPA fallback is `200.html`** (pristine tag-free shell), not
   `index.html` — falling back to the prerendered homepage made Google index
   unknown URLs as homepage duplicates. See `public/_redirects`.
-- **Journal** was migrated from Airtable to `src/data/journal.json`
-  (`scripts/migrate-journal.mjs`) so posts are prerendered and in the
-  sitemap. Airtable still handles bookings, reviews and availability.
+- **Journal** was migrated from Airtable to `src/data/journal.json` so posts
+  are prerendered and in the sitemap.
+- **Airtable is gone.** Bookings are Google Calendar events written by
+  `/api/submit`, and `/api/availability` derives the "spots left" map from
+  them — every event holds a seat, so deleting one releases it. Every
+  submission is also appended to a Google Sheet ledger that nothing reads,
+  so it stays free to re-sort and extend. Departure dates, blocked dates and
+  OTA bookings are admin-owned JSON in `src/data/`; reviews come from the
+  Google Places sync plus the curated highlights in `/admin → Reviews`.
+  Setup: `docs/google-calendar-setup.md`.
 - **Prerender failures fail the build** (exit 1) so broken pages can't ship;
   emergency override: `PRERENDER_ALLOW_FAIL=1 npm run build`.
 

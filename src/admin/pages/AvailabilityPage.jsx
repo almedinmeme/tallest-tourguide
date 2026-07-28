@@ -1,18 +1,20 @@
 // Availability — four jobs in one screen, ordered by how often they're used:
 //   1. External (OTA) bookings — seats sold on GetYourGuide/Viator/etc. that
-//      must count against on-site availability. Admin-owned and additive:
-//      stored in src/data/manual-bookings.json, which the Airtable sync
-//      NEVER touches.
+//      must count against on-site availability. Additive, stored in
+//      src/data/manual-bookings.json.
 //   2. Weekly schedule — a day tour's fixed recurring days (e.g. only Monday
-//      and Tuesday). Admin-owned, stored in src/data/weekly-availability.json
-//      (also never touched by Airtable), and read by useBlockedDates on the
-//      public site to grey out every day not in the set.
+//      and Tuesday), stored in src/data/weekly-availability.json and read by
+//      useBlockedDates on the public site to grey out every other weekday.
 //   3. Blocked dates — single days or ranges when tours can't run.
 //   4. Journey departure dates.
-// 3 and 4 edit the same src/data/airtable/*.json files the build-time sync
-// regenerates, so for those AIRTABLE STAYS THE PRIORITY SOURCE: any build
-// that reaches it overwrites them. They're the fallback for when Airtable
-// is down or over its API cap.
+// All four are authoritative: what's saved here is what ships on the next
+// publish. (3 and 4 used to be regenerated from Airtable on every build,
+// making these edits a temporary fallback. That sync is gone.)
+//
+// ── One rule worth remembering ────────────────────────────────────────
+// Bookings taken through the SITE live on the Google Calendar and are
+// counted automatically. Section 1 is for seats sold ELSEWHERE. Entering
+// the same booking in both double-counts it and quietly loses you a seat.
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import * as api from '../api'
@@ -235,7 +237,7 @@ export default function AvailabilityPage() {
   // ---- Blocked dates --------------------------------------------------------
 
   // Accepts a single date or an inclusive from/to range; ranges are expanded
-  // into one record per day so the stored shape (and Airtable's) stays flat.
+  // into one record per day so the stored shape stays flat.
   const addBlocked = (from, to, tourSlug) => {
     if (!from) return
     const end = to && to >= from ? to : from
@@ -331,8 +333,9 @@ export default function AvailabilityPage() {
         <h2 style={{ ...s.h2, marginTop: 0 }}>External bookings (OTA)</h2>
         <SectionHint>
           Seats sold on other channels (GetYourGuide, Viator, phone…). They reduce the spots
-          shown on the website, on top of the site's own bookings. Airtable never overwrites
-          these — this list is the single place they live.
+          shown on the website, on top of the bookings taken here. Only add seats sold
+          ELSEWHERE — a booking made on the site is already on the Bookings calendar, and
+          entering it twice quietly loses you a seat.
         </SectionHint>
 
         <ManualAdder bookables={bookables} onAdd={addManual} />
@@ -460,10 +463,9 @@ export default function AvailabilityPage() {
       {/* ── 3 · Blocked dates ───────────────────────────────────────────── */}
       <section style={{ ...s.card, marginTop: 20 }}>
         <h2 style={{ ...s.h2, marginTop: 0 }}>Blocked dates</h2>
-        <SectionHint tone="warn">
-          Fallback for Airtable's BlockedDates table: any deploy that can reach Airtable replaces
-          this list with Airtable's. Add dates here only while Airtable is down or over its API
-          limit — and mirror them into Airtable afterwards.
+        <SectionHint>
+          Days when tours can't run. Saved here and shipped on the next publish — nothing
+          else writes this list.
         </SectionHint>
 
         <BlockedAdder bookables={bookables} onAdd={addBlocked} />
@@ -509,9 +511,8 @@ export default function AvailabilityPage() {
       {/* ── 4 · Journey departure dates ─────────────────────────────────── */}
       <section style={{ ...s.card, marginTop: 20 }}>
         <h2 style={{ ...s.h2, marginTop: 0 }}>Journey departure dates</h2>
-        <SectionHint tone="warn">
-          Fallback for Airtable's DepartureDates table — same rule as blocked dates: Airtable
-          overwrites this list on any deploy that reaches it.
+        <SectionHint>
+          The dates each journey departs. Saved here and shipped on the next publish.
         </SectionHint>
         {journeys.length === 0 && <div style={s.subtle}>No journeys found.</div>}
         {journeys.map((pkg) => (

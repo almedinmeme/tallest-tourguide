@@ -1,13 +1,13 @@
-// Dates unavailable for booking, from the build-time Airtable sync
-// (src/data/airtable/blocked-dates.json) — no runtime API calls.
-// The sync keeps ALL records; past dates are filtered out here because the
-// JSON can be up to a week old between rebuilds.
+// Dates unavailable for booking, edited in /admin → Availability and baked
+// into the bundle (src/data/availability/blocked-dates.json) — no runtime
+// API calls. Past dates are filtered out here because the JSON is only as
+// fresh as the last deploy.
 // Also folds in each tour's fixed weekly schedule (src/data/weekly-availability.json,
 // admin-owned — see AvailabilityPage), so a tour that only runs e.g. Monday
 // and Tuesday reads as "blocked" every other weekday without a blocked-dates
 // record for each individual date.
 
-import blockedDatesData from '../data/airtable/blocked-dates.json'
+import blockedDatesData from '../data/availability/blocked-dates.json'
 import weeklyAvailability from '../data/weekly-availability.json'
 
 const today = new Date().toISOString().split('T')[0]

@@ -145,14 +145,15 @@ async function main() {
   const server = await preview({ preview: { port: PORT, strictPort: false } })
   const base = server.resolvedUrls?.local?.[0]?.replace(/\/$/, '') || `http://localhost:${PORT}`
 
-  // Airtable is blocked at the DNS level: tour pages call it live for
-  // availability/reviews, it rate-limits under 51-route × retry load, and the
-  // static HTML must not embed live data anyway — the client refetches after
-  // hydration. A resolver rule (vs request interception) can't deadlock the
-  // crawl: the fetch fails instantly and the app's fallbacks render.
+  // No third-party host needs blocking here. Availability is the only live
+  // data a page fetches, and it goes to same-origin /api/availability, which
+  // `vite preview` answers with the SPA fallback — so the crawl never reaches
+  // Google, and the static HTML never embeds seat counts. (There used to be a
+  // --host-resolver-rules rule pinning api.airtable.com to NOTFOUND; it was
+  // already inert for the same reason.)
   const browser = await puppeteer.launch({
     headless: true,
-    args: ['--no-sandbox', '--host-resolver-rules=MAP api.airtable.com ~NOTFOUND'],
+    args: ['--no-sandbox'],
   })
   let page = await newMobilePage(browser)
 

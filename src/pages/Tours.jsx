@@ -7,7 +7,6 @@ import TourCard from '../components/TourCard'
 import useWindowWidth from '../hooks/useWindowWidth'
 import tours from '../data/tours'
 import { TOUR_CATEGORY_LABELS, TOUR_CATEGORY_IDS, tourCategories } from '../data/tourCategories'
-import { useAllReviews } from '../hooks/useAllReviews'
 import { getPage } from '../data/pages'
 
 // Hero photo and SEO are editable in the admin (Pages → All Tours); empty
@@ -58,7 +57,6 @@ function durationToHours(duration) {
 function Tours() {
   const width = useWindowWidth()
   const isMobile = width <= 768
-  const { stats } = useAllReviews()
 
   // Place-led entry: /tours?city=Sarajevo filters to that city's day tours.
   // ?category= (hero quick links) seeds the category filter; ?search= (hero
@@ -461,8 +459,8 @@ function Tours() {
                 title={tour.title}
                 price={tour.price}
                 oldPrice={tour.oldPrice}
-                rating={stats[String(tour.id)]?.avgRating ?? tour.rating}
-                reviews={stats[String(tour.id)]?.count ?? tour.reviews}
+                rating={tour.rating}
+                reviews={tour.reviews}
                 duration={tour.duration}
                 highlights={tour.highlights}
                 badge={tour.badge}

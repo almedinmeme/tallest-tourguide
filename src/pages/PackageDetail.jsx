@@ -19,7 +19,6 @@ import { sendEmail } from '../utils/email'
 import useWindowWidth from '../hooks/useWindowWidth'
 import { useAvailability } from '../hooks/useAvailability'
 import { usePackageDates } from '../hooks/usePackageDates'
-import { useAllReviews } from '../hooks/useAllReviews'
 import Gallery from '../components/Gallery'
 import Button from '../components/Button'
 import TourReviews from '../components/TourReviews'
@@ -280,7 +279,6 @@ function PackageDetail() {
   const pkg = packages.find((p) => p.slug === slug)
   const width = useWindowWidth()
   const isMobile = width <= 768
-  const { stats } = useAllReviews()
 
   const [expandedBreakdown, setExpandedBreakdown] = useState(new Set())
   const toggleBreakdown = (key) => setExpandedBreakdown(prev => { const s = new Set(prev); s.has(key) ? s.delete(key) : s.add(key); return s })
@@ -909,8 +907,8 @@ function PackageDetail() {
             {/* Rating — above the title */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '12px' }}>
               <Star size={15} color="var(--color-amber)" fill="var(--color-amber)" />
-              <span style={styles.ratingNumber}>{stats[pkg.slug]?.avgRating ?? pkg.rating}</span>
-              <span style={styles.ratingCount}>({stats[pkg.slug]?.count ?? pkg.reviews} reviews)</span>
+              <span style={styles.ratingNumber}>{pkg.rating}</span>
+              <span style={styles.ratingCount}>({pkg.reviews} reviews)</span>
             </div>
 
             {/* Title */}
@@ -1455,10 +1453,11 @@ function PackageDetail() {
               </div>
             </div>
 
-            {/* Package Reviews — approved reviews from Airtable + submission form */}
-       <div id="reviews">
-  <TourReviews tourId={pkg.slug} tourName={pkg.name} tourSlug={pkg.slug} />
-</div>
+            {/* Curated highlights for this journey + links to review us on
+                Google/Tripadvisor, where a review actually counts. */}
+            <div id="reviews">
+              <TourReviews tourSlug={pkg.slug} />
+            </div>
 
           </div>
 
