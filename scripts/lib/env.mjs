@@ -3,6 +3,7 @@
 import { readFileSync } from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { parseServiceAccount } from '../../netlify/functions/_lib/google-auth.mjs'
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..')
 
@@ -19,11 +20,20 @@ export function loadEnv(rootDir = ROOT) {
   return env
 }
 
-// Airtable credentials with the legacy VITE_-prefixed names as fallback so
-// the transition away from client-side tokens can't break a build.
-export function airtableCredentials(env = loadEnv()) {
+// Google credentials for the booking store: the calendar that holds seats
+// and the sheet that ledgers every submission. One service account covers
+// both.
+//
+// The key is base64'd into a single variable because the parser above is
+// single-line: a PEM is 28 lines and simply cannot be expressed in .env.
+// Decoding lives in the functions lib so there is one implementation — note
+// the import direction (scripts → netlify/functions/_lib) is deliberate and
+// must not be reversed, since this file reads .env off disk and that means
+// nothing inside a Lambda.
+export function googleCredentials(env = loadEnv()) {
   return {
-    token: env.AIRTABLE_TOKEN || env.VITE_AIRTABLE_TOKEN || '',
-    baseId: env.AIRTABLE_BASE_ID || env.VITE_AIRTABLE_BASE_ID || '',
+    sa: parseServiceAccount(env.GOOGLE_SA_KEY_B64 || ''),
+    calendarId: env.GOOGLE_CALENDAR_ID || '',
+    sheetId: env.GOOGLE_SHEET_ID || '',
   }
 }

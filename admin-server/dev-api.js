@@ -1,40 +1,43 @@
 // Dev-only /api/availability + /api/submit, mirroring the production
 // Netlify Functions so plain `npm run dev` works without `netlify dev`.
-// Both transports are thin wrappers over the same core module
-// (netlify/functions/_lib/airtable.mjs) so behavior can't drift.
+// Both transports are thin wrappers over the same core modules
+// (netlify/functions/_lib/*) so behavior can't drift.
 //
-// The Airtable token comes from .env (AIRTABLE_TOKEN / AIRTABLE_BASE_ID) via
-// the scripts env loader — Vite only exposes VITE_-prefixed vars, and these
-// must never get that prefix (they'd end up in the public bundle).
+// Credentials come from .env via the scripts env loader — Vite only exposes
+// VITE_-prefixed vars, and these must never get that prefix (the service
+// account key would end up in the public bundle, and it never expires).
+//
+// IMPORTANT: point GOOGLE_CALENDAR_ID / GOOGLE_SHEET_ID at the throwaway dev
+// calendar and sheet. Otherwise every test booking you make while developing
+// lands on the real calendar — i.e. on the owner's phone — and holds seats
+// that aren't actually sold. See docs/google-calendar-setup.md.
 import express from 'express'
-import { loadEnv, airtableCredentials } from '../scripts/lib/env.mjs'
-import {
-  fetchAvailability,
-  submitRecord,
-  validateSubmitBody,
-  MAX_BODY_BYTES,
-} from '../netlify/functions/_lib/airtable.mjs'
+import { loadEnv, googleCredentials } from '../scripts/lib/env.mjs'
+import { fetchAvailability, validateBooking, MAX_BODY_BYTES } from '../netlify/functions/_lib/gcal.mjs'
+import { submitBooking } from '../netlify/functions/_lib/booking.mjs'
 
 export default function devApiPlugin() {
   return {
     name: 'tallest-dev-api',
     apply: 'serve',
     configureServer(server) {
-      const { token, baseId } = airtableCredentials(loadEnv())
-      if (!token || !baseId) {
+      const { sa, calendarId, sheetId } = googleCredentials(loadEnv())
+      if (!sa || !calendarId) {
         console.warn(
-          '[dev-api] AIRTABLE_TOKEN / AIRTABLE_BASE_ID missing from .env — ' +
+          '[dev-api] GOOGLE_SA_KEY_B64 / GOOGLE_CALENDAR_ID missing from .env — ' +
             '/api/availability returns {} and /api/submit returns 503.'
         )
+      } else if (!sheetId) {
+        console.warn('[dev-api] GOOGLE_SHEET_ID missing — bookings save to the calendar but not the ledger.')
       }
 
       const app = express()
       app.use(express.json({ limit: MAX_BODY_BYTES }))
 
       app.get('/availability', async (_req, res) => {
-        if (!token || !baseId) return res.json({})
+        if (!sa || !calendarId) return res.json({})
         try {
-          res.json(await fetchAvailability({ token, baseId }))
+          res.json(await fetchAvailability({ sa, calendarId }))
         } catch (err) {
           // Fail open like production: empty map = full availability shown.
           console.warn('[dev-api] availability:', err.message)
@@ -47,18 +50,18 @@ export default function devApiPlugin() {
         if (typeof body?.website === 'string' && body.website.trim() !== '') {
           return res.json({ ok: true }) // honeypot tripped — silently drop
         }
-        let table, fields
+        let booking
         try {
-          ;({ table, fields } = validateSubmitBody(body))
+          booking = validateBooking(body?.booking)
         } catch (err) {
           return res.status(400).json({ error: err.message })
         }
-        if (!token || !baseId) {
-          return res.status(503).json({ error: 'Airtable not configured (AIRTABLE_TOKEN in .env)' })
+        if (!sa || !calendarId) {
+          return res.status(503).json({ error: 'Google Calendar not configured (GOOGLE_SA_KEY_B64 in .env)' })
         }
-        const result = await submitRecord({ token, baseId, table, fields })
+        const result = await submitBooking({ sa, calendarId, sheetId, booking })
         if (!result.ok) return res.status(result.status).json({ error: result.error })
-        res.json({ ok: true })
+        res.json(result)
       })
 
       // Mounted under /api AFTER the admin plugin, so /api/admin/* keeps

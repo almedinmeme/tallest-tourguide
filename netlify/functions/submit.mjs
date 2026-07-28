@@ -1,15 +1,18 @@
 // POST /api/submit  (via the /api/* redirect in public/_redirects)
 //
-// Single write endpoint for form submissions that land in Airtable
-// (Bookings from checkout, Reviews from the review forms). Keeps the
-// Airtable token server-side — the client bundle contains no credentials —
-// and enforces per-table field allowlists (see _lib/airtable.mjs).
+// The single write endpoint for bookings: creates the Google Calendar event
+// that holds the seats and appends a row to the booking ledger. Credentials
+// stay server-side, so the client bundle carries none.
 //
-// Body: { table: 'Bookings' | 'Reviews', fields: {...}, website?: '' }
+// This used to accept a `table` and write to Airtable. It is bookings-only
+// now — reviews moved to Google/Tripadvisor — so the body is simply:
+//   { booking: {...}, website?: '' }
 // `website` is a honeypot: bots that fill the hidden input get a fake
 // success and nothing is written.
 
-import { submitRecord, validateSubmitBody, MAX_BODY_BYTES } from './_lib/airtable.mjs'
+import { parseServiceAccount } from './_lib/google-auth.mjs'
+import { validateBooking, MAX_BODY_BYTES } from './_lib/gcal.mjs'
+import { submitBooking } from './_lib/booking.mjs'
 
 export default async (req) => {
   if (req.method !== 'POST') {
@@ -31,23 +34,27 @@ export default async (req) => {
     return Response.json({ ok: true }) // honeypot tripped — silently drop
   }
 
-  let table, fields
+  let booking
   try {
-    ;({ table, fields } = validateSubmitBody(body))
+    booking = validateBooking(body?.booking)
   } catch (err) {
     return Response.json({ error: err.message }, { status: 400 })
   }
 
-  const token = process.env.AIRTABLE_TOKEN
-  const baseId = process.env.AIRTABLE_BASE_ID
-  if (!token || !baseId) {
-    console.error('submit: Airtable credentials not configured')
-    return Response.json({ error: 'Submission storage not configured' }, { status: 503 })
+  const sa = parseServiceAccount(process.env.GOOGLE_SA_KEY_B64 || '')
+  const calendarId = process.env.GOOGLE_CALENDAR_ID
+  if (!sa || !calendarId) {
+    console.error('submit: Google Calendar credentials not configured')
+    return Response.json({ error: 'Booking storage not configured' }, { status: 503 })
   }
 
-  const result = await submitRecord({ token, baseId, table, fields })
+  // The ledger is valuable but not load-bearing: without a sheet id we still
+  // take the booking rather than turning it away.
+  const sheetId = process.env.GOOGLE_SHEET_ID || ''
+
+  const result = await submitBooking({ sa, calendarId, sheetId, booking })
   if (!result.ok) {
     return Response.json({ error: result.error }, { status: result.status })
   }
-  return Response.json({ ok: true })
+  return Response.json(result)
 }
