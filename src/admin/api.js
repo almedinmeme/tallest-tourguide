@@ -45,6 +45,13 @@ export const googleReviews = {
   get: () => jsonFetch(`${BASE}/google-reviews`),
 }
 
+// Read-only: bookings taken on the site, live from the Google Calendar.
+// Not stored in src/data, so this is the one admin screen whose data doesn't
+// ship with a publish.
+export const bookings = {
+  list: (days = 180) => jsonFetch(`${BASE}/bookings?days=${days}`),
+}
+
 // Singleton — one object, no ids.
 export const settings = {
   get: () => jsonFetch(`${BASE}/settings`),

@@ -3,6 +3,8 @@ import { execFile } from 'node:child_process'
 import { readCollection, writeCollection, nextId, readAvailability, writeAvailability } from './storage.js'
 import { upload, processUpload } from './upload.js'
 import { renameUpload } from './rename.js'
+import { loadEnv, googleCredentials } from '../scripts/lib/env.mjs'
+import { fetchBookings } from '../netlify/functions/_lib/gcal.mjs'
 
 function asyncHandler(fn) {
   return (req, res, next) => {
@@ -96,6 +98,27 @@ export function buildAdminRouter() {
   router.get('/google-reviews', asyncHandler(async (_req, res) => {
     const data = await readCollection('googleReviews')
     res.json(Array.isArray(data) ? { reviews: [] } : data)
+  }))
+
+  // Read-only view of the bookings on the Google Calendar.
+  //
+  // Google Calendar shows you your day; it does not show you "Mostar, 14 Aug,
+  // English — 14 of 16 seats, 2 of them from Viator". That merge of calendar
+  // bookings with the OTA seats in manual-bookings.json exists nowhere else,
+  // and it's the number that answers "can I take this group?".
+  //
+  // Read-only on purpose: this server only runs locally, whereas the phone in
+  // your pocket already has a perfectly good delete button. Rows link out to
+  // the event instead.
+  router.get('/bookings', asyncHandler(async (_req, res) => {
+    const { sa, calendarId } = googleCredentials(loadEnv())
+    if (!sa || !calendarId) {
+      return res.status(503).json({
+        error: 'Google Calendar not configured — add GOOGLE_SA_KEY_B64 and GOOGLE_CALENDAR_ID to .env.',
+      })
+    }
+    const days = Math.min(Number(_req.query.days) || 180, 550)
+    res.json({ bookings: await fetchBookings({ sa, calendarId, days }) })
   }))
 
   router.post('/upload', upload.single('file'), asyncHandler(async (req, res) => {
