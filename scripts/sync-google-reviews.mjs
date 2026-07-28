@@ -13,9 +13,9 @@
 // no "all reviews" endpoint. The section pairs them with the curated
 // highlights in src/data/featuredReviews.js.
 //
-// Failure policy is deliberately softer than sync-airtable: Google reviews are
-// supplementary social proof, so a missing key or a failed fetch keeps the
-// committed JSON and logs loudly instead of failing the deploy. Set
+// Failure policy is deliberately soft: Google reviews are supplementary
+// social proof, so a missing key or a failed fetch keeps the committed JSON
+// and logs loudly instead of failing the deploy. Set
 // GOOGLE_REVIEWS_SYNC_STRICT=1 to fail the build on CI instead.
 //
 // Setup:

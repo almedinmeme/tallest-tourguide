@@ -1,5 +1,5 @@
 // Journal posts — local JSON collection, edited via /admin like tours and
-// destinations. Migrated from Airtable (scripts/migrate-journal.mjs) so posts
+// destinations. Migrated off Airtable so posts
 // are enumerable at build time: they get prerendered HTML and sitemap entries
 // instead of being invisible to crawlers behind a runtime fetch.
 //

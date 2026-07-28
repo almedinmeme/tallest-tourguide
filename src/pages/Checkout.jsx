@@ -10,7 +10,8 @@
 //                    seam to replace with a real gateway later.
 //   • Reserve & pay later → the frictionless flow, full price.
 //
-// Both paths funnel through submitBooking() (Airtable save + emails).
+// Both paths funnel through submitBooking(): the calendar write that holds
+// the seats, then the guest and admin emails.
 //
 // Conversion furniture: on mobile the trip summary sits above the form (you
 // see what you're paying for before you're asked to pay), a sticky total bar
