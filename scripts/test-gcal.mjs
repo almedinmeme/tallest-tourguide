@@ -208,6 +208,13 @@ s = await submit({ numPeople: 4, groupSize: 12, bookingId: 's3' })
 ok('sold out returns 409', s.ok === false && s.status === 409, JSON.stringify(s))
 ok('sold out writes NO ledger row', appended.length === 0)
 
+// Same rule as the 409: no booking was created, so nothing is ledgered.
+// A second row here would double-count the money on the sheet.
+listItems = [evt(2, 'dup2', 'dupe-ledger')]; appended = []
+s = await submit({ numPeople: 2, groupSize: 12, bookingId: 'dupe-ledger' })
+ok('duplicate submit succeeds', s.ok === true && s.eventId === 'dup2', JSON.stringify(s))
+ok('duplicate writes NO ledger row', appended.length === 0, `${appended.length} rows`)
+
 listItems = []; appended = []; ledgerShouldFail = true
 s = await submit({ bookingId: 's4' })
 ok('ledger failure is not fatal', s.ok === true, JSON.stringify(s))

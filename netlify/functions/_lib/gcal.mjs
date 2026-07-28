@@ -47,8 +47,6 @@ export async function fetchAvailability({ sa, calendarId }) {
 // `days` bounds how far ahead to look; journeys are booked ~18 months out
 // at the outside.
 export async function fetchBookings({ sa, calendarId, days = 550 }) {
-  await warnOnCalendarTimeZone(sa, calendarId)
-
   // Deliberately "now − 36h" rather than midnight in Sarajevo: computing a
   // local midnight needs a UTC offset, which is exactly the DST bug class
   // this module avoids everywhere else. Over-fetching a day and a half is
@@ -72,16 +70,20 @@ export async function fetchBookings({ sa, calendarId, days = 550 }) {
     url.searchParams.set('orderBy', 'startTime')
     // Server-side filter, so events you created by hand never even reach us.
     url.searchParams.set('privateExtendedProperty', 'src=site')
-    // Cuts the response ~5x. Everything we read is in this projection.
+    // Cuts the response ~5x. Everything we read is in this projection —
+    // including the calendar's own timeZone, which comes free here and saves
+    // a calendars.get call (that endpoint needs a broader scope than
+    // calendar.events, so asking for it would widen our permissions).
     url.searchParams.set(
       'fields',
-      'nextPageToken,items(id,htmlLink,start,end,summary,description,extendedProperties/private)'
+      'nextPageToken,timeZone,items(id,htmlLink,start,end,summary,description,extendedProperties/private)'
     )
     if (pageToken) url.searchParams.set('pageToken', pageToken)
 
     const res = await googleFetch(sa, url)
     if (!res.ok) throw new Error(await googleError(res, 'Calendar events.list'))
     const data = await res.json()
+    warnOnCalendarTimeZone(data.timeZone)
 
     for (const item of data.items || []) {
       const row = toBookingRow(item)
@@ -145,26 +147,36 @@ function parseDescription(description) {
   }
 }
 
-// If the calendar isn't in Europe/Sarajevo, events.list returns dateTimes in
+// If the calendar isn't on Sarajevo time, events.list returns dateTimes in
 // whatever zone it IS in, and the YYYY-MM-DD slice above silently produces
-// off-by-one dates near midnight. Checked once per warm container — a
-// warning, not a throw, because a wrong zone still mostly works and taking
-// bookings down over it would be worse.
-let timeZoneChecked = false
-async function warnOnCalendarTimeZone(sa, calendarId) {
-  if (timeZoneChecked) return
-  timeZoneChecked = true
+// off-by-one dates near midnight.
+//
+// Compared by UTC OFFSET rather than by name, because Europe/Sarajevo is an
+// IANA link to Europe/Belgrade — Google canonicalises it, so a name check
+// would cry wolf on a calendar that is in fact set up correctly. Zagreb,
+// Ljubljana, Podgorica and Skopje are the same zone too.
+//
+// Warned once per warm container, and never thrown: a wrong zone still
+// mostly works, and taking bookings down over it would be the worse outcome.
+let timeZoneWarned = false
+function warnOnCalendarTimeZone(timeZone) {
+  if (timeZoneWarned || !timeZone || timeZone === TIME_ZONE) return
   try {
-    const res = await googleFetch(sa, `${API}/${encodeURIComponent(calendarId)}?fields=timeZone`)
-    if (!res.ok) return
-    const { timeZone } = await res.json()
-    if (timeZone && timeZone !== TIME_ZONE) {
-      console.warn(
-        `[gcal] Bookings calendar is ${timeZone}, expected ${TIME_ZONE}. ` +
-        'Dates near midnight may be off by one — fix it in Calendar settings.'
-      )
-    }
-  } catch { /* diagnostics only, never block a booking */ }
+    const offset = (tz, date) =>
+      new Intl.DateTimeFormat('en', { timeZone: tz, timeZoneName: 'longOffset' }).format(date)
+    // Two probes, six months apart, so a zone that merely shares our winter
+    // offset but not our summer one is still caught.
+    const winter = new Date('2026-01-15T12:00:00Z')
+    const summer = new Date('2026-07-15T12:00:00Z')
+    if (offset(timeZone, winter) === offset(TIME_ZONE, winter) &&
+        offset(timeZone, summer) === offset(TIME_ZONE, summer)) return
+  } catch { /* unknown zone name — fall through and warn */ }
+
+  timeZoneWarned = true
+  console.warn(
+    `[gcal] Bookings calendar is ${timeZone}, which is not on ${TIME_ZONE} time. ` +
+    'Dates near midnight will be off by one — fix it in Calendar settings.'
+  )
 }
 
 // ── Writing a booking ──────────────────────────────────────────────────

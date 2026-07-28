@@ -12,7 +12,10 @@ export function loadEnv(rootDir = ROOT) {
   try {
     for (const line of readFileSync(path.join(rootDir, '.env'), 'utf-8').split('\n')) {
       const m = line.match(/^\s*([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(.*)\s*$/)
-      if (m && !(m[1] in env)) env[m[1]] = m[2].replace(/^['"]|['"]$/g, '')
+      // .trim() is load-bearing, not tidiness: the (.*) above is greedy, so
+      // \s*$ never gets to match and trailing spaces end up inside the value.
+      // A calendar id pasted with a stray space then 404s with no clue why.
+      if (m && !(m[1] in env)) env[m[1]] = m[2].trim().replace(/^['"]|['"]$/g, '').trim()
     }
   } catch {
     // no .env — rely on process.env

@@ -23,14 +23,27 @@ import { appendBookingRow } from './gsheet.mjs'
 export async function submitBooking({ sa, calendarId, sheetId, booking }) {
   const calendar = await createBooking({ sa, calendarId, booking })
 
-  // Sold out / duplicate — the one case the guest is told about.
+  // Sold out — the one case the guest is told about.
   if (!calendar.ok && calendar.status === 409) {
     return { ok: false, status: 409, error: calendar.error }
   }
 
-  const calendarStatus = calendar.ok
-    ? (calendar.duplicate ? 'ok (duplicate submit ignored)' : 'ok')
-    : `FAILED: ${calendar.error}`
+  // A retried submit (double-click, flaky mobile) matched an existing event,
+  // so no booking was created. The ledger records bookings, not the HTTP
+  // requests that arrived — a second row here would double-count the money
+  // for anyone reconciling revenue from the sheet. Same rule as the 409.
+  if (calendar.duplicate) {
+    return {
+      ok: true,
+      status: 200,
+      eventId: calendar.eventId,
+      bookingId: booking.bookingId || '',
+      calendarStatus: 'ok (duplicate submit ignored)',
+      ledgerStatus: 'skipped (duplicate)',
+    }
+  }
+
+  const calendarStatus = calendar.ok ? 'ok' : `FAILED: ${calendar.error}`
 
   if (!calendar.ok) {
     console.error('submit: calendar write failed —', calendar.error)
