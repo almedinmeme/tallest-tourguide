@@ -12,6 +12,10 @@ export const PATHS = {
   accommodations: path.join(ROOT, 'src/data/accommodations.json'),
   pages: path.join(ROOT, 'src/data/pages.json'),
   journal: path.join(ROOT, 'src/data/journal.json'),
+  // Curated review highlights for the homepage reviews section. The Google
+  // reviews beside them are synced at build time, not edited here.
+  reviews: path.join(ROOT, 'src/data/featuredReviews.json'),
+  googleReviews: path.join(ROOT, 'src/data/google/reviews.json'),
   settings: path.join(ROOT, 'src/data/settings.json'),
   announcement: path.join(ROOT, 'src/data/announcement.json'),
   uploads: path.join(ROOT, 'public/uploads'),

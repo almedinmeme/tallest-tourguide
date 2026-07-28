@@ -501,6 +501,12 @@
         "id": "srclbq",
         "type": "text",
         "html": "<h2>Why This Still Matters on a Tour</h2><p>In thirteen years of doing this work, I've witnessed so much. There have been so many moments where people are crying, and where I'm crying right along with them, because of what this war and its aftermath did to this country. My goal has never been to shock anyone. It's simply to face the harsh reality of what happened here in 1995, honestly and directly.</p><p>One of the tours that stays with me most was one I led for Remembering Srebrenica, an organization from the UK. On that trip, I met the Mothers of Srebrenica in person, and I was translating for the group in real time as they spoke. I remember how devastated I was in that moment — trying to hold the weight of their words in two languages at once, while everyone around me, including me, was breaking down. Moments like that don't leave you. They come with an obligation: to keep carrying this story, and to keep telling it to the rest of the world, so it's never reduced to a date in a textbook.</p>"
+      },
+      {
+        "id": "o6vme3",
+        "type": "promo",
+        "cardType": "tour",
+        "slug": "sarajevo-war-tour"
       }
     ],
     "relatedTourSlug": "srebrenica-day-trip-from-sarajevo",

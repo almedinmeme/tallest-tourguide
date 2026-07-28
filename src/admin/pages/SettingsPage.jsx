@@ -94,6 +94,38 @@ export default function SettingsPage() {
         <FormField label="TripAdvisor URL" hint="Footer, the reviews section's “read all reviews” link, and schema markup.">
           <input style={s.input} value={item.tripadvisorUrl || ''} onChange={(e) => set({ tripadvisorUrl: e.target.value })} />
         </FormField>
+        <div style={s.grid2}>
+          <FormField label="TripAdvisor rating" hint="e.g. 4.9 — TripAdvisor has no API, so copy it from your profile every few months.">
+            <input
+              style={s.input}
+              type="number"
+              step="0.1"
+              min="0"
+              max="5"
+              value={item.tripadvisorRating ?? ''}
+              onChange={(e) => set({ tripadvisorRating: e.target.value === '' ? '' : Number(e.target.value) })}
+            />
+          </FormField>
+          <FormField label="TripAdvisor review count" hint="e.g. 180 — feeds the “4.9 from 300+ reviews” headline on the homepage.">
+            <input
+              style={s.input}
+              type="number"
+              step="1"
+              min="0"
+              value={item.tripadvisorReviewCount ?? ''}
+              onChange={(e) => set({ tripadvisorReviewCount: e.target.value === '' ? '' : Number(e.target.value) })}
+            />
+          </FormField>
+        </div>
+        <FormField
+          label="Google Place ID"
+          hint="From google.com/maps → your business → “Share”, or the Place ID Finder. The build fetches your Google rating and reviews with it — the homepage Google cards stay empty until it's filled in."
+        >
+          <input style={s.input} value={item.googlePlaceId || ''} onChange={(e) => set({ googlePlaceId: e.target.value })} />
+        </FormField>
+        <FormField label="Google reviews URL" hint="Optional — where “Read all reviews on Google” points. Left empty, it uses your Google Maps listing.">
+          <input style={s.input} value={item.googleReviewsUrl || ''} onChange={(e) => set({ googleReviewsUrl: e.target.value })} />
+        </FormField>
       </section>
 
       <section style={s.card}>

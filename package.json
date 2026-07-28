@@ -5,8 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "node scripts/sync-airtable.mjs && vite build && node scripts/generate-image-variants.mjs && node scripts/prerender.mjs",
-    "sync": "node scripts/sync-airtable.mjs",
+    "build": "node scripts/sync-airtable.mjs && node scripts/sync-google-reviews.mjs && vite build && node scripts/generate-image-variants.mjs && node scripts/prerender.mjs",
+    "sync": "node scripts/sync-airtable.mjs && node scripts/sync-google-reviews.mjs",
+    "sync:google": "node scripts/sync-google-reviews.mjs",
     "build:spa": "vite build",
     "prerender": "node scripts/prerender.mjs",
     "lint": "eslint .",

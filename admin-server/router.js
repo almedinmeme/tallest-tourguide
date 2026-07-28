@@ -88,6 +88,15 @@ export function buildAdminRouter() {
   router.use('/accommodations', buildCollectionRouter('accommodations'))
   router.use('/pages', buildCollectionRouter('pages'))
   router.use('/journal', buildCollectionRouter('journal'))
+  router.use('/reviews', buildCollectionRouter('reviews'))
+
+  // Read-only: the Google reviews written by scripts/sync-google-reviews.mjs.
+  // The admin can hide individual ones (settings.hiddenGoogleReviewIds) but
+  // never edit the text — it belongs to whoever wrote it.
+  router.get('/google-reviews', asyncHandler(async (_req, res) => {
+    const data = await readCollection('googleReviews')
+    res.json(Array.isArray(data) ? { reviews: [] } : data)
+  }))
 
   router.post('/upload', upload.single('file'), asyncHandler(async (req, res) => {
     const result = await processUpload(req.file, { slug: req.body?.slug })

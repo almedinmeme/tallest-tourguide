@@ -13,6 +13,7 @@ import PagesList from './pages/PagesList'
 import PageEditor from './pages/PageEditor'
 import JournalList from './pages/JournalList'
 import JournalEditor from './pages/JournalEditor'
+import ReviewsPage from './pages/ReviewsPage'
 import AvailabilityPage from './pages/AvailabilityPage'
 import AnnouncementPage from './pages/AnnouncementPage'
 import SettingsPage from './pages/SettingsPage'
@@ -95,6 +96,11 @@ const Icon = {
     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
       <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+    </svg>
+  ),
+  reviews: (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="m12 3.5 2.6 5.3 5.9.85-4.25 4.15 1 5.85L12 16.9l-5.25 2.75 1-5.85L3.5 9.65l5.9-.85z" />
     </svg>
   ),
   availability: (
@@ -326,6 +332,7 @@ export default function AdminApp() {
             <NavItem to="/admin/accommodations" icon={Icon.accommodations}>Accommodations</NavItem>
             <NavItem to="/admin/pages" icon={Icon.pages}>Pages</NavItem>
             <NavItem to="/admin/journal" icon={Icon.journal}>Journal</NavItem>
+            <NavItem to="/admin/reviews" icon={Icon.reviews}>Reviews</NavItem>
             <NavItem to="/admin/availability" icon={Icon.availability}>Availability</NavItem>
             <NavItem to="/admin/announcement" icon={Icon.announcement}>Promotions</NavItem>
             <NavItem to="/admin/settings" icon={Icon.settings}>Settings</NavItem>
@@ -374,6 +381,7 @@ export default function AdminApp() {
             <Route path="journal" element={<JournalList />} />
             <Route path="journal/new" element={<JournalEditor />} />
             <Route path="journal/:id" element={<JournalEditor />} />
+            <Route path="reviews" element={<ReviewsPage />} />
             <Route path="availability" element={<AvailabilityPage />} />
             <Route path="announcement" element={<AnnouncementPage />} />
             <Route path="settings" element={<SettingsPage />} />

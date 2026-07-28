@@ -38,6 +38,12 @@ export const destinations = makeCollection('destinations')
 export const accommodations = makeCollection('accommodations')
 export const pages = makeCollection('pages')
 export const journal = makeCollection('journal')
+export const reviews = makeCollection('reviews')
+
+// Read-only view of the build-time Google sync (src/data/google/reviews.json).
+export const googleReviews = {
+  get: () => jsonFetch(`${BASE}/google-reviews`),
+}
 
 // Singleton — one object, no ids.
 export const settings = {
