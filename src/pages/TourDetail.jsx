@@ -16,7 +16,9 @@ import Img from '../components/Img'
 import { useCurrency } from '../context/CurrencyContext'
 import { lazy, Suspense, useCallback, useEffect, useRef, useState } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
+import { nanoid } from 'nanoid'
 import { trackEvent } from '../utils/analytics'
+import { parseDuration } from '../utils/duration'
 import {
   Star, Clock, Users, MapPin, CheckCircle,
   XCircle, ShieldCheck, ChevronDown, ChevronUp,
@@ -333,7 +335,7 @@ function TourDetail() {
 
   // Collect the tour selection and hand off to the dedicated /checkout screen,
   // where the customer enters their details and chooses to pay by card or
-  // reserve & pay later. The Airtable save + emails happen there.
+  // reserve & pay later. The calendar save + emails happen there.
   const handleBooking = () => {
     if (!selectedDate) {
       setDateError(true)
@@ -392,16 +394,23 @@ function TourDetail() {
       language: selectedLanguageLabel,
     }
 
-    const airtableFields = {
-      TourSlug: tour.slug,
-      TourName: tour.title,
-      TourDate: selectedDate,
-      StartTime: startTime || '',
-      NumPeople: numPeople,
-      TourType: tourType,
-      Language: selectedLanguageLabel,
-      TotalPrice: isPrivateQuote ? 0 : totalPrice,
-      Status: 'Pending',
+    // What gets written to the Bookings calendar. groupSize lets the server
+    // re-check capacity at the moment of writing, which is the last defence
+    // against two people taking the same final seat; bookingId makes a
+    // retried submit (double-click, flaky mobile) reuse the same event
+    // instead of burning a second set of seats.
+    const bookingFields = {
+      bookingId: nanoid(12),
+      tourSlug: tour.slug,
+      tourName: tour.title,
+      tourDate: selectedDate,
+      startTime: startTime || '',
+      numPeople,
+      tourType,
+      language: selectedLanguageLabel,
+      totalPrice: isPrivateQuote ? 0 : totalPrice,
+      groupSize: tour.groupSize,
+      durationMinutes: parseDuration(tour.duration),
     }
 
     const analytics = {
@@ -438,7 +447,7 @@ function TourDetail() {
           rating: tour.rating,
           reviews: tour.reviews,
           templateParams,
-          airtableFields,
+          bookingFields,
           analytics,
         },
       },

@@ -1,6 +1,7 @@
 import SEO from '../components/SEO'
 import { useEffect, useRef, useState } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
+import { nanoid } from 'nanoid'
 import { trackEvent } from '../utils/analytics'
 import {
   ChevronDown, ChevronUp,
@@ -408,7 +409,7 @@ function PackageDetail() {
 
   // Collect the package selection and hand off to the dedicated /checkout
   // screen, where the customer enters their details and chooses to pay by card
-  // or reserve & pay later. The Airtable save + emails happen there.
+  // or reserve & pay later. The calendar save + emails happen there.
   const handleBooking = () => {
     if (!selectedDate) {
       setDateError(true)
@@ -443,16 +444,22 @@ function PackageDetail() {
       language: selectedLanguage,
     }
 
-    const airtableFields = {
-      TourSlug: pkg.slug || pkg.id || '',
-      TourName: `${pkg.name} — ${pkg.subtitle}`,
-      TourDate: selectedDate,
-      NumPeople: numPeople,
-      TourType: 'package',
-      TotalPrice: totalPrice,
-      Language: selectedLanguage,
-      Accommodation: accommodationLabel,
-      Status: 'Pending',
+    // What gets written to the Bookings calendar. A journey becomes one
+    // all-day event spanning the trip, so it sends durationDays — days.length
+    // is the exact night count, unlike the prose `duration` field.
+    // See the note in TourDetail.jsx on bookingId and groupSize.
+    const bookingFields = {
+      bookingId: nanoid(12),
+      tourSlug: pkg.slug || pkg.id || '',
+      tourName: `${pkg.name} — ${pkg.subtitle}`,
+      tourDate: selectedDate,
+      numPeople,
+      tourType: 'package',
+      totalPrice,
+      language: selectedLanguage,
+      accommodation: accommodationLabel,
+      groupSize: pkg.groupSize,
+      durationDays: (pkg.days || []).length || 1,
     }
 
     const analytics = {
@@ -482,7 +489,7 @@ function PackageDetail() {
           rating: pkg.rating,
           reviews: pkg.reviews,
           templateParams,
-          airtableFields,
+          bookingFields,
           analytics,
         },
       },

@@ -159,5 +159,65 @@ listItems = [{
 map = await fetchAvailability({ sa, calendarId })
 ok('recovers from description line', map['mostar-day-trip_2026-09-01_german'] === 3, JSON.stringify(map))
 
+// ── submitBooking orchestration ─────────────────────────────────────────
+// The write ORDER is the whole reason _lib/booking.mjs exists: a rejected
+// booking must leave no ledger row, and a failed calendar write must still
+// leave one.
+console.log('\nsubmitBooking — calendar then ledger')
+const { submitBooking } = await import('../netlify/functions/_lib/booking.mjs')
+
+let appended = []
+let calendarShouldFail = false
+let ledgerShouldFail = false
+globalThis.fetch = async (url, options = {}) => {
+  const u = String(url)
+  if (u.includes('oauth2.googleapis.com')) {
+    return { ok: true, json: async () => ({ access_token: 'fake', expires_in: 3600 }) }
+  }
+  if (u.includes('sheets.googleapis.com')) {
+    if (ledgerShouldFail) return { ok: false, status: 500, json: async () => ({ error: { message: 'sheet down' } }) }
+    appended.push(JSON.parse(options.body).values[0])
+    return { ok: true, json: async () => ({}) }
+  }
+  if (u.includes('?fields=timeZone')) return { ok: true, json: async () => ({ timeZone: 'Europe/Sarajevo' }) }
+  if (options.method === 'POST') {
+    if (calendarShouldFail) return { ok: false, status: 500, json: async () => ({ error: { message: 'calendar down' } }) }
+    return { ok: true, json: async () => ({ id: 'evt_ok' }) }
+  }
+  return { ok: true, json: async () => ({ items: listItems }) }
+}
+
+const submit = (overrides = {}, sheetId = 'sheet') =>
+  submitBooking({ sa, calendarId, sheetId, booking: validateBooking({ ...base, ...overrides }) })
+
+listItems = []; appended = []; calendarShouldFail = false; ledgerShouldFail = false
+let s = await submit({ bookingId: 's1' })
+ok('happy path succeeds', s.ok && s.eventId === 'evt_ok', JSON.stringify(s))
+ok('ledger got exactly one row', appended.length === 1)
+ok('ledger records calendarStatus ok', appended[0][15] === 'ok', JSON.stringify(appended[0]))
+ok('ledger records the eventId', appended[0][16] === 'evt_ok')
+
+listItems = []; appended = []; calendarShouldFail = true
+s = await submit({ bookingId: 's2' })
+ok('calendar failure still completes for the guest', s.ok === true, JSON.stringify(s))
+ok('calendar failure still writes a ledger row', appended.length === 1)
+ok('ledger row flags the failure', /^FAILED:/.test(appended[0][15]), appended[0][15])
+
+listItems = [evt(10)]; appended = []; calendarShouldFail = false
+s = await submit({ numPeople: 4, groupSize: 12, bookingId: 's3' })
+ok('sold out returns 409', s.ok === false && s.status === 409, JSON.stringify(s))
+ok('sold out writes NO ledger row', appended.length === 0)
+
+listItems = []; appended = []; ledgerShouldFail = true
+s = await submit({ bookingId: 's4' })
+ok('ledger failure is not fatal', s.ok === true, JSON.stringify(s))
+ok('ledger failure is reported', /^FAILED:/.test(s.ledgerStatus), s.ledgerStatus)
+ledgerShouldFail = false
+
+listItems = []; appended = []
+s = await submit({ bookingId: 's5' }, '')
+ok('no sheet configured still books', s.ok === true)
+ok('no sheet configured is reported', /skipped/.test(s.ledgerStatus), s.ledgerStatus)
+
 console.log(`\n${pass} passed, ${fail} failed`)
 process.exit(fail ? 1 : 0)

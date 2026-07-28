@@ -88,6 +88,9 @@ function Checkout() {
 
   const [isSending, setIsSending] = useState(false)
   const [isError, setIsError] = useState(false)
+  // Set only when the server rejects the booking because the seats went in
+  // the meantime — the one failure the guest can actually act on.
+  const [soldOut, setSoldOut] = useState('')
   const [done, setDone] = useState(null) // null | 'card' | 'reserve'
 
   // Mobile-only UI state: expandable top summary + sticky total bar.
@@ -129,8 +132,8 @@ function Checkout() {
   const dueNow = paySplit ? depositAmount : total
 
   // The real calendar date the balance falls due, when the departure ISO
-  // date travelled with the booking (packages send airtableFields.TourDate).
-  const departureISO = booking?.airtableFields?.TourDate
+  // date travelled with the booking (packages send bookingFields.tourDate).
+  const departureISO = booking?.bookingFields?.tourDate
   const balanceDueLabel = useMemo(() => {
     if (!/^\d{4}-\d{2}-\d{2}$/.test(departureISO || '')) return null
     const [y, m, d] = departureISO.split('-').map(Number)
@@ -181,6 +184,7 @@ function Checkout() {
     }
     setIsSending(true)
     setIsError(false)
+    setSoldOut('')
 
     // A redeemed promo shows its effect on the booking record; any other
     // code travels as plain attribution text.
@@ -193,11 +197,11 @@ function Checkout() {
       guest_phone: phone.trim() || 'Not provided',
       discount_code: codeLine || 'None',
     }
-    const guestAirtable = {
-      GuestName: name.trim(),
-      GuestEmail: email.trim(),
-      GuestPhone: phone.trim(),
-      DiscountCode: codeLine,
+    const guestFields = {
+      guestName: name.trim(),
+      guestEmail: email.trim(),
+      guestPhone: phone.trim(),
+      discountCode: codeLine,
     }
 
     const isCard = payMethod === 'card'
@@ -205,8 +209,8 @@ function Checkout() {
     const extrasSummary = selectedExtraItems.length
       ? selectedExtraItems.map((e) => `${e.label} (+€${e.amount})`).join(', ')
       : 'None'
-    // Fold the payment plan into the free-text payment_method so existing
-    // email templates and the Airtable schema need no new fields.
+    // Fold the payment plan into the free-text payment_method so the existing
+    // email templates need no new fields.
     const planSuffix = hasDeposit
       ? paySplit
         ? ` · ${DEPOSIT_PERCENT}% deposit plan (€${depositAmount} now, €${balanceAmount} due ${BALANCE_DUE_DAYS} days before departure)`
@@ -214,10 +218,10 @@ function Checkout() {
       : ''
 
     const payload = {
-      airtableFields: {
-        ...booking.airtableFields,
-        ...guestAirtable,
-        ...(isQuote ? {} : { TotalPrice: payTotal }),
+      bookingFields: {
+        ...booking.bookingFields,
+        ...guestFields,
+        ...(isQuote ? {} : { totalPrice: payTotal }),
       },
       templateParams: {
         ...booking.templateParams,
@@ -241,9 +245,16 @@ function Checkout() {
         setDone(payMethod)
         window.scrollTo(0, 0)
       })
-      .catch(() => {
+      .catch((err) => {
         setIsSending(false)
-        setIsError(true)
+        // A sold-out date is actionable — say so and point them back to the
+        // date picker. Everything else is the existing generic error.
+        if (err?.code === 'SOLD_OUT') {
+          setSoldOut(err.message)
+          window.scrollTo({ top: 0, behavior: 'smooth' })
+        } else {
+          setIsError(true)
+        }
       })
   }
 
@@ -411,6 +422,19 @@ function Checkout() {
                 You're moments away. Enter your details and choose how you'd like to pay.
               </p>
             </header>
+
+            {/* The date filled up while this guest was on the form. Shown
+                here rather than by the pay button because the fix is to go
+                back and pick another date, not to try again. */}
+            {soldOut && (
+              <div style={styles.soldOutBanner}>
+                <strong style={styles.soldOutTitle}>That date just filled up</strong>
+                <span>{soldOut}</span>
+                <Link to={booking.backLink} style={styles.soldOutLink}>
+                  {booking.backLabel} to choose another date
+                </Link>
+              </div>
+            )}
 
             {/* Your details */}
             <div style={styles.section}>
@@ -1260,6 +1284,26 @@ const styles = {
     color: 'var(--color-n600)',
     lineHeight: 1.6,
     margin: '0 0 22px',
+  },
+  // Amber rather than red: nothing went wrong, the seats simply went.
+  soldOutBanner: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '4px',
+    marginBottom: '24px',
+    padding: '14px 16px',
+    borderRadius: 'var(--radius)',
+    backgroundColor: 'rgba(217,158,66,0.08)',
+    border: '1px solid rgba(217,158,66,0.35)',
+    fontSize: 'var(--text-small)',
+    color: 'var(--color-charcoal)',
+  },
+  soldOutTitle: { fontSize: 'var(--text-body)' },
+  soldOutLink: {
+    marginTop: '4px',
+    color: 'var(--color-forest-green)',
+    fontWeight: 600,
+    textDecoration: 'underline',
   },
   errorBanner: {
     marginTop: '16px',

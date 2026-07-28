@@ -1,12 +1,17 @@
 // Live "spots left" data via /api/availability (a Netlify Function in
-// production, admin-server/dev-api.js in dev). The endpoint aggregates
-// confirmed future bookings server-side and the CDN caches it, so visitors
-// never call Airtable directly and no token ships in the bundle.
+// production, admin-server/dev-api.js in dev). The endpoint aggregates the
+// bookings on the Google Calendar server-side and the CDN caches it, so
+// visitors never call Google directly and no credentials ship in the bundle.
 //
 // Manual (OTA) bookings entered in /admin/availability are baked into the
 // bundle and ALWAYS count, on top of whatever the live endpoint returns —
 // including when it fails (seats sold on external channels must never be
-// resold just because Airtable is down).
+// resold just because the endpoint is down).
+//
+// The division of labour is worth keeping straight: the CALENDAR holds
+// direct bookings taken through this site, and manual-bookings.json holds
+// seats sold on OTAs. Entering the same booking in both double-counts it and
+// quietly loses a seat.
 import { useState, useEffect } from 'react'
 import manualBookings from '../data/manual-bookings.json'
 
@@ -26,6 +31,12 @@ function withManual(liveMap) {
 }
 
 let cache = null
+
+// Dropped after a booking completes, so the guest doesn't keep seeing the
+// seat counts from before they booked. Called by submitBooking().
+export function invalidateAvailability() {
+  cache = null
+}
 
 export function useAvailability() {
   const [bookings, setBookings] = useState(manualMap)
