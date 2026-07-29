@@ -95,10 +95,19 @@ const css = `
     font-weight: 400;
   }
   .rv__figure {
+    display: inline-block;
     font-family: var(--font-hero);
     font-weight: 300;
     font-size: clamp(68px, 11vw, 108px);
-    line-height: 0.82;
+    /* background-clip: text paints the gradient only inside this element's own
+       box, so the box has to be tall enough for the glyphs — a tight
+       line-height was shaving the top off the numerals and there is no fill
+       left underneath to show through. The padding is pulled straight back
+       out with a matching negative margin, so the lockup sits where it looks
+       like it should. */
+    line-height: 1;
+    padding: 0.12em 0.04em 0.06em;
+    margin: -0.12em -0.04em -0.06em;
     letter-spacing: -0.03em;
     color: #fff;
     background: linear-gradient(170deg, #ffffff 25%, rgba(255,255,255,0.58) 100%);
@@ -233,6 +242,9 @@ const css = `
     line-height: 1.62;
     letter-spacing: 0.1px;
     color: rgba(255,255,255,0.88);
+    /* Reviews written in paragraphs keep them — HTML would otherwise run the
+       whole thing together into one block. */
+    white-space: pre-line;
   }
   .rv__clamped {
     display: -webkit-box;
@@ -404,14 +416,17 @@ function Stars({ rating = 5, size = 15 }) {
       {[1, 2, 3, 4, 5].map((star) => {
         const fill = Math.max(0, Math.min(1, rating - (star - 1)))
         return (
-          <span key={star} style={{ position: 'relative', display: 'block', width: size, height: size }}>
-            <Star size={size} color="rgba(244,161,48,0.35)" aria-hidden />
+          // line-height 0 on the box, display:block on the marks: an inline
+          // SVG otherwise sits on the text baseline, which drops it far enough
+          // for the clipped overlay to cut the bottom off the star.
+          <span key={star} style={{ position: 'relative', display: 'block', width: size, height: size, lineHeight: 0 }}>
+            <Star size={size} color="rgba(244,161,48,0.35)" aria-hidden style={{ display: 'block' }} />
             {fill > 0 && (
               <span
                 style={{ position: 'absolute', inset: 0, width: `${fill * 100}%`, overflow: 'hidden' }}
                 aria-hidden
               >
-                <Star size={size} color="var(--color-amber)" fill="var(--color-amber)" />
+                <Star size={size} color="var(--color-amber)" fill="var(--color-amber)" style={{ display: 'block' }} />
               </span>
             )}
           </span>
