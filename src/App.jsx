@@ -1,6 +1,6 @@
 import { lazy, Suspense } from 'react'
 import { Routes, Route, useLocation, useParams, Navigate } from 'react-router-dom'
-import { LocalBusinessSchema, OrganizationSchema } from './schema/SchemaMarkup'
+import { LocalBusinessSchema, OrganizationSchema } from './schema/SiteSchema'
 import Navbar from './components/Navbar'
 import AnnouncementBar from './components/AnnouncementBar'
 import Footer from './components/Footer'
@@ -158,6 +158,9 @@ function App() {
           <Route path="/journal/:slug" element={<BlogPost />} />
           <Route path="/blog" element={<Navigate to="/journal" replace />} />
           <Route path="/blog/:slug" element={<BlogSlugRedirect />} />
+          {/* With a slug for a specific tour; without one for a link that can
+              be printed on a card and handed to anyone. */}
+          <Route path="/review" element={<LeaveReview />} />
           <Route path="/review/:slug" element={<LeaveReview />} />
           <Route path="/booking-conditions" element={<BookingConditions />} />
           <Route path="/safe-travels" element={<SafeTravels />} />

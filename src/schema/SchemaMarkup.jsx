@@ -1,130 +1,51 @@
 // SchemaMarkup.jsx
-import { CONTACT_EMAIL, INSTAGRAM_URL, TRIPADVISOR_URL } from '../data/settings'
-// Schema.org structured data for Tallest Tourguide.
-// Tells Google exactly what type of business this is,
-// what each tour offers, and how to display it in search.
+// Page-level schema.org structured data for Tallest Tourguide — the markup
+// that describes one particular tour, package, FAQ set or article.
 //
-// Components used across the site:
-//   LocalBusinessSchema  → App.jsx (once, site-wide)
-//   OrganizationSchema   → App.jsx (once, site-wide: Organization + WebSite)
+// Components:
 //   TourActivitySchema   → TourDetail.jsx (TouristAttraction + Product/offers)
 //   PackageSchema        → PackageDetail.jsx (TouristTrip + Product/offers)
 //   FAQSchema            → TourDetail.jsx (per tour, auto-skips if no faqs)
 //   BlogPostingSchema    → BlogPost.jsx (per post)
 //
+// The site-wide business/brand schema lives in SiteSchema.jsx, kept separate
+// because App.jsx loads it on every route and this file pulls in the review
+// text. Breadcrumb JSON-LD lives in src/components/Breadcrumbs.jsx, emitted
+// together with the visible trail so the two can never disagree.
+//
 // Product + offers is what Google's price/review rich results actually
 // consume — TouristAttraction/TouristTrip alone earn no rich result.
-// Breadcrumb JSON-LD lives in src/components/Breadcrumbs.jsx, emitted
-// together with the visible trail so the two can never disagree.
 //
 // All use react-helmet-async (already installed in your project).
 
 import { Helmet } from 'react-helmet-async'
 import { siteUrl, SITE_ORIGIN } from '../utils/seo'
+import { publishedFeaturedReviews } from '../data/featuredReviews'
+import { aggregateRating } from './aggregateRating'
 
-// ----------------------------------------------------------
-// 1. LOCAL BUSINESS SCHEMA
-//    Tells Google: this is a real local business in Sarajevo.
-//    Adds your business to Google's knowledge graph.
-//    Used in App.jsx — renders once on every page.
-// ----------------------------------------------------------
-export function LocalBusinessSchema() {
-  const schema = {
-    '@context': 'https://schema.org',
-    '@type': 'TravelAgency',
-    name: 'Tallest Tourguide',
-    url: siteUrl('/'),
-    logo: `${SITE_ORIGIN}/logo.svg`,
-    image: `${SITE_ORIGIN}/og-image.jpg`,
-    description:
-      'Small group guided tours in Sarajevo and Bosnia. War history, food experiences, Mostar day trips. Local guide with 14 years experience. Genuinely small groups.',
-    telephone: '+38762664244',
-    email: CONTACT_EMAIL,
-    address: {
-      '@type': 'PostalAddress',
-      streetAddress: 'Hamdije Kreševljakovića 61',
-      addressLocality: 'Sarajevo',
-      addressRegion: 'Federation of Bosnia and Herzegovina',
-      postalCode: '71000',
-      addressCountry: 'BA',
-    },
-    hasMap:
-      'https://www.google.com/maps/place/Tallest+Tourguide+%26+Friends/@43.8568344,18.4235815,17z',
-    geo: {
-      '@type': 'GeoCoordinates',
-      latitude: 43.8563,
-      longitude: 18.4131,
-    },
-    priceRange: '$$',
-    openingHoursSpecification: [
-      {
-        '@type': 'OpeningHoursSpecification',
-        dayOfWeek: [
-          'Monday', 'Tuesday', 'Wednesday', 'Thursday',
-          'Friday', 'Saturday', 'Sunday',
-        ],
-        opens: '08:00',
-        closes: '20:00',
+// Google only grants a review snippet when the structured data matches what a
+// visitor can actually read on the page. This reads the same source
+// TourReviews.jsx renders from, so the two can't drift.
+//
+// The reviews pinned to this tour in /admin → Reviews, shaped for schema.org.
+// Same explicit tourSlug link the visible section uses — never a name match.
+function reviewsForTour(slug) {
+  if (!slug) return []
+  return publishedFeaturedReviews
+    .filter((r) => r.tourSlug === slug && r.text && r.rating)
+    .map((r) => ({
+      '@type': 'Review',
+      reviewRating: {
+        '@type': 'Rating',
+        ratingValue: r.rating,
+        bestRating: '5',
+        worstRating: '1',
       },
-    ],
-    sameAs: [
-      TRIPADVISOR_URL,
-      INSTAGRAM_URL,
-    ],
-  }
-
-  return (
-    <Helmet>
-      <script type="application/ld+json">
-        {JSON.stringify(schema)}
-      </script>
-    </Helmet>
-  )
-}
-
-// ----------------------------------------------------------
-// 3. ORGANIZATION + WEBSITE SCHEMA
-//    The brand-level entity (who publishes this site) and the
-//    site itself. Complements LocalBusinessSchema: LocalBusiness
-//    covers the Sarajevo storefront, Organization covers the
-//    brand Google shows in knowledge panels and news results.
-//    Used in App.jsx — renders once on every page.
-// ----------------------------------------------------------
-export function OrganizationSchema() {
-  const organization = {
-    '@context': 'https://schema.org',
-    '@type': 'Organization',
-    '@id': `${SITE_ORIGIN}/#organization`,
-    name: 'Tallest Tourguide',
-    url: siteUrl('/'),
-    logo: `${SITE_ORIGIN}/logo.svg`,
-    email: CONTACT_EMAIL,
-    telephone: '+38762664244',
-    sameAs: [
-      TRIPADVISOR_URL,
-      INSTAGRAM_URL,
-    ],
-  }
-
-  const website = {
-    '@context': 'https://schema.org',
-    '@type': 'WebSite',
-    name: 'Tallest Tourguide',
-    url: siteUrl('/'),
-    inLanguage: 'en',
-    publisher: { '@id': `${SITE_ORIGIN}/#organization` },
-  }
-
-  return (
-    <Helmet>
-      <script type="application/ld+json">
-        {JSON.stringify(organization)}
-      </script>
-      <script type="application/ld+json">
-        {JSON.stringify(website)}
-      </script>
-    </Helmet>
-  )
+      author: { '@type': 'Person', name: r.name || 'Guest' },
+      reviewBody: r.text,
+      // `date` is 'YYYY-MM' in the data; schema.org wants a full date.
+      ...(r.date ? { datePublished: /^\d{4}-\d{2}$/.test(r.date) ? `${r.date}-01` : r.date } : {}),
+    }))
 }
 
 // ----------------------------------------------------------
@@ -136,6 +57,9 @@ export function OrganizationSchema() {
 //    Props: tour — the full tour object from tours.js
 // ----------------------------------------------------------
 export function TourActivitySchema({ tour }) {
+  const rating = aggregateRating(tour.rating, tour.reviews)
+  const reviews = reviewsForTour(tour.slug)
+
   const schema = {
     '@context': 'https://schema.org',
     '@type': 'TouristAttraction',
@@ -172,14 +96,7 @@ export function TourActivitySchema({ tour }) {
         addressCountry: 'BA',
       },
     },
-    aggregateRating: tour.rating
-      ? {
-          '@type': 'AggregateRating',
-          ratingValue: tour.rating,
-          reviewCount: tour.reviews,
-          bestRating: '5',
-        }
-      : undefined,
+    aggregateRating: rating,
   }
 
   // Product + offers earns the price/rating rich result in search;
@@ -200,14 +117,11 @@ export function TourActivitySchema({ tour }) {
       availability: 'https://schema.org/InStock',
       url: siteUrl(`/tours/${tour.slug}`),
     },
-    aggregateRating: tour.rating
-      ? {
-          '@type': 'AggregateRating',
-          ratingValue: tour.rating,
-          reviewCount: tour.reviews,
-          bestRating: '5',
-        }
-      : undefined,
+    aggregateRating: rating,
+    // The guest reviews actually rendered further down the page. This is
+    // what earns the review snippet — an aggregateRating on its own no
+    // longer does.
+    review: reviews.length ? reviews : undefined,
   }
 
   return (
@@ -311,14 +225,7 @@ export function PackageSchema({ pkg }) {
     sku: pkg.slug,
     brand: { '@type': 'Brand', name: 'Tallest Tourguide' },
     offers,
-    aggregateRating: pkg.rating
-      ? {
-          '@type': 'AggregateRating',
-          ratingValue: pkg.rating,
-          reviewCount: pkg.reviews,
-          bestRating: '5',
-        }
-      : undefined,
+    aggregateRating: aggregateRating(pkg.rating, pkg.reviews),
   }
 
   return (
