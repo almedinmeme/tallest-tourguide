@@ -630,7 +630,7 @@ const styles = {
 
   dropdownItemDescription: {
     fontFamily: 'var(--font-body)',
-    fontSize: '11px',
+    fontSize: '12px',
     color: 'var(--color-n600)',
   },
 
@@ -663,7 +663,7 @@ const styles = {
     display: 'block',
     fontFamily: 'var(--font-body)',
     fontWeight: '700',
-    fontSize: '10px',
+    fontSize: '12px',
     color: 'var(--color-n500)',
     textTransform: 'uppercase',
     letterSpacing: '1.2px',

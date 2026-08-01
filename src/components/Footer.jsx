@@ -339,7 +339,7 @@ const styles = {
   columnLabel: {
     fontFamily: 'var(--font-body)',
     fontWeight: '600',
-    fontSize: '11px',
+    fontSize: '12px',
     color: 'rgba(255,255,255,0.48)',
     letterSpacing: '2px',
     textTransform: 'uppercase',

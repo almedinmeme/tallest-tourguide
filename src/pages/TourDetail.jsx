@@ -1514,7 +1514,7 @@ const styles = {
     display: 'block',
     fontFamily: 'var(--font-body)',
     fontWeight: '500',
-    fontSize: '11px',
+    fontSize: '12px',
     color: 'var(--color-forest-green)',
     letterSpacing: '2px',
     textTransform: 'uppercase',
@@ -1696,7 +1696,7 @@ const styles = {
   inclusionSubtitle: {
     fontFamily: 'var(--font-display)',
     fontWeight: '700',
-    fontSize: '11px',
+    fontSize: '12px',
     color: 'var(--color-success)',
     letterSpacing: '1px',
     textTransform: 'uppercase',
@@ -1706,7 +1706,7 @@ const styles = {
   exclusionSubtitle: {
     fontFamily: 'var(--font-display)',
     fontWeight: '700',
-    fontSize: '11px',
+    fontSize: '12px',
     color: 'var(--color-n600)',
     letterSpacing: '1px',
     textTransform: 'uppercase',
@@ -1805,7 +1805,7 @@ const styles = {
     display: 'block',
     fontFamily: 'var(--font-body)',
     fontWeight: '600',
-    fontSize: '11px',
+    fontSize: '12px',
     color: 'var(--color-n600)',
     textTransform: 'uppercase',
     letterSpacing: '0.5px',
@@ -1836,7 +1836,7 @@ const styles = {
     display: 'block',
     fontFamily: 'var(--font-body)',
     fontWeight: '600',
-    fontSize: '11px',
+    fontSize: '12px',
     color: 'var(--color-n900)',
     textTransform: 'uppercase',
     letterSpacing: '0.5px',
@@ -1867,7 +1867,9 @@ const styles = {
   typeOptionTitle: {
     fontFamily: 'var(--font-body)',
     fontWeight: '600',
-    fontSize: '11px',
+    // Sentence-case control label, not a micro-caption — it names the thing
+    // you're choosing, so it reads at control size.
+    fontSize: '13px',
     lineHeight: '1.3',
     transition: 'color 0.15s ease',
   },
@@ -1882,7 +1884,7 @@ const styles = {
   typePerPerson: {
     fontFamily: 'var(--font-body)',
     fontWeight: '400',
-    fontSize: '11px',
+    fontSize: '13px',
     color: 'var(--color-n600)',
     marginLeft: '2px',
   },

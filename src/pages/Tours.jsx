@@ -682,7 +682,7 @@ const styles = {
   filterLabel: {
     fontFamily: 'var(--font-body)',
     fontWeight: '600',
-    fontSize: '11px',
+    fontSize: '12px',
     color: 'var(--color-n400)',
     letterSpacing: '0.8px',
     textTransform: 'uppercase',

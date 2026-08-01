@@ -83,7 +83,7 @@ const styles = {
     display: 'block',
     fontFamily: 'var(--font-body)',
     fontWeight: '600',
-    fontSize: '11px',
+    fontSize: '12px',
     color: 'var(--color-forest-green)',
     textTransform: 'uppercase',
     letterSpacing: '1.5px',
@@ -139,14 +139,14 @@ const styles = {
   category: {
     fontFamily: 'var(--font-body)',
     fontWeight: '600',
-    fontSize: '10px',
+    fontSize: '12px',
     color: 'var(--color-forest-green)',
     textTransform: 'uppercase',
     letterSpacing: '0.8px',
   },
   date: {
     fontFamily: 'var(--font-body)',
-    fontSize: '11px',
+    fontSize: '12px',
     color: 'var(--color-n600)',
   },
   title: {

@@ -383,7 +383,7 @@ const prevNextLink = {
 }
 const prevNextLabel = {
   fontFamily: 'var(--font-body)',
-  fontSize: '11px',
+  fontSize: '12px',
   fontWeight: 600,
   textTransform: 'uppercase',
   letterSpacing: '0.06em',
@@ -518,7 +518,7 @@ const styles = {
     color: 'var(--color-n000)',
     fontFamily: 'var(--font-body)',
     fontWeight: '600',
-    fontSize: '11px',
+    fontSize: '12px',
     textTransform: 'uppercase',
     letterSpacing: '0.8px',
     padding: '4px 12px',
@@ -677,7 +677,7 @@ const styles = {
     display: 'block',
     fontFamily: 'var(--font-body)',
     fontWeight: '600',
-    fontSize: '11px',
+    fontSize: '12px',
     color: 'var(--color-forest-green)',
     textTransform: 'uppercase',
     letterSpacing: '1.5px',
@@ -740,7 +740,7 @@ const styles = {
     display: 'block',
     fontFamily: 'var(--font-body)',
     fontWeight: '600',
-    fontSize: '11px',
+    fontSize: '12px',
     color: 'var(--color-forest-green)',
     textTransform: 'uppercase',
     letterSpacing: '1.5px',
@@ -806,7 +806,7 @@ const styles = {
   postRowCategory: {
     fontFamily: 'var(--font-body)',
     fontWeight: '600',
-    fontSize: '10px',
+    fontSize: '12px',
     color: 'var(--color-forest-green)',
     textTransform: 'uppercase',
     letterSpacing: '0.8px',
@@ -814,7 +814,7 @@ const styles = {
 
   postRowDate: {
     fontFamily: 'var(--font-body)',
-    fontSize: '11px',
+    fontSize: '12px',
     color: 'var(--color-n600)',
   },
 
@@ -888,7 +888,7 @@ const styles = {
     color: 'var(--color-n900)',
     fontFamily: 'var(--font-body)',
     fontWeight: '700',
-    fontSize: '10px',
+    fontSize: '12px',
     textTransform: 'uppercase',
     letterSpacing: '0.6px',
     padding: '3px 8px',
@@ -904,7 +904,7 @@ const styles = {
     color: 'var(--color-n000)',
     fontFamily: 'var(--font-body)',
     fontWeight: '600',
-    fontSize: '10px',
+    fontSize: '12px',
     textTransform: 'uppercase',
     letterSpacing: '0.8px',
     padding: '3px 8px',
@@ -1097,7 +1097,7 @@ const cardStyles = {
     color: 'var(--color-n000)',
     fontFamily: 'var(--font-body)',
     fontWeight: '700',
-    fontSize: '9px',
+    fontSize: '12px',
     letterSpacing: '1px',
     textTransform: 'uppercase',
     padding: '3px 8px',
@@ -1126,7 +1126,7 @@ const cardStyles = {
 
   pricePer: {
     fontFamily: 'var(--font-body)',
-    fontSize: '11px',
+    fontSize: '12px',
     color: 'var(--color-n600)',
   },
 
@@ -1143,7 +1143,7 @@ const cardStyles = {
   typeTag: {
     fontFamily: 'var(--font-body)',
     fontWeight: '700',
-    fontSize: '10px',
+    fontSize: '12px',
     color: 'var(--color-forest-green)',
     textTransform: 'uppercase',
     letterSpacing: '1.2px',

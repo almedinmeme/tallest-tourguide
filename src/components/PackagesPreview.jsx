@@ -1,9 +1,10 @@
 import { useState, useRef } from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowRight, Gauge, MapPin, Globe, ChevronLeft, ChevronRight } from 'lucide-react'
+import { ArrowRight, Gauge, MapPin, Globe } from 'lucide-react'
 import useWindowWidth from '../hooks/useWindowWidth'
 import Img from './Img'
 import Button from './Button'
+import CarouselNav from './CarouselNav'
 
 import { packages } from '../data/packages'
 import { useCurrency } from '../context/CurrencyContext'
@@ -62,9 +63,6 @@ function PackagesPreview() {
                 gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)',
               }}>
                 {packages.slice(pageIdx * visibleCount, (pageIdx + 1) * visibleCount).map((pkg) => {
-                  const avgRating = pkg.rating
-                  const reviewCount = pkg.reviews
-
                   return (
                     <Link key={pkg.id} to={`/multi-day-tours/${pkg.slug}`} style={styles.cardLink}>
                       <div style={styles.card} className="pkg-card">
@@ -126,87 +124,14 @@ function PackagesPreview() {
           </div>
         </div>
 
-        {/* Desktop only: arrows float at the vertical center of the
-            carousel, on either side, instead of stacking below it with the
-            dots. Mobile keeps swipe + the arrow/dot row below untouched. */}
-        {!isMobile && totalPages > 1 && (
-          <>
-            <button
-              style={{ ...styles.sideNavBtn, ...styles.sideNavBtnLeft, opacity: page === 0 ? 0.35 : 1 }}
-              onClick={() => setPage((p) => Math.max(0, p - 1))}
-              disabled={page === 0}
-              aria-label="Previous journeys"
-            >
-              <ChevronLeft size={22} color="var(--color-forest-green)" />
-            </button>
-            <button
-              style={{ ...styles.sideNavBtn, ...styles.sideNavBtnRight, opacity: page === totalPages - 1 ? 0.35 : 1 }}
-              onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
-              disabled={page === totalPages - 1}
-              aria-label="Next journeys"
-            >
-              <ChevronRight size={22} color="var(--color-forest-green)" />
-            </button>
-          </>
-        )}
       </div>
 
-      {/* Controls */}
-      {totalPages > 1 && (
-        isMobile ? (
-          <div style={styles.controls}>
-            <button
-              style={{ ...styles.navBtn, opacity: page === 0 ? 0.35 : 1 }}
-              onClick={() => setPage((p) => Math.max(0, p - 1))}
-              disabled={page === 0}
-              aria-label="Previous journeys"
-            >
-              <ChevronLeft size={18} color="var(--color-forest-green)" />
-            </button>
-
-            <div style={styles.dots}>
-              {Array.from({ length: totalPages }).map((_, i) => (
-                <button
-                  key={i}
-                  onClick={() => setPage(i)}
-                  style={{
-                    ...styles.dot,
-                    width: page === i ? '24px' : '8px',
-                    backgroundColor: page === i ? 'var(--color-forest-green)' : 'var(--color-n300)',
-                  }}
-                  aria-label={`Go to page ${i + 1}`}
-                />
-              ))}
-            </div>
-
-            <button
-              style={{ ...styles.navBtn, opacity: page === totalPages - 1 ? 0.35 : 1 }}
-              onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
-              disabled={page === totalPages - 1}
-              aria-label="Next journeys"
-            >
-              <ChevronRight size={18} color="var(--color-forest-green)" />
-            </button>
-          </div>
-        ) : (
-          <div style={styles.controlsDesktop}>
-            <div style={styles.dots}>
-              {Array.from({ length: totalPages }).map((_, i) => (
-                <button
-                  key={i}
-                  onClick={() => setPage(i)}
-                  style={{
-                    ...styles.dot,
-                    width: page === i ? '24px' : '8px',
-                    backgroundColor: page === i ? 'var(--color-forest-green)' : 'var(--color-n300)',
-                  }}
-                  aria-label={`Go to page ${i + 1}`}
-                />
-              ))}
-            </div>
-          </div>
-        )
-      )}
+      <CarouselNav
+        page={page}
+        total={totalPages}
+        onChange={setPage}
+        label="journeys"
+      />
 
       <div style={styles.bottomRow}>
         <p style={styles.bottomText}>Looking for a longer journey or a private group?</p>
@@ -291,81 +216,6 @@ const styles = {
     marginRight: '24px',
   },
 
-  controls: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: '16px',
-    marginTop: '32px',
-  },
-
-  // Desktop-only row below the carousel once the side arrows take over
-  // navigation — just the page dots, still centered.
-  controlsDesktop: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: '32px',
-  },
-
-  navBtn: {
-    width: '40px',
-    height: '40px',
-    borderRadius: '50%',
-    border: '1.5px solid var(--color-n300)',
-    backgroundColor: 'var(--color-n000)',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    cursor: 'pointer',
-    transition: 'opacity 0.2s ease',
-    flexShrink: 0,
-  },
-
-  // Desktop: arrows float at the vertical center of the carousel,
-  // overlapping in from the edge toward the carousel's center rather than
-  // stacking below it with the dots.
-  sideNavBtn: {
-    position: 'absolute',
-    top: '50%',
-    transform: 'translateY(-50%)',
-    width: '52px',
-    height: '52px',
-    borderRadius: '50%',
-    border: '1.5px solid var(--color-n300)',
-    backgroundColor: 'var(--color-n000)',
-    boxShadow: '0 4px 16px rgba(0,0,0,0.16)',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    cursor: 'pointer',
-    transition: 'opacity 0.2s ease',
-    zIndex: 2,
-  },
-
-  sideNavBtnLeft: {
-    left: '8px',
-  },
-
-  sideNavBtnRight: {
-    right: '8px',
-  },
-
-  dots: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '6px',
-  },
-
-  dot: {
-    height: '8px',
-    borderRadius: '4px',
-    border: 'none',
-    cursor: 'pointer',
-    padding: 0,
-    transition: 'width 0.3s ease, background-color 0.3s ease',
-  },
-
   cardLink: {
     display: 'block',
     textDecoration: 'none',
@@ -424,7 +274,7 @@ const styles = {
   badge: {
     fontFamily: 'var(--font-body)',
     fontWeight: '700',
-    fontSize: '10px',
+    fontSize: '12px',
     letterSpacing: '1px',
     textTransform: 'uppercase',
     padding: '4px 11px',
@@ -452,7 +302,7 @@ const styles = {
     gap: '4px',
     fontFamily: 'var(--font-body)',
     fontWeight: '600',
-    fontSize: '11px',
+    fontSize: '12px',
     color: 'rgba(255,255,255,0.92)',
     backgroundColor: 'rgba(0,0,0,0.42)',
     backdropFilter: 'blur(6px)',
@@ -495,7 +345,7 @@ const styles = {
 
   priceFrom: {
     fontFamily: 'var(--font-body)',
-    fontSize: '10px',
+    fontSize: '12px',
     color: 'rgba(255,255,255,0.60)',
     fontWeight: '500',
     letterSpacing: '0.3px',

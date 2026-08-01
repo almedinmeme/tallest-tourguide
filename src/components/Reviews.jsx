@@ -41,7 +41,7 @@ const css = `
     position: relative;
     isolation: isolate;
     overflow: hidden;
-    padding: 64px 20px 60px;
+    padding: 64px 20px 48px;
     color: #fff;
     background:
       radial-gradient(70% 55% at 8% -10%, rgba(244,161,48,0.16) 0%, rgba(244,161,48,0) 68%),
@@ -178,6 +178,11 @@ const css = `
   /* Mobile first: one snap-scrolling row that bleeds to both edges. */
   .rv__grid {
     display: flex;
+    /* Cross-axis default is stretch — every card in the scroller would
+       inherit the height of its tallest sibling even though only one is on
+       screen at a time. flex-start lets each card end where its own content
+       ends. */
+    align-items: flex-start;
     gap: 0;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
@@ -234,7 +239,13 @@ const css = `
   /* Serif quotes. Reviews are the one place on the page where someone else is
      talking, and the change of voice should be audible in the type. */
   .rv__quote {
-    flex: 1;
+    /* Deliberately NOT flex: 1. Stretching the quote to fill the row pinned
+       every attribution to the bottom of its cell, which looked tidy only
+       when the reviews were the same length — a short one left a slab of
+       empty green between the last line and the name. It also broke the
+       6-line clamp: a stretched box clips at its own height, so a seventh
+       half-line showed through under the fade. The text now sets the height
+       and the leftover space falls to the bottom of the cell. */
     margin: 0;
     font-family: var(--font-hero);
     font-weight: 300;
@@ -246,9 +257,12 @@ const css = `
        whole thing together into one block. */
     white-space: pre-line;
   }
+  /* Five lines, not six: the tallest cell sets the row height, so every line
+     the longest review is allowed is a line of empty green under the shortest
+     one. Five still carries a whole thought; the rest is one click away. */
   .rv__clamped {
     display: -webkit-box;
-    -webkit-line-clamp: 6;
+    -webkit-line-clamp: 5;
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
@@ -306,7 +320,7 @@ const css = `
   .rv__progress {
     position: relative;
     height: 2px;
-    margin-top: 22px;
+    margin-top: 16px;
     border-radius: 2px;
     background-color: rgba(255,255,255,0.14);
     overflow: hidden;
@@ -326,12 +340,11 @@ const css = `
     flex-direction: column;
     align-items: flex-start;
     gap: 18px;
-    margin-top: 40px;
-    padding-top: 26px;
+    margin-top: 30px;
+    padding-top: 24px;
     border-top: 1px solid rgba(255,255,255,0.14);
   }
   .rv__note {
-    flex: 1 1 300px;
     margin: 0;
     max-width: 46ch;
     font-family: var(--font-body);
@@ -365,8 +378,16 @@ const css = `
   }
 
   /* ── Tablet: two columns ──────────────────────────────────────── */
+  /* Back to CSS Grid — proper rows, not a masonry flow. A multi-column
+     layout packed cards more tightly (no shared row to stretch to), but the
+     browser rebalances which card lands in which column on ANY height
+     change in that container, so clicking "Read full review" could jump a
+     card into a different column instead of just growing it in place. A
+     stable, predictable expand matters more here than a few extra pixels of
+     green, so grid rows are back; the 5-line clamp and tighter spacing below
+     keep most of that gap out. */
   @media (min-width: 769px) {
-    .rv { padding: 96px 40px 88px; }
+    .rv { padding: 96px 40px 64px; }
     .rv__grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -383,10 +404,15 @@ const css = `
     .rv__entry:hover { background: linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0) 70%); }
     .rv__progress { display: none; }
     .rv__foot { flex-direction: row; align-items: center; justify-content: space-between; gap: 28px; }
+    /* flex-grow only makes sense once the footer is a row: it lets the note
+       fill the horizontal gap next to the buttons. On the mobile column
+       layout this same rule grows the note along the vertical main axis
+       instead, ballooning it into the empty space above the buttons. */
+    .rv__note { flex: 1 1 300px; }
     .rv__actions { width: auto; }
   }
 
-  /* ── Desktop: header side by side, three columns ──────────────── */
+  /* ── Desktop: header side by side, three columns, two rows ──────── */
   @media (min-width: 1000px) {
     .rv__head {
       flex-direction: row;

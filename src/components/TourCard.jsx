@@ -218,7 +218,7 @@ cardLink: {
     color: 'var(--color-n000)',
     fontFamily: 'var(--font-body)',
     fontWeight: '700',
-    fontSize: '10px',
+    fontSize: '12px',
     letterSpacing: '1.5px',
     textTransform: 'uppercase',
     padding: '4px 10px',
@@ -252,7 +252,7 @@ cardLink: {
 
   pricePer: {
     fontFamily: 'var(--font-body)',
-    fontSize: '11px',
+    fontSize: '12px',
     color: 'rgba(255,255,255,0.7)',
   },
 
@@ -267,7 +267,7 @@ cardLink: {
     color: 'var(--color-n900)',
     fontFamily: 'var(--font-body)',
     fontWeight: '700',
-    fontSize: '11px',
+    fontSize: '12px',
     padding: '2px 7px',
     borderRadius: 'var(--radius-pill)',
     boxShadow: 'var(--shadow-sm)',

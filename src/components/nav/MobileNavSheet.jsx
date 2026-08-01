@@ -408,7 +408,7 @@ const styles = {
 
   groupLabel: {
     fontFamily: 'var(--font-body)',
-    fontSize: '10px',
+    fontSize: '12px',
     fontWeight: 700,
     textTransform: 'uppercase',
     letterSpacing: '0.07em',
@@ -424,7 +424,7 @@ const styles = {
   accLabel: {
     display: 'block',
     fontFamily: 'var(--font-body)',
-    fontSize: '10px',
+    fontSize: '12px',
     fontWeight: 700,
     textTransform: 'uppercase',
     letterSpacing: '1.2px',

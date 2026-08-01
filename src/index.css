@@ -47,11 +47,26 @@
   --font-hero: 'Newsreader', Georgia, serif;
 
   /* --- TYPE SCALE --- */
-  --text-display: 48px;
-  --text-h1: 40px;
-  --text-h2: 32px;
-  --text-h3: 22px;
-  --text-body-l: 18px;
+  /* Fluid from a 360px phone up to a 1200px desktop, where each size reaches
+     the value the desktop design was drawn at. Headings have to shrink on a
+     phone — 40px in a 320px-wide column breaks after two words — but they have
+     to shrink BY DIFFERENT AMOUNTS or the hierarchy flattens into one size.
+     This used to be a blunt `h1 { font-size: 28px !important }` in the mobile
+     media query, which is why every heading on a phone was 28 or 24 no matter
+     what it was.
+     Each is `px + vw` rather than vw alone, so browser zoom still works
+     (WCAG 1.4.4) — a pure-vw font size ignores it. */
+  --text-display: clamp(32px, 1.90vw + 25.2px, 48px);
+  --text-h1:      clamp(28px, 1.43vw + 22.9px, 40px);
+  --text-h2:      clamp(26px, 0.71vw + 23.4px, 32px);
+  --text-h3:      clamp(20px, 0.24vw + 19.1px, 22px);
+  /* The lead paragraph under a section title lands on 16px on a phone. At 18
+     it was competing with the heading above it — 24 vs 18 is not enough of a
+     step to read as a hierarchy in a 320px-wide column. */
+  --text-body-l:  clamp(16px, 0.24vw + 15.1px, 18px);
+  /* Body and below stay put. Shrinking body copy on a phone is the one thing
+     that reliably makes a site feel worse, and anything under 16px in a form
+     field makes iOS Safari zoom the page on focus. */
   --text-body: 16px;
   --text-small: 14px;
   --text-tiny: 12px;
@@ -111,7 +126,18 @@ body {
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-display);
   color: var(--color-n900);
+  /* Keep the last line of a heading from being one orphaned word. Ignored by
+     browsers that don't support it, which just get the normal greedy wrap. */
+  text-wrap: balance;
 }
+
+/* Defaults from the scale, so a heading that doesn't set its own size is
+   still on the system rather than on the browser's (h1 = 2em = 32px, which
+   was both wrong and immune to the mobile rules). Components that set their
+   own size inline still win. */
+h1 { font-size: var(--text-h1); line-height: var(--leading-h1); }
+h2 { font-size: var(--text-h2); line-height: 1.25; }
+h3 { font-size: var(--text-h3); line-height: 1.35; }
 
 /* ============================================
    RESPONSIVE STYLES — MOBILE BREAKPOINT
@@ -136,19 +162,15 @@ h1, h2, h3, h4, h5, h6 {
     padding-right: 20px !important;
   }
 
-  /* ── HERO SECTION ─────────────────────────────
-     The display font size of 48px is too large for
-     a phone — it forces line breaks in awkward places
-     and overwhelms the screen. 32px reads comfortably
-     on mobile while still feeling like a hero headline. */
-  h1 {
-    font-size: 28px !important;
-    line-height: 1.3 !important;
-  }
-
-  h2 {
-    font-size: 24px !important;
-  }
+  /* ── TYPE ─────────────────────────────────────
+     Nothing here any more. This used to force every
+     h1 to 28px and every h2 to 24px with !important,
+     which flattened the whole hierarchy on a phone
+     and overrode the per-section sizes components had
+     been given. The scale in :root is fluid instead,
+     so each level shrinks by its own amount and the
+     relationships between them survive. */
+  h1 { line-height: 1.2; }
 }
 @keyframes bounce {
   0%, 100% {

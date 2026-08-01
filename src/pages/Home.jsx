@@ -8,10 +8,11 @@
 import SEO from '../components/SEO'
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { Compass, ArrowRight, Star, ChevronDown, ChevronLeft, ChevronRight, Users, UserCheck, ShieldCheck, Heart } from 'lucide-react'
+import { Compass, ArrowRight, Star, ChevronDown, Users, UserCheck, ShieldCheck, Heart } from 'lucide-react'
 import TourCard from '../components/TourCard'
 import Button from '../components/Button'
 import HeroSearch from '../components/HeroSearch'
+import Img from '../components/Img'
 import tours from '../data/tours'
 import useWindowWidth from '../hooks/useWindowWidth'
 import hero2 from '../assets/tour-2-hero.webp'
@@ -35,6 +36,7 @@ import HowItWorks from '../components/HowItWorks'
 import Reviews from '../components/Reviews'
 import CTABanner from '../components/CTABanner'
 import PackagesPreview from '../components/PackagesPreview'
+import CarouselNav from '../components/CarouselNav'
 import { useBlog } from '../hooks/useBlog'
 import { TRUST_BAR_CANCEL } from '../data/policy'
 import { useCurrency } from '../context/CurrencyContext'
@@ -50,10 +52,37 @@ function Home() {
   const tourTouchStartX = React.useRef(null)
   const touchStartX = React.useRef(null)
   const [heroIndex, setHeroIndex] = useState(0)
+  // Only the first hero photo mounts on initial render — it's the LCP
+  // element and is already <link rel="preload">'d in index.html. The other
+  // 4 carousel frames (roughly 1.5MB combined) used to mount eagerly too,
+  // which made them compete with the LCP image for bandwidth on a throttled
+  // connection. They're brought in only once the first photo has actually
+  // finished loading (not just "the main thread is idle" — on a slow
+  // connection those aren't the same moment), well before the 6s interval
+  // below ever needs them. A capped timeout is a fallback in case onLoad
+  // never fires (e.g. the image errors).
+  const [mountedHeroCount, setMountedHeroCount] = useState(1)
+  const [heroLoaded, setHeroLoaded] = useState(false)
 
   useEffect(() => {
     const t = setInterval(() => setHeroIndex(i => (i + 1) % HERO_IMAGES.length), 6000)
     return () => clearInterval(t)
+  }, [])
+
+  useEffect(() => {
+    if (!heroLoaded || mountedHeroCount >= HERO_IMAGES.length) return
+    const revealRest = () => setMountedHeroCount(HERO_IMAGES.length)
+    if (typeof window.requestIdleCallback === 'function') {
+      const id = window.requestIdleCallback(revealRest, { timeout: 2000 })
+      return () => window.cancelIdleCallback(id)
+    }
+    const id = setTimeout(revealRest, 300)
+    return () => clearTimeout(id)
+  }, [heroLoaded, mountedHeroCount])
+
+  useEffect(() => {
+    const fallback = setTimeout(() => setHeroLoaded(true), 8000)
+    return () => clearTimeout(fallback)
   }, [])
 
   return (
@@ -90,11 +119,13 @@ function Home() {
             sits behind everything else via z-index.
             objectFit cover fills the entire section
             regardless of the photo's original dimensions. */}
-        {HERO_IMAGES.map((img, i) => (
-          <img
+        {HERO_IMAGES.slice(0, mountedHeroCount).map((img, i) => (
+          <Img
             key={i}
             src={img}
             alt=""
+            eager={i === 0}
+            onLoad={i === 0 ? () => setHeroLoaded(true) : undefined}
             style={{
               ...styles.heroBg,
               opacity: i === heroIndex ? 1 : 0,
@@ -400,88 +431,14 @@ function Home() {
                   </div>
                 </div>
 
-                {/* Desktop only: arrows float at the vertical center of the
-                    carousel, on either side, instead of stacking below it
-                    with the dots. Mobile keeps swipe + the arrow/dot row
-                    below (see carouselControls further down) untouched. */}
-                {!isMobile && totalPages > 1 && (
-                  <>
-                    <button
-                      style={{ ...styles.carouselSideNav, ...styles.carouselSideNavLeft, opacity: tourPage === 0 ? 0.35 : 1 }}
-                      onClick={() => setTourPage((p) => Math.max(0, p - 1))}
-                      disabled={tourPage === 0}
-                      aria-label="Previous tours"
-                    >
-                      <ChevronLeft size={22} color="var(--color-forest-green)" />
-                    </button>
-                    <button
-                      style={{ ...styles.carouselSideNav, ...styles.carouselSideNavRight, opacity: tourPage === totalPages - 1 ? 0.35 : 1 }}
-                      onClick={() => setTourPage((p) => Math.min(totalPages - 1, p + 1))}
-                      disabled={tourPage === totalPages - 1}
-                      aria-label="Next tours"
-                    >
-                      <ChevronRight size={22} color="var(--color-forest-green)" />
-                    </button>
-                  </>
-                )}
               </div>
 
-              {/* Carousel controls */}
-              {totalPages > 1 && (
-                isMobile ? (
-                  <div style={styles.carouselControls}>
-                    <button
-                      style={{ ...styles.carouselNavBtn, opacity: tourPage === 0 ? 0.35 : 1 }}
-                      onClick={() => setTourPage((p) => Math.max(0, p - 1))}
-                      disabled={tourPage === 0}
-                      aria-label="Previous tours"
-                    >
-                      <ChevronLeft size={18} color="var(--color-forest-green)" />
-                    </button>
-
-                    <div style={styles.carouselDots}>
-                      {Array.from({ length: totalPages }).map((_, i) => (
-                        <button
-                          key={i}
-                          onClick={() => setTourPage(i)}
-                          style={{
-                            ...styles.carouselDot,
-                            width: tourPage === i ? '24px' : '8px',
-                            backgroundColor: tourPage === i ? 'var(--color-forest-green)' : 'var(--color-n300)',
-                          }}
-                          aria-label={`Go to page ${i + 1}`}
-                        />
-                      ))}
-                    </div>
-
-                    <button
-                      style={{ ...styles.carouselNavBtn, opacity: tourPage === totalPages - 1 ? 0.35 : 1 }}
-                      onClick={() => setTourPage((p) => Math.min(totalPages - 1, p + 1))}
-                      disabled={tourPage === totalPages - 1}
-                      aria-label="Next tours"
-                    >
-                      <ChevronRight size={18} color="var(--color-forest-green)" />
-                    </button>
-                  </div>
-                ) : (
-                  <div style={styles.carouselControlsDesktop}>
-                    <div style={styles.carouselDots}>
-                      {Array.from({ length: totalPages }).map((_, i) => (
-                        <button
-                          key={i}
-                          onClick={() => setTourPage(i)}
-                          style={{
-                            ...styles.carouselDot,
-                            width: tourPage === i ? '24px' : '8px',
-                            backgroundColor: tourPage === i ? 'var(--color-forest-green)' : 'var(--color-n300)',
-                          }}
-                          aria-label={`Go to page ${i + 1}`}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                )
-              )}
+              <CarouselNav
+                page={tourPage}
+                total={totalPages}
+                onChange={setTourPage}
+                label="tours"
+              />
             </>
           )
         })()}
@@ -574,98 +531,14 @@ function Home() {
                 </div>
               </div>
 
-              {/* Desktop only: arrows float at the vertical center of the
-                  carousel, on either side, instead of stacking below it
-                  with the dots. Mobile keeps swipe + the arrow/dot row
-                  below untouched. */}
-              {!isMobile && totalPages > 1 && (
-                <>
-                  <button
-                    style={{ ...blogStyles.sideNavBtn, ...blogStyles.sideNavBtnLeft, opacity: blogPage === 0 ? 0.35 : 1 }}
-                    onClick={() => setBlogPage((p) => Math.max(0, p - 1))}
-                    disabled={blogPage === 0}
-                    aria-label="Previous posts"
-                  >
-                    <ChevronLeft size={22} color="var(--color-forest-green)" />
-                  </button>
-                  <button
-                    style={{ ...blogStyles.sideNavBtn, ...blogStyles.sideNavBtnRight, opacity: blogPage === totalPages - 1 ? 0.35 : 1 }}
-                    onClick={() => setBlogPage((p) => Math.min(totalPages - 1, p + 1))}
-                    disabled={blogPage === totalPages - 1}
-                    aria-label="Next posts"
-                  >
-                    <ChevronRight size={22} color="var(--color-forest-green)" />
-                  </button>
-                </>
-              )}
               </div>
 
-              {/* Controls */}
-              {totalPages > 1 && (
-                isMobile ? (
-                  <div style={blogStyles.controls}>
-                    <button
-                      style={{
-                        ...blogStyles.navBtn,
-                        opacity: blogPage === 0 ? 0.35 : 1,
-                      }}
-                      onClick={() => setBlogPage((p) => Math.max(0, p - 1))}
-                      disabled={blogPage === 0}
-                      aria-label="Previous posts"
-                    >
-                      <ChevronLeft size={18} color="var(--color-forest-green)" />
-                    </button>
-
-                    <div style={blogStyles.dots}>
-                      {Array.from({ length: totalPages }).map((_, i) => (
-                        <button
-                          key={i}
-                          onClick={() => setBlogPage(i)}
-                          style={{
-                            ...blogStyles.dot,
-                            width: blogPage === i ? '24px' : '8px',
-                            backgroundColor: blogPage === i
-                              ? 'var(--color-forest-green)'
-                              : 'var(--color-n300)',
-                          }}
-                          aria-label={`Go to page ${i + 1}`}
-                        />
-                      ))}
-                    </div>
-
-                    <button
-                      style={{
-                        ...blogStyles.navBtn,
-                        opacity: blogPage === totalPages - 1 ? 0.35 : 1,
-                      }}
-                      onClick={() => setBlogPage((p) => Math.min(totalPages - 1, p + 1))}
-                      disabled={blogPage === totalPages - 1}
-                      aria-label="Next posts"
-                    >
-                      <ChevronRight size={18} color="var(--color-forest-green)" />
-                    </button>
-                  </div>
-                ) : (
-                  <div style={blogStyles.controlsDesktop}>
-                    <div style={blogStyles.dots}>
-                      {Array.from({ length: totalPages }).map((_, i) => (
-                        <button
-                          key={i}
-                          onClick={() => setBlogPage(i)}
-                          style={{
-                            ...blogStyles.dot,
-                            width: blogPage === i ? '24px' : '8px',
-                            backgroundColor: blogPage === i
-                              ? 'var(--color-forest-green)'
-                              : 'var(--color-n300)',
-                          }}
-                          aria-label={`Go to page ${i + 1}`}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                )
-              )}
+              <CarouselNav
+                page={blogPage}
+                total={totalPages}
+                onChange={setBlogPage}
+                label="journal posts"
+              />
             </section>
             <Divider />
           </>
@@ -713,7 +586,12 @@ const styles = {
   sectionTitle: {
     fontFamily: 'var(--font-display)',
     fontWeight: '700',
-    fontSize: 'var(--text-h1)',
+    // --text-h2, like the Journeys and Journal section titles below it. This
+    // was --text-h1 (a page-title size on a section heading), which made the
+    // three peer sections disagree — and disagree by different amounts at
+    // different widths: 40 vs 32 on a desktop reads as a deliberate step,
+    // 28.5 vs 26.2 on a phone just reads as sloppy.
+    fontSize: 'var(--text-h2)',
     color: 'var(--color-n900)',
     marginBottom: '16px',
   },
@@ -781,81 +659,6 @@ const styles = {
     marginRight: '24px',
   },
 
-  carouselControls: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: '16px',
-    marginTop: '32px',
-  },
-
-  // Desktop-only row below the carousel once the side arrows take over
-  // navigation — just the page dots, still centered.
-  carouselControlsDesktop: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: '32px',
-  },
-
-  carouselNavBtn: {
-    width: '40px',
-    height: '40px',
-    borderRadius: '50%',
-    border: '1.5px solid var(--color-n300)',
-    backgroundColor: 'var(--color-n000)',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    cursor: 'pointer',
-    transition: 'opacity 0.2s ease',
-    flexShrink: 0,
-  },
-
-  // Desktop: arrows float at the vertical center of the whole carousel
-  // (both card rows), overlapping in from the edge toward the carousel's
-  // center rather than stacked below it with the dots.
-  carouselSideNav: {
-    position: 'absolute',
-    top: '50%',
-    transform: 'translateY(-50%)',
-    width: '52px',
-    height: '52px',
-    borderRadius: '50%',
-    border: '1.5px solid var(--color-n300)',
-    backgroundColor: 'var(--color-n000)',
-    boxShadow: '0 4px 16px rgba(0,0,0,0.16)',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    cursor: 'pointer',
-    transition: 'opacity 0.2s ease',
-    zIndex: 2,
-  },
-
-  carouselSideNavLeft: {
-    left: '8px',
-  },
-
-  carouselSideNavRight: {
-    right: '8px',
-  },
-
-  carouselDots: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '6px',
-  },
-
-  carouselDot: {
-    height: '8px',
-    borderRadius: '4px',
-    border: 'none',
-    cursor: 'pointer',
-    padding: 0,
-    transition: 'width 0.3s ease, background-color 0.3s ease',
-  },
-
   // Standardized with the "View All Journeys" row on PackagesPreview —
   // same pitch-line + shared <Button> pattern on both sections.
   bottomRow: {
@@ -917,7 +720,7 @@ trustBar: {
 
   trustLabel: {
     fontFamily: 'var(--font-body)',
-    fontSize: '10px',
+    fontSize: '12px',
     fontWeight: '500',
     color: 'var(--color-n600)',
     textTransform: 'uppercase',
@@ -973,7 +776,7 @@ trustBar: {
 
   trustLabelMobile: {
     fontFamily: 'var(--font-body)',
-    fontSize: '10px',
+    fontSize: '12px',
     fontWeight: '500',
     color: 'var(--color-n600)',
     textTransform: 'uppercase',
@@ -1008,7 +811,7 @@ hero: {
 
   heroFeaturedLabel: {
     fontFamily: 'var(--font-body)',
-    fontSize: '11px',
+    fontSize: '12px',
     fontWeight: 700,
     textTransform: 'uppercase',
     letterSpacing: '1.6px',
@@ -1273,44 +1076,6 @@ const blogStyles = {
     margin: '-24px auto -32px',
   },
 
-  // Desktop: arrows float at the vertical center of the carousel,
-  // overlapping in from the edge toward the carousel's center rather than
-  // stacking below it with the dots.
-  sideNavBtn: {
-    position: 'absolute',
-    top: '50%',
-    transform: 'translateY(-50%)',
-    width: '52px',
-    height: '52px',
-    borderRadius: '50%',
-    border: '1.5px solid var(--color-n300)',
-    backgroundColor: 'var(--color-n000)',
-    boxShadow: '0 4px 16px rgba(0,0,0,0.16)',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    cursor: 'pointer',
-    transition: 'opacity 0.2s ease',
-    zIndex: 2,
-  },
-
-  sideNavBtnLeft: {
-    left: '8px',
-  },
-
-  sideNavBtnRight: {
-    right: '8px',
-  },
-
-  // Desktop-only row below the carousel once the side arrows take over
-  // navigation — just the page dots, still centered.
-  controlsDesktop: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: '32px',
-  },
-
   carouselTrack: {
     display: 'flex',
     transition: 'transform 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
@@ -1325,42 +1090,6 @@ const blogStyles = {
     marginRight: '24px',
   },
 
-  controls: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: '16px',
-    marginTop: '32px',
-  },
-
-  navBtn: {
-    width: '40px',
-    height: '40px',
-    borderRadius: '50%',
-    border: '1.5px solid var(--color-n300)',
-    backgroundColor: 'var(--color-n000)',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    cursor: 'pointer',
-    transition: 'opacity 0.2s ease',
-    flexShrink: 0,
-  },
-
-  dots: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '6px',
-  },
-
-  dot: {
-    height: '8px',
-    borderRadius: '4px',
-    border: 'none',
-    cursor: 'pointer',
-    padding: 0,
-    transition: 'width 0.3s ease, background-color 0.3s ease',
-  },
   card: {
     backgroundColor: 'var(--color-n000)',
     borderRadius: '16px',
@@ -1399,7 +1128,7 @@ const blogStyles = {
     color: 'var(--color-n000)',
     fontFamily: 'var(--font-body)',
     fontWeight: '600',
-    fontSize: '11px',
+    fontSize: '12px',
     textTransform: 'uppercase',
     letterSpacing: '0.8px',
     padding: '4px 10px',

@@ -275,7 +275,7 @@ const styles = {
     display: 'block',
     fontFamily: 'var(--font-body)',
     fontWeight: '700',
-    fontSize: '10px',
+    fontSize: '12px',
     color: 'var(--color-n600)',
     textTransform: 'uppercase',
     letterSpacing: '1.5px',

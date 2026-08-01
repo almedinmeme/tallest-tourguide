@@ -77,7 +77,7 @@ export default function SectionNav({ sections, activeId, onScrollTo, isMobile })
             >
               <span style={{
                 fontFamily: 'var(--font-hero)',
-                fontSize: '11px',
+                fontSize: '12px',
                 fontWeight: 500,
                 color: isActive ? 'var(--color-amber)' : 'var(--color-n400)',
               }}>{number}</span>

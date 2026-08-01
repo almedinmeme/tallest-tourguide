@@ -235,7 +235,7 @@ const styles = {
     color: 'var(--color-n000)',
     fontFamily: 'var(--font-body)',
     fontWeight: '600',
-    fontSize: '11px',
+    fontSize: '12px',
     textTransform: 'uppercase',
     letterSpacing: '0.8px',
     padding: '4px 10px',

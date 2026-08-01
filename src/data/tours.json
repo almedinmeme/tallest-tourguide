@@ -2097,7 +2097,7 @@
     "city": "Mostar",
     "region": "Bosnia & Herzegovina",
     "title": "Stolac Day Tour from Mostar: Three Thousand Years in a Single Day",
-    "price": 55,
+    "price": 60,
     "rating": 5,
     "reviews": 2,
     "duration": "~6.5 hours",
@@ -2105,12 +2105,12 @@
     "badge": "New",
     "hero": "/uploads/stolac-day-tour-from-mostar-atkcvsm0.webp",
     "detailHero": "/uploads/stolac-day-tour-from-mostar-yu8ltu45.webp",
-    "description": "Stolac is forty minutes from Mostar and one of the oldest continuously inhabited places in Bosnia and Herzegovina. Most visitors staying in Mostar never go. The ones who do come back with a different understanding of the region — because Stolac holds things that predate Mostar by two thousand years. This tour covers them all in a single day: a UNESCO medieval tombstone field, an Illyrian hilltop capital, a preserved Ottoman quarter, lunch at a working Herzegovinian farm, and a coffee on the Bregava river. Finishing in Mostar or continuing to Sarajevo — your choice.\n\nMost guests staying in Mostar have never heard of Stolac. It sits in a bend of the Bregava river, quiet and unhurried, and it has been inhabited without interruption since the Bronze Age. The Illyrians were here. The Romans passed through. Medieval Bosnian lords built their fortress on the hill above the town. The Ottomans built a neighbourhood at its feet. And someone, between the 12th and 16th centuries, carved over 130 extraordinary tombstones in a field just outside town. That field is where the day begins.\n\nThe Radimlja necropolis is a UNESCO World Heritage site. Over 130 stećci — medieval monolithic tombstones — stand in open grass, carved with knights on horseback, vine spirals, hunting scenes, crescent moons, and geometric patterns that scholars still argue over. There is no fence. No ticket booth. Just the stones, the landscape, and your guide explaining what is known and honest about what remains a mystery.\n\nOld Town Vidoški is the medieval fortress above Stolac, built on Illyrian foundations that go back to the 4th century BC. Daorson, just above it, was the hilltop capital of the Daors tribe — the Hellenistic dry-stone walls are still standing at the summit and contain some of the best-preserved polygonal masonry in the Balkans. Coming down from the hill, Begovina waits: a 17th-century Ottoman residential complex with stone houses, a česma, and a small mosque — inhabited, intact, and empty of tourists.\n\nCoffee on the Bregava river is the afternoon's pace change. The water is turquoise and cold even in summer; the bank is quiet. Lunch follows at a local agrotourism — Herzegovinian food from the farm, prepared that morning. By mid-afternoon you're heading back north. Guests returning to Mostar are dropped off in the city centre by 16:15. Guests continuing to Sarajevo join the minibus back through the Neretva canyon, arriving in the capital by evening.",
+    "description": "<p>Stolac is forty minutes from Mostar and one of the oldest continuously inhabited places in Bosnia and Herzegovina. Most visitors staying in Mostar never go. The ones who do come back with a different understanding of the region — because Stolac holds things that predate Mostar by two thousand years. This tour covers them all in a single day: a UNESCO medieval tombstone field, an Illyrian hilltop capital, a preserved Ottoman quarter, lunch at a working Herzegovinian farm, and a coffee on the Bregava river. Finishing in Mostar or continuing to Sarajevo — your choice. Most guests staying in Mostar have never heard of Stolac. It sits in a bend of the Bregava river, quiet and unhurried, and it has been inhabited without interruption since the Bronze Age. The Illyrians were here. The Romans passed through. Medieval Bosnian lords built their fortress on the hill above the town. The Ottomans built a neighbourhood at its feet. And someone, between the 12th and 16th centuries, carved over 130 extraordinary tombstones in a field just outside town. That field is where the day begins. <br><br>The Radimlja necropolis is a <strong>UNESCO World Heritage site</strong>. Over 130 stećci — medieval monolithic tombstones — stand in open grass, carved with knights on horseback, vine spirals, hunting scenes, crescent moons, and geometric patterns that scholars still argue over. There is no fence. No ticket booth. Just the stones, the landscape, and your guide explaining what is known and honest about what remains a mystery. Old Town Vidoški is the medieval fortress above Stolac, built on Illyrian foundations that go back to the 4th century BC. Daorson, just above it, was the hilltop capital of the Daors tribe — the Hellenistic dry-stone walls are still standing at the summit and contain some of the best-preserved polygonal masonry in the Balkans. Coming down from the hill, Begovina waits: a 17th-century Ottoman residential complex with stone houses — inhabited, intact, and empty of tourists. Coffee on the Bregava river is the afternoon's pace change. The water is turquoise and cold even in summer; the bank is quiet. Lunch follows at a local agrotourism — Herzegovinian food from the farm, prepared that morning. By mid-afternoon you're heading back north. Guests returning to Mostar are dropped off in the city centre by 16:30. Guests continuing to Sarajevo join the minibus back through the Neretva canyon, arriving in the capital by evening.</p>",
     "highlights": [
       "Radimlja Necropolis — A UNESCO World Heritage stećci field on the approach to Stolac: over 130 medieval tombstones carved with knights, vine spirals, hunting scenes, and crescent moons. No fence, no ticket booth — just the stones and your guide explaining what's known and honest about the rest.",
       "Old Town Vidoški — The medieval fortress above Stolac, built on Illyrian foundations from the Iron Age, with views over the Bregava valley and the old town below.",
       "Daorson — The Illyrian hilltop capital of the Daors tribe, 4th–3rd century BC. Hellenistic dry-stone polygonal walls still stand at the summit — one of the least-visited prehistoric sites in the Balkans.",
-      "Begovina and the River Bregava — A 17th-century Ottoman residential quarter of stone houses, a česma, and a small mosque, still inhabited and empty of tourists. Coffee follows on the cold, turquoise Bregava.",
+      "Begovina and the River Bregava — A 17th-century Ottoman residential quarter of stone houses still inhabited and empty of tourists. Coffee follows on the cold, turquoise Bregava.",
       "Agrotourism Lunch — Herzegovinian home cooking at a working farm near Stolac, prepared the same day from what the season offers.",
       "Optional Transfer to Sarajevo — Continue with the group to Sarajevo at 17:30, with an optional guided walk through Mostar's old town first, at no extra cost to add on."
     ],
@@ -2190,7 +2190,7 @@
       "drivingDistanceKm": 70,
       "walkingDurationMin": 120,
       "drivingDurationMin": 90,
-      "durationMin": 390,
+      "durationMin": 400,
       "elevationGainM": 60,
       "effortLevel": "moderate",
       "suitability": {
@@ -2266,7 +2266,14 @@
         "perPerson": true
       }
     ],
-    "oldPrice": null
+    "oldPrice": null,
+    "extraCategories": [],
+    "privatePricing": {
+      "mode": "quote"
+    },
+    "journalPosts": [
+      "stolac-bosnia-oldest-town-guide"
+    ]
   },
   {
     "id": 15,
@@ -2442,5 +2449,179 @@
     ],
     "mapProfile": "foot-walking",
     "extras": []
+  },
+  {
+    "id": 16,
+    "slug": "sarajevo-islamic-heritage-tour",
+    "category": "history",
+    "extraCategories": [
+      "city-walks"
+    ],
+    "city": "Sarajevo",
+    "region": "Bosnia & Herzegovina",
+    "title": "Islamic Heritage Tour Sarajevo: The Islam You Didn't Expect",
+    "subtitle": "Ninety minutes in Muslim Sarajevo — a working mosque, a Sufi lodge, and the honest version of Bosnian Islam, from someone raised inside it.",
+    "price": 30,
+    "rating": 5,
+    "reviews": 0,
+    "duration": "90 minutes",
+    "groupSize": 12,
+    "badge": "New",
+    "hero": "/uploads/the-four-faiths-of-sarajevo-a-500-meter-walk-through-three-r-1t1lfjx8.webp",
+    "detailHero": "/uploads/the-four-faiths-of-sarajevo-a-500-meter-walk-through-three-r-1t1lfjx8.webp",
+    "description": "Ninety minutes inside Muslim Sarajevo — a working mosque, a Sufi dervish lodge, and Ottoman heritage, guided by someone raised inside it. Not a sales pitch.\n\nBosnia has the oldest continuously organised Muslim community in Europe, running without interruption since 1882, when Bosnian Muslims became the first in Europe with religious leadership independent of Istanbul. That is a stranger and more interesting fact than the one most visitors arrive with. This tour covers how Islam reached Bosnia, what five centuries of it produced, and what it means here now — inside Gazi Husrev-beg Mosque, inside a surviving Qadiri tekke, and on foot through the Ottoman quarter that grew up around both.\n\nThis is not a religious tour and it is not an apologetic one. It is an explanation. Your guide comes from a religious Bosnian family, which makes the account first-hand rather than read from a book — and unsentimental. You will hear where Bosnian Islam sits uneasily with itself, what the 1990s did to it, and what the community is arguing about right now. You are not going to be told what to think about any of it.\n\nNinety minutes is short by design: one mosque, one tekke, one quarter, covered properly rather than six sites badly. We enter a working place of prayer, so modest dress is required — the full notes are further down, and we carry spare headscarves.",
+    "highlights": [
+      "Gazi Husrev-beg Mosque (1531) — Inside the largest historical mosque in Bosnia, still the main congregational mosque of the Islamic Community and in daily use. Architecture, function, and what the five daily prayers actually involve for a person with a job and a family.",
+      "Hadži Sinanova tekija — A surviving Qadiri Sufi lodge most visitors never hear about: over a hundred calligraphic inscriptions, the recitation practice called zikr, and the twentieth-century suppression and revival of Bosnian Sufism.",
+      "Baščaršija and the Sebilj — The Ottoman quarter as a built argument. The arrival of 1463, Isa-beg Ishaković's founding endowment, and how the waqf system produced a city — market, mosque, bathhouse, bridge, school — as a single financial instrument.",
+      "How Islam actually spread in Bosnia — Gradually, unevenly, over generations. The mechanism rather than the slogan, and why both of the popular versions collapse on contact with the records.",
+      "The 1882 story — How Bosnian Muslims became the first in Europe with religious leadership independent of Istanbul, and why that institutional continuity explains most of what makes Bosnian Islam distinctive.",
+      "The argument happening now — Practice versus identity, and post-1990s foreign religious influence. Laid out honestly, including the parts the community is still fighting about. You do the concluding.",
+      "A guide raised inside it — From a religious Bosnian family, giving a first-hand and unsentimental account. Hard questions are welcome; evasive answers aren't the house style."
+    ],
+    "includes": [
+      "90-minute guided walking tour",
+      "Mosque entry",
+      "Tekke entry",
+      "Loan headscarves if needed",
+      "All entrance fees where applicable",
+      "Small group, max 12"
+    ],
+    "excludes": [
+      "Personal travel insurance",
+      "Gratuities (appreciated, never expected)",
+      "Food and drinks"
+    ],
+    "faqs": [
+      {
+        "question": "Do I need to be Muslim, or religious at all?",
+        "answer": "No. Most guests are neither. The tour is built for people who are curious and want an accurate picture — including guests from strongly secular backgrounds and guests of other faiths. Nobody is preached at."
+      },
+      {
+        "question": "Is it really respectful for tourists to enter a working mosque?",
+        "answer": "Yes, when it's done properly, and Sarajevo's mosques are accustomed to visitors. That is what the dress code and the timing are for. Your guide handles the etiquette so you don't have to guess, and we avoid prayer times."
+      },
+      {
+        "question": "I'm a woman and I've never worn a headscarf. Is that awkward?",
+        "answer": "It's less awkward than people expect, and your guide will show you how to put one on. It comes off the moment you leave. If it genuinely isn't something you want to do, tell us — the courtyard, the complex and the tekke portion still make a substantial tour."
+      },
+      {
+        "question": "What's a tekke?",
+        "answer": "A Sufi lodge — a building where members of a dervish order gather for ritual, recitation and study. Sufism is the mystical current within Islam. Sarajevo once had dozens of these; a handful survive. Most visitors to Bosnia never learn they exist."
+      },
+      {
+        "question": "Will we see a dervish ceremony?",
+        "answer": "Not as a scheduled part of the tour. Zikr is a religious practice, not a performance, and we don't treat it as one. If you're interested in attending a ceremony, ask your guide — that is arranged separately, respectfully, and only sometimes."
+      },
+      {
+        "question": "Is 90 minutes enough?",
+        "answer": "For this scope, yes. The tour deliberately covers one mosque, one tekke and one quarter properly rather than six sites badly. If you want more — Jewish Sarajevo, the wider Ottoman heritage of Bosnia, the multi-faith story — we have longer tours and we'll tell you which one fits."
+      },
+      {
+        "question": "Can I ask difficult questions?",
+        "answer": "Please do. Your guide grew up inside a religious family and has thought about this a great deal, which means hard questions are welcome and evasive answers aren't the house style. If something has no clean answer, you'll be told that too."
+      },
+      {
+        "question": "Is this suitable for children?",
+        "answer": "Yes, from around 10 upward with an adult. The dress code applies to children as well."
+      },
+      {
+        "question": "Can you run this during Ramadan?",
+        "answer": "Yes, and it's a genuinely different experience — the city changes rhythm entirely. Timing shifts around iftar, so contact us for Ramadan dates."
+      }
+    ],
+    "meetingPoint": "The Sebilj fountain, Baščaršija square, Sarajevo Old Town. The exact meeting point is confirmed when you book.",
+    "startingTimes": [
+      "10 AM"
+    ],
+    "languages": [
+      "english",
+      "bosnian"
+    ],
+    "rightFor": [
+      "Curious visitors of any faith or none — most guests are neither Muslim nor religious",
+      "Travellers who want an accurate picture rather than a tidy one, including the uncomfortable parts",
+      "Guests who have done our Jewish Heritage Tour and want the other half of the story",
+      "Anyone short on time who would rather see one mosque and one tekke properly than six sites badly",
+      "Families with children from around 10 upward, with an adult"
+    ],
+    "notRightFor": [
+      "Anyone unwilling or unable to meet the dress code — shoulders and legs covered, and a headscarf for women inside the prayer hall",
+      "Guests looking for a light, entertaining sightseeing walk — this one is dense by design",
+      "Visitors hoping to watch a dervish ceremony — zikr is a religious practice, not a performance, and is not part of the tour",
+      "Children under about 10"
+    ],
+    "fitnessNote": {
+      "type": "emotional",
+      "level": "Modest dress required — we enter a working mosque",
+      "detail": "Shoulders covered, no shorts, and legs covered to below the knee, for everyone. Shoes come off at the entrance; socks or bare feet are both fine, and slip-on shoes make it much easier. Women need a headscarf inside the prayer hall — bring one if you can, and we carry spares, so nobody is turned away for arriving without one. Phones on silent; photography is generally fine, but ask your guide first. If any of this is a problem for you, tell us when you book and we will find a way to make the tour work."
+    },
+    "accessibility": {
+      "walkingDistanceKm": 1.2,
+      "drivingDistanceKm": null,
+      "walkingDurationMin": 90,
+      "drivingDurationMin": null,
+      "durationMin": 90,
+      "elevationGainM": null,
+      "effortLevel": "low",
+      "suitability": {
+        "wheelchair": "partial",
+        "stroller": "partial",
+        "smallChildren": "no",
+        "children": "partial",
+        "pregnancy": "yes",
+        "seniors": "yes",
+        "pets": "no"
+      },
+      "requirements": [
+        {
+          "key": "dress-code",
+          "label": "Dress modestly for the mosque and the tekke",
+          "detail": "Shoulders covered and legs covered to below the knee, for everyone. Women wear a headscarf inside the prayer hall — we carry spares."
+        },
+        {
+          "key": "shoes-off",
+          "label": "Take your shoes off at the entrance",
+          "detail": "Socks or bare feet are both fine. Slip-on shoes make the entrance much easier."
+        },
+        {
+          "key": "walking",
+          "label": "Walk about 1.2 km at an easy pace",
+          "detail": "Entirely within the old town, flat throughout, with two extended indoor stops."
+        }
+      ],
+      "terrain": "Flat, entirely within the old town, cobbled in places.",
+      "notes": "Walking: ~1.2 km over 90 minutes, flat throughout, with two extended indoor stops.\n\nWe time visits to avoid the five daily prayers, but if prayer begins while we are inside, we step back and wait. It takes a few minutes and it is worth seeing.\n\nMenstruating women are traditionally not expected to enter the prayer hall. We mention this only so nobody is caught out; nobody will ask you anything, and the courtyard portion of the visit loses very little.\n\nAvailable year-round, including Ramadan — the city changes rhythm entirely and timing shifts around iftar, so ask us about Ramadan dates."
+    },
+    "gallery": [
+      "/uploads/the-four-faiths-of-sarajevo-a-500-meter-walk-through-three-r-1t1lfjx8.webp",
+      "/uploads/the-four-faiths-of-sarajevo-a-500-meter-walk-through-three-r-6m36kog1.webp"
+    ],
+    "mapWaypoints": [
+      {
+        "lat": 43.85953,
+        "lng": 18.43094,
+        "label": "Baščaršija & the Sebilj"
+      },
+      {
+        "lat": 43.85936,
+        "lng": 18.42876,
+        "label": "Gazi Husrev-beg Mosque & complex"
+      },
+      {
+        "lat": 43.86046,
+        "lng": 18.43103,
+        "label": "Hadži Sinanova tekija"
+      }
+    ],
+    "mapProfile": "foot-walking",
+    "extras": [],
+    "oldPrice": null,
+    "privatePricing": {
+      "mode": "quote"
+    },
+    "journalPosts": [
+      "the-four-faiths-of-sarajevo-a-500-meter-walk-through-three-religions-and-one-empire"
+    ]
   }
 ]

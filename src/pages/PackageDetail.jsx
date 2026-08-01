@@ -1509,7 +1509,7 @@ function PackageDetail() {
                         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(0,0,0,0.30) 0%, transparent 28%, transparent 40%, rgba(0,0,0,0.88) 100%)' }} />
                         <div style={{ position: 'absolute', top: '14px', left: '14px', right: '14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                           {badge && (
-                            <span style={{ fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: '10px', letterSpacing: '1px', textTransform: 'uppercase', padding: '4px 11px', borderRadius: 'var(--radius-pill)', backgroundColor: badgeStyle === 'amber' ? 'var(--color-amber)' : badgeStyle === 'green' ? 'var(--color-forest-green)' : 'rgba(0,0,0,0.55)', color: badgeStyle === 'amber' ? 'var(--color-n900)' : 'var(--color-n000)' }}>{badge}</span>
+                            <span style={{ fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: '12px', letterSpacing: '1px', textTransform: 'uppercase', padding: '4px 11px', borderRadius: 'var(--radius-pill)', backgroundColor: badgeStyle === 'amber' ? 'var(--color-amber)' : badgeStyle === 'green' ? 'var(--color-forest-green)' : 'rgba(0,0,0,0.55)', color: badgeStyle === 'amber' ? 'var(--color-n900)' : 'var(--color-n000)' }}>{badge}</span>
                           )}
                           <span style={{ fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: '12px', color: 'var(--color-n000)', backgroundColor: 'rgba(0,0,0,0.40)', backdropFilter: 'blur(6px)', border: '1px solid rgba(255,255,255,0.18)', padding: '5px 12px', borderRadius: 'var(--radius-pill)', marginLeft: 'auto' }}>{p.duration}</span>
                         </div>
@@ -1517,12 +1517,12 @@ function PackageDetail() {
                           <h3 style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '20px', color: 'var(--color-n000)', lineHeight: 1.2, letterSpacing: '-0.2px', margin: '0 0 4px' }}>{p.name}</h3>
                           {p.subtitle && <p style={{ fontFamily: 'var(--font-body)', fontSize: '12px', color: 'rgba(255,255,255,0.70)', margin: '0 0 10px', fontStyle: 'italic' }}>{p.subtitle}</p>}
                           <div style={{ display: 'flex', gap: '5px', flexWrap: 'wrap', marginBottom: '12px' }}>
-                            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '11px', color: 'rgba(255,255,255,0.92)', backgroundColor: 'rgba(0,0,0,0.42)', backdropFilter: 'blur(6px)', border: '1px solid rgba(255,255,255,0.16)', padding: '3px 9px', borderRadius: 'var(--radius-pill)' }}><Gauge size={11} />{p.difficulty}</span>
-                            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '11px', color: 'rgba(255,255,255,0.92)', backgroundColor: 'rgba(0,0,0,0.42)', backdropFilter: 'blur(6px)', border: '1px solid rgba(255,255,255,0.16)', padding: '3px 9px', borderRadius: 'var(--radius-pill)' }}><MapPin size={11} />{p.locations} locations</span>
+                            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '12px', color: 'rgba(255,255,255,0.92)', backgroundColor: 'rgba(0,0,0,0.42)', backdropFilter: 'blur(6px)', border: '1px solid rgba(255,255,255,0.16)', padding: '3px 9px', borderRadius: 'var(--radius-pill)' }}><Gauge size={11} />{p.difficulty}</span>
+                            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '12px', color: 'rgba(255,255,255,0.92)', backgroundColor: 'rgba(0,0,0,0.42)', backdropFilter: 'blur(6px)', border: '1px solid rgba(255,255,255,0.16)', padding: '3px 9px', borderRadius: 'var(--radius-pill)' }}><MapPin size={11} />{p.locations} locations</span>
                           </div>
                           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '10px' }}>
                             <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px' }}>
-                              <span style={{ fontFamily: 'var(--font-body)', fontSize: '10px', color: 'rgba(255,255,255,0.60)', fontWeight: 500, letterSpacing: '0.3px' }}>from</span>
+                              <span style={{ fontFamily: 'var(--font-body)', fontSize: '12px', color: 'rgba(255,255,255,0.60)', fontWeight: 500, letterSpacing: '0.3px' }}>from</span>
                               <span style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '28px', color: 'var(--color-n000)', lineHeight: 1 }}>{format(p.priceWithout)}</span>
                             </div>
                             <button className="btn btn--sm pkg-card-btn">
@@ -1547,7 +1547,7 @@ function PackageDetail() {
                           <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(0,0,0,0.30) 0%, transparent 28%, transparent 40%, rgba(0,0,0,0.88) 100%)' }} />
                           <div style={{ position: 'absolute', top: '14px', left: '14px', right: '14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                             {badge && (
-                              <span style={{ fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: '10px', letterSpacing: '1px', textTransform: 'uppercase', padding: '4px 11px', borderRadius: 'var(--radius-pill)', backgroundColor: badgeStyle === 'amber' ? 'var(--color-amber)' : badgeStyle === 'green' ? 'var(--color-forest-green)' : 'rgba(0,0,0,0.55)', color: badgeStyle === 'amber' ? 'var(--color-n900)' : 'var(--color-n000)' }}>{badge}</span>
+                              <span style={{ fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: '12px', letterSpacing: '1px', textTransform: 'uppercase', padding: '4px 11px', borderRadius: 'var(--radius-pill)', backgroundColor: badgeStyle === 'amber' ? 'var(--color-amber)' : badgeStyle === 'green' ? 'var(--color-forest-green)' : 'rgba(0,0,0,0.55)', color: badgeStyle === 'amber' ? 'var(--color-n900)' : 'var(--color-n000)' }}>{badge}</span>
                             )}
                             <span style={{ fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: '12px', color: 'var(--color-n000)', backgroundColor: 'rgba(0,0,0,0.40)', backdropFilter: 'blur(6px)', border: '1px solid rgba(255,255,255,0.18)', padding: '5px 12px', borderRadius: 'var(--radius-pill)', marginLeft: 'auto' }}>{p.duration}</span>
                           </div>
@@ -1555,12 +1555,12 @@ function PackageDetail() {
                             <h3 style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '20px', color: 'var(--color-n000)', lineHeight: 1.2, letterSpacing: '-0.2px', margin: '0 0 4px' }}>{p.name}</h3>
                             {p.subtitle && <p style={{ fontFamily: 'var(--font-body)', fontSize: '12px', color: 'rgba(255,255,255,0.70)', margin: '0 0 10px', fontStyle: 'italic' }}>{p.subtitle}</p>}
                             <div style={{ display: 'flex', gap: '5px', flexWrap: 'wrap', marginBottom: '12px' }}>
-                              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '11px', color: 'rgba(255,255,255,0.92)', backgroundColor: 'rgba(0,0,0,0.42)', backdropFilter: 'blur(6px)', border: '1px solid rgba(255,255,255,0.16)', padding: '3px 9px', borderRadius: 'var(--radius-pill)' }}><Gauge size={11} />{p.difficulty}</span>
-                              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '11px', color: 'rgba(255,255,255,0.92)', backgroundColor: 'rgba(0,0,0,0.42)', backdropFilter: 'blur(6px)', border: '1px solid rgba(255,255,255,0.16)', padding: '3px 9px', borderRadius: 'var(--radius-pill)' }}><MapPin size={11} />{p.locations} locations</span>
+                              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '12px', color: 'rgba(255,255,255,0.92)', backgroundColor: 'rgba(0,0,0,0.42)', backdropFilter: 'blur(6px)', border: '1px solid rgba(255,255,255,0.16)', padding: '3px 9px', borderRadius: 'var(--radius-pill)' }}><Gauge size={11} />{p.difficulty}</span>
+                              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '12px', color: 'rgba(255,255,255,0.92)', backgroundColor: 'rgba(0,0,0,0.42)', backdropFilter: 'blur(6px)', border: '1px solid rgba(255,255,255,0.16)', padding: '3px 9px', borderRadius: 'var(--radius-pill)' }}><MapPin size={11} />{p.locations} locations</span>
                             </div>
                             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '10px' }}>
                               <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px' }}>
-                                <span style={{ fontFamily: 'var(--font-body)', fontSize: '10px', color: 'rgba(255,255,255,0.60)', fontWeight: 500, letterSpacing: '0.3px' }}>from</span>
+                                <span style={{ fontFamily: 'var(--font-body)', fontSize: '12px', color: 'rgba(255,255,255,0.60)', fontWeight: 500, letterSpacing: '0.3px' }}>from</span>
                                 <span style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '28px', color: 'var(--color-n000)', lineHeight: 1 }}>{format(p.priceWithout)}</span>
                               </div>
                               <button className="btn btn--sm pkg-card-btn">
@@ -1695,7 +1695,7 @@ const styles = {
     display: 'block',
     fontFamily: 'var(--font-body)',
     fontWeight: '500',
-    fontSize: '11px',
+    fontSize: '12px',
     color: 'var(--color-forest-green)',
     letterSpacing: '2px',
     textTransform: 'uppercase',
@@ -1844,13 +1844,13 @@ const styles = {
   cityLabel: {
     fontFamily: 'var(--font-body)',
     fontWeight: '600',
-    fontSize: '11px',
+    fontSize: '12px',
     color: 'var(--color-forest-green)',
   },
 
   cityInline: {
     fontFamily: 'var(--font-body)',
-    fontSize: '11px',
+    fontSize: '12px',
     fontWeight: '500',
     color: 'var(--color-n400)',
   },
@@ -1864,7 +1864,7 @@ const styles = {
     backgroundColor: 'var(--color-forest-green)',
     fontFamily: 'var(--font-body)',
     fontWeight: '700',
-    fontSize: '11px',
+    fontSize: '12px',
     color: '#fff',
     letterSpacing: '0.5px',
     flexShrink: 0,
@@ -2050,7 +2050,7 @@ const styles = {
 
   activitiesLabel: {
     fontFamily: 'var(--font-display)',
-    fontSize: '10px',
+    fontSize: '12px',
     fontWeight: '700',
     letterSpacing: '0.8px',
     textTransform: 'uppercase',
@@ -2059,7 +2059,7 @@ const styles = {
 
   activitiesLabelOptional: {
     fontFamily: 'var(--font-display)',
-    fontSize: '10px',
+    fontSize: '12px',
     fontWeight: '700',
     letterSpacing: '0.8px',
     textTransform: 'uppercase',
@@ -2083,7 +2083,7 @@ const styles = {
   inclusionSubtitle: {
     fontFamily: 'var(--font-display)',
     fontWeight: '700',
-    fontSize: '11px',
+    fontSize: '12px',
     color: 'var(--color-success)',
     letterSpacing: '1px',
     textTransform: 'uppercase',
@@ -2093,7 +2093,7 @@ const styles = {
   exclusionSubtitle: {
     fontFamily: 'var(--font-display)',
     fontWeight: '700',
-    fontSize: '11px',
+    fontSize: '12px',
     color: 'var(--color-n600)',
     letterSpacing: '1px',
     textTransform: 'uppercase',
@@ -2296,7 +2296,7 @@ const styles = {
   accomOptionTitle: {
     fontFamily: 'var(--font-body)',
     fontWeight: '600',
-    fontSize: '11px',
+    fontSize: '12px',
     lineHeight: '1.3',
     transition: 'color 0.15s ease',
     flex: 1,
@@ -2581,7 +2581,7 @@ const styles = {
 
   mobilePricePer: {
     fontFamily: 'var(--font-body)',
-    fontSize: '11px',
+    fontSize: '12px',
     color: 'var(--color-n500)',
     lineHeight: 1,
   },

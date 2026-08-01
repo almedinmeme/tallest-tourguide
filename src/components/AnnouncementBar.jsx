@@ -352,7 +352,7 @@ const styles = {
   kicker: {
     fontFamily: 'var(--font-body)',
     fontWeight: '700',
-    fontSize: '10.5px',
+    fontSize: '12px',
     letterSpacing: '2px',
     textTransform: 'uppercase',
     whiteSpace: 'nowrap',
@@ -495,7 +495,7 @@ const styles = {
     position: 'relative',
     fontFamily: 'var(--font-body)',
     fontWeight: '700',
-    fontSize: '11px',
+    fontSize: '12px',
     letterSpacing: '2.2px',
     textTransform: 'uppercase',
     color: 'var(--color-amber)',

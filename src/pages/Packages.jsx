@@ -495,7 +495,7 @@ const styles = {
   filterLabel: {
     fontFamily: 'var(--font-body)',
     fontWeight: '600',
-    fontSize: '11px',
+    fontSize: '12px',
     color: 'var(--color-n400)',
     letterSpacing: '0.8px',
     textTransform: 'uppercase',
@@ -643,7 +643,7 @@ const styles = {
   badge: {
     fontFamily: 'var(--font-body)',
     fontWeight: '700',
-    fontSize: '10px',
+    fontSize: '12px',
     letterSpacing: '1px',
     textTransform: 'uppercase',
     padding: '4px 11px',
@@ -684,7 +684,7 @@ const styles = {
     gap: '4px',
     fontFamily: 'var(--font-body)',
     fontWeight: '600',
-    fontSize: '11px',
+    fontSize: '12px',
     color: 'rgba(255,255,255,0.92)',
     backgroundColor: 'rgba(0,0,0,0.42)',
     backdropFilter: 'blur(6px)',
@@ -727,7 +727,7 @@ const styles = {
 
   priceFrom: {
     fontFamily: 'var(--font-body)',
-    fontSize: '10px',
+    fontSize: '12px',
     color: 'rgba(255,255,255,0.60)',
     fontWeight: '500',
     letterSpacing: '0.3px',
@@ -813,7 +813,7 @@ const styles = {
   personalisedLabel: {
     fontFamily: 'var(--font-body)',
     fontWeight: '700',
-    fontSize: '11px',
+    fontSize: '12px',
     color: 'rgba(255,255,255,0.4)',
     textTransform: 'uppercase',
     letterSpacing: '1.5px',

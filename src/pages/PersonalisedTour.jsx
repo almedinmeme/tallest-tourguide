@@ -1338,7 +1338,7 @@ const styles = {
   placesGroupLabel: {
     fontFamily: 'var(--font-body)',
     fontWeight: '700',
-    fontSize: '11px',
+    fontSize: '12px',
     color: 'var(--color-n500)',
     textTransform: 'uppercase',
     letterSpacing: '1px',
@@ -1454,7 +1454,7 @@ const styles = {
 
   summaryLabel: {
     fontFamily: 'var(--font-body)',
-    fontSize: '11px',
+    fontSize: '12px',
     fontWeight: '600',
     color: 'var(--color-n600)',
     textTransform: 'uppercase',
