@@ -11,24 +11,23 @@
 import { useState } from 'react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import useWindowWidth from '../hooks/useWindowWidth'
-
-// Import all five guide photos
-import guide1 from '../assets/guide-1.webp'
-import guide2 from '../assets/guide-2.webp'
-import guide3 from '../assets/guide-3.webp'
-import guide4 from '../assets/guide-4.webp'
-import guide5 from '../assets/guide-5.webp'
+import Img from './Img'
 
 // Photo data — each photo has an src and a caption.
 // The caption appears below the main photo and gives
 // context about where and what the visitor is seeing.
 // Keep captions short — one location, one detail.
+//
+// Paths point at /uploads/ (not a src/assets import) so they go through Img
+// and get the same 480/960/1600w responsive variants as admin-uploaded
+// content — these five files were already sitting in public/uploads/,
+// byte-identical to the old src/assets copies, just unreferenced.
 const photos = [
-  { src: guide1, caption: 'Things Tallest Tourguide & Friends do... ' },
-  { src: guide2, caption: 'Early morning Bosnian coffee ceremony' },
-  { src: guide3, caption: 'Surviving the Neretva Rafting' },
-  { src: guide4, caption: 'Doing a good banter with each other' },
-  { src: guide5, caption: 'Forgetting the banter after the lunch'  },
+  { src: '/uploads/guide-1.webp', caption: 'Things Tallest Tourguide & Friends do... ' },
+  { src: '/uploads/guide-2.webp', caption: 'Early morning Bosnian coffee ceremony' },
+  { src: '/uploads/guide-3.webp', caption: 'Surviving the Neretva Rafting' },
+  { src: '/uploads/guide-4.webp', caption: 'Doing a good banter with each other' },
+  { src: '/uploads/guide-5.webp', caption: 'Forgetting the banter after the lunch'  },
 ]
 
 function GuideSection() {
@@ -70,9 +69,10 @@ function GuideSection() {
 
             {/* The photo itself — objectFit cover keeps it
                 perfectly cropped regardless of the source dimensions */}
-            <img
+            <Img
               src={photos[selectedPhoto].src}
               alt={photos[selectedPhoto].caption}
+              sizes="(min-width: 900px) 570px, 90vw"
               style={styles.mainPhoto}
             />
 
@@ -137,9 +137,10 @@ function GuideSection() {
                   }}
                   aria-label={`View photo ${index + 1}`}
                 >
-                  <img
+                  <Img
                     src={photo.src}
                     alt={photo.caption}
+                    sizes="110px"
                     style={styles.thumbnailImg}
                   />
                 </button>

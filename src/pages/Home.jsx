@@ -13,6 +13,7 @@ import TourCard from '../components/TourCard'
 import Button from '../components/Button'
 import HeroSearch from '../components/HeroSearch'
 import Img from '../components/Img'
+import { variantSrcset, variantUrl } from '../utils/imageVariants'
 import tours from '../data/tours'
 import useWindowWidth from '../hooks/useWindowWidth'
 import hero2 from '../assets/tour-2-hero.webp'
@@ -27,6 +28,19 @@ import { getPage } from '../data/pages'
 const homePage = getPage('home')
 const ADMIN_HERO_IMAGES = (homePage?.extra?.heroImages || []).map((h) => h.image).filter(Boolean)
 const HERO_IMAGES = ADMIN_HERO_IMAGES.length > 0 ? ADMIN_HERO_IMAGES : ['/hero-bg.webp', hero2, hero3, hero4, hero5]
+
+// index.html used to hardcode a <link rel="preload"> for a single fixed hero
+// image. Once the hero became admin-editable that preload silently stopped
+// matching HERO_IMAGES[0] — the browser was preloading a decoy nobody sees
+// while the real LCP image downloaded unassisted. Deriving the preload from
+// the same HERO_IMAGES[0] the hero itself renders (passed to <SEO> below)
+// makes that drift structurally impossible.
+const heroPreloadSrc = HERO_IMAGES[0]
+const heroPreloadSrcSet = variantSrcset(heroPreloadSrc)
+// variantSrcset already returns undefined outside prod builds (variants only
+// exist in dist/), so gating on it here — rather than isVariantEligible,
+// which doesn't know about that — keeps the preload honest on the dev server.
+const heroPreloadHref = heroPreloadSrcSet ? variantUrl(heroPreloadSrc, 960) : heroPreloadSrc
 
 const FAVOURITE_SLUGS = homePage?.extra?.favouriteTours || []
 const favouriteTours = FAVOURITE_SLUGS.map((slug) => tours.find((t) => t.slug === slug)).filter(Boolean)
@@ -97,6 +111,7 @@ function Home() {
   description={homePage?.seo?.description || 'Small group tours in Sarajevo and Bosnia led by a local guide. War history, food tours, day trips to Mostar and more. Genuinely small groups. Book online.'}
   url="/"
   image="https://tallesttourguide.com/og-image.jpg"
+  preloadImage={{ href: heroPreloadHref, srcSet: heroPreloadSrcSet, sizes: '100vw' }}
 />
      {/* ═══════════════════════════════
           HERO SECTION — Redesigned

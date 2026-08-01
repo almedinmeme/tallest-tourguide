@@ -18,6 +18,11 @@ function SEO({
   url,
   type = 'website',
   publishedDate,
+  // Preload the page's LCP image — { href, srcSet, sizes }. href is a
+  // concrete fallback URL (a <link> can't take a bare srcset); srcSet/sizes
+  // let the browser pick the right responsive variant, same as the actual
+  // <img> will. Only pages with an eager hero image (Home today) pass this.
+  preloadImage,
 }) {
   const fullTitle = title
     ? `${title} | Tallest Tourguide Sarajevo`
@@ -37,6 +42,18 @@ function SEO({
       <title>{fullTitle}</title>
       <meta name="description" content={description} />
       <link rel="canonical" href={fullUrl} />
+
+      {preloadImage && (
+        <link
+          rel="preload"
+          as="image"
+          href={preloadImage.href}
+          fetchpriority="high"
+          {...(preloadImage.srcSet
+            ? { imagesrcset: preloadImage.srcSet, imagesizes: preloadImage.sizes || '100vw' }
+            : {})}
+        />
+      )}
 
       {/* Open Graph — controls social and messaging previews */}
       <meta property="og:type" content={type} />
