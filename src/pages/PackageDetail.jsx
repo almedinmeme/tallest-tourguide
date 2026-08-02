@@ -406,8 +406,8 @@ function PackageDetail() {
   }
 
   // Collect the package selection and hand off to the dedicated /checkout
-  // screen, where the customer enters their details and chooses to pay by card
-  // or reserve & pay later. The calendar save + emails happen there.
+  // screen, where the customer enters their details and pays by bank invoice
+  // (in full or as a deposit). The calendar save + emails happen there.
   const handleBooking = () => {
     if (!selectedDate) {
       setDateError(true)
@@ -847,7 +847,7 @@ function PackageDetail() {
                 </div>
                 <div style={styles.trustRow}>
                   <ShieldCheck size={13} color="var(--color-forest-green)" style={{ flexShrink: 0, marginTop: '2px' }} />
-                  <span>Secure card checkout — pay in full or a {DEPOSIT_PERCENT}% deposit</span>
+                  <span>Bank-invoice checkout — pay in full or a {DEPOSIT_PERCENT}% deposit</span>
                 </div>
               </div>
             </>

@@ -5,10 +5,18 @@
 // React Router location.state.
 //
 // Here the customer enters their contact details and chooses how to pay:
-//   • Pay by card  → the (placeholder) card form; the booking confirms instantly.
-//                    The Pay button calls processCardPayment() — the single
-//                    seam to replace with a real gateway later.
-//   • Reserve & pay later → the frictionless flow, full price.
+//   • Pay by card  → DISABLED while the real gateway is being built (see
+//                    below). The UI, validation and processCardPayment()
+//                    stub are all kept intact — re-enabling it later is just
+//                    removing MethodRow's `disabled` on this option.
+//   • Bank invoice → the current default. No payment is taken here; we email
+//                    the guest a bank invoice separately and they transfer
+//                    the amount before the trip.
+//   • Reserve & pay later → the frictionless flow (tours only), full price
+//                    in cash on the day.
+// Journeys (booking.deposit) skip the method picker entirely — no card, no
+// cash reserve, always bank invoice — but can still choose to pay in full or
+// a deposit today via the segmented toggle below.
 //
 // Both paths funnel through submitBooking(): the calendar write that holds
 // the seats, then the guest and admin emails.
@@ -76,8 +84,9 @@ function Checkout() {
   // Optional add-ons chosen here (indices into booking.availableExtras).
   const [selectedExtras, setSelectedExtras] = useState([])
 
-  // Payment method: default to card so the payment UI is shown immediately.
-  const [method, setMethod] = useState('card')
+  // Payment method: default to bank invoice — card is disabled while the
+  // real gateway is built (see the file banner above).
+  const [method, setMethod] = useState('invoice')
   // Journeys can pay the full amount (default) or a deposit ('full' | 'deposit').
   const [payPlan, setPayPlan] = useState('full')
 
@@ -92,7 +101,7 @@ function Checkout() {
   // Set only when the server rejects the booking because the seats went in
   // the meantime — the one failure the guest can actually act on.
   const [soldOut, setSoldOut] = useState('')
-  const [done, setDone] = useState(null) // null | 'card' | 'reserve'
+  const [done, setDone] = useState(null) // null | 'card' | 'invoice' | 'reserve'
 
   // Mobile-only UI state: expandable top summary + sticky total bar.
   const [summaryOpen, setSummaryOpen] = useState(false)
@@ -122,11 +131,15 @@ function Checkout() {
   // Everything downstream (card discount, deposit split, totals) works from
   // the promo-reduced total.
   const total = listTotal - promoSaving
-  // Journeys (booking.deposit) are card-only — there is no reserve option.
-  // They pay the list total in full, or a deposit now with the balance due
-  // before departure.
+  // Journeys (booking.deposit) always pay by invoice — no card, no cash
+  // reserve. They pay the list total in full, or a deposit now with the
+  // balance due before departure.
   const hasDeposit = Boolean(booking?.deposit) && !isQuote
-  const payingByCard = (hasDeposit || method === 'card') && !isQuote
+  // True whenever the guest owes a specific amount via bank invoice (not
+  // cash-on-the-day reserve) — journeys always, tours when 'invoice' is
+  // selected. Named for the invoice flow now that card is disabled; a
+  // future re-enable of card would fold `method === 'card'` in here too.
+  const payingByInvoice = (hasDeposit || method === 'invoice') && !isQuote
   const depositAmount = Math.round(total * (DEPOSIT_PERCENT / 100))
   const balanceAmount = total - depositAmount
   const paySplit = hasDeposit && payPlan === 'deposit'
@@ -162,7 +175,9 @@ function Checkout() {
     if (phone.trim() && !/^\+\d{6,15}$/.test(phone.replace(/[\s\-().]/g, ''))) {
       e.phone = 'Include your country code, e.g. +387 62 123 456'
     }
-    if (payingByCard) {
+    // Card fields are only ever reachable if 'card' stops being disabled —
+    // checked directly (not via payingByInvoice) so that seam still works.
+    if (method === 'card') {
       if (!cardName.trim()) e.cardName = 'Please enter the name on the card'
       const digits = cardNumber.replace(/\D/g, '')
       if (digits.length < 13) e.cardNumber = 'Please enter a valid card number'
@@ -229,9 +244,13 @@ function Checkout() {
         ...guestTemplate,
         extras: extrasSummary,
         ...(isQuote ? {} : { total_price: `€${payTotal}` }),
-        payment_method: (isCard
-          ? 'Card — charged at booking'
-          : isQuote ? 'Quote requested' : 'Reserve & pay later') + planSuffix,
+        payment_method: (isQuote
+          ? 'Quote requested'
+          : isCard
+            ? 'Card — charged at booking'
+            : payMethod === 'invoice'
+              ? 'Bank invoice — payment details to follow by email (online gateway coming soon)'
+              : 'Reserve & pay later — cash on tour day') + planSuffix,
       },
       analytics: booking.analytics
         ? { ...booking.analytics, value: isQuote ? 0 : payTotal }
@@ -271,7 +290,7 @@ function Checkout() {
               <CheckCircle size={46} color="var(--color-forest-green)" strokeWidth={1.6} />
             </span>
             <h1 style={styles.successTitle}>
-              {done === 'card' ? 'Booking confirmed' : isQuote ? 'Request received' : 'Your place is reserved'}
+              {done === 'card' || done === 'invoice' ? 'Booking confirmed' : isQuote ? 'Request received' : 'Your place is reserved'}
             </h1>
             <p style={styles.successLead}>
               Thank you, {name.trim()}. Your booking for <strong>{booking.title}</strong>
@@ -289,9 +308,24 @@ function Checkout() {
                   been charged securely — a receipt and your booking confirmation are on their
                   way to <strong>{email.trim()}</strong>.</>
                 )
+              ) : done === 'invoice' ? (
+                paySplit ? (
+                  <>Our online payment gateway is still being built, so we'll email a bank
+                  invoice for your <strong>{format(depositAmount)}</strong> deposit to{' '}
+                  <strong>{email.trim()}</strong> shortly — pay it directly by bank transfer. The
+                  balance of <strong>{format(balanceAmount)}</strong> is due {BALANCE_DUE_DAYS}{' '}
+                  days before departure; we'll email you well in advance.</>
+                ) : (
+                  <>Our online payment gateway is still being built, so we'll email a bank
+                  invoice for <strong>{format(total)}</strong> to <strong>{email.trim()}</strong>{' '}
+                  shortly — pay it directly by bank transfer to secure your booking.</>
+                )
               ) : (
-                <>We've emailed a confirmation to <strong>{email.trim()}</strong> and will be
-                in touch shortly to finalise the details{isQuote ? ' and send your tailored quote' : ''}.</>
+                <>We've emailed a confirmation to <strong>{email.trim()}</strong>
+                {isQuote
+                  ? <> and will be in touch shortly to finalise the details and send your tailored quote.</>
+                  : <> — your place is held, and you can pay the full amount in cash on the day of your tour.</>}
+                </>
               )}
             </p>
             <Button to="/tours" variant="secondary">
@@ -350,7 +384,7 @@ function Checkout() {
             </div>
           ))}
           <div style={styles.totalRow}>
-            <span style={styles.totalLabel}>{paySplit ? 'Due today' : payingByCard ? 'Pay today' : 'Total'}</span>
+            <span style={styles.totalLabel}>{paySplit ? 'Due today' : 'Total'}</span>
             <span style={styles.totalValue}>{format(dueNow)}</span>
           </div>
           {paySplit && (
@@ -392,7 +426,7 @@ function Checkout() {
                 {mobileMeta && <span style={styles.mobileMeta}>{mobileMeta}</span>}
               </div>
               <div style={{ textAlign: 'right', flexShrink: 0 }}>
-                <span style={styles.mobileTotalLabel}>{paySplit ? 'Due today' : payingByCard && !isQuote ? 'Pay today' : 'Total'}</span>
+                <span style={styles.mobileTotalLabel}>{paySplit ? 'Due today' : 'Total'}</span>
                 <span style={styles.mobileTotal}>{isQuote ? 'On request' : format(dueNow)}</span>
               </div>
             </div>
@@ -587,7 +621,7 @@ function Checkout() {
                           role="radio"
                           aria-checked={paySplit}
                           className="checkout-plan-seg"
-                          onClick={() => { setPayPlan('deposit'); setMethod('card') }}
+                          onClick={() => { setPayPlan('deposit'); setMethod('invoice') }}
                           style={{ ...styles.planSeg, ...(paySplit ? styles.planSegActive : {}) }}
                         >
                           <span style={{
@@ -607,7 +641,7 @@ function Checkout() {
                         <div style={styles.tlTrack}>
                           <span style={styles.tlDash} />
                           <span style={{ ...styles.tlDotFilled, position: 'absolute', left: 0 }} />
-                          {paySplit || !payingByCard ? (
+                          {paySplit || !payingByInvoice ? (
                             <span style={{ ...styles.tlDotHollow, position: 'absolute', right: 0 }} />
                           ) : (
                             <span style={{ ...styles.tlDotCheck, position: 'absolute', right: 0 }}>
@@ -639,23 +673,40 @@ function Checkout() {
                       </div>
                     </>
                   )}
-                  {/* Method choice is tours-only — journeys are card-only */}
+                  {/* Method choice is tours-only — journeys always pay by invoice */}
                   {!hasDeposit && (
                     <div>
                       <MethodRow
-                        active={method === 'card'}
-                        onSelect={() => setMethod('card')}
+                        active={false}
+                        onSelect={() => {}}
                         title="Pay by card"
-                        sub="Pay securely now — your booking is confirmed instantly."
+                        sub="We're still building our secure payment gateway — for now, pay by bank invoice or reserve and pay in cash."
+                        badge="Coming soon"
+                        disabled
+                      />
+                      <div style={styles.methodDivider} />
+                      <MethodRow
+                        active={method === 'invoice'}
+                        onSelect={() => setMethod('invoice')}
+                        title="Pay by bank invoice"
+                        sub="We'll email you a bank invoice — pay by transfer before your trip."
                       />
                       <div style={styles.methodDivider} />
                       <MethodRow
                         active={method === 'reserve'}
                         onSelect={() => setMethod('reserve')}
                         title="Reserve & pay later"
-                        sub="Hold your place now — pay before your trip."
+                        sub="Hold your place now — pay in cash on the day of your tour."
                       />
                     </div>
+                  )}
+
+                  {payingByInvoice && (
+                    <p style={styles.invoiceNote}>
+                      Our online payment gateway is still being built — we'll email a bank
+                      invoice for <strong>{format(dueNow)}</strong>{paySplit ? ' (your deposit)' : ''} to
+                      the address below, payable directly by bank transfer to secure your booking.
+                    </p>
                   )}
 
                   {method === 'card' && (
@@ -697,11 +748,11 @@ function Checkout() {
                   disabled={isSending}
                 >
                   {isSending
-                    ? (payingByCard ? 'Processing…' : 'Reserving…')
+                    ? (payingByInvoice ? 'Confirming…' : 'Reserving…')
                     : isQuote
                       ? 'Request booking'
-                      : payingByCard
-                        ? `Pay ${format(dueNow)}${paySplit ? ' deposit' : ''}`
+                      : payingByInvoice
+                        ? `Confirm booking — invoice ${format(dueNow)}${paySplit ? ' deposit' : ''}`
                         : `Reserve now — pay ${format(total)} later`}
                 </Button>
               </div>
@@ -710,9 +761,9 @@ function Checkout() {
                 <Lock size={13} style={{ verticalAlign: '-2px', marginRight: 6 }} />
                 {isQuote
                   ? 'No payment is taken now.'
-                  : payingByCard
-                    ? `Your card is charged ${format(dueNow)}${paySplit ? ` today — the ${format(balanceAmount)} balance is due later` : ' immediately, securely encrypted'}. Card details are never stored.`
-                    : 'No payment is taken now — pay any time before your trip.'}
+                  : payingByInvoice
+                    ? `No payment is taken now — we'll email a bank invoice for ${format(dueNow)}${paySplit ? ' (your deposit)' : ''} to pay by bank transfer.`
+                    : 'No payment is taken now — pay any time before your trip, in cash.'}
               </p>
               {!isQuote && (
                 <p style={styles.cancelLine}>
@@ -775,7 +826,7 @@ function Checkout() {
       {isMobile && !payInView && (
         <div style={styles.stickyBar}>
           <div style={{ display: 'flex', flexDirection: 'column', minWidth: 0 }}>
-            <span style={styles.stickyLabel}>{payingByCard && !isQuote ? 'Pay today' : 'Total'}</span>
+            <span style={styles.stickyLabel}>Total</span>
             <span style={styles.stickyTotal}>{isQuote ? 'On request' : format(dueNow)}</span>
           </div>
           <Button
@@ -786,7 +837,7 @@ function Checkout() {
           >
             {isSending
               ? 'Working…'
-              : isQuote ? 'Request booking' : payingByCard ? `Pay ${format(dueNow)}` : 'Reserve now'}
+              : isQuote ? 'Request booking' : payingByInvoice ? `Invoice ${format(dueNow)}` : 'Reserve now'}
           </Button>
         </div>
       )}
@@ -1263,6 +1314,16 @@ const styles = {
     border: '1px solid var(--color-n200)',
   },
   cardRow: { display: 'flex', gap: '12px' },
+  invoiceNote: {
+    marginTop: '12px',
+    padding: '14px 16px',
+    borderRadius: 'var(--radius-lg)',
+    backgroundColor: 'var(--color-n100)',
+    border: '1px solid var(--color-n200)',
+    fontSize: 'var(--text-small)',
+    color: 'var(--color-n600)',
+    lineHeight: 1.55,
+  },
 
   secureLine: {
     margin: '12px 0 0',

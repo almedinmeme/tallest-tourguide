@@ -334,8 +334,8 @@ function TourDetail() {
   }
 
   // Collect the tour selection and hand off to the dedicated /checkout screen,
-  // where the customer enters their details and chooses to pay by card or
-  // reserve & pay later. The calendar save + emails happen there.
+  // where the customer enters their details and chooses to pay by bank
+  // invoice or reserve & pay cash later. The calendar save + emails happen there.
   const handleBooking = () => {
     if (!selectedDate) {
       setDateError(true)
@@ -752,7 +752,7 @@ function TourDetail() {
                 </div>
                 <div style={styles.trustRow}>
                   <ShieldCheck size={13} color="var(--color-forest-green)" style={{ flexShrink: 0, marginTop: '2px' }} />
-                  <span>Secure checkout — pay by card or bank invoice</span>
+                  <span>Secure checkout — pay by bank invoice, or reserve and pay cash</span>
                 </div>
               </div>
           </>
