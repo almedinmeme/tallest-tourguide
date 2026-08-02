@@ -43,7 +43,19 @@ function Navbar() {
   const [searchFocused, setSearchFocused] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [navHidden, setNavHidden] = useState(false)
+  const [navHovered, setNavHovered] = useState(false)
   const lastScrollY = useRef(0)
+
+  // The homepage hero is the only place a photo sits directly behind the
+  // nav's own row (see the negative marginTop on Home's hero section) — so
+  // the transparent-until-interaction treatment only makes sense there.
+  // Everywhere else the nav stays solid, same as always.
+  const isHome = location.pathname === '/'
+  const transparent = isHome && !scrolled && !navHovered
+  // The "frosted glass" solid look — used once actually scrolled (every
+  // page, unchanged from before) and also as soon as the home nav is
+  // hovered pre-scroll, so hovering doesn't flash a harder-edged bar.
+  const blurSolid = scrolled || (isHome && navHovered)
 
   useEffect(() => {
     const onScroll = () => {
@@ -191,12 +203,18 @@ function Navbar() {
     handleLinkClick()
   }
 
+  // Shared so every nav link/trigger recolors the same way once the bar
+  // goes transparent over the hero — white text with a soft shadow so it
+  // stays legible regardless of what's in the photo behind it.
+  const navTextColor = (active) => transparent
+    ? 'rgba(255,255,255,0.94)'
+    : (active ? 'var(--color-forest-green)' : 'var(--color-n600)')
+
   const getLinkStyle = (path) => ({
     ...styles.link,
-    color: location.pathname === path
-      ? 'var(--color-forest-green)'
-      : 'var(--color-n600)',
+    color: navTextColor(location.pathname === path),
     fontWeight: location.pathname === path ? '700' : '500',
+    textShadow: transparent ? '0 1px 3px rgba(0,0,0,0.35)' : 'none',
   })
 
   const destActive = location.pathname.startsWith('/tours')
@@ -205,13 +223,13 @@ function Navbar() {
 
   return (
     <>
-    <nav ref={navRef} style={{
+    <nav ref={navRef} onMouseEnter={() => setNavHovered(true)} onMouseLeave={() => setNavHovered(false)} style={{
       ...styles.nav,
-      backgroundColor: scrolled ? 'rgba(255,255,255,0.92)' : 'var(--color-n000)',
-      backdropFilter: scrolled ? 'blur(12px)' : 'none',
-      WebkitBackdropFilter: scrolled ? 'blur(12px)' : 'none',
-      boxShadow: scrolled ? 'var(--shadow-md)' : 'none',
-      borderBottom: scrolled ? 'none' : '1px solid var(--color-n300)',
+      backgroundColor: transparent ? 'transparent' : (blurSolid ? 'rgba(255,255,255,0.92)' : 'var(--color-n000)'),
+      backdropFilter: transparent ? 'none' : (blurSolid ? 'blur(12px)' : 'none'),
+      WebkitBackdropFilter: transparent ? 'none' : (blurSolid ? 'blur(12px)' : 'none'),
+      boxShadow: transparent ? 'none' : (blurSolid ? 'var(--shadow-md)' : 'none'),
+      borderBottom: transparent ? 'none' : (blurSolid ? 'none' : '1px solid var(--color-n300)'),
       transform: navHidden ? 'translateY(-100%)' : 'translateY(0)',
       transition: 'background-color var(--t-base), box-shadow var(--t-base), transform 0.3s ease',
     }}>
@@ -222,9 +240,22 @@ function Navbar() {
         justifyContent: isMobile ? 'space-between' : undefined,
       }}>
 
-        {/* Brand */}
+        {/* Brand — the logo already has white text baked into its dark-green
+            ribbon (fills: #044725 green, #f7941d amber, #fff text), so a
+            brightness(0)/invert(1) trick to "make it white" flattens the
+            ribbon and its text to the same flat white and erases the
+            wordmark. A drop-shadow for edge definition against the photo is
+            enough; the logo's own colors stay as designed. */}
         <Link to="/" style={styles.brand} onClick={handleHomeClick}>
-          <img src={logo} alt="Tallest Tourguide" style={styles.logoImg} />
+          <img
+            src={logo}
+            alt="Tallest Tourguide"
+            style={{
+              ...styles.logoImg,
+              filter: transparent ? 'drop-shadow(0 2px 5px rgba(0,0,0,0.45))' : 'none',
+              transition: 'filter var(--t-base)',
+            }}
+          />
         </Link>
 
         {/* Centered search input — desktop only */}
@@ -307,10 +338,9 @@ function Navbar() {
                 onClick={() => setDestDropdownOpen((o) => !o)}
                 style={{
                   ...styles.dropdownTrigger,
-                  color: destActive || destDropdownOpen
-                    ? 'var(--color-forest-green)'
-                    : 'var(--color-n600)',
+                  color: navTextColor(destActive || destDropdownOpen),
                   fontWeight: destActive ? '700' : '500',
+                  textShadow: transparent ? '0 1px 3px rgba(0,0,0,0.35)' : 'none',
                 }}
               >
                 Day Tours
@@ -338,10 +368,9 @@ function Navbar() {
                 onClick={() => setPackagesDropdownOpen((o) => !o)}
                 style={{
                   ...styles.dropdownTrigger,
-                  color: journeysActive || packagesDropdownOpen
-                    ? 'var(--color-forest-green)'
-                    : 'var(--color-n600)',
+                  color: navTextColor(journeysActive || packagesDropdownOpen),
                   fontWeight: journeysActive ? '700' : '500',
+                  textShadow: transparent ? '0 1px 3px rgba(0,0,0,0.35)' : 'none',
                 }}
               >
                 Journeys
@@ -369,10 +398,9 @@ function Navbar() {
                 onClick={() => setDiscoverDropdownOpen((o) => !o)}
                 style={{
                   ...styles.dropdownTrigger,
-                  color: discoverActive || discoverDropdownOpen
-                    ? 'var(--color-forest-green)'
-                    : 'var(--color-n600)',
+                  color: navTextColor(discoverActive || discoverDropdownOpen),
                   fontWeight: discoverActive ? '700' : '500',
+                  textShadow: transparent ? '0 1px 3px rgba(0,0,0,0.35)' : 'none',
                 }}
               >
                 Discover
@@ -438,7 +466,7 @@ function Navbar() {
               The Journal
             </Link>
 
-            <CurrencySwitcher />
+            <CurrencySwitcher variant={transparent ? 'light' : 'default'} />
 
             {/* Lands on the free questionnaire, not the paid consult — a €90
                 price as the first click was scaring warm leads away. The
@@ -459,9 +487,13 @@ function Navbar() {
           <button
             style={{
               ...styles.hamburger,
-              backgroundColor: isMenuOpen ? 'var(--color-forest-green)' : 'rgba(46,125,94,0.06)',
-              borderColor: isMenuOpen ? 'var(--color-forest-green)' : 'rgba(46,125,94,0.25)',
-              color: isMenuOpen ? 'var(--color-n000)' : 'var(--color-forest-green)',
+              backgroundColor: isMenuOpen
+                ? 'var(--color-forest-green)'
+                : transparent ? 'rgba(255,255,255,0.16)' : 'rgba(46,125,94,0.06)',
+              borderColor: isMenuOpen
+                ? 'var(--color-forest-green)'
+                : transparent ? 'rgba(255,255,255,0.5)' : 'rgba(46,125,94,0.25)',
+              color: isMenuOpen ? 'var(--color-n000)' : transparent ? '#fff' : 'var(--color-forest-green)',
             }}
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             aria-label="Toggle navigation"

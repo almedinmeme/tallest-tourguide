@@ -6,19 +6,25 @@
 
 import { ArrowRight } from 'lucide-react'
 import Button from './Button'
-import tours from '../data/tours'
 import useWindowWidth from '../hooks/useWindowWidth'
+import jajcePhoto from '../assets/jajce-1.webp'
+import mostarPhoto from '../assets/mostar-2.webp'
+import lukomirPhoto from '../assets/lukomir-2.webp'
+
+// Fixed set — the falls at Jajce, the Old Bridge in Mostar, and a Lukomir
+// hike — rather than the top 3 tours' hero photos, so this closing cluster
+// always reads as "the range of what we do" regardless of admin tour order.
+const SNAPSHOTS = [
+  { id: 'jajce', src: jajcePhoto, caption: 'Jajce' },
+  { id: 'mostar', src: mostarPhoto, caption: 'Mostar' },
+  { id: 'lukomir', src: lukomirPhoto, caption: 'Lukomir' },
+]
 
 function CTABanner() {
   const width = useWindowWidth()
   const isMobile = width <= 768
 
-  // The first three tours (admin drag-order) supply the snapshots.
-  const snapshots = tours.slice(0, 3).map((t) => ({
-    src: t.hero,
-    caption: t.city || 'Bosnia',
-    slug: t.slug,
-  }))
+  const snapshots = SNAPSHOTS
 
   const rotations = ['-5deg', '3deg', '-2deg']
 
@@ -89,7 +95,7 @@ function CTABanner() {
         >
           {snapshots.map((snap, i) => (
             <div
-              key={snap.slug}
+              key={snap.id}
               className="cta-snapshot"
               style={{
                 ...styles.snapshot,

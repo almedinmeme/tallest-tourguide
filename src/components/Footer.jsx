@@ -3,6 +3,7 @@ import { useState } from 'react'
 import useWindowWidth from '../hooks/useWindowWidth'
 import { Link } from 'react-router-dom'
 import { CONTACT_EMAIL, PHONE_DISPLAY, WHATSAPP_URL, INSTAGRAM_URL, TRIPADVISOR_URL } from '../data/settings'
+import { tripadvisorStats } from '../data/reviewStats'
 import { MapPin, Mail, Phone, ArrowUpRight } from 'lucide-react'
 import Button from './Button'
 import logo from '../assets/logo.svg'
@@ -166,7 +167,7 @@ function Footer() {
               <ArrowUpRight size={16} color="rgba(255,255,255,0.6)" />
             </div>
             <p style={styles.tripAdvisorRating}>★★★★★</p>
-            <p style={styles.tripAdvisorCount}>180 reviews</p>
+            <p style={styles.tripAdvisorCount}>{tripadvisorStats.count.toLocaleString('en-GB')} reviews</p>
             <p style={styles.tripAdvisorLabel}>Read on TripAdvisor</p>
           </a>
         </div>

@@ -1,7 +1,7 @@
 {
   "enabled": true,
   "tone": "amber",
-  "message": "10% discount with the promo code Aug10%OFF",
+  "message": "10% discount with the promo code AUG10",
   "ctaLabel": "",
   "ctaHref": "tours?category=food-culture",
   "startDate": "2026-08-01",
@@ -11,7 +11,7 @@
   "detailsBody": "Book any day tour during August and take 10% off the listed price — shared or private, any language.\n\n- Enter the code Aug10%OFF at checkout, under \"Have a referral or promo code?\"\n- The discount applies to the tour price (optional add-ons are charged in full)\n\nQuestions? Message us on WhatsApp — we answer fast.",
   "promoCodes": [
     {
-      "code": "Aug10%OFF",
+      "code": "AUG10",
       "type": "percent",
       "value": 10,
       "enabled": true,

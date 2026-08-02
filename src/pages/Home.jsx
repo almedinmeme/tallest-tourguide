@@ -15,6 +15,7 @@ import HeroSearch from '../components/HeroSearch'
 import Img from '../components/Img'
 import { variantSrcset, variantUrl } from '../utils/imageVariants'
 import tours from '../data/tours'
+import { overallStats } from '../data/reviewStats'
 import useWindowWidth from '../hooks/useWindowWidth'
 import hero2 from '../assets/tour-2-hero.webp'
 import hero3 from '../assets/tour-3-hero.webp'
@@ -229,7 +230,7 @@ function Home() {
               fill="var(--color-amber)"
             />
             <span style={styles.heroProofText}>
-              4.9 · 180 reviews · 5000+ guests guided
+              {overallStats.rating.toFixed(1)} · {overallStats.count.toLocaleString('en-GB')} reviews · 5000+ guests guided
             </span>
           </div>
 
@@ -810,6 +811,13 @@ hero: {
     overflow: 'hidden',
     display: 'flex',
     alignItems: 'center',
+    // Pull the hero up underneath the nav's own row (Navbar.jsx's .bar is a
+    // fixed 68px) rather than starting after it. The nav itself doesn't
+    // move — it's still `position: sticky` and reserves that space — this
+    // just lets the hero photo occupy it too, so the nav's transparent
+    // state (see Navbar.jsx's `transparent`) has something to be
+    // transparent over instead of showing a gap of plain page background.
+    marginTop: '-68px',
   },
 
   // Right-side featured tour cards (desktop only) — glassy, over the photo.
