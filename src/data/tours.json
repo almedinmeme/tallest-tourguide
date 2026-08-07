@@ -586,7 +586,7 @@
     "city": "Jajce",
     "region": "Bosnia & Herzegovina",
     "title": "Jajce & Travnik Day Trip from Sarajevo: Medieval Bosnia Full Day Tour",
-    "price": 85,
+    "price": 75,
     "rating": 5,
     "reviews": 12,
     "duration": "Full day",
@@ -718,7 +718,13 @@
         "label": "Plivski Mlinčići -  Pliva's Watermill's"
       }
     ],
-    "mapProfile": "driving-car"
+    "mapProfile": "driving-car",
+    "extraCategories": [],
+    "privatePricing": {
+      "mode": "quote"
+    },
+    "oldPrice": null,
+    "extras": []
   },
   {
     "slug": "home-hosted-dinner",
@@ -858,7 +864,7 @@
     "city": "Lukomir",
     "region": "Bosnia & Herzegovina",
     "title": "Lukomir Hike: Full Day Trek to Bosnia's Highest Mountain Village",
-    "price": 85,
+    "price": 75,
     "rating": 5,
     "reviews": 4,
     "duration": "Full day",
@@ -1003,7 +1009,12 @@
     "mapProfile": "foot-hiking",
     "extraCategories": [
       "day-trips"
-    ]
+    ],
+    "privatePricing": {
+      "mode": "quote"
+    },
+    "oldPrice": null,
+    "extras": []
   },
   {
     "id": 6,
@@ -1012,7 +1023,7 @@
     "city": "Sarajevo",
     "region": "Bosnia & Herzegovina",
     "title": "Sarajevo Morning Walk Tour: Sarajevo Before the Crowds",
-    "price": 20,
+    "price": 15,
     "rating": 5,
     "reviews": 8,
     "duration": "1.5 hours",
@@ -1150,7 +1161,13 @@
         "label": "Orthodox Church of the Nativity of the Theotokos"
       }
     ],
-    "mapProfile": "foot-walking"
+    "mapProfile": "foot-walking",
+    "extraCategories": [],
+    "privatePricing": {
+      "mode": "quote"
+    },
+    "oldPrice": null,
+    "extras": []
   },
   {
     "id": 9,
@@ -1159,7 +1176,7 @@
     "city": "Srebrenica",
     "region": "Bosnia & Herzegovina",
     "title": "Srebrenica Day Trip from Sarajevo | Genocide Memorial & Museum Tour",
-    "price": 85,
+    "price": 75,
     "rating": 5,
     "reviews": 2,
     "duration": "Full day",
@@ -1468,7 +1485,7 @@
     "city": "Sarajevo",
     "region": "Bosnia & Herzegovina",
     "title": "Trebević Full Day Hike: Olympic Mountain & a Local Lunch",
-    "price": 53,
+    "price": 50,
     "rating": 5,
     "reviews": 3,
     "duration": "Full day",
@@ -1636,7 +1653,10 @@
     "mapProfile": "foot-hiking",
     "oldPrice": 59,
     "extras": [],
-    "extraCategories": []
+    "extraCategories": [],
+    "privatePricing": {
+      "mode": "quote"
+    }
   },
   {
     "id": 12,
@@ -2097,7 +2117,7 @@
     "city": "Mostar",
     "region": "Bosnia & Herzegovina",
     "title": "Stolac Day Tour from Mostar: Three Thousand Years in a Single Day",
-    "price": 60,
+    "price": 65,
     "rating": 5,
     "reviews": 2,
     "duration": "~6.5 hours",
@@ -2286,7 +2306,7 @@
     "region": "Bosnia & Herzegovina",
     "title": "The Sarajevo Century: From 1914 to Yugoslavia",
     "subtitle": "A study tour across three chapters of the 20th century — the empire, the occupation, and the country that no longer exists.",
-    "price": 60,
+    "price": 49,
     "rating": 5,
     "reviews": 0,
     "duration": "3–4 hours",
@@ -2448,7 +2468,11 @@
       }
     ],
     "mapProfile": "foot-walking",
-    "extras": []
+    "extras": [],
+    "privatePricing": {
+      "mode": "quote"
+    },
+    "oldPrice": null
   },
   {
     "id": 16,
@@ -2461,7 +2485,7 @@
     "region": "Bosnia & Herzegovina",
     "title": "Islamic Heritage Tour Sarajevo: The Islam You Didn't Expect",
     "subtitle": "Ninety minutes in Muslim Sarajevo — a working mosque, a Sufi lodge, and the honest version of Bosnian Islam, from someone raised inside it.",
-    "price": 30,
+    "price": 25,
     "rating": 5,
     "reviews": 0,
     "duration": "90 minutes",

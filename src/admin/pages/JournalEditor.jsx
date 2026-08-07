@@ -34,6 +34,8 @@ const EMPTY = {
   blocks: [],
   relatedTourSlug: '',
   relatedPackageSlug: '',
+  relatedExtraType: 'tour',
+  relatedExtraSlug: '',
   seoTitle: '',
   seoDescription: '',
 }
@@ -164,12 +166,29 @@ export default function JournalEditor() {
             <p style={s.subheadingHint}>
               These show as booking cards at the end of the post. For cards inside the story, add a “Booking card” block in the Body section above.
             </p>
-            <div style={s.grid2}>
+            <div style={s.grid3}>
               <FormField label="Related tour">
                 <RelationPicker kind="tour" value={item.relatedTourSlug || ''} onChange={(v) => set({ relatedTourSlug: v })} />
               </FormField>
               <FormField label="Related package">
                 <RelationPicker kind="package" value={item.relatedPackageSlug || ''} onChange={(v) => set({ relatedPackageSlug: v })} />
+              </FormField>
+              <FormField label="Third related item" hint="Optional — adds a third card alongside the tour and package above.">
+                <div style={{ display: 'grid', gridTemplateColumns: '110px 1fr', gap: 8 }}>
+                  <select
+                    style={s.input}
+                    value={item.relatedExtraType === 'package' ? 'package' : 'tour'}
+                    onChange={(e) => set({ relatedExtraType: e.target.value, relatedExtraSlug: '' })}
+                  >
+                    <option value="tour">Tour</option>
+                    <option value="package">Package</option>
+                  </select>
+                  <RelationPicker
+                    kind={item.relatedExtraType === 'package' ? 'package' : 'tour'}
+                    value={item.relatedExtraSlug || ''}
+                    onChange={(v) => set({ relatedExtraSlug: v })}
+                  />
+                </div>
               </FormField>
             </div>
           </section>

@@ -1,25 +1,25 @@
 {
   "placeId": "ChIJU9Sd2Z3JWEcRlGRi9AMMH98",
   "rating": 5,
-  "userRatingCount": 9,
+  "userRatingCount": 12,
   "mapsUri": "https://maps.google.com/?cid=16077582405860484244&g_mp=CiVnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLkdldFBsYWNlEAIYBCAA",
   "reviews": [
     {
-      "id": "places/ChIJU9Sd2Z3JWEcRlGRi9AMMH98/reviews/Ci9DQUlRQUNvZENodHljRjlvT2w5UmJVTkRiVTVNY0hSVlkxcDJWVU5VTTFCWmEwRRAB",
+      "id": "places/ChIJU9Sd2Z3JWEcRlGRi9AMMH98/reviews/Ci9DQUlRQUNvZENodHljRjlvT2poek1qVmlSazlMUkdGUllYbE9VWEZ6TXpoR2JYYxAB",
       "rating": 5,
-      "text": "Meme was an amazing tour guide! He was very knowledgeable and if he wasn’t an expert in the location he connected us with an expert. Would tour with him again!",
+      "text": "Almedin was the most wonderful tour guide. He may not live in the places we visited but he navigated them as if he grew up there. His contacts were able to get us good deals on private boat rides and city tours with University Professors. He would be a great guide for any and all people. He even fought for us when a taxi tried to over-charge us for a cab ride. His passion for history, culture, and people made my family trip to the Balkans all the better.",
       "relativeTime": "in the last week",
-      "publishTime": "2026-07-31T21:10:45.276227313Z",
-      "authorName": "Brianna Saint-Louis",
-      "authorPhoto": "https://lh3.googleusercontent.com/a/ACg8ocIrwdMWWRswm6MbHc8Ygnk7sBPMGKOcNawL8vHdNXnb4L30DA=s128-c0x00000000-cc-rp-mo",
-      "authorUrl": "https://www.google.com/maps/contrib/104868212981757270123/reviews",
-      "url": "https://www.google.com/maps/reviews/data=!4m6!14m5!1m4!2m3!1sCi9DQUlRQUNvZENodHljRjlvT2w5UmJVTkRiVTVNY0hSVlkxcDJWVU5VTTFCWmEwRRAB!2m1!1s0x4758c99dd99dd453:0xdf1f0c03f4626494"
+      "publishTime": "2026-08-05T15:55:42.793733707Z",
+      "authorName": "yanda b",
+      "authorPhoto": "https://lh3.googleusercontent.com/a-/ALV-UjWLWUJcFbIaGtDdeCEZxCR6EYnx2mLlYZnYcvTbWR0GvydeJio-XA=s128-c0x00000000-cc-rp-mo",
+      "authorUrl": "https://www.google.com/maps/contrib/113906065035832466641/reviews",
+      "url": "https://www.google.com/maps/reviews/data=!4m6!14m5!1m4!2m3!1sCi9DQUlRQUNvZENodHljRjlvT2poek1qVmlSazlMUkdGUllYbE9VWEZ6TXpoR2JYYxAB!2m1!1s0x4758c99dd99dd453:0xdf1f0c03f4626494"
     },
     {
       "id": "places/ChIJU9Sd2Z3JWEcRlGRi9AMMH98/reviews/Ci9DQUlRQUNvZENodHljRjlvT201SFVXTkZkMkoyVVRGRFMwdDZRemxDVFVGdVJIYxAB",
       "rating": 5,
       "text": "We had the most wonderful evening cooking and sharing a meal with Đula, Eda, and Almedin! Đula & Eda were amazing teachers and helped us learn to make Burek & Klepe. Not only were we able to eat the delicious foods we made, they shared many other tasty Bosnian dishes and coffee with us! Their lovely home has a beautiful garden as well. I highly recommend taking a cooking class with them, it was one of our very favorite highlights of visiting Sarajevo. Thank you all so much for the excellent class!",
-      "relativeTime": "3 weeks ago",
+      "relativeTime": "4 weeks ago",
       "publishTime": "2026-07-08T14:20:32.646036349Z",
       "authorName": "Shannon Smith",
       "authorPhoto": "https://lh3.googleusercontent.com/a-/ALV-UjXL7eiZdPFJkuGC6R1gjd_d-3fjcuPVrGhA4r71cYf6_laJpV1C=s128-c0x00000000-cc-rp-mo",
@@ -60,5 +60,5 @@
       "url": "https://www.google.com/maps/reviews/data=!4m6!14m5!1m4!2m3!1sCi9DQUlRQUNvZENodHljRjlvT21Wa1dtOXNhRlUxUVU0d1VIUkJhVEZEVDJoYVdWRRAB!2m1!1s0x4758c99dd99dd453:0xdf1f0c03f4626494"
     }
   ],
-  "fetchedAt": "2026-08-01T08:26:42.859Z"
+  "fetchedAt": "2026-08-07T08:18:15.327Z"
 }

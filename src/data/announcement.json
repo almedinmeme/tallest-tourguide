@@ -18,6 +18,15 @@
       "startDate": "2026-08-01",
       "endDate": "2026-08-31",
       "note": "August promo advertised in the announcement bar"
+    },
+    {
+      "code": "FRND",
+      "type": "percent",
+      "value": 5,
+      "enabled": true,
+      "startDate": "2026-08-04",
+      "endDate": "2027-07-04",
+      "note": "Friends of previous guests"
     }
   ]
 }
