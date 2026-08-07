@@ -1,22 +1,12 @@
 import { useState, useRef } from 'react'
-import { Link } from 'react-router-dom'
-import { ArrowRight, Gauge, MapPin, Globe } from 'lucide-react'
 import useWindowWidth from '../hooks/useWindowWidth'
-import Img from './Img'
 import Button from './Button'
 import CarouselNav from './CarouselNav'
+import JourneyCard from './JourneyCard'
 
 import { packages } from '../data/packages'
-import { useCurrency } from '../context/CurrencyContext'
-
-const DIFFICULTY_COLOR = {
-  Easy: { color: 'var(--color-forest-green)', bg: 'rgba(46,125,94,0.10)', border: 'rgba(46,125,94,0.20)' },
-  Moderate: { color: '#b45309', bg: 'rgba(180,83,9,0.08)', border: 'rgba(180,83,9,0.18)' },
-  Challenging: { color: '#c0392b', bg: 'rgba(192,57,43,0.08)', border: 'rgba(192,57,43,0.18)' },
-}
 
 function PackagesPreview() {
-  const { format } = useCurrency()
   const width = useWindowWidth()
   const isMobile = width <= 640
   const [page, setPage] = useState(0)
@@ -62,63 +52,9 @@ function PackagesPreview() {
                 ...styles.carouselPage,
                 gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)',
               }}>
-                {packages.slice(pageIdx * visibleCount, (pageIdx + 1) * visibleCount).map((pkg) => {
-                  return (
-                    <Link key={pkg.id} to={`/multi-day-tours/${pkg.slug}`} style={styles.cardLink}>
-                      <div style={styles.card} className="pkg-card">
-                        <div style={styles.imageWrapper}>
-                          <Img src={pkg.hero} alt={pkg.name} sizes="(max-width: 768px) 92vw, 420px" style={styles.photo} className="pkg-card-img" />
-                          <div style={styles.imageGradient} />
-
-                          <div style={styles.imageTop}>
-                            <span style={{
-                              ...styles.badge,
-                              ...(pkg.badgeColor
-                                ? { backgroundColor: pkg.badgeColor, color: pkg.badgeTextColor || 'var(--color-n000)' }
-                                : pkg.badgeStyle === 'amber'
-                                ? { backgroundColor: 'var(--color-amber)', color: 'var(--color-n900)' }
-                                : pkg.badgeStyle === 'green'
-                                ? { backgroundColor: 'var(--color-forest-green)', color: 'var(--color-n000)' }
-                                : { backgroundColor: 'rgba(0,0,0,0.55)', color: 'var(--color-n000)' }),
-                            }}>
-                              {pkg.badge}
-                            </span>
-                            <span style={styles.daysPill}>{pkg.duration}</span>
-                          </div>
-
-                          <div style={styles.imageBottom}>
-                            <h3 style={styles.packageName}>{pkg.name}</h3>
-                            <p style={styles.packageSubtitle}>{pkg.subtitle}</p>
-                            <div style={styles.statPills}>
-                              <span style={styles.statPill}>
-                                <Gauge size={11} />
-                                {pkg.difficulty}
-                              </span>
-                              <span style={styles.statPill}>
-                                <MapPin size={11} />
-                                {pkg.locations} stops
-                              </span>
-                              <span style={styles.statPill}>
-                                <Globe size={11} />
-                                {pkg.countries} {pkg.countries === 1 ? 'country' : 'countries'}
-                              </span>
-                            </div>
-                            <div style={styles.priceRow}>
-                              <div style={styles.priceBlock}>
-                                <span style={styles.priceFrom}>from</span>
-                                <span style={styles.price}>{format(pkg.price)}</span>
-                              </div>
-                              <button className="btn btn--sm pkg-card-btn">
-                                View package
-                                <ArrowRight size={13} />
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </Link>
-                  )
-                })}
+                {packages.slice(pageIdx * visibleCount, (pageIdx + 1) * visibleCount).map((pkg) => (
+                  <JourneyCard key={pkg.id} pkg={pkg} />
+                ))}
               </div>
             ))}
           </div>
@@ -214,149 +150,6 @@ const styles = {
     minWidth: '100%',
     alignItems: 'stretch',
     marginRight: '24px',
-  },
-
-  cardLink: {
-    display: 'block',
-    textDecoration: 'none',
-    borderRadius: '16px',
-  },
-
-  card: {
-    borderRadius: '16px',
-    overflow: 'hidden',
-    boxShadow: '0 4px 24px rgba(0,0,0,0.12)',
-  },
-
-  imageWrapper: {
-    position: 'relative',
-    width: '100%',
-    height: '483px',
-    overflow: 'hidden',
-  },
-
-  photo: {
-    width: '100%',
-    height: '100%',
-    objectFit: 'cover',
-    display: 'block',
-  },
-
-  imageGradient: {
-    position: 'absolute',
-    inset: 0,
-    background: 'linear-gradient(to bottom, rgba(0,0,0,0.30) 0%, transparent 28%, transparent 40%, rgba(0,0,0,0.88) 100%)',
-  },
-
-  imageTop: {
-    position: 'absolute',
-    top: '14px',
-    left: '14px',
-    right: '14px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-
-  daysPill: {
-    fontFamily: 'var(--font-body)',
-    fontWeight: '700',
-    fontSize: '12px',
-    color: 'var(--color-n000)',
-    backgroundColor: 'rgba(0,0,0,0.40)',
-    backdropFilter: 'blur(6px)',
-    border: '1px solid rgba(255,255,255,0.18)',
-    padding: '5px 12px',
-    borderRadius: 'var(--radius-pill)',
-    letterSpacing: '0.2px',
-  },
-
-  badge: {
-    fontFamily: 'var(--font-body)',
-    fontWeight: '700',
-    fontSize: '12px',
-    letterSpacing: '1px',
-    textTransform: 'uppercase',
-    padding: '4px 11px',
-    borderRadius: 'var(--radius-pill)',
-  },
-
-  imageBottom: {
-    position: 'absolute',
-    bottom: '0',
-    left: '0',
-    right: '0',
-    padding: '20px 18px 18px',
-  },
-
-  statPills: {
-    display: 'flex',
-    gap: '5px',
-    flexWrap: 'wrap',
-    marginBottom: '12px',
-  },
-
-  statPill: {
-    display: 'inline-flex',
-    alignItems: 'center',
-    gap: '4px',
-    fontFamily: 'var(--font-body)',
-    fontWeight: '600',
-    fontSize: '12px',
-    color: 'rgba(255,255,255,0.92)',
-    backgroundColor: 'rgba(0,0,0,0.42)',
-    backdropFilter: 'blur(6px)',
-    border: '1px solid rgba(255,255,255,0.16)',
-    padding: '3px 9px',
-    borderRadius: 'var(--radius-pill)',
-    whiteSpace: 'nowrap',
-  },
-
-  packageName: {
-    fontFamily: 'var(--font-display)',
-    fontWeight: '700',
-    fontSize: '20px',
-    color: 'var(--color-n000)',
-    lineHeight: '1.2',
-    letterSpacing: '-0.2px',
-    margin: '0 0 4px 0',
-  },
-
-  packageSubtitle: {
-    fontFamily: 'var(--font-body)',
-    fontSize: '12px',
-    color: 'rgba(255,255,255,0.70)',
-    margin: '0 0 10px 0',
-    fontStyle: 'italic',
-  },
-
-  priceRow: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    gap: '10px',
-  },
-
-  priceBlock: {
-    display: 'flex',
-    alignItems: 'baseline',
-    gap: '4px',
-  },
-
-  priceFrom: {
-    fontFamily: 'var(--font-body)',
-    fontSize: '12px',
-    color: 'rgba(255,255,255,0.60)',
-    fontWeight: '500',
-    letterSpacing: '0.3px',
-  },
-
-  price: {
-    fontFamily: 'var(--font-display)',
-    fontWeight: '800',
-    fontSize: '28px',
-    color: 'var(--color-n000)',
-    lineHeight: 1,
   },
 
   // Standardized with the "View All Tours" row on Home — same pitch-line +

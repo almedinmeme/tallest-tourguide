@@ -17,6 +17,7 @@ import {
 } from 'lucide-react'
 import { sendEmail } from '../utils/email'
 import useWindowWidth from '../hooks/useWindowWidth'
+import JourneyCard from '../components/JourneyCard'
 import { useAvailability } from '../hooks/useAvailability'
 import { usePackageDates } from '../hooks/usePackageDates'
 import Gallery from '../components/Gallery'
@@ -254,22 +255,6 @@ function getInfoIcon(title) {
   if (t.includes('segment') || t.includes('available')) return Clock
   if (t.includes('consider') || t.includes('booking')) return AlertTriangle
   return ShieldCheck
-}
-
-const PKG_BADGES = {
-  'sarajevo-essential':      { badge: 'Most Popular', badgeStyle: 'amber' },
-  'bosnia-deep-dive':        { badge: 'Best Value',   badgeStyle: 'green' },
-  'sarajevo-to-dubrovnik':   { badge: 'New',          badgeStyle: 'dark'  },
-  'balkans-full-arc':        { badge: 'Epic Journey', badgeStyle: 'green' },
-  'empires-and-edge':        { badge: 'New',          badgeStyle: 'amber' },
-  'mountains-of-the-balkans':{ badge: 'Active',       badgeStyle: 'green' },
-  'adriatic-crossings':      { badge: 'New',          badgeStyle: 'dark'  },
-}
-
-const DIFF_COLOR = {
-  Easy:        { color: 'var(--color-forest-green)', bg: 'rgba(46,125,94,0.10)',  border: 'rgba(46,125,94,0.20)'  },
-  Moderate:    { color: '#b45309',                   bg: 'rgba(180,83,9,0.08)',   border: 'rgba(180,83,9,0.18)'   },
-  Challenging: { color: '#c0392b',                   bg: 'rgba(192,57,43,0.08)', border: 'rgba(192,57,43,0.18)'  },
 }
 
 function PackageDetail() {
@@ -1499,80 +1484,17 @@ function PackageDetail() {
             </div>
             {isMobile ? (
               <div style={{ display: 'flex', gap: '16px', overflowX: 'auto', scrollSnapType: 'x mandatory', WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none', msOverflowStyle: 'none', padding: '0 20px 8px' }}>
-                {relatedPackages.map((p) => {
-                  const { badge, badgeStyle } = PKG_BADGES[p.slug] || {}
-                  const diffCol = DIFF_COLOR[p.difficulty] || DIFF_COLOR.Easy
-                  return (
-                    <Link key={p.id} to={`/multi-day-tours/${p.slug}`} style={{ flex: '0 0 80vw', maxWidth: '340px', scrollSnapAlign: 'start', textDecoration: 'none', display: 'block', borderRadius: '16px', overflow: 'hidden', boxShadow: '0 4px 24px rgba(0,0,0,0.12)' }}>
-                      <div style={{ position: 'relative', width: '100%', height: '420px', overflow: 'hidden' }}>
-                        <img src={p.heroImage} alt={p.name} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} className="pkg-card-img" />
-                        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(0,0,0,0.30) 0%, transparent 28%, transparent 40%, rgba(0,0,0,0.88) 100%)' }} />
-                        <div style={{ position: 'absolute', top: '14px', left: '14px', right: '14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                          {badge && (
-                            <span style={{ fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: '12px', letterSpacing: '1px', textTransform: 'uppercase', padding: '4px 11px', borderRadius: 'var(--radius-pill)', backgroundColor: badgeStyle === 'amber' ? 'var(--color-amber)' : badgeStyle === 'green' ? 'var(--color-forest-green)' : 'rgba(0,0,0,0.55)', color: badgeStyle === 'amber' ? 'var(--color-n900)' : 'var(--color-n000)' }}>{badge}</span>
-                          )}
-                          <span style={{ fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: '12px', color: 'var(--color-n000)', backgroundColor: 'rgba(0,0,0,0.40)', backdropFilter: 'blur(6px)', border: '1px solid rgba(255,255,255,0.18)', padding: '5px 12px', borderRadius: 'var(--radius-pill)', marginLeft: 'auto' }}>{p.duration}</span>
-                        </div>
-                        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '20px 18px 18px' }}>
-                          <h3 style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '20px', color: 'var(--color-n000)', lineHeight: 1.2, letterSpacing: '-0.2px', margin: '0 0 4px' }}>{p.name}</h3>
-                          {p.subtitle && <p style={{ fontFamily: 'var(--font-body)', fontSize: '12px', color: 'rgba(255,255,255,0.70)', margin: '0 0 10px', fontStyle: 'italic' }}>{p.subtitle}</p>}
-                          <div style={{ display: 'flex', gap: '5px', flexWrap: 'wrap', marginBottom: '12px' }}>
-                            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '12px', color: 'rgba(255,255,255,0.92)', backgroundColor: 'rgba(0,0,0,0.42)', backdropFilter: 'blur(6px)', border: '1px solid rgba(255,255,255,0.16)', padding: '3px 9px', borderRadius: 'var(--radius-pill)' }}><Gauge size={11} />{p.difficulty}</span>
-                            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '12px', color: 'rgba(255,255,255,0.92)', backgroundColor: 'rgba(0,0,0,0.42)', backdropFilter: 'blur(6px)', border: '1px solid rgba(255,255,255,0.16)', padding: '3px 9px', borderRadius: 'var(--radius-pill)' }}><MapPin size={11} />{p.locations} locations</span>
-                          </div>
-                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '10px' }}>
-                            <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px' }}>
-                              <span style={{ fontFamily: 'var(--font-body)', fontSize: '12px', color: 'rgba(255,255,255,0.60)', fontWeight: 500, letterSpacing: '0.3px' }}>from</span>
-                              <span style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '28px', color: 'var(--color-n000)', lineHeight: 1 }}>{format(p.priceWithout)}</span>
-                            </div>
-                            <button className="btn btn--sm pkg-card-btn">
-                              View journey <ArrowRight size={13} />
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    </Link>
-                  )
-                })}
+                {relatedPackages.map((p) => (
+                  <div key={p.id} style={{ flex: '0 0 80vw', maxWidth: '340px', scrollSnapAlign: 'start' }}>
+                    <JourneyCard pkg={p} priceField="priceWithout" height={420} />
+                  </div>
+                ))}
               </div>
             ) : (
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px' }}>
-                {relatedPackages.map((p) => {
-                  const { badge, badgeStyle } = PKG_BADGES[p.slug] || {}
-                  return (
-                    <Link key={p.id} to={`/multi-day-tours/${p.slug}`} style={{ display: 'block', textDecoration: 'none', borderRadius: '16px' }} className="pkg-card">
-                      <div style={{ borderRadius: '16px', overflow: 'hidden', boxShadow: '0 4px 24px rgba(0,0,0,0.12)' }}>
-                        <div style={{ position: 'relative', width: '100%', height: '420px', overflow: 'hidden' }}>
-                          <img src={p.heroImage} alt={p.name} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} className="pkg-card-img" />
-                          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(0,0,0,0.30) 0%, transparent 28%, transparent 40%, rgba(0,0,0,0.88) 100%)' }} />
-                          <div style={{ position: 'absolute', top: '14px', left: '14px', right: '14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                            {badge && (
-                              <span style={{ fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: '12px', letterSpacing: '1px', textTransform: 'uppercase', padding: '4px 11px', borderRadius: 'var(--radius-pill)', backgroundColor: badgeStyle === 'amber' ? 'var(--color-amber)' : badgeStyle === 'green' ? 'var(--color-forest-green)' : 'rgba(0,0,0,0.55)', color: badgeStyle === 'amber' ? 'var(--color-n900)' : 'var(--color-n000)' }}>{badge}</span>
-                            )}
-                            <span style={{ fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: '12px', color: 'var(--color-n000)', backgroundColor: 'rgba(0,0,0,0.40)', backdropFilter: 'blur(6px)', border: '1px solid rgba(255,255,255,0.18)', padding: '5px 12px', borderRadius: 'var(--radius-pill)', marginLeft: 'auto' }}>{p.duration}</span>
-                          </div>
-                          <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '20px 18px 18px' }}>
-                            <h3 style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '20px', color: 'var(--color-n000)', lineHeight: 1.2, letterSpacing: '-0.2px', margin: '0 0 4px' }}>{p.name}</h3>
-                            {p.subtitle && <p style={{ fontFamily: 'var(--font-body)', fontSize: '12px', color: 'rgba(255,255,255,0.70)', margin: '0 0 10px', fontStyle: 'italic' }}>{p.subtitle}</p>}
-                            <div style={{ display: 'flex', gap: '5px', flexWrap: 'wrap', marginBottom: '12px' }}>
-                              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '12px', color: 'rgba(255,255,255,0.92)', backgroundColor: 'rgba(0,0,0,0.42)', backdropFilter: 'blur(6px)', border: '1px solid rgba(255,255,255,0.16)', padding: '3px 9px', borderRadius: 'var(--radius-pill)' }}><Gauge size={11} />{p.difficulty}</span>
-                              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '12px', color: 'rgba(255,255,255,0.92)', backgroundColor: 'rgba(0,0,0,0.42)', backdropFilter: 'blur(6px)', border: '1px solid rgba(255,255,255,0.16)', padding: '3px 9px', borderRadius: 'var(--radius-pill)' }}><MapPin size={11} />{p.locations} locations</span>
-                            </div>
-                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '10px' }}>
-                              <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px' }}>
-                                <span style={{ fontFamily: 'var(--font-body)', fontSize: '12px', color: 'rgba(255,255,255,0.60)', fontWeight: 500, letterSpacing: '0.3px' }}>from</span>
-                                <span style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '28px', color: 'var(--color-n000)', lineHeight: 1 }}>{format(p.priceWithout)}</span>
-                              </div>
-                              <button className="btn btn--sm pkg-card-btn">
-                                View journey <ArrowRight size={13} />
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </Link>
-                  )
-                })}
+                {relatedPackages.map((p) => (
+                  <JourneyCard key={p.id} pkg={p} priceField="priceWithout" height={420} />
+                ))}
               </div>
             )}
           </div>

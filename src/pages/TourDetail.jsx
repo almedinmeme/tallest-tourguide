@@ -1325,6 +1325,7 @@ function TourDetail() {
                       rating={t.rating}
                       reviews={t.reviews}
                       duration={t.duration}
+                      groupSize={t.groupSize}
                       highlights={t.highlights}
                       badge={t.badge}
                       hero={t.hero}
@@ -1343,10 +1344,12 @@ function TourDetail() {
                     slug={t.slug}
                     title={t.title}
                     price={t.price}
+                    oldPrice={t.oldPrice}
                     rating={t.rating}
                     reviews={t.reviews}
                     duration={t.duration}
                     groupSize={t.groupSize}
+                    highlights={t.highlights}
                     badge={t.badge}
                     hero={t.hero}
                     startingTimes={t.startingTimes}

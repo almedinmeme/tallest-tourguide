@@ -1,13 +1,13 @@
 import SEO from '../components/SEO'
 import { useState, useRef, useEffect } from 'react'
-import { Link } from 'react-router-dom'
 import {
-  ArrowRight, Gauge, MapPin, Globe, Sparkles, CheckCircle,
+  ArrowRight, Sparkles, CheckCircle,
   ChevronDown, ArrowUpDown, X, Check,
 } from 'lucide-react'
 import useWindowWidth from '../hooks/useWindowWidth'
 import PageHero from '../components/PageHero'
 import Button from '../components/Button'
+import JourneyCard from '../components/JourneyCard'
 
 const DURATION_OPTIONS = [
   { value: 'all',      label: 'All' },
@@ -59,7 +59,6 @@ const DIFFICULTY_COLOR = {
 
 import { packages as standardPackages } from '../data/packages'
 import { getPage } from '../data/pages'
-import { useCurrency } from '../context/CurrencyContext'
 
 // Hero photo and SEO are editable in the admin (Pages → Journeys); empty
 // fields fall back to the built-ins.
@@ -67,7 +66,6 @@ const journeysPage = getPage('journeys')
 const HERO_IMAGE = journeysPage?.extra?.heroImage || '/uploads/balkans-full-arc-803ecks8.webp'
 
 function Packages() {
-  const { format } = useCurrency()
   const width = useWindowWidth()
   const isMobile = width <= 768
   const isTablet = width <= 960
@@ -308,37 +306,7 @@ function Packages() {
         ) : (
           <div style={{ ...styles.cardsList, gridTemplateColumns: cols }}>
             {sorted.map((pkg) => (
-              <Link key={pkg.id} to={`/multi-day-tours/${pkg.slug}`} style={styles.cardLink}>
-                <div style={styles.card} className="pkg-card">
-                  <div style={styles.imageWrapper}>
-                    <img src={pkg.hero} alt={pkg.name} style={styles.photo} className="pkg-card-img" />
-                    <div style={styles.imageGradient} />
-                    <div style={styles.imageTop}>
-                      <span style={{ ...styles.badge, backgroundColor: pkg.badgeColor, color: pkg.badgeTextColor }}>{pkg.badge}</span>
-                      <span style={styles.daysPill}>{pkg.duration}</span>
-                    </div>
-                    <div style={styles.imageBottom}>
-                      <h3 style={styles.packageName}>{pkg.name}</h3>
-                      <p style={styles.packageSubtitle}>{pkg.subtitle}</p>
-                      <div style={styles.statPills}>
-                        <span style={styles.statPill}><Gauge size={11} />{pkg.difficulty}</span>
-                        <span style={styles.statPill}><MapPin size={11} />{pkg.locations} stops</span>
-                        <span style={styles.statPill}><Globe size={11} />{pkg.countries} {pkg.countries === 1 ? 'country' : 'countries'}</span>
-                      </div>
-                      <div style={styles.priceRow}>
-                        <div style={styles.priceBlock}>
-                          <span style={styles.priceFrom}>from</span>
-                          <span style={styles.price}>{format(pkg.price)}</span>
-                        </div>
-                        <button className="btn btn--sm pkg-card-btn">
-                          View journey
-                          <ArrowRight size={13} />
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </Link>
+              <JourneyCard key={pkg.id} pkg={pkg} height={420} />
             ))}
           </div>
         )}
@@ -597,150 +565,6 @@ const styles = {
     maxWidth: '1160px',
     margin: '0 auto',
   },
-
-  cardLink: {
-    display: 'block',
-    textDecoration: 'none',
-    borderRadius: '20px',
-  },
-
-  card: {
-    borderRadius: '16px',
-    overflow: 'hidden',
-    boxShadow: '0 4px 24px rgba(0,0,0,0.12)',
-  },
-
-  imageWrapper: {
-    position: 'relative',
-    width: '100%',
-    height: '420px',
-    overflow: 'hidden',
-  },
-
-  photo: {
-    width: '100%',
-    height: '100%',
-    objectFit: 'cover',
-    display: 'block',
-  },
-
-  imageGradient: {
-    position: 'absolute',
-    inset: 0,
-    background: 'linear-gradient(to bottom, rgba(0,0,0,0.30) 0%, transparent 28%, transparent 40%, rgba(0,0,0,0.88) 100%)',
-  },
-
-  imageTop: {
-    position: 'absolute',
-    top: '14px',
-    left: '14px',
-    right: '14px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-
-  badge: {
-    fontFamily: 'var(--font-body)',
-    fontWeight: '700',
-    fontSize: '12px',
-    letterSpacing: '1px',
-    textTransform: 'uppercase',
-    padding: '4px 11px',
-    borderRadius: 'var(--radius-pill)',
-  },
-
-  daysPill: {
-    fontFamily: 'var(--font-body)',
-    fontWeight: '700',
-    fontSize: '12px',
-    color: 'var(--color-n000)',
-    backgroundColor: 'rgba(0,0,0,0.40)',
-    backdropFilter: 'blur(6px)',
-    border: '1px solid rgba(255,255,255,0.18)',
-    padding: '5px 12px',
-    borderRadius: 'var(--radius-pill)',
-    letterSpacing: '0.2px',
-  },
-
-  imageBottom: {
-    position: 'absolute',
-    bottom: '0',
-    left: '0',
-    right: '0',
-    padding: '20px 18px 18px',
-  },
-
-  statPills: {
-    display: 'flex',
-    gap: '5px',
-    flexWrap: 'wrap',
-    marginBottom: '12px',
-  },
-
-  statPill: {
-    display: 'inline-flex',
-    alignItems: 'center',
-    gap: '4px',
-    fontFamily: 'var(--font-body)',
-    fontWeight: '600',
-    fontSize: '12px',
-    color: 'rgba(255,255,255,0.92)',
-    backgroundColor: 'rgba(0,0,0,0.42)',
-    backdropFilter: 'blur(6px)',
-    border: '1px solid rgba(255,255,255,0.16)',
-    padding: '3px 9px',
-    borderRadius: 'var(--radius-pill)',
-    whiteSpace: 'nowrap',
-  },
-
-  packageName: {
-    fontFamily: 'var(--font-display)',
-    fontWeight: '700',
-    fontSize: '20px',
-    color: 'var(--color-n000)',
-    lineHeight: '1.2',
-    letterSpacing: '-0.2px',
-    margin: '0 0 4px 0',
-  },
-
-  packageSubtitle: {
-    fontFamily: 'var(--font-body)',
-    fontSize: '12px',
-    color: 'rgba(255,255,255,0.70)',
-    margin: '0 0 10px 0',
-    fontStyle: 'italic',
-  },
-
-  priceRow: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    gap: '10px',
-  },
-
-  priceBlock: {
-    display: 'flex',
-    alignItems: 'baseline',
-    gap: '4px',
-  },
-
-  priceFrom: {
-    fontFamily: 'var(--font-body)',
-    fontSize: '12px',
-    color: 'rgba(255,255,255,0.60)',
-    fontWeight: '500',
-    letterSpacing: '0.3px',
-  },
-
-  price: {
-    fontFamily: 'var(--font-display)',
-    fontWeight: '800',
-    fontSize: '28px',
-    color: 'var(--color-n000)',
-    lineHeight: 1,
-  },
-
 
   // Personalised card — dark background, two column layout.
   // Visually distinct from the standard package cards above —

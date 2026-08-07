@@ -1,15 +1,19 @@
 // TourCard.jsx
-// The entire card is now clickable — wrapping everything
-// in a React Router Link makes the full card a touch target.
-// "Book Now" replaced with "View Tour →" — a lower pressure
-// invitation that matches the card's role as a discovery surface.
-// The booking action lives on the detail page where the visitor
-// has full information to make a confident decision.
+// The entire card is clickable — wrapping everything in a React Router
+// Link makes the full card a touch target. There is no "View tour" button:
+// it duplicated the link the card already is, and cost 59px of card height
+// (a 44px .btn--sm plus its divider) to say nothing the card didn't. The
+// hover affordance lives on the title instead.
+//
+// The card is laid out so every instance is the same shape regardless of
+// its content — three fixed blocks under the photo: rating, a title clamped
+// to three lines, and a 2×2 meta panel. Facts are grouped by kind: all the
+// money on the photo's price pill, the two time facts side by side on the
+// panel's top row.
 import { useState } from 'react'
-import { Star, Clock, Sparkles, ArrowRight, Watch } from 'lucide-react'
+import { Star, Clock, AlarmClock, Sparkles, Users } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { getTourLanguages } from '../data/tourLanguages'
-import { CANCEL_SHORT_TOUR } from '../data/policy'
 import Img from './Img'
 import { useCurrency } from '../context/CurrencyContext'
 
@@ -18,7 +22,7 @@ import { useCurrency } from '../context/CurrencyContext'
 // back on when the multi-language site/tours ship.
 const SHOW_LANGUAGE_FLAGS = false
 
-function TourCard({ id, slug, title, price, oldPrice, rating, reviews, duration, highlights, badge, hero, startingTimes, languages }) {
+function TourCard({ id, slug, title, price, oldPrice, rating, reviews, duration, groupSize, highlights, badge, hero, startingTimes, languages }) {
   const { format } = useCurrency()
   const supportedLanguages = getTourLanguages(languages)
   const [cardHovered, setCardHovered] = useState(false)
@@ -28,6 +32,7 @@ function TourCard({ id, slug, title, price, oldPrice, rating, reviews, duration,
   // booking math; oldPrice is the struck-through "was" price when set.
   const hasDiscount = Number(oldPrice) > Number(price)
   const discountPct = hasDiscount ? Math.round((1 - price / oldPrice) * 100) : 0
+  const times = Array.isArray(startingTimes) ? startingTimes.join(' / ') : startingTimes
 
   return (
     // The entire card is wrapped in a Link component.
@@ -61,11 +66,11 @@ function TourCard({ id, slug, title, price, oldPrice, rating, reviews, duration,
             
           )}
 
-          {/* Price pill overlaid on the bottom right of the photo.
-              Moving the price here frees up space in the card body
-              and creates a cleaner, more modern card layout.
-              Visitors see the price immediately without scrolling
-              through the card details first. */}
+          {/* The whole money story lives in this one pill: the discount tag,
+              the struck "was" price, the price, and the unit. It used to be
+              split — percentage and price here, "You save €14" down in the
+              footer — which scattered one decision across two ends of the
+              card and said the same thing twice. */}
           <div style={styles.pricePill}>
             {hasDiscount && <span style={styles.discountTag}>−{discountPct}%</span>}
             {hasDiscount && <span style={styles.priceWas}>{format(oldPrice)}</span>}
@@ -80,82 +85,74 @@ function TourCard({ id, slug, title, price, oldPrice, rating, reviews, duration,
 
           {/* Rating row */}
           <div style={styles.ratingRow}>
-            <Star size={13} color="var(--color-amber)" fill="var(--color-amber)" />
+            <Star size={14} color="var(--color-amber)" fill="var(--color-amber)" />
             <span style={styles.ratingNumber}>{rating}</span>
             <span style={styles.reviews}>({reviews} reviews)</span>
           </div>
 
-          {/* Tour title */}
+          {/* Tour title — shifts to green on card hover. The card is a link
+              with no button in it, so the title carries the affordance. */}
           <div style={styles.titleWrapper}>
-            <h3 style={styles.title}>{title}</h3>
+            <h3 style={{ ...styles.title, color: cardHovered ? 'var(--color-forest-green)' : 'var(--color-n900)' }}>
+              {title}
+            </h3>
           </div>
 
-          {/* Meta row — duration and group size */}
+          {/* Meta panel — four facts in a fixed 2×2, not a wrapping row.
+              Wrapping made every card break at a different point and let the
+              nowrap chips spill past the card edge. The grid puts the two
+              time facts side by side on the top row, aligns the columns
+              across every card, and can never overflow. */}
           <div style={styles.metaRow}>
-  <div style={styles.metaItem}>
-    <Clock size={13} color="var(--color-n600)" />
-    <span style={styles.meta}>{duration}</span>
-  </div>
-  {highlightCount > 0 && (
-    <div style={styles.metaItem}>
-      <Sparkles size={13} color="var(--color-n600)" />
-      <span style={styles.meta}>{highlightCount} highlights</span>
-    </div>
-  )}
-  {startingTimes && startingTimes.length > 0 && (
-    <div style={styles.metaItem}>
-      <Watch size={13} color="var(--color-n600)" />
-      <span style={styles.meta}>
-        {Array.isArray(startingTimes) ? startingTimes.join(' / ') : startingTimes}
-      </span>
-    </div>
-  )}
-</div>
-
-          {/* Divider */}
-          <div style={styles.divider} />
-
-          {/* Footer row — View Tour link replacing Book Now button.
-              ArrowRight icon reinforces the directional action —
-              this is an invitation to explore, not a demand to commit. */}
-          {/* Footer — View Tour CTA */}
-          <div style={styles.footer}>
-            {/* div, not a Button/Link — the whole card is the anchor; the fill
-                follows the card's hover state rather than the button's own */}
-            <div
-              className="btn btn--secondary btn--sm"
-              style={cardHovered ? { backgroundColor: 'var(--color-forest-green)', color: '#fff' } : undefined}
-            >
-              <span>View tour</span>
-              <ArrowRight size={14} color={cardHovered ? '#ffffff' : 'var(--color-forest-green)'} />
-            </div>
-
-            {SHOW_LANGUAGE_FLAGS && supportedLanguages.length > 0 && (
-              <div
-                style={styles.languageFlags}
-                aria-label={`Available in ${supportedLanguages.map((language) => language.label).join(' and ')}`}
-              >
-                {supportedLanguages.map((language) => (
-                  <span
-                    key={language.id}
-                    style={styles.languageFlag}
-                    title={language.label}
-                    aria-label={language.label}
-                  >
-                    {language.flag}
-                  </span>
-                ))}
+            {times && (
+              <div style={styles.metaItem}>
+                <AlarmClock size={14} color="var(--color-forest-green)" style={styles.metaIcon} />
+                <span style={styles.meta}>{times}</span>
               </div>
             )}
-
-            {/* The freed slot earns its keep: savings when discounted,
-                the true 24h promise otherwise. */}
-            {!SHOW_LANGUAGE_FLAGS && (
-              hasDiscount
-                ? <span style={styles.saveNote}>You save {format(oldPrice - price)}</span>
-                : <span style={styles.cancelNote}>{CANCEL_SHORT_TOUR}</span>
+            <div style={styles.metaItem}>
+              <Clock size={14} color="var(--color-forest-green)" style={styles.metaIcon} />
+              <span style={styles.meta}>{duration}</span>
+            </div>
+            {Number(groupSize) > 0 && (
+              <div style={styles.metaItem}>
+                <Users size={14} color="var(--color-forest-green)" style={styles.metaIcon} />
+                <span style={styles.meta}>Max {groupSize} people</span>
+              </div>
+            )}
+            {highlightCount > 0 && (
+              <div style={styles.metaItem}>
+                <Sparkles size={14} color="var(--color-forest-green)" style={styles.metaIcon} />
+                <span style={styles.meta}>{highlightCount} highlights</span>
+              </div>
             )}
           </div>
+
+          {/* No footer line. The free-cancellation note used to live here and
+              cost a whole row to repeat a policy that already appears on the
+              tour page and in the booking flow — on a discovery card it was
+              paying rent in height without helping anyone choose. The saving
+              is likewise fully told by the price pill (−17%, struck price,
+              lower price), so nothing needs restating down here.
+              The parked language flags keep their slot for when the
+              multi-language tours ship. */}
+          {SHOW_LANGUAGE_FLAGS && supportedLanguages.length > 0 && (
+            <div
+              style={styles.footer}
+              aria-label={`Available in ${supportedLanguages.map((language) => language.label).join(' and ')}`}
+            >
+              {supportedLanguages.map((language) => (
+                <span
+                  key={language.id}
+                  style={styles.languageFlag}
+                  title={language.label}
+                  aria-label={language.label}
+                >
+                  {language.flag}
+                </span>
+              ))}
+            </div>
+          )}
 
         </div>
       </div>
@@ -175,6 +172,10 @@ cardLink: {
     transition: 'transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
   },
 
+  // Flex column so the body can stretch and the footer can pin to the
+  // bottom. Without this, a card with a 3-line title or a wrapped meta row
+  // ends its content higher or lower than its neighbours and the grid row
+  // looks ragged — the cards have to read as one row, not as N variants.
   card: {
     backgroundColor: 'var(--color-n000)',
     borderRadius: 'var(--radius-lg)',
@@ -182,6 +183,8 @@ cardLink: {
     boxShadow: '0 2px 16px rgba(0,0,0,0.08)',
     border: '1px solid var(--color-n200)',
     height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
   },
 
   photoContainer: {
@@ -189,6 +192,7 @@ cardLink: {
     aspectRatio: '4/3',
     position: 'relative',
     overflow: 'hidden',
+    flexShrink: 0,
   },
 
   photo: {
@@ -218,7 +222,7 @@ cardLink: {
     color: 'var(--color-n000)',
     fontFamily: 'var(--font-body)',
     fontWeight: '700',
-    fontSize: '12px',
+    fontSize: 'var(--text-tiny)',
     letterSpacing: '1.5px',
     textTransform: 'uppercase',
     padding: '4px 10px',
@@ -252,7 +256,7 @@ cardLink: {
 
   pricePer: {
     fontFamily: 'var(--font-body)',
-    fontSize: '12px',
+    fontSize: 'var(--text-tiny)',
     color: 'rgba(255,255,255,0.7)',
   },
 
@@ -267,7 +271,7 @@ cardLink: {
     color: 'var(--color-n900)',
     fontFamily: 'var(--font-body)',
     fontWeight: '700',
-    fontSize: '12px',
+    fontSize: 'var(--text-tiny)',
     padding: '2px 7px',
     borderRadius: 'var(--radius-pill)',
     boxShadow: 'var(--shadow-sm)',
@@ -275,13 +279,18 @@ cardLink: {
 
   priceWas: {
     fontFamily: 'var(--font-body)',
-    fontSize: '13px',
+    fontSize: 'var(--text-tiny)',
     color: 'rgba(255,255,255,0.65)',
     textDecoration: 'line-through',
   },
 
+  // No bottom padding: the meta panel below is full-bleed and supplies its
+  // own, so it can run edge to edge into the card's rounded bottom corners.
   body: {
-    padding: '16px 20px 20px 20px',
+    padding: '16px 20px 0',
+    display: 'flex',
+    flexDirection: 'column',
+    flex: 1,
   },
 
   ratingRow: {
@@ -294,16 +303,21 @@ cardLink: {
   ratingNumber: {
     fontFamily: 'var(--font-body)',
     fontWeight: '700',
-    fontSize: '13px',
+    fontSize: 'var(--text-small)',
     color: 'var(--color-n900)',
   },
 
   reviews: {
     fontFamily: 'var(--font-body)',
-    fontSize: '13px',
+    fontSize: 'var(--text-small)',
     color: 'var(--color-n600)',
   },
 
+  // Capped at three lines. 86px is exactly three lines at --text-h3, so
+  // with the clamp the title block is always that height — every card in a
+  // row starts its meta row on the same baseline. The cap is a safety net
+  // rather than active truncation: the longest title in the catalogue is
+  // 70 characters, which still lands inside three lines at card width.
   title: {
     fontFamily: 'var(--font-display)',
     fontWeight: '700',
@@ -311,6 +325,11 @@ cardLink: {
     color: 'var(--color-n900)',
     marginBottom: 0,
     lineHeight: '1.3',
+    transition: 'color 0.2s ease',
+    display: '-webkit-box',
+    WebkitLineClamp: 3,
+    WebkitBoxOrient: 'vertical',
+    overflow: 'hidden',
   },
 
   titleWrapper: {
@@ -318,66 +337,70 @@ cardLink: {
     marginBottom: '10px',
   },
 
-  // Wraps between items, never inside them — on narrow cards the row breaks
-  // into tidy lines of whole chips instead of splitting "Small group" mid-word.
+  // The panel that closes the card: tinted, with a hairline above it. Two
+  // fixed columns filled row-major — when it starts and how long it runs on
+  // the top row, group size and scope beneath. minmax(0, 1fr) rather than
+  // 1fr is what stops a long value from blowing the column out past the
+  // card: a grid item's default min-width is auto, not zero.
+  //
+  // Negative side margins pull it out of the body's 20px padding so the
+  // tint runs the full width and meets the card's rounded bottom corners
+  // (the card clips with overflow hidden). marginTop auto drops it to the
+  // bottom of the stretched body, so the panel sits on the same baseline on
+  // every card in a row and the card ends on a deliberate edge rather than
+  // trailing off into white.
   metaRow: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    gap: '6px 14px',
-    marginBottom: '14px',
+    display: 'grid',
+    gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1fr)',
+    gap: '11px 12px',
+    marginTop: 'auto',
+    marginLeft: '-20px',
+    marginRight: '-20px',
+    marginBottom: 0,
+    padding: '15px 20px 17px',
+    backgroundColor: 'var(--color-n100)',
+    borderTop: '1px solid var(--color-n200)',
   },
 
   metaItem: {
     display: 'flex',
     alignItems: 'center',
-    gap: '5px',
+    gap: '7px',
+    minWidth: 0,
   },
 
+  metaIcon: {
+    flexShrink: 0,
+  },
+
+  // --text-small (14px), not the 13px it started as: 13 is off the project's
+  // type scale (12/14/16/18/22…) and sits under the mobile legibility floor.
+  // n700 on the n100 panel is 9.04:1; the forest-green icons are 5.74:1,
+  // which clears the text threshold, not just the 3:1 non-text one.
+  //
+  // Ellipsis instead of nowrap-and-spill: the chips stay on one line each,
+  // but an unusually long duration string truncates inside its column
+  // rather than overlapping the card edge.
   meta: {
     fontFamily: 'var(--font-body)',
-    fontSize: '13px',
-    color: 'var(--color-n600)',
+    fontSize: 'var(--text-small)',
+    fontWeight: '500',
+    lineHeight: '1.4',
+    color: 'var(--color-n700)',
     whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    minWidth: 0,
   },
 
-  divider: {
-    height: '1px',
-    backgroundColor: 'var(--color-n200)',
-    marginBottom: '14px',
-  },
-
- footer: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    gap: '12px',
-    flexWrap: 'wrap',
-  },
-
-  languageFlags: {
+  // Only ever rendered for the parked language flags. It sits below the meta
+  // panel, which already carries the marginTop auto, so this just needs its
+  // own padding back — the body no longer has any at the bottom.
+  footer: {
     display: 'flex',
     alignItems: 'center',
     gap: '8px',
-  },
-
-  // Soft amber chip — reads as a deal without shouting.
-  saveNote: {
-    fontFamily: 'var(--font-body)',
-    fontWeight: '700',
-    fontSize: '12.5px',
-    color: 'var(--color-n900)',
-    backgroundColor: 'var(--color-amber-light)',
-    padding: '4px 12px',
-    borderRadius: 'var(--radius-pill)',
-    whiteSpace: 'nowrap',
-  },
-
-  cancelNote: {
-    fontFamily: 'var(--font-body)',
-    fontWeight: '500',
-    fontSize: '12.5px',
-    color: 'var(--color-n500)',
-    whiteSpace: 'nowrap',
+    padding: '12px 0 16px',
   },
 
   languageFlag: {

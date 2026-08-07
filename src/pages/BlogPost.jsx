@@ -1,9 +1,11 @@
 import { useParams, Link } from 'react-router-dom'
-import { Star, Clock, Sparkles, MapPin, ArrowRight } from 'lucide-react'
+import { Star, Clock, Sparkles, Gauge, MapPin, ArrowRight } from 'lucide-react'
 import { trackEvent } from '../utils/analytics'
 import SEO from '../components/SEO'
 import Img from '../components/Img'
 import Breadcrumbs from '../components/Breadcrumbs'
+import TourCard from '../components/TourCard'
+import JourneyCard from '../components/JourneyCard'
 import { BlogPostingSchema } from '../schema/SchemaMarkup'
 import { useBlog } from '../hooks/useBlog'
 import useWindowWidth from '../hooks/useWindowWidth'
@@ -26,7 +28,6 @@ function formatDate(dateStr) {
 }
 
 function BlogPost() {
-  const { format } = useCurrency()
   const { slug } = useParams()
   const { posts, loading, error } = useBlog()
   const width = useWindowWidth()
@@ -53,6 +54,19 @@ function BlogPost() {
   const relatedPackage = post?.relatedPackageSlug
     ? packages.find((p) => p.slug === post.relatedPackageSlug)
     : null
+
+  // Optional third card — editor picks its type (tour or package) in the admin.
+  const relatedExtraIsPackage = post?.relatedExtraType === 'package'
+  const relatedExtraRaw = post?.relatedExtraSlug
+    ? (relatedExtraIsPackage
+        ? packages.find((p) => p.slug === post.relatedExtraSlug)
+        : tours.find((t) => t.slug === post.relatedExtraSlug))
+    : null
+  // Skip it if it duplicates the dedicated tour/package slot above.
+  const relatedExtra = relatedExtraRaw && relatedExtraRaw.slug !== (relatedExtraIsPackage ? relatedPackage?.slug : relatedTour?.slug)
+    ? relatedExtraRaw
+    : null
+  const experienceCount = [relatedTour, relatedPackage, relatedExtra].filter(Boolean).length
 
   // Each promo block names its own tour/package (a post can feature several).
   const resolvePromo = (block) => {
@@ -256,90 +270,65 @@ function BlogPost() {
             </div>
           )}
 
-          {/* Related tour + package */}
-          {(relatedTour || relatedPackage) && (
+          {/* Related tour + package (+ optional third pick) */}
+          {(relatedTour || relatedPackage || relatedExtra) && (
             <div style={styles.relatedBlock}>
               <div style={styles.relatedBlockHeader}>
                 <span style={styles.relatedEyebrow}>Plan Your Visit</span>
                 <h2 style={styles.relatedHeading}>Book Your Next Experience</h2>
               </div>
               <div style={{
-                ...styles.experiencesGrid,
-                gridTemplateColumns: isMobile ? '1fr' : 'repeat(2, 1fr)',
+                display: 'grid',
+                gridTemplateColumns: isMobile ? '1fr' : `repeat(${experienceCount}, 1fr)`,
+                gap: '20px',
+                alignItems: 'stretch',
               }}>
 
-                {/* Tour card */}
+                {/* Tour card — same TourCard used for "More tours you'll love" on Tour Detail */}
                 {relatedTour && (
-                  <Link
-                    to={`/tours/${relatedTour.slug}`}
-                    style={styles.experienceCard}
-                    className="card-lift"
-                  >
-                    <div style={styles.experienceImageWrapper}>
-                      <img src={relatedTour.hero} alt={relatedTour.title} loading="lazy" style={styles.experienceImage} />
-                      {relatedTour.badge && (
-                        <span style={styles.experienceBadge}>{relatedTour.badge}</span>
-                      )}
-                      <span style={styles.experienceTypeTag}>Tour</span>
-                    </div>
-                    <div style={styles.experienceBody}>
-                      <div style={styles.experienceRating}>
-                        <Star size={12} color="var(--color-amber)" fill="var(--color-amber)" />
-                        <span style={styles.experienceRatingNum}>{relatedTour.rating}</span>
-                        <span style={styles.experienceRatingCount}>({relatedTour.reviews} reviews)</span>
-                      </div>
-                      <h3 style={styles.experienceTitle}>{relatedTour.title}</h3>
-                      <div style={styles.experienceMeta}>
-                        <span style={styles.experienceMetaItem}>{relatedTour.duration}</span>
-                        <span style={styles.experienceMetaDot}>·</span>
-                        <span style={styles.experienceMetaItem}>{(relatedTour.highlights || []).length} highlights</span>
-                      </div>
-                      <div style={styles.experienceFooter}>
-                        <div>
-                          <span style={styles.experiencePrice}>{format(relatedTour.price)}</span>
-                          <span style={styles.experiencePricePer}> /person</span>
-                        </div>
-                        <span style={styles.experienceBookBtn}>Book now →</span>
-                      </div>
-                    </div>
-                  </Link>
+                  <TourCard
+                    id={relatedTour.id}
+                    slug={relatedTour.slug}
+                    title={relatedTour.title}
+                    price={relatedTour.price}
+                    oldPrice={relatedTour.oldPrice}
+                    rating={relatedTour.rating}
+                    reviews={relatedTour.reviews}
+                    duration={relatedTour.duration}
+                    groupSize={relatedTour.groupSize}
+                    highlights={relatedTour.highlights}
+                    badge={relatedTour.badge}
+                    hero={relatedTour.hero}
+                    startingTimes={relatedTour.startingTimes}
+                    languages={relatedTour.languages}
+                  />
                 )}
 
-                {/* Package card */}
-                {relatedPackage && (
-                  <Link
-                    to={`/multi-day-tours/${relatedPackage.slug}`}
-                    style={styles.experienceCard}
-                    className="card-lift"
-                  >
-                    <div style={styles.experienceImageWrapper}>
-                      <img src={relatedPackage.heroImage} alt={relatedPackage.name} loading="lazy" style={styles.experienceImage} />
-                      {relatedPackage.badge && (
-                        <span style={styles.experienceBadge}>{relatedPackage.badge}</span>
-                      )}
-                      <span style={styles.experienceTypeTag}>Package</span>
-                    </div>
-                    <div style={styles.experienceBody}>
-                      <div style={styles.experienceRating}>
-                        <Star size={12} color="var(--color-amber)" fill="var(--color-amber)" />
-                        <span style={styles.experienceRatingNum}>{relatedPackage.rating}</span>
-                        <span style={styles.experienceRatingCount}>({relatedPackage.reviews} reviews)</span>
-                      </div>
-                      <h3 style={styles.experienceTitle}>{relatedPackage.name}</h3>
-                      <div style={styles.experienceMeta}>
-                        <span style={styles.experienceMetaItem}>{relatedPackage.duration}</span>
-                        <span style={styles.experienceMetaDot}>·</span>
-                        <span style={styles.experienceMetaItem}>{relatedPackage.locations} locations</span>
-                      </div>
-                      <div style={styles.experienceFooter}>
-                        <div>
-                          <span style={styles.experiencePrice}>{format(relatedPackage.price)}</span>
-                          <span style={styles.experiencePricePer}> /person</span>
-                        </div>
-                        <span style={styles.experienceBookBtn}>View package →</span>
-                      </div>
-                    </div>
-                  </Link>
+                {/* Journey card — same poster card used for "More journeys" on Journey Detail */}
+                {relatedPackage && <JourneyCard pkg={relatedPackage} priceField="priceWithout" height={420} stretch />}
+
+                {/* Third pick — whichever type the editor chose */}
+                {relatedExtra && (
+                  relatedExtraIsPackage ? (
+                    <JourneyCard pkg={relatedExtra} priceField="priceWithout" height={420} stretch />
+                  ) : (
+                    <TourCard
+                      id={relatedExtra.id}
+                      slug={relatedExtra.slug}
+                      title={relatedExtra.title}
+                      price={relatedExtra.price}
+                      oldPrice={relatedExtra.oldPrice}
+                      rating={relatedExtra.rating}
+                      reviews={relatedExtra.reviews}
+                      duration={relatedExtra.duration}
+                      groupSize={relatedExtra.groupSize}
+                      highlights={relatedExtra.highlights}
+                      badge={relatedExtra.badge}
+                      hero={relatedExtra.hero}
+                      startingTimes={relatedExtra.startingTimes}
+                      languages={relatedExtra.languages}
+                    />
+                  )
                 )}
 
               </div>
@@ -849,152 +838,11 @@ const styles = {
     flexShrink: 0,
   },
 
-  // Tour + package experience cards
-  experiencesGrid: {
-    display: 'grid',
-    gap: '20px',
-  },
-
-  experienceCard: {
-    backgroundColor: 'var(--color-n100)',
-    borderRadius: '14px',
-    border: '1px solid var(--color-n300)',
-    overflow: 'hidden',
-    textDecoration: 'none',
-    display: 'flex',
-    flexDirection: 'column',
-  },
-
-  experienceImageWrapper: {
-    position: 'relative',
-    width: '100%',
-    aspectRatio: '16 / 9',
-    overflow: 'hidden',
-    flexShrink: 0,
-  },
-
-  experienceImage: {
-    width: '100%',
-    height: '100%',
-    objectFit: 'cover',
-    display: 'block',
-  },
-
-  experienceBadge: {
-    position: 'absolute',
-    top: '10px',
-    left: '10px',
-    backgroundColor: 'var(--color-amber)',
-    color: 'var(--color-n900)',
-    fontFamily: 'var(--font-body)',
-    fontWeight: '700',
-    fontSize: '12px',
-    textTransform: 'uppercase',
-    letterSpacing: '0.6px',
-    padding: '3px 8px',
-    borderRadius: 'var(--radius-pill)',
-  },
-
-  experienceTypeTag: {
-    position: 'absolute',
-    top: '10px',
-    right: '10px',
-    backgroundColor: 'rgba(0,0,0,0.45)',
-    backdropFilter: 'blur(4px)',
-    color: 'var(--color-n000)',
-    fontFamily: 'var(--font-body)',
-    fontWeight: '600',
-    fontSize: '12px',
-    textTransform: 'uppercase',
-    letterSpacing: '0.8px',
-    padding: '3px 8px',
-    borderRadius: 'var(--radius-pill)',
-  },
-
-  experienceBody: {
-    padding: '16px 18px 20px 18px',
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '6px',
-    flex: 1,
-  },
-
-  experienceRating: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '4px',
-  },
-
-  experienceRatingNum: {
-    fontFamily: 'var(--font-body)',
-    fontWeight: '700',
-    fontSize: '13px',
-    color: 'var(--color-n900)',
-  },
-
-  experienceRatingCount: {
-    fontFamily: 'var(--font-body)',
-    fontSize: '12px',
-    color: 'var(--color-n600)',
-  },
-
-  experienceTitle: {
-    fontFamily: 'var(--font-display)',
-    fontWeight: '700',
-    fontSize: '16px',
-    color: 'var(--color-n900)',
-    lineHeight: '1.3',
-    margin: 0,
-  },
-
-  experienceMeta: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '6px',
-  },
-
-  experienceMetaItem: {
-    fontFamily: 'var(--font-body)',
-    fontSize: '12px',
-    color: 'var(--color-n600)',
-  },
-
-  experienceMetaDot: {
-    color: 'var(--color-n300)',
-    fontSize: '12px',
-  },
-
-  experienceFooter: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginTop: 'auto',
-    paddingTop: '10px',
-  },
-
-  experiencePrice: {
-    fontFamily: 'var(--font-display)',
-    fontWeight: '700',
-    fontSize: '18px',
-    color: 'var(--color-forest-green)',
-  },
-
-  experiencePricePer: {
-    fontFamily: 'var(--font-body)',
-    fontWeight: '400',
-    fontSize: '12px',
-    color: 'var(--color-n600)',
-    marginLeft: '2px',
-  },
-
-  experienceBookBtn: {
-    fontFamily: 'var(--font-body)',
-    fontWeight: '700',
-    fontSize: '13px',
-    color: 'var(--color-forest-green)',
-  },
 }
 
+// Same poster card used for "More journeys" on the Journey Detail page —
+// shared here so the tour+package (+ optional third pick) row on a journal
+// post never drifts from that look.
 function InlinePromoCard({ card, isPackage, isMobile }) {
   const { format } = useCurrency()
   const href = isPackage ? `/multi-day-tours/${card.slug}` : `/tours/${card.slug}`

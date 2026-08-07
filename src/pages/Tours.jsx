@@ -462,6 +462,7 @@ function Tours() {
                 rating={tour.rating}
                 reviews={tour.reviews}
                 duration={tour.duration}
+                groupSize={tour.groupSize}
                 highlights={tour.highlights}
                 badge={tour.badge}
                 hero={tour.hero}

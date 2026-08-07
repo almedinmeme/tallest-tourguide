@@ -226,11 +226,36 @@ h3 { font-size: var(--text-h3); line-height: 1.35; }
   transform: scale(1.05);
   filter: brightness(0.72);
 }
-/* View Tour pill fills with Forest Green on card hover —
-   the entire card hover state triggers the button fill,
-   reinforcing that the whole card is interactive. */
-a[href^="/tours/"]:hover .view-tour-pill {
-  background-color: var(--color-forest-green);
+
+/* Card motion is the biggest movement on a listing page — a whole grid of
+   cards lifting and zooming. The existing reduced-motion block below only
+   covers the route diagram, so cards opted themselves out of the setting.
+   !important is needed for the tour photo: its zoom is an inline style from
+   React state, which a stylesheet rule cannot otherwise override. Colour
+   feedback (title, brightness) is deliberately kept — the affordance stays,
+   only the movement stops. */
+@media (prefers-reduced-motion: reduce) {
+  .tour-card-link,
+  .tour-card-link > div,
+  .pkg-card,
+  .pkg-card-img {
+    transition: none !important;
+  }
+  .tour-card-link:hover > div,
+  .pkg-card:hover {
+    transform: none !important;
+  }
+  .tour-card-link img,
+  .pkg-card:hover .pkg-card-img {
+    transform: none !important;
+  }
+}
+/* The journey card has no button — the title carries the affordance.
+   Green would be unreadable on a white-on-photo title, so it underlines
+   instead. (TourCard does the green shift inline; its title sits on white.) */
+.pkg-card:hover .pkg-card-title {
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 /* Scroll to top button entrance —
@@ -416,20 +441,6 @@ a[href^="/tours/"]:hover .view-tour-pill {
 .btn--sm { height: var(--btn-sm); padding: 0 var(--btn-pad-sm); font-size: var(--btn-font-sm); gap: 8px; }
 .btn--lg { height: var(--btn-lg); padding: 0 var(--btn-pad-lg); font-size: var(--btn-font-lg); }
 .btn--full { width: 100%; }
-
-/* Package-card CTA — on-dark white outline that fills when the CARD is
-   hovered (the whole card is the link; the button is decorative).
-   Compose as "btn btn--sm pkg-card-btn" for system geometry. */
-.pkg-card-btn {
-  color: #ffffff;
-  background-color: transparent;
-  border-color: rgba(255, 255, 255, 0.65);
-}
-.pkg-card:hover .pkg-card-btn {
-  background-color: #ffffff;
-  color: var(--color-forest-green);
-  border-color: #ffffff;
-}
 
 /* ── Hover system ────────────────────────────────────────── */
 /* DEPRECATED for buttons — use the .btn system above. The classes
