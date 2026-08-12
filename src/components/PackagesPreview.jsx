@@ -4,7 +4,9 @@ import Button from './Button'
 import CarouselNav from './CarouselNav'
 import JourneyCard from './JourneyCard'
 
-import { packages } from '../data/packages'
+// Card-level index — this strip is on the homepage and needs none of the
+// day-by-day itinerary. See scripts/vite-plugin-catalog-index.js.
+import { journeyCards as packages } from 'virtual:catalog-cards'
 
 function PackagesPreview() {
   const width = useWindowWidth()

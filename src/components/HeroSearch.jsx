@@ -7,7 +7,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Search } from 'lucide-react'
-import tours from '../data/tours'
+// Card-level index — search matches title/city/category/badge only.
+import { tourCards as tours } from 'virtual:catalog-cards'
 import { searchPackageLinks } from '../data/navigation'
 import { posts } from '../data/journal'
 import { SearchGroup, SearchResult } from './nav/SearchResults'

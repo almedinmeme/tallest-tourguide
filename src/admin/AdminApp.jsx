@@ -188,7 +188,16 @@ function GitStatusPill() {
   }
 
   const hasWork = (changed ?? 0) > 0 || ahead > 0
-  if (changed == null || !hasWork) return null
+  // Nothing to publish: just the standing explainer. With work waiting the
+  // pill and its deploy button say the same thing better, and the sidebar
+  // footer is short enough to stay above the fold on a small laptop.
+  if (changed == null || !hasWork) {
+    return (
+      <p style={{ margin: '10px 14px 0', fontSize: 11, lineHeight: 1.5, color: colors.textOnDarkMuted, opacity: 0.75 }}>
+        Local editor — changes are saved to this project's files. Commit &amp; deploy to publish.
+      </p>
+    )
+  }
 
   const label =
     changed > 0
@@ -204,6 +213,12 @@ function GitStatusPill() {
     cursor: busy ? 'default' : 'pointer',
     opacity: busy ? 0.6 : 1,
   }
+
+  const deployLabel = busy === 'deploy'
+    ? 'Deploying…'
+    : changed > 0
+      ? `Commit & deploy ${changed} change${changed === 1 ? '' : 's'}`
+      : 'Deploy now'
 
   return (
     <div style={{ margin: '8px 14px 0' }}>
@@ -228,6 +243,8 @@ function GitStatusPill() {
         {label}
         <span style={{ opacity: 0.7 }}>{open ? '▴' : '▾'}</span>
       </button>
+      {/* Details only — the deploy button below stays out of the disclosure so
+          publishing is never something you have to expand a panel to find. */}
       {open && (
         <div style={{ marginTop: 8 }}>
           {files.length > 0 && (
@@ -275,17 +292,20 @@ function GitStatusPill() {
               }}
             />
           )}
-          <button
-            onClick={() => run(true)}
-            disabled={!!busy}
-            style={{ ...smallBtn, fontWeight: 700, border: 'none', backgroundColor: colors.primary, color: '#fff' }}
-          >
-            {busy === 'deploy'
-              ? 'Deploying…'
-              : changed > 0
-                ? `Commit & deploy ${changed} change${changed === 1 ? '' : 's'}`
-                : 'Deploy now'}
-          </button>
+        </div>
+      )}
+
+      <button
+        onClick={() => run(true)}
+        disabled={!!busy}
+        title={open ? undefined : `${deployLabel} — expand for the file list and a commit message.`}
+        style={{ ...smallBtn, fontWeight: 700, border: 'none', backgroundColor: colors.primary, color: '#fff' }}
+      >
+        {deployLabel}
+      </button>
+
+      {open && (
+        <>
           {changed > 0 && (
             <button
               onClick={() => run(false)}
@@ -298,7 +318,7 @@ function GitStatusPill() {
           <p style={{ margin: '6px 0 0', fontSize: 10, lineHeight: 1.5, color: colors.textOnDarkMuted, opacity: 0.75 }}>
             Commits only content files (src/data, public/uploads). Deploy pushes to GitHub — Netlify rebuilds the live site automatically.
           </p>
-        </div>
+        </>
       )}
     </div>
   )
@@ -364,9 +384,6 @@ export default function AdminApp() {
               View public site {Icon.external}
             </a>
             <GitStatusPill />
-            <p style={{ margin: '10px 14px 0', fontSize: 11, lineHeight: 1.5, color: colors.textOnDarkMuted, opacity: 0.75 }}>
-              Local editor — changes are saved to this project's files. Commit &amp; deploy to publish.
-            </p>
           </div>
         </aside>
         <main style={s.main}>

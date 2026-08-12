@@ -14,7 +14,10 @@ import Button from '../components/Button'
 import HeroSearch from '../components/HeroSearch'
 import Img from '../components/Img'
 import { variantSrcset, variantUrl } from '../utils/imageVariants'
-import tours from '../data/tours'
+// Card-level index rather than the full tours.json: the homepage renders three
+// tour cards and never a description, FAQ or gallery. See
+// scripts/vite-plugin-catalog-index.js.
+import { tourCards as tours } from 'virtual:catalog-cards'
 import { overallStats } from '../data/reviewStats'
 import useWindowWidth from '../hooks/useWindowWidth'
 import hero2 from '../assets/tour-2-hero.webp'

@@ -4,7 +4,9 @@ import { ChevronDown, Search, X, Menu, MessageCircle } from 'lucide-react'
 import useWindowWidth from '../hooks/useWindowWidth'
 import logo from '../assets/logo.svg'
 import { useBlog } from '../hooks/useBlog'
-import tours from '../data/tours'
+// Slim index, not the full tours.json — the Navbar is mounted on every route
+// and a full import would put every tour description in the eager chunk.
+import { tourIndex as tours } from 'virtual:catalog-index'
 import {
   DAY_TOURS_RAIL,
   DAY_TOURS_DEFAULT_ID,

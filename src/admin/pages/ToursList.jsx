@@ -4,6 +4,7 @@ import * as api from '../api'
 import { s, colors } from '../styles'
 import { SearchBox, Thumb, SkeletonRows } from '../components/ListChrome'
 import DragHandle from '../components/DragHandle'
+import RowActions from '../components/RowActions'
 import ConfirmDialog from '../components/ConfirmDialog'
 import { useToast } from '../hooks/useToast'
 import { useListDrag } from '../hooks/useListDrag'
@@ -117,16 +118,29 @@ export default function ToursList() {
           {q ? `No tours match "${q}".` : 'No tours yet. Create your first one.'}
         </div>
       ) : (
-        <table style={s.table}>
+        <div style={s.tableWrap}>
+        {/* Fixed layout: the columns are sized here rather than by the widest
+            slug or subtitle, so the table always fits the window and long text
+            ellipsises instead of stretching the page. */}
+        <table style={{ ...s.table, tableLayout: 'fixed', minWidth: 820 }}>
+          <colgroup>
+            <col style={{ width: 34 }} />
+            <col style={{ width: 84 }} />
+            <col />
+            <col style={{ width: 124 }} />
+            <col style={{ width: 84 }} />
+            <col style={{ width: 92 }} />
+            <col style={{ width: 210 }} />
+          </colgroup>
           <thead>
             <tr>
-              <th style={{ ...s.th, width: 34 }}></th>
-              <th style={{ ...s.th, width: 84 }}></th>
+              <th style={s.th}></th>
+              <th style={s.th}></th>
               <th style={s.th}>Tour</th>
-              <th style={{ ...s.th, width: 130 }}>Category</th>
-              <th style={{ ...s.th, width: 90 }}>Price</th>
-              <th style={{ ...s.th, width: 90 }}>Rating</th>
-              <th style={{ ...s.th, width: 210 }}></th>
+              <th style={s.th}>Category</th>
+              <th style={s.th}>Price</th>
+              <th style={s.th}>Rating</th>
+              <th style={s.th}></th>
             </tr>
           </thead>
           <tbody>
@@ -138,23 +152,26 @@ export default function ToursList() {
                 <td style={{ ...s.td, padding: '10px 16px' }}>
                   <Thumb src={t.hero} alt={t.title} />
                 </td>
-                <td style={s.td}>
-                  <Link to={`/admin/tours/${t.id}`} style={{ color: colors.text, textDecoration: 'none', fontWeight: 600, fontSize: 14.5 }}>
+                <td style={{ ...s.td, overflow: 'hidden' }}>
+                  <Link to={`/admin/tours/${t.id}`} style={{ color: colors.text, textDecoration: 'none', fontWeight: 600, fontSize: 14.5, overflowWrap: 'anywhere' }}>
                     {t.title || <em style={{ color: colors.textMuted }}>untitled</em>}
                   </Link>
                   {t.subtitle && (
-                    <div style={{ color: colors.textMuted, fontSize: 12.5, marginTop: 2, maxWidth: 520, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                    <div title={t.subtitle} style={{ color: colors.textMuted, fontSize: 12.5, marginTop: 2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                       {t.subtitle}
                     </div>
                   )}
-                  <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginTop: 5 }}>
-                    <code style={{ fontSize: 11, color: colors.textMuted, fontFamily: 'ui-monospace, monospace' }}>
+                  <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginTop: 5, minWidth: 0 }}>
+                    <code
+                      title={`/tours/${t.slug}`}
+                      style={{ fontSize: 11, color: colors.textMuted, fontFamily: 'ui-monospace, monospace', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
+                    >
                       /tours/{t.slug}
                     </code>
-                    {t.badge && <span style={s.pill}>{t.badge}</span>}
+                    {t.badge && <span style={{ ...s.pill, flexShrink: 0 }}>{t.badge}</span>}
                   </div>
                 </td>
-                <td style={s.td}>{t.category && <span style={s.pillNeutral}>{t.category}</span>}</td>
+                <td style={{ ...s.td, overflow: 'hidden' }}>{t.category && <span style={s.pillNeutral}>{t.category}</span>}</td>
                 <td style={{ ...s.td, fontWeight: 600 }}>{t.price != null ? `€${t.price}` : <span style={{ color: colors.textMuted }}>—</span>}</td>
                 <td style={s.td}>
                   {t.rating ? (
@@ -167,29 +184,25 @@ export default function ToursList() {
                   )}
                 </td>
                 <td style={s.td}>
-                  <div style={{ display: 'flex', gap: 6, justifyContent: 'flex-end' }}>
-                    <button
-                      style={{ ...s.btn, ...s.btnGhost, padding: '6px 8px' }}
-                      title="Move up"
-                      disabled={!canReorder || idx === 0}
-                      onClick={() => move(idx, -1)}
-                    >↑</button>
-                    <button
-                      style={{ ...s.btn, ...s.btnGhost, padding: '6px 8px' }}
-                      title="Move down"
-                      disabled={!canReorder || idx === filtered.length - 1}
-                      onClick={() => move(idx, 1)}
-                    >↓</button>
-                    <a href={`/tours/${t.slug}`} target="_blank" rel="noreferrer" style={{ ...s.btn, ...s.btnGhost, textDecoration: 'none' }} title="Open public page">↗</a>
-                    <button style={{ ...s.btn, ...s.btnGhost, padding: '6px 8px' }} title="Duplicate this tour" onClick={() => duplicate(t)}>⧉</button>
-                    <Link to={`/admin/tours/${t.id}`} style={{ ...s.btn, ...s.btnSecondary, textDecoration: 'none' }}>Edit</Link>
-                    <button style={{ ...s.btn, ...s.btnGhost, color: colors.danger }} onClick={() => setPendingDelete({ id: t.id, title: t.title })}>Delete</button>
-                  </div>
+                  <RowActions
+                    name={t.title}
+                    noun="tour"
+                    editTo={`/admin/tours/${t.id}`}
+                    viewHref={`/tours/${t.slug}`}
+                    onDuplicate={() => duplicate(t)}
+                    onDelete={() => setPendingDelete({ id: t.id, title: t.title })}
+                    onMoveUp={() => move(idx, -1)}
+                    onMoveDown={() => move(idx, 1)}
+                    canMoveUp={canReorder && idx > 0}
+                    canMoveDown={canReorder && idx < filtered.length - 1}
+                    reorderHint={canReorder ? undefined : 'Clear the search to reorder'}
+                  />
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
+        </div>
       )}
 
       <ConfirmDialog

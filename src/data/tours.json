@@ -404,7 +404,7 @@
     "city": "Mostar",
     "region": "Bosnia & Herzegovina",
     "title": "Mostar Day Trip from Sarajevo: Old Bridge, Kravice & Herzegovina",
-    "price": 75,
+    "price": 80,
     "rating": 5,
     "reviews": 18,
     "duration": "Full day",
@@ -559,7 +559,7 @@
         "perPerson": true
       }
     ],
-    "oldPrice": 85,
+    "oldPrice": null,
     "privatePricing": {
       "mode": "tiered",
       "tiers": [
@@ -586,7 +586,7 @@
     "city": "Jajce",
     "region": "Bosnia & Herzegovina",
     "title": "Jajce & Travnik Day Trip from Sarajevo: Medieval Bosnia Full Day Tour",
-    "price": 75,
+    "price": 80,
     "rating": 5,
     "reviews": 12,
     "duration": "Full day",
@@ -737,7 +737,7 @@
     "reviews": 4,
     "duration": "2 hours",
     "groupSize": 6,
-    "hero": "/uploads/home-hosted-dinner-ncci3p8s.webp",
+    "hero": "/uploads/home-hosted-dinner-f0cwpmlp.webp",
     "detailHero": "/uploads/home-hosted-dinner-gqqnbhal.webp",
     "description": "<p>There is a version of travel where you eat well but never really connect. This is not that. This evening opens a genuine Sarajevo home for a dinner built around food, conversation, and the kind of hospitality Bosnia has always been quietly known for. No restaurant can recreate it, because it was never designed to be replicated — only shared.</p><p>Your host shapes the menu around the season and your preferences, but two dishes anchor every table: burek, the hand-stretched meat pastry that defines Bosnian baking, and klepe, delicate dumplings served with garlic yogurt. Around them, expect slow-cooked dishes, homemade preserves, and a dessert that closes the evening properly. You leave the way guests in Bosnia always leave — full, welcomed, and already telling someone about it.</p>",
     "highlights": [
@@ -864,12 +864,12 @@
     "city": "Lukomir",
     "region": "Bosnia & Herzegovina",
     "title": "Lukomir Hike: Full Day Trek to Bosnia's Highest Mountain Village",
-    "price": 75,
+    "price": 80,
     "rating": 5,
     "reviews": 4,
     "duration": "Full day",
     "groupSize": 12,
-    "badge": "Active",
+    "badge": "Lunch Included",
     "hero": "/uploads/lukomir-1.webp",
     "detailHero": "/uploads/lukomir-5.webp",
     "description": "Lukomir sits at 1,469 metres above sea level on the edge of the Rakitnica Canyon — the deepest and most untouched river canyon in the western Balkans. It is the highest permanently inhabited village in Bosnia, and in many ways it feels like the rest of the world simply forgot to arrive. Stone houses, traditional dress, shepherds moving across the plateau exactly as their grandparents did. Getting there on foot makes it mean something entirely different than arriving any other way.The route follows the canyon rim through the Bjelašnica plateau, with open mountain views that stretch further than you expect and a silence that takes some adjusting to. The hike is moderate — rewarding for those with some trail experience, manageable for anyone in good shape who takes it at their own pace. Lunch is taken in the village itself, with a local family. You descend with the kind of tiredness that feels earned, and a view of Bosnia that very few visitors ever reach.",
@@ -890,10 +890,10 @@
     "includes": [
       "Experienced local guide",
       "Return transport from Sarajevo",
-      "Small group, personally guided"
+      "Small group, personally guided",
+      "Local organic lunch"
     ],
     "excludes": [
-      "Lunch in home of Lukomir residents (approx. 10 EUR / 20 BAM))",
       "Personal expenses"
     ],
     "faqs": [
@@ -1176,7 +1176,7 @@
     "city": "Srebrenica",
     "region": "Bosnia & Herzegovina",
     "title": "Srebrenica Day Trip from Sarajevo | Genocide Memorial & Museum Tour",
-    "price": 75,
+    "price": 80,
     "rating": 5,
     "reviews": 2,
     "duration": "Full day",
@@ -1316,166 +1316,6 @@
           "price": 600
         }
       ]
-    }
-  },
-  {
-    "id": 14,
-    "slug": "sarajevo-sketch-tour",
-    "category": "city-walks",
-    "city": "Sarajevo",
-    "region": "Bosnia & Herzegovina",
-    "title": "Sarajevo Sketch and Paint Tour: Draw the City with a Local Illustrator",
-    "price": 55,
-    "rating": 5,
-    "reviews": 0,
-    "duration": "3 hours",
-    "groupSize": 6,
-    "badge": "New",
-    "hero": "/uploads/sarajevo-sketch-tour-osauti7o.webp",
-    "detailHero": "/uploads/sarajevo-sketch-tour-ziu2s6nh.webp",
-    "description": "Most tours give you Sarajevo to look at. This one gives you Sarajevo to draw. You choose three locations from a curated list — an Ottoman fortress, a bridge with a spiral in its centre, a 15th-century mosque, a neo-Moorish city hall — and at each one, you sit down and sketch it. Your guide is a working illustrator who grew up here. They’ll show you how to look at a building before you draw it, tell you its story while you do, and make sure you leave each location with something worth keeping. All materials are provided. No experience is required.\n\nUrban sketching is the practice of drawing places as you find them — outdoors, in real time, with the sounds and light of the city around you. It slows you down in a way that photographs can’t. When you draw a minaret, you have to look at it for several minutes, and you notice things a camera misses. Sarajevo is one of the most visually layered cities in Europe, and this tour was built around that fact.\n\nBefore the tour starts, you choose three locations from the five below. At each one, you spend up to 45 minutes sketching and painting with guidance — technique hints, compositional suggestions, historical context. Between locations, the walk itself is its own short tour: Sarajevo’s streets are full of things to point at, and your guide knows all of them. Refreshments are included along the way, and the pace is unhurried throughout.\n\nAt the end of three hours, you have a sketchbook with three drawings of Sarajevo made by you, in the places themselves. Most guests say it’s the souvenir they were most glad to have — not a photograph taken of something, but a record of actually looking at it. The quality of the drawing matters far less than the quality of the attention, and your guide’s job is to help you pay that attention.",
-    "highlights": [
-      "Yellow Fortress (Žuta Tabija) — The widest panoramic view of Sarajevo on foot: minarets, red rooftops and the hills closing in from every side. Good for beginners who want a clear subject with real depth.",
-      "Academy of Fine Arts & Festina Lente Bridge — Four eras in one small stretch: an Austro-Hungarian academy, a spiral pedestrian bridge, a modern square and one of Bosnia’s best-known public sculptures. Good for architectural detail and mixed-era composition.",
-      "Emperor’s Mosque (Careva Džamija) — One of the oldest standing buildings in the city, built in the 15th century, with a courtyard, fountain and stonework that reward careful, symmetrical composition.",
-      "City Hall & the House of Spite — The neo-Moorish Vijećnica, burned in the siege and painstakingly rebuilt, standing across from Inat Kuća, a Bosnian home relocated stone by stone in defiance. Two buildings, one of the best stories in Sarajevo.",
-      "Mejdan & the Musical Pavilion — A quieter, greener stretch of the Miljacka, ideal for sketching at a slower pace among trees and water rather than the busier streets."
-    ],
-    "includes": [
-      "Guided route between all three chosen locations",
-      "Full urban sketching kit: sketchbook, pencils, fineliner pens, travel watercolour set, brushes",
-      "Technique guidance and compositional hints at every stop",
-      "Historical context at each location",
-      "Short walking tour between locations",
-      "Refreshments during the tour"
-    ],
-    "excludes": [
-      "Personal travel insurance",
-      "Gratuities (appreciated, never expected)",
-      "Additional food or drinks beyond the included refreshments"
-    ],
-    "faqs": [
-      {
-        "question": "Do I need to know how to draw?",
-        "answer": "No. The tour is designed for complete beginners and experienced sketchers equally. The guidance adjusts to whoever is holding the pencil. You are not being assessed — the point is to look carefully and put something down on paper, not to produce a finished artwork."
-      },
-      {
-        "question": "What materials are provided?",
-        "answer": "A sketchbook, pencils, fineliner pens, a travel watercolour set, brushes, and a small water container. Everything is yours to keep at the end of the tour."
-      },
-      {
-        "question": "Can I bring my own materials?",
-        "answer": "Yes — if you sketch regularly and prefer your own kit, bring it. The included materials are there to remove the barrier, not to replace preference."
-      },
-      {
-        "question": "How do we choose the three locations?",
-        "answer": "You choose before the tour, either when you book or by contacting us directly. Your guide then builds the walking route and narrative around your selection. If you can’t decide, we’ll suggest a combination based on the time of day and what’s worth seeing that week."
-      },
-      {
-        "question": "Is this suitable for children?",
-        "answer": "Yes, from age 8 upward with an adult. Younger children who are interested in drawing are welcome — the guidance adapts. The tour is slow-paced and non-strenuous."
-      },
-      {
-        "question": "What happens if it rains?",
-        "answer": "Some locations have covered or sheltered areas and the tour continues. In heavy rain, we’ll adjust the route to prioritise sheltered spots or reschedule. We’ll contact you in advance if conditions are likely to be a problem."
-      },
-      {
-        "question": "Is this a class or a tour?",
-        "answer": "Both. You’re moving through the city with a guide who knows it well — that’s the tour. At each location you’re also receiving individual guidance on how to approach what you’re drawing — that’s the instruction. Neither element dominates the other."
-      },
-      {
-        "question": "Can I book this for a group — a birthday, corporate event, or hen party?",
-        "answer": "Yes. Private bookings for groups are available — contact us directly and we’ll discuss the format, location combinations, and any specific preferences."
-      }
-    ],
-    "meetingPoint": "In front of the Tallest Tourguide & Friends office, Hamdije Kresevljakovica 61, Sarajevo. Right next to the Viking Pub.",
-    "startingTimes": [
-      "10 AM"
-    ],
-    "languages": [
-      "english",
-      "bosnian"
-    ],
-    "rightFor": [
-      "Complete beginners who’ve never sketched, and experienced artists alike",
-      "Guests who want a slower, more attentive way to see Sarajevo",
-      "Families with children aged 8 and up who enjoy hands-on activities",
-      "Anyone who’d rather take home a drawing than another photograph"
-    ],
-    "notRightFor": [
-      "Guests looking for a fast-paced sightseeing tour rather than time to sit and draw",
-      "Young children without an accompanying adult",
-      "Anyone who’d rather not sit and work outdoors for stretches of up to 45 minutes"
-    ],
-    "accessibility": {
-      "walkingDistanceKm": null,
-      "drivingDistanceKm": null,
-      "walkingDurationMin": null,
-      "drivingDurationMin": null,
-      "durationMin": 180,
-      "elevationGainM": null,
-      "effortLevel": "low",
-      "suitability": {
-        "wheelchair": null,
-        "stroller": null,
-        "smallChildren": "partial",
-        "children": "yes",
-        "pregnancy": "yes",
-        "seniors": "yes",
-        "pets": null
-      },
-      "requirements": [],
-      "terrain": "Mostly seated at each sketching stop, with short walks between locations on paved city streets",
-      "notes": "Light physical demand — mostly seated at each location, with short walks between. Suitable for age 8+ with an accompanying adult. Some locations have covered or sheltered spots if it rains."
-    },
-    "subtitle": "Three locations, three hours, and a sketchbook full of the city — guided by a local illustrator. No experience needed.",
-    "gallery": [],
-    "mapWaypoints": [
-      {
-        "lat": 43.85696584469741,
-        "lng": 18.427094566825225,
-        "label": "Tallest Tourguide & Friends Office"
-      },
-      {
-        "lat": 43.8615,
-        "lng": 18.4373,
-        "label": "Yellow Fortress — Žuta Tabija"
-      },
-      {
-        "lat": 43.8583,
-        "lng": 18.4308,
-        "label": "Emperor's Mosque — Careva Džamija"
-      },
-      {
-        "lat": 43.8590211484846,
-        "lng": 18.43406468291093,
-        "label": "City Hall (Vijećnica) & Inat Kuća"
-      },
-      {
-        "lat": 43.8556,
-        "lng": 18.4189,
-        "label": "Academy of Fine Arts & Festina Lente Bridge"
-      },
-      {
-        "lat": 43.8570431536568,
-        "lng": 18.428447488310436,
-        "label": "Mejdan & Musical Pavilion"
-      }
-    ],
-    "mapProfile": "foot-walking",
-    "fitnessNote": {
-      "type": "physical",
-      "level": "Easy — suitable for all fitness levels",
-      "detail": "Light physical demand: mostly seated at each location, with short walks between on paved city streets. Suitable for complete beginners to experienced sketchers, and children aged 8+ with an accompanying adult."
-    },
-    "extras": [],
-    "oldPrice": null,
-    "journalPosts": [],
-    "extraCategories": [
-      "food-culture"
-    ],
-    "privatePricing": {
-      "mode": "quote"
     }
   },
   {
@@ -1665,12 +1505,12 @@
     "city": "Mostar",
     "region": "Bosnia & Herzegovina",
     "title": "Sarajevo to Mostar and Stolac: A Full Day in Ancient Herzegovina",
-    "price": 85,
+    "price": 80,
     "rating": 5,
     "reviews": 2,
     "duration": "Full day (~13h)",
     "groupSize": 12,
-    "badge": "New",
+    "badge": "Lunch Included",
     "hero": "/uploads/mostar-stolac-day-trip-from-sarajevo-rz4va91h.webp",
     "detailHero": "/uploads/mostar-stolac-day-trip-from-sarajevo-62uu97vk.webp",
     "description": "Most tours from Sarajevo stop at Mostar. This one goes further — to Stolac, one of the oldest continuously inhabited towns in Bosnia and Herzegovina, where three thousand years of settlement left ruins on top of ruins. You'll walk a UNESCO stećci field, a 4th-century BC Illyrian hillfort, a 17th-century Ottoman mahala, and the banks of the Bregava river before you ever reach the Old Bridge. Mostar comes at the end, with context.\n\nThe Neretva valley road out of Sarajevo is reason enough to take a window seat. The canyon opens wide as you descend, the river turquoise below limestone cliffs, fig trees growing out of stone walls. Herzegovina announces itself early. By the time the minibus reaches Mostar, your guide has already started talking — the landscape has history too, and this one knows it.\n\nStolac sits in a bend of the Bregava river and has been inhabited without interruption for millennia. Illyrians built a capital on the hill above it. Medieval Bosnian lords built a fortress on the same hill. The Ottoman empire built a mahala at its feet. And in a field just outside town, a community of medieval Bosnians carved their most elaborate tombstones and left them standing in the grass, unsupervised, for six hundred years. That field is Radimlja, and it is where the day begins.\n\nAfter the ruins, the afternoon slows. Begovina is Stolac's 17th-century Ottoman residential quarter — stone houses, a česma, a small mosque — all still standing and still inhabited. It is one of the best-preserved Ottoman civilian complexes in Bosnia, and almost no international tour makes the detour. The Bregava river runs beside it, cold and fast even in summer. Coffee here is mandatory.\n\nThe Stari Most bridge and the Kujundžiluk bazaar are among the most recognised images in the Balkans. Arriving after a day in Stolac changes how you read them. The bridge was built by the same empire that built Begovina. The bazaar was designed for the same slow commercial rhythm you walked through all afternoon. Your guide stays with you through the old town. Then you drive back north through the canyon as the light drops.",
@@ -1836,8 +1676,12 @@
       }
     ],
     "mapProfile": "driving-car",
-    "oldPrice": 99,
-    "extras": []
+    "oldPrice": 90,
+    "extras": [],
+    "extraCategories": [],
+    "privatePricing": {
+      "mode": "quote"
+    }
   },
   {
     "id": 4,
@@ -1970,6 +1814,180 @@
       ]
     },
     "extraCategories": []
+  },
+  {
+    "id": 16,
+    "slug": "sarajevo-islamic-heritage-tour",
+    "category": "history",
+    "extraCategories": [
+      "city-walks"
+    ],
+    "city": "Sarajevo",
+    "region": "Bosnia & Herzegovina",
+    "title": "Islamic Heritage Tour Sarajevo: The Islam You Didn't Expect",
+    "subtitle": "Ninety minutes in Muslim Sarajevo — a working mosque, a Sufi lodge, and the honest version of Bosnian Islam, from someone raised inside it.",
+    "price": 25,
+    "rating": 5,
+    "reviews": 0,
+    "duration": "90 minutes",
+    "groupSize": 12,
+    "badge": "New",
+    "hero": "/uploads/the-four-faiths-of-sarajevo-a-500-meter-walk-through-three-r-1t1lfjx8.webp",
+    "detailHero": "/uploads/the-four-faiths-of-sarajevo-a-500-meter-walk-through-three-r-1t1lfjx8.webp",
+    "description": "Ninety minutes inside Muslim Sarajevo — a working mosque, a Sufi dervish lodge, and Ottoman heritage, guided by someone raised inside it. Not a sales pitch.\n\nBosnia has the oldest continuously organised Muslim community in Europe, running without interruption since 1882, when Bosnian Muslims became the first in Europe with religious leadership independent of Istanbul. That is a stranger and more interesting fact than the one most visitors arrive with. This tour covers how Islam reached Bosnia, what five centuries of it produced, and what it means here now — inside Gazi Husrev-beg Mosque, inside a surviving Qadiri tekke, and on foot through the Ottoman quarter that grew up around both.\n\nThis is not a religious tour and it is not an apologetic one. It is an explanation. Your guide comes from a religious Bosnian family, which makes the account first-hand rather than read from a book — and unsentimental. You will hear where Bosnian Islam sits uneasily with itself, what the 1990s did to it, and what the community is arguing about right now. You are not going to be told what to think about any of it.\n\nNinety minutes is short by design: one mosque, one tekke, one quarter, covered properly rather than six sites badly. We enter a working place of prayer, so modest dress is required — the full notes are further down, and we carry spare headscarves.",
+    "highlights": [
+      "Gazi Husrev-beg Mosque (1531) — Inside the largest historical mosque in Bosnia, still the main congregational mosque of the Islamic Community and in daily use. Architecture, function, and what the five daily prayers actually involve for a person with a job and a family.",
+      "Hadži Sinanova tekija — A surviving Qadiri Sufi lodge most visitors never hear about: over a hundred calligraphic inscriptions, the recitation practice called zikr, and the twentieth-century suppression and revival of Bosnian Sufism.",
+      "Baščaršija and the Sebilj — The Ottoman quarter as a built argument. The arrival of 1463, Isa-beg Ishaković's founding endowment, and how the waqf system produced a city — market, mosque, bathhouse, bridge, school — as a single financial instrument.",
+      "How Islam actually spread in Bosnia — Gradually, unevenly, over generations. The mechanism rather than the slogan, and why both of the popular versions collapse on contact with the records.",
+      "The 1882 story — How Bosnian Muslims became the first in Europe with religious leadership independent of Istanbul, and why that institutional continuity explains most of what makes Bosnian Islam distinctive.",
+      "The argument happening now — Practice versus identity, and post-1990s foreign religious influence. Laid out honestly, including the parts the community is still fighting about. You do the concluding.",
+      "A guide raised inside it — From a religious Bosnian family, giving a first-hand and unsentimental account. Hard questions are welcome; evasive answers aren't the house style."
+    ],
+    "includes": [
+      "90-minute guided walking tour",
+      "Mosque entry",
+      "Tekke entry",
+      "Loan headscarves if needed",
+      "All entrance fees where applicable",
+      "Small group, max 12"
+    ],
+    "excludes": [
+      "Personal travel insurance",
+      "Gratuities (appreciated, never expected)",
+      "Food and drinks"
+    ],
+    "faqs": [
+      {
+        "question": "Do I need to be Muslim, or religious at all?",
+        "answer": "No. Most guests are neither. The tour is built for people who are curious and want an accurate picture — including guests from strongly secular backgrounds and guests of other faiths. Nobody is preached at."
+      },
+      {
+        "question": "Is it really respectful for tourists to enter a working mosque?",
+        "answer": "Yes, when it's done properly, and Sarajevo's mosques are accustomed to visitors. That is what the dress code and the timing are for. Your guide handles the etiquette so you don't have to guess, and we avoid prayer times."
+      },
+      {
+        "question": "I'm a woman and I've never worn a headscarf. Is that awkward?",
+        "answer": "It's less awkward than people expect, and your guide will show you how to put one on. It comes off the moment you leave. If it genuinely isn't something you want to do, tell us — the courtyard, the complex and the tekke portion still make a substantial tour."
+      },
+      {
+        "question": "What's a tekke?",
+        "answer": "A Sufi lodge — a building where members of a dervish order gather for ritual, recitation and study. Sufism is the mystical current within Islam. Sarajevo once had dozens of these; a handful survive. Most visitors to Bosnia never learn they exist."
+      },
+      {
+        "question": "Will we see a dervish ceremony?",
+        "answer": "Not as a scheduled part of the tour. Zikr is a religious practice, not a performance, and we don't treat it as one. If you're interested in attending a ceremony, ask your guide — that is arranged separately, respectfully, and only sometimes."
+      },
+      {
+        "question": "Is 90 minutes enough?",
+        "answer": "For this scope, yes. The tour deliberately covers one mosque, one tekke and one quarter properly rather than six sites badly. If you want more — Jewish Sarajevo, the wider Ottoman heritage of Bosnia, the multi-faith story — we have longer tours and we'll tell you which one fits."
+      },
+      {
+        "question": "Can I ask difficult questions?",
+        "answer": "Please do. Your guide grew up inside a religious family and has thought about this a great deal, which means hard questions are welcome and evasive answers aren't the house style. If something has no clean answer, you'll be told that too."
+      },
+      {
+        "question": "Is this suitable for children?",
+        "answer": "Yes, from around 10 upward with an adult. The dress code applies to children as well."
+      },
+      {
+        "question": "Can you run this during Ramadan?",
+        "answer": "Yes, and it's a genuinely different experience — the city changes rhythm entirely. Timing shifts around iftar, so contact us for Ramadan dates."
+      }
+    ],
+    "meetingPoint": "The Sebilj fountain, Baščaršija square, Sarajevo Old Town. The exact meeting point is confirmed when you book.",
+    "startingTimes": [
+      "10 AM"
+    ],
+    "languages": [
+      "english",
+      "bosnian"
+    ],
+    "rightFor": [
+      "Curious visitors of any faith or none — most guests are neither Muslim nor religious",
+      "Travellers who want an accurate picture rather than a tidy one, including the uncomfortable parts",
+      "Guests who have done our Jewish Heritage Tour and want the other half of the story",
+      "Anyone short on time who would rather see one mosque and one tekke properly than six sites badly",
+      "Families with children from around 10 upward, with an adult"
+    ],
+    "notRightFor": [
+      "Anyone unwilling or unable to meet the dress code — shoulders and legs covered, and a headscarf for women inside the prayer hall",
+      "Guests looking for a light, entertaining sightseeing walk — this one is dense by design",
+      "Visitors hoping to watch a dervish ceremony — zikr is a religious practice, not a performance, and is not part of the tour",
+      "Children under about 10"
+    ],
+    "fitnessNote": {
+      "type": "emotional",
+      "level": "Modest dress required — we enter a working mosque",
+      "detail": "Shoulders covered, no shorts, and legs covered to below the knee, for everyone. Shoes come off at the entrance; socks or bare feet are both fine, and slip-on shoes make it much easier. Women need a headscarf inside the prayer hall — bring one if you can, and we carry spares, so nobody is turned away for arriving without one. Phones on silent; photography is generally fine, but ask your guide first. If any of this is a problem for you, tell us when you book and we will find a way to make the tour work."
+    },
+    "accessibility": {
+      "walkingDistanceKm": 1.2,
+      "drivingDistanceKm": null,
+      "walkingDurationMin": 90,
+      "drivingDurationMin": null,
+      "durationMin": 90,
+      "elevationGainM": null,
+      "effortLevel": "low",
+      "suitability": {
+        "wheelchair": "partial",
+        "stroller": "partial",
+        "smallChildren": "no",
+        "children": "partial",
+        "pregnancy": "yes",
+        "seniors": "yes",
+        "pets": "no"
+      },
+      "requirements": [
+        {
+          "key": "dress-code",
+          "label": "Dress modestly for the mosque and the tekke",
+          "detail": "Shoulders covered and legs covered to below the knee, for everyone. Women wear a headscarf inside the prayer hall — we carry spares."
+        },
+        {
+          "key": "shoes-off",
+          "label": "Take your shoes off at the entrance",
+          "detail": "Socks or bare feet are both fine. Slip-on shoes make the entrance much easier."
+        },
+        {
+          "key": "walking",
+          "label": "Walk about 1.2 km at an easy pace",
+          "detail": "Entirely within the old town, flat throughout, with two extended indoor stops."
+        }
+      ],
+      "terrain": "Flat, entirely within the old town, cobbled in places.",
+      "notes": "Walking: ~1.2 km over 90 minutes, flat throughout, with two extended indoor stops.\n\nWe time visits to avoid the five daily prayers, but if prayer begins while we are inside, we step back and wait. It takes a few minutes and it is worth seeing.\n\nMenstruating women are traditionally not expected to enter the prayer hall. We mention this only so nobody is caught out; nobody will ask you anything, and the courtyard portion of the visit loses very little.\n\nAvailable year-round, including Ramadan — the city changes rhythm entirely and timing shifts around iftar, so ask us about Ramadan dates."
+    },
+    "gallery": [
+      "/uploads/the-four-faiths-of-sarajevo-a-500-meter-walk-through-three-r-1t1lfjx8.webp",
+      "/uploads/the-four-faiths-of-sarajevo-a-500-meter-walk-through-three-r-6m36kog1.webp"
+    ],
+    "mapWaypoints": [
+      {
+        "lat": 43.85953,
+        "lng": 18.43094,
+        "label": "Baščaršija & the Sebilj"
+      },
+      {
+        "lat": 43.85936,
+        "lng": 18.42876,
+        "label": "Gazi Husrev-beg Mosque & complex"
+      },
+      {
+        "lat": 43.86046,
+        "lng": 18.43103,
+        "label": "Hadži Sinanova tekija"
+      }
+    ],
+    "mapProfile": "foot-walking",
+    "extras": [],
+    "oldPrice": null,
+    "privatePricing": {
+      "mode": "quote"
+    },
+    "journalPosts": [
+      "the-four-faiths-of-sarajevo-a-500-meter-walk-through-three-religions-and-one-empire"
+    ]
   },
   {
     "id": 7,
@@ -2109,6 +2127,166 @@
     "extraCategories": [
       "city-walks"
     ]
+  },
+  {
+    "id": 14,
+    "slug": "sarajevo-sketch-tour",
+    "category": "city-walks",
+    "city": "Sarajevo",
+    "region": "Bosnia & Herzegovina",
+    "title": "Sarajevo Sketch and Paint Tour: Draw the City with a Local Illustrator",
+    "price": 55,
+    "rating": 5,
+    "reviews": 0,
+    "duration": "3 hours",
+    "groupSize": 6,
+    "badge": "New",
+    "hero": "/uploads/sarajevo-sketch-tour-osauti7o.webp",
+    "detailHero": "/uploads/sarajevo-sketch-tour-ziu2s6nh.webp",
+    "description": "Most tours give you Sarajevo to look at. This one gives you Sarajevo to draw. You choose three locations from a curated list — an Ottoman fortress, a bridge with a spiral in its centre, a 15th-century mosque, a neo-Moorish city hall — and at each one, you sit down and sketch it. Your guide is a working illustrator who grew up here. They’ll show you how to look at a building before you draw it, tell you its story while you do, and make sure you leave each location with something worth keeping. All materials are provided. No experience is required.\n\nUrban sketching is the practice of drawing places as you find them — outdoors, in real time, with the sounds and light of the city around you. It slows you down in a way that photographs can’t. When you draw a minaret, you have to look at it for several minutes, and you notice things a camera misses. Sarajevo is one of the most visually layered cities in Europe, and this tour was built around that fact.\n\nBefore the tour starts, you choose three locations from the five below. At each one, you spend up to 45 minutes sketching and painting with guidance — technique hints, compositional suggestions, historical context. Between locations, the walk itself is its own short tour: Sarajevo’s streets are full of things to point at, and your guide knows all of them. Refreshments are included along the way, and the pace is unhurried throughout.\n\nAt the end of three hours, you have a sketchbook with three drawings of Sarajevo made by you, in the places themselves. Most guests say it’s the souvenir they were most glad to have — not a photograph taken of something, but a record of actually looking at it. The quality of the drawing matters far less than the quality of the attention, and your guide’s job is to help you pay that attention.",
+    "highlights": [
+      "Yellow Fortress (Žuta Tabija) — The widest panoramic view of Sarajevo on foot: minarets, red rooftops and the hills closing in from every side. Good for beginners who want a clear subject with real depth.",
+      "Academy of Fine Arts & Festina Lente Bridge — Four eras in one small stretch: an Austro-Hungarian academy, a spiral pedestrian bridge, a modern square and one of Bosnia’s best-known public sculptures. Good for architectural detail and mixed-era composition.",
+      "Emperor’s Mosque (Careva Džamija) — One of the oldest standing buildings in the city, built in the 15th century, with a courtyard, fountain and stonework that reward careful, symmetrical composition.",
+      "City Hall & the House of Spite — The neo-Moorish Vijećnica, burned in the siege and painstakingly rebuilt, standing across from Inat Kuća, a Bosnian home relocated stone by stone in defiance. Two buildings, one of the best stories in Sarajevo.",
+      "Mejdan & the Musical Pavilion — A quieter, greener stretch of the Miljacka, ideal for sketching at a slower pace among trees and water rather than the busier streets."
+    ],
+    "includes": [
+      "Guided route between all three chosen locations",
+      "Full urban sketching kit: sketchbook, pencils, fineliner pens, travel watercolour set, brushes",
+      "Technique guidance and compositional hints at every stop",
+      "Historical context at each location",
+      "Short walking tour between locations",
+      "Refreshments during the tour"
+    ],
+    "excludes": [
+      "Personal travel insurance",
+      "Gratuities (appreciated, never expected)",
+      "Additional food or drinks beyond the included refreshments"
+    ],
+    "faqs": [
+      {
+        "question": "Do I need to know how to draw?",
+        "answer": "No. The tour is designed for complete beginners and experienced sketchers equally. The guidance adjusts to whoever is holding the pencil. You are not being assessed — the point is to look carefully and put something down on paper, not to produce a finished artwork."
+      },
+      {
+        "question": "What materials are provided?",
+        "answer": "A sketchbook, pencils, fineliner pens, a travel watercolour set, brushes, and a small water container. Everything is yours to keep at the end of the tour."
+      },
+      {
+        "question": "Can I bring my own materials?",
+        "answer": "Yes — if you sketch regularly and prefer your own kit, bring it. The included materials are there to remove the barrier, not to replace preference."
+      },
+      {
+        "question": "How do we choose the three locations?",
+        "answer": "You choose before the tour, either when you book or by contacting us directly. Your guide then builds the walking route and narrative around your selection. If you can’t decide, we’ll suggest a combination based on the time of day and what’s worth seeing that week."
+      },
+      {
+        "question": "Is this suitable for children?",
+        "answer": "Yes, from age 8 upward with an adult. Younger children who are interested in drawing are welcome — the guidance adapts. The tour is slow-paced and non-strenuous."
+      },
+      {
+        "question": "What happens if it rains?",
+        "answer": "Some locations have covered or sheltered areas and the tour continues. In heavy rain, we’ll adjust the route to prioritise sheltered spots or reschedule. We’ll contact you in advance if conditions are likely to be a problem."
+      },
+      {
+        "question": "Is this a class or a tour?",
+        "answer": "Both. You’re moving through the city with a guide who knows it well — that’s the tour. At each location you’re also receiving individual guidance on how to approach what you’re drawing — that’s the instruction. Neither element dominates the other."
+      },
+      {
+        "question": "Can I book this for a group — a birthday, corporate event, or hen party?",
+        "answer": "Yes. Private bookings for groups are available — contact us directly and we’ll discuss the format, location combinations, and any specific preferences."
+      }
+    ],
+    "meetingPoint": "In front of the Tallest Tourguide & Friends office, Hamdije Kresevljakovica 61, Sarajevo. Right next to the Viking Pub.",
+    "startingTimes": [
+      "10 AM"
+    ],
+    "languages": [
+      "english",
+      "bosnian"
+    ],
+    "rightFor": [
+      "Complete beginners who’ve never sketched, and experienced artists alike",
+      "Guests who want a slower, more attentive way to see Sarajevo",
+      "Families with children aged 8 and up who enjoy hands-on activities",
+      "Anyone who’d rather take home a drawing than another photograph"
+    ],
+    "notRightFor": [
+      "Guests looking for a fast-paced sightseeing tour rather than time to sit and draw",
+      "Young children without an accompanying adult",
+      "Anyone who’d rather not sit and work outdoors for stretches of up to 45 minutes"
+    ],
+    "accessibility": {
+      "walkingDistanceKm": null,
+      "drivingDistanceKm": null,
+      "walkingDurationMin": null,
+      "drivingDurationMin": null,
+      "durationMin": 180,
+      "elevationGainM": null,
+      "effortLevel": "low",
+      "suitability": {
+        "wheelchair": null,
+        "stroller": null,
+        "smallChildren": "partial",
+        "children": "yes",
+        "pregnancy": "yes",
+        "seniors": "yes",
+        "pets": null
+      },
+      "requirements": [],
+      "terrain": "Mostly seated at each sketching stop, with short walks between locations on paved city streets",
+      "notes": "Light physical demand — mostly seated at each location, with short walks between. Suitable for age 8+ with an accompanying adult. Some locations have covered or sheltered spots if it rains."
+    },
+    "subtitle": "Three locations, three hours, and a sketchbook full of the city — guided by a local illustrator. No experience needed.",
+    "gallery": [],
+    "mapWaypoints": [
+      {
+        "lat": 43.85696584469741,
+        "lng": 18.427094566825225,
+        "label": "Tallest Tourguide & Friends Office"
+      },
+      {
+        "lat": 43.8615,
+        "lng": 18.4373,
+        "label": "Yellow Fortress — Žuta Tabija"
+      },
+      {
+        "lat": 43.8583,
+        "lng": 18.4308,
+        "label": "Emperor's Mosque — Careva Džamija"
+      },
+      {
+        "lat": 43.8590211484846,
+        "lng": 18.43406468291093,
+        "label": "City Hall (Vijećnica) & Inat Kuća"
+      },
+      {
+        "lat": 43.8556,
+        "lng": 18.4189,
+        "label": "Academy of Fine Arts & Festina Lente Bridge"
+      },
+      {
+        "lat": 43.8570431536568,
+        "lng": 18.428447488310436,
+        "label": "Mejdan & Musical Pavilion"
+      }
+    ],
+    "mapProfile": "foot-walking",
+    "fitnessNote": {
+      "type": "physical",
+      "level": "Easy — suitable for all fitness levels",
+      "detail": "Light physical demand: mostly seated at each location, with short walks between on paved city streets. Suitable for complete beginners to experienced sketchers, and children aged 8+ with an accompanying adult."
+    },
+    "extras": [],
+    "oldPrice": null,
+    "journalPosts": [],
+    "extraCategories": [
+      "food-culture"
+    ],
+    "privatePricing": {
+      "mode": "quote"
+    }
   },
   {
     "id": 13,
@@ -2306,7 +2484,7 @@
     "region": "Bosnia & Herzegovina",
     "title": "The Sarajevo Century: From 1914 to Yugoslavia",
     "subtitle": "A study tour across three chapters of the 20th century — the empire, the occupation, and the country that no longer exists.",
-    "price": 49,
+    "price": 45,
     "rating": 5,
     "reviews": 0,
     "duration": "3–4 hours",
@@ -2473,179 +2651,5 @@
       "mode": "quote"
     },
     "oldPrice": null
-  },
-  {
-    "id": 16,
-    "slug": "sarajevo-islamic-heritage-tour",
-    "category": "history",
-    "extraCategories": [
-      "city-walks"
-    ],
-    "city": "Sarajevo",
-    "region": "Bosnia & Herzegovina",
-    "title": "Islamic Heritage Tour Sarajevo: The Islam You Didn't Expect",
-    "subtitle": "Ninety minutes in Muslim Sarajevo — a working mosque, a Sufi lodge, and the honest version of Bosnian Islam, from someone raised inside it.",
-    "price": 25,
-    "rating": 5,
-    "reviews": 0,
-    "duration": "90 minutes",
-    "groupSize": 12,
-    "badge": "New",
-    "hero": "/uploads/the-four-faiths-of-sarajevo-a-500-meter-walk-through-three-r-1t1lfjx8.webp",
-    "detailHero": "/uploads/the-four-faiths-of-sarajevo-a-500-meter-walk-through-three-r-1t1lfjx8.webp",
-    "description": "Ninety minutes inside Muslim Sarajevo — a working mosque, a Sufi dervish lodge, and Ottoman heritage, guided by someone raised inside it. Not a sales pitch.\n\nBosnia has the oldest continuously organised Muslim community in Europe, running without interruption since 1882, when Bosnian Muslims became the first in Europe with religious leadership independent of Istanbul. That is a stranger and more interesting fact than the one most visitors arrive with. This tour covers how Islam reached Bosnia, what five centuries of it produced, and what it means here now — inside Gazi Husrev-beg Mosque, inside a surviving Qadiri tekke, and on foot through the Ottoman quarter that grew up around both.\n\nThis is not a religious tour and it is not an apologetic one. It is an explanation. Your guide comes from a religious Bosnian family, which makes the account first-hand rather than read from a book — and unsentimental. You will hear where Bosnian Islam sits uneasily with itself, what the 1990s did to it, and what the community is arguing about right now. You are not going to be told what to think about any of it.\n\nNinety minutes is short by design: one mosque, one tekke, one quarter, covered properly rather than six sites badly. We enter a working place of prayer, so modest dress is required — the full notes are further down, and we carry spare headscarves.",
-    "highlights": [
-      "Gazi Husrev-beg Mosque (1531) — Inside the largest historical mosque in Bosnia, still the main congregational mosque of the Islamic Community and in daily use. Architecture, function, and what the five daily prayers actually involve for a person with a job and a family.",
-      "Hadži Sinanova tekija — A surviving Qadiri Sufi lodge most visitors never hear about: over a hundred calligraphic inscriptions, the recitation practice called zikr, and the twentieth-century suppression and revival of Bosnian Sufism.",
-      "Baščaršija and the Sebilj — The Ottoman quarter as a built argument. The arrival of 1463, Isa-beg Ishaković's founding endowment, and how the waqf system produced a city — market, mosque, bathhouse, bridge, school — as a single financial instrument.",
-      "How Islam actually spread in Bosnia — Gradually, unevenly, over generations. The mechanism rather than the slogan, and why both of the popular versions collapse on contact with the records.",
-      "The 1882 story — How Bosnian Muslims became the first in Europe with religious leadership independent of Istanbul, and why that institutional continuity explains most of what makes Bosnian Islam distinctive.",
-      "The argument happening now — Practice versus identity, and post-1990s foreign religious influence. Laid out honestly, including the parts the community is still fighting about. You do the concluding.",
-      "A guide raised inside it — From a religious Bosnian family, giving a first-hand and unsentimental account. Hard questions are welcome; evasive answers aren't the house style."
-    ],
-    "includes": [
-      "90-minute guided walking tour",
-      "Mosque entry",
-      "Tekke entry",
-      "Loan headscarves if needed",
-      "All entrance fees where applicable",
-      "Small group, max 12"
-    ],
-    "excludes": [
-      "Personal travel insurance",
-      "Gratuities (appreciated, never expected)",
-      "Food and drinks"
-    ],
-    "faqs": [
-      {
-        "question": "Do I need to be Muslim, or religious at all?",
-        "answer": "No. Most guests are neither. The tour is built for people who are curious and want an accurate picture — including guests from strongly secular backgrounds and guests of other faiths. Nobody is preached at."
-      },
-      {
-        "question": "Is it really respectful for tourists to enter a working mosque?",
-        "answer": "Yes, when it's done properly, and Sarajevo's mosques are accustomed to visitors. That is what the dress code and the timing are for. Your guide handles the etiquette so you don't have to guess, and we avoid prayer times."
-      },
-      {
-        "question": "I'm a woman and I've never worn a headscarf. Is that awkward?",
-        "answer": "It's less awkward than people expect, and your guide will show you how to put one on. It comes off the moment you leave. If it genuinely isn't something you want to do, tell us — the courtyard, the complex and the tekke portion still make a substantial tour."
-      },
-      {
-        "question": "What's a tekke?",
-        "answer": "A Sufi lodge — a building where members of a dervish order gather for ritual, recitation and study. Sufism is the mystical current within Islam. Sarajevo once had dozens of these; a handful survive. Most visitors to Bosnia never learn they exist."
-      },
-      {
-        "question": "Will we see a dervish ceremony?",
-        "answer": "Not as a scheduled part of the tour. Zikr is a religious practice, not a performance, and we don't treat it as one. If you're interested in attending a ceremony, ask your guide — that is arranged separately, respectfully, and only sometimes."
-      },
-      {
-        "question": "Is 90 minutes enough?",
-        "answer": "For this scope, yes. The tour deliberately covers one mosque, one tekke and one quarter properly rather than six sites badly. If you want more — Jewish Sarajevo, the wider Ottoman heritage of Bosnia, the multi-faith story — we have longer tours and we'll tell you which one fits."
-      },
-      {
-        "question": "Can I ask difficult questions?",
-        "answer": "Please do. Your guide grew up inside a religious family and has thought about this a great deal, which means hard questions are welcome and evasive answers aren't the house style. If something has no clean answer, you'll be told that too."
-      },
-      {
-        "question": "Is this suitable for children?",
-        "answer": "Yes, from around 10 upward with an adult. The dress code applies to children as well."
-      },
-      {
-        "question": "Can you run this during Ramadan?",
-        "answer": "Yes, and it's a genuinely different experience — the city changes rhythm entirely. Timing shifts around iftar, so contact us for Ramadan dates."
-      }
-    ],
-    "meetingPoint": "The Sebilj fountain, Baščaršija square, Sarajevo Old Town. The exact meeting point is confirmed when you book.",
-    "startingTimes": [
-      "10 AM"
-    ],
-    "languages": [
-      "english",
-      "bosnian"
-    ],
-    "rightFor": [
-      "Curious visitors of any faith or none — most guests are neither Muslim nor religious",
-      "Travellers who want an accurate picture rather than a tidy one, including the uncomfortable parts",
-      "Guests who have done our Jewish Heritage Tour and want the other half of the story",
-      "Anyone short on time who would rather see one mosque and one tekke properly than six sites badly",
-      "Families with children from around 10 upward, with an adult"
-    ],
-    "notRightFor": [
-      "Anyone unwilling or unable to meet the dress code — shoulders and legs covered, and a headscarf for women inside the prayer hall",
-      "Guests looking for a light, entertaining sightseeing walk — this one is dense by design",
-      "Visitors hoping to watch a dervish ceremony — zikr is a religious practice, not a performance, and is not part of the tour",
-      "Children under about 10"
-    ],
-    "fitnessNote": {
-      "type": "emotional",
-      "level": "Modest dress required — we enter a working mosque",
-      "detail": "Shoulders covered, no shorts, and legs covered to below the knee, for everyone. Shoes come off at the entrance; socks or bare feet are both fine, and slip-on shoes make it much easier. Women need a headscarf inside the prayer hall — bring one if you can, and we carry spares, so nobody is turned away for arriving without one. Phones on silent; photography is generally fine, but ask your guide first. If any of this is a problem for you, tell us when you book and we will find a way to make the tour work."
-    },
-    "accessibility": {
-      "walkingDistanceKm": 1.2,
-      "drivingDistanceKm": null,
-      "walkingDurationMin": 90,
-      "drivingDurationMin": null,
-      "durationMin": 90,
-      "elevationGainM": null,
-      "effortLevel": "low",
-      "suitability": {
-        "wheelchair": "partial",
-        "stroller": "partial",
-        "smallChildren": "no",
-        "children": "partial",
-        "pregnancy": "yes",
-        "seniors": "yes",
-        "pets": "no"
-      },
-      "requirements": [
-        {
-          "key": "dress-code",
-          "label": "Dress modestly for the mosque and the tekke",
-          "detail": "Shoulders covered and legs covered to below the knee, for everyone. Women wear a headscarf inside the prayer hall — we carry spares."
-        },
-        {
-          "key": "shoes-off",
-          "label": "Take your shoes off at the entrance",
-          "detail": "Socks or bare feet are both fine. Slip-on shoes make the entrance much easier."
-        },
-        {
-          "key": "walking",
-          "label": "Walk about 1.2 km at an easy pace",
-          "detail": "Entirely within the old town, flat throughout, with two extended indoor stops."
-        }
-      ],
-      "terrain": "Flat, entirely within the old town, cobbled in places.",
-      "notes": "Walking: ~1.2 km over 90 minutes, flat throughout, with two extended indoor stops.\n\nWe time visits to avoid the five daily prayers, but if prayer begins while we are inside, we step back and wait. It takes a few minutes and it is worth seeing.\n\nMenstruating women are traditionally not expected to enter the prayer hall. We mention this only so nobody is caught out; nobody will ask you anything, and the courtyard portion of the visit loses very little.\n\nAvailable year-round, including Ramadan — the city changes rhythm entirely and timing shifts around iftar, so ask us about Ramadan dates."
-    },
-    "gallery": [
-      "/uploads/the-four-faiths-of-sarajevo-a-500-meter-walk-through-three-r-1t1lfjx8.webp",
-      "/uploads/the-four-faiths-of-sarajevo-a-500-meter-walk-through-three-r-6m36kog1.webp"
-    ],
-    "mapWaypoints": [
-      {
-        "lat": 43.85953,
-        "lng": 18.43094,
-        "label": "Baščaršija & the Sebilj"
-      },
-      {
-        "lat": 43.85936,
-        "lng": 18.42876,
-        "label": "Gazi Husrev-beg Mosque & complex"
-      },
-      {
-        "lat": 43.86046,
-        "lng": 18.43103,
-        "label": "Hadži Sinanova tekija"
-      }
-    ],
-    "mapProfile": "foot-walking",
-    "extras": [],
-    "oldPrice": null,
-    "privatePricing": {
-      "mode": "quote"
-    },
-    "journalPosts": [
-      "the-four-faiths-of-sarajevo-a-500-meter-walk-through-three-religions-and-one-empire"
-    ]
   }
 ]

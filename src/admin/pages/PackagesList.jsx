@@ -4,6 +4,7 @@ import * as api from '../api'
 import { s, colors } from '../styles'
 import { SearchBox, Thumb, SkeletonRows } from '../components/ListChrome'
 import DragHandle from '../components/DragHandle'
+import RowActions from '../components/RowActions'
 import ConfirmDialog from '../components/ConfirmDialog'
 import { useToast } from '../hooks/useToast'
 import { useListDrag } from '../hooks/useListDrag'
@@ -116,16 +117,28 @@ export default function PackagesList() {
           {q ? `No packages match "${q}".` : 'No packages yet. Create your first one.'}
         </div>
       ) : (
-        <table style={s.table}>
+        <div style={s.tableWrap}>
+        {/* Fixed layout — see ToursList: columns are sized here so a long slug
+            or subtitle truncates instead of widening the page. */}
+        <table style={{ ...s.table, tableLayout: 'fixed', minWidth: 830 }}>
+          <colgroup>
+            <col style={{ width: 34 }} />
+            <col style={{ width: 84 }} />
+            <col />
+            <col style={{ width: 110 }} />
+            <col style={{ width: 110 }} />
+            <col style={{ width: 90 }} />
+            <col style={{ width: 210 }} />
+          </colgroup>
           <thead>
             <tr>
-              <th style={{ ...s.th, width: 34 }}></th>
-              <th style={{ ...s.th, width: 84 }}></th>
+              <th style={s.th}></th>
+              <th style={s.th}></th>
               <th style={s.th}>Package</th>
-              <th style={{ ...s.th, width: 110 }}>Duration</th>
-              <th style={{ ...s.th, width: 110 }}>Difficulty</th>
-              <th style={{ ...s.th, width: 90 }}>Price</th>
-              <th style={{ ...s.th, width: 210 }}></th>
+              <th style={s.th}>Duration</th>
+              <th style={s.th}>Difficulty</th>
+              <th style={s.th}>Price</th>
+              <th style={s.th}></th>
             </tr>
           </thead>
           <tbody>
@@ -140,55 +153,54 @@ export default function PackagesList() {
                   <td style={{ ...s.td, padding: '10px 16px' }}>
                     <Thumb src={cover} alt={p.name} />
                   </td>
-                  <td style={s.td}>
-                    <Link to={`/admin/packages/${p.id}`} style={{ color: colors.text, textDecoration: 'none', fontWeight: 600, fontSize: 14.5 }}>
+                  <td style={{ ...s.td, overflow: 'hidden' }}>
+                    <Link to={`/admin/packages/${p.id}`} style={{ color: colors.text, textDecoration: 'none', fontWeight: 600, fontSize: 14.5, overflowWrap: 'anywhere' }}>
                       {p.name || <em style={{ color: colors.textMuted }}>untitled</em>}
                     </Link>
                     {p.subtitle && (
-                      <div style={{ color: colors.textMuted, fontSize: 12.5, marginTop: 2, maxWidth: 520, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      <div title={p.subtitle} style={{ color: colors.textMuted, fontSize: 12.5, marginTop: 2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                         {p.subtitle}
                       </div>
                     )}
-                    <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginTop: 5 }}>
-                      <code style={{ fontSize: 11, color: colors.textMuted, fontFamily: 'ui-monospace, monospace' }}>
+                    <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginTop: 5, minWidth: 0 }}>
+                      <code
+                        title={`/multi-day-tours/${p.slug}`}
+                        style={{ fontSize: 11, color: colors.textMuted, fontFamily: 'ui-monospace, monospace', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
+                      >
                         /multi-day-tours/{p.slug}
                       </code>
-                      {p.badge && <span style={s.pill}>{p.badge}</span>}
+                      {p.badge && <span style={{ ...s.pill, flexShrink: 0 }}>{p.badge}</span>}
                       {days != null && (
-                        <span style={{ fontSize: 11, color: colors.textMuted }}>{days} day{days === 1 ? '' : 's'}</span>
+                        <span style={{ fontSize: 11, color: colors.textMuted, flexShrink: 0 }}>{days} day{days === 1 ? '' : 's'}</span>
                       )}
                     </div>
                   </td>
-                  <td style={s.td}>{p.duration ? <span style={s.pillNeutral}>{p.duration}</span> : <span style={{ color: colors.textMuted }}>—</span>}</td>
-                  <td style={s.td}>{p.difficulty ? <span style={s.pillNeutral}>{p.difficulty}</span> : <span style={{ color: colors.textMuted }}>—</span>}</td>
+                  <td style={{ ...s.td, overflow: 'hidden' }}>{p.duration ? <span style={s.pillNeutral}>{p.duration}</span> : <span style={{ color: colors.textMuted }}>—</span>}</td>
+                  <td style={{ ...s.td, overflow: 'hidden' }}>{p.difficulty ? <span style={s.pillNeutral}>{p.difficulty}</span> : <span style={{ color: colors.textMuted }}>—</span>}</td>
                   <td style={{ ...s.td, fontWeight: 600 }}>
                     {p.price != null ? `€${p.price}` : p.priceWithout != null ? `€${p.priceWithout}` : <span style={{ color: colors.textMuted }}>—</span>}
                   </td>
                   <td style={s.td}>
-                    <div style={{ display: 'flex', gap: 6, justifyContent: 'flex-end' }}>
-                      <button
-                        style={{ ...s.btn, ...s.btnGhost, padding: '6px 8px' }}
-                        title="Move up"
-                        disabled={!canReorder || idx === 0}
-                        onClick={() => move(idx, -1)}
-                      >↑</button>
-                      <button
-                        style={{ ...s.btn, ...s.btnGhost, padding: '6px 8px' }}
-                        title="Move down"
-                        disabled={!canReorder || idx === filtered.length - 1}
-                        onClick={() => move(idx, 1)}
-                      >↓</button>
-                      <a href={`/multi-day-tours/${p.slug}`} target="_blank" rel="noreferrer" style={{ ...s.btn, ...s.btnGhost, textDecoration: 'none' }} title="Open public page">↗</a>
-                      <button style={{ ...s.btn, ...s.btnGhost, padding: '6px 8px' }} title="Duplicate this package" onClick={() => duplicate(p)}>⧉</button>
-                      <Link to={`/admin/packages/${p.id}`} style={{ ...s.btn, ...s.btnSecondary, textDecoration: 'none' }}>Edit</Link>
-                      <button style={{ ...s.btn, ...s.btnGhost, color: colors.danger }} onClick={() => setPendingDelete({ id: p.id, name: p.name })}>Delete</button>
-                    </div>
+                    <RowActions
+                      name={p.name}
+                      noun="package"
+                      editTo={`/admin/packages/${p.id}`}
+                      viewHref={`/multi-day-tours/${p.slug}`}
+                      onDuplicate={() => duplicate(p)}
+                      onDelete={() => setPendingDelete({ id: p.id, name: p.name })}
+                      onMoveUp={() => move(idx, -1)}
+                      onMoveDown={() => move(idx, 1)}
+                      canMoveUp={canReorder && idx > 0}
+                      canMoveDown={canReorder && idx < filtered.length - 1}
+                      reorderHint={canReorder ? undefined : 'Clear the search to reorder'}
+                    />
                   </td>
                 </tr>
               )
             })}
           </tbody>
         </table>
+        </div>
       )}
 
       <ConfirmDialog

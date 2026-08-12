@@ -22,14 +22,48 @@ import { Helmet } from 'react-helmet-async'
 import { siteUrl, SITE_ORIGIN } from '../utils/seo'
 import { publishedFeaturedReviews } from '../data/featuredReviews'
 import { aggregateRating } from './aggregateRating'
+import { TOUR_FREE_CANCEL_HOURS, PACKAGE_FULL_REFUND_DAYS } from '../data/policy'
+
+// Google asks every Offer for a hasMerchantReturnPolicy, and reports its
+// absence as "Missing field hasMerchantReturnPolicy (in offers)". The
+// vocabulary was written for returning goods, but the customer-facing meaning
+// — you can get all your money back, at no cost, within this window — is
+// exactly our cancellation policy, so it maps honestly enough to state.
+//
+// `days` is the closest schema.org gets: it means days from purchase, while
+// ours run backwards from the tour date, so we quote the shorter, safer
+// number rather than a window we might not honour. returnMethod is left out
+// on purpose — its only values are ReturnByMail, ReturnInStore and
+// ReturnAtKiosk, and a cancelled booking is none of them. It is a recommended
+// field, not a required one.
+//
+// Numbers come from data/policy.js, the same module the visible cancellation
+// copy reads, so the markup can't promise something the page doesn't.
+function returnPolicy(days) {
+  return {
+    '@type': 'MerchantReturnPolicy',
+    applicableCountry: 'BA',
+    returnPolicyCategory: 'https://schema.org/MerchantReturnFiniteReturnWindow',
+    merchantReturnDays: days,
+    returnFees: 'https://schema.org/FreeReturn',
+  }
+}
+
+// 24 hours before the tour — expressed in whole days, which is what
+// merchantReturnDays takes.
+const TOUR_RETURN_POLICY = returnPolicy(Math.ceil(TOUR_FREE_CANCEL_HOURS / 24))
+const PACKAGE_RETURN_POLICY = returnPolicy(PACKAGE_FULL_REFUND_DAYS)
 
 // Google only grants a review snippet when the structured data matches what a
 // visitor can actually read on the page. This reads the same source
 // TourReviews.jsx renders from, so the two can't drift.
 //
-// The reviews pinned to this tour in /admin → Reviews, shaped for schema.org.
-// Same explicit tourSlug link the visible section uses — never a name match.
-function reviewsForTour(slug) {
+// The reviews pinned to this tour or journey in /admin → Reviews, shaped for
+// schema.org. Same explicit tourSlug link the visible section uses — never a
+// name match. TourReviews.jsx renders from this on both detail pages
+// (PackageDetail passes the package slug through the same prop), so anything
+// this returns is on the page for the visitor to read.
+function reviewsFor(slug) {
   if (!slug) return []
   return publishedFeaturedReviews
     .filter((r) => r.tourSlug === slug && r.text && r.rating)
@@ -58,7 +92,18 @@ function reviewsForTour(slug) {
 // ----------------------------------------------------------
 export function TourActivitySchema({ tour }) {
   const rating = aggregateRating(tour.rating, tour.reviews)
-  const reviews = reviewsForTour(tour.slug)
+  const reviews = reviewsFor(tour.slug)
+
+  // One offer object for both nodes below — they described the same booking in
+  // two places and had to be kept in step by hand.
+  const offers = {
+    '@type': 'Offer',
+    price: tour.price,
+    priceCurrency: 'EUR',
+    availability: 'https://schema.org/InStock',
+    url: siteUrl(`/tours/${tour.slug}`),
+    hasMerchantReturnPolicy: TOUR_RETURN_POLICY,
+  }
 
   const schema = {
     '@context': 'https://schema.org',
@@ -75,13 +120,7 @@ export function TourActivitySchema({ tour }) {
       '@type': 'Language',
       name: lang.charAt(0).toUpperCase() + lang.slice(1),
     })),
-    offers: {
-      '@type': 'Offer',
-      price: tour.price,
-      priceCurrency: 'EUR',
-      availability: 'https://schema.org/InStock',
-      url: siteUrl(`/tours/${tour.slug}`),
-    },
+    offers,
     provider: {
       '@type': 'LocalBusiness',
       name: 'Tallest Tourguide',
@@ -96,7 +135,13 @@ export function TourActivitySchema({ tour }) {
         addressCountry: 'BA',
       },
     },
-    aggregateRating: rating,
+    // NO aggregateRating / review here, deliberately. Google's review snippet
+    // only accepts a handful of parent types (Product, LocalBusiness,
+    // Organization, Event, Recipe, Course, Book, Movie, SoftwareApplication…)
+    // and TouristAttraction is not one of them: a rating hung off this node is
+    // reported as "Invalid object type for field <parent_node>", a critical
+    // error in the Review snippets report. The rating belongs on the Product
+    // node below, which is the node that earns the rich result anyway.
   }
 
   // Product + offers earns the price/rating rich result in search;
@@ -110,13 +155,7 @@ export function TourActivitySchema({ tour }) {
     url: siteUrl(`/tours/${tour.slug}`),
     sku: tour.slug,
     brand: { '@type': 'Brand', name: 'Tallest Tourguide' },
-    offers: {
-      '@type': 'Offer',
-      price: tour.price,
-      priceCurrency: 'EUR',
-      availability: 'https://schema.org/InStock',
-      url: siteUrl(`/tours/${tour.slug}`),
-    },
+    offers,
     aggregateRating: rating,
     // The guest reviews actually rendered further down the page. This is
     // what earns the review snippet — an aggregateRating on its own no
@@ -186,6 +225,7 @@ export function PackageSchema({ pkg }) {
     priceCurrency: 'EUR',
     availability: 'https://schema.org/InStock',
     url,
+    hasMerchantReturnPolicy: PACKAGE_RETURN_POLICY,
   }
 
   const trip = {
@@ -215,6 +255,12 @@ export function PackageSchema({ pkg }) {
     },
   }
 
+  // PackageDetail renders <TourReviews tourSlug={pkg.slug} />, so a review
+  // pinned to a journey is on the page exactly like a tour's — it just wasn't
+  // being marked up, which is a "Missing field review" warning on every
+  // journey that has one.
+  const reviews = reviewsFor(pkg.slug)
+
   const product = {
     '@context': 'https://schema.org',
     '@type': 'Product',
@@ -226,6 +272,7 @@ export function PackageSchema({ pkg }) {
     brand: { '@type': 'Brand', name: 'Tallest Tourguide' },
     offers,
     aggregateRating: aggregateRating(pkg.rating, pkg.reviews),
+    review: reviews.length ? reviews : undefined,
   }
 
   return (

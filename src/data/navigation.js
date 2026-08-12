@@ -4,8 +4,11 @@
 // Everything derives from the JSON collections so the menus always match
 // /tours, /multi-day-tours and /destinations.
 
-import tours from './tours'
-import packages from './packages'
+// The slim build-time index, not the full collections: this module is pulled
+// in by the always-mounted Navbar, so a static import of tours.json /
+// packages.json here lands all 277KB of them in the eager chunk on every
+// route. See scripts/vite-plugin-catalog-index.js for what the index carries.
+import { tourIndex as tours, journeyIndex as packages } from 'virtual:catalog-index'
 import { sortedDestinations } from './destinations'
 import { TOUR_CATEGORY_LABELS, tourCategories } from './tourCategories'
 

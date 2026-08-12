@@ -15,12 +15,20 @@
 export const DEPOSIT_PERCENT = 25
 export const BALANCE_DUE_DAYS = 30
 
+// The refund windows as numbers, so the sentences below and the
+// MerchantReturnPolicy in the structured data state one policy, not two.
+// (PACKAGE_FULL_REFUND_DAYS happens to equal BALANCE_DUE_DAYS today; they are
+// separate things — when the balance falls due vs. how long a full refund
+// lasts — so they get separate constants.)
+export const TOUR_FREE_CANCEL_HOURS = 24
+export const PACKAGE_FULL_REFUND_DAYS = 30
+
 export const CANCEL_LINE_TOUR =
-  'Free cancellation up to 24 hours before your day tour — full refund.'
+  `Free cancellation up to ${TOUR_FREE_CANCEL_HOURS} hours before your day tour — full refund.`
 // Compact form for tight surfaces (tour cards).
-export const CANCEL_SHORT_TOUR = 'Free cancellation 24h'
+export const CANCEL_SHORT_TOUR = `Free cancellation ${TOUR_FREE_CANCEL_HOURS}h`
 export const CANCEL_LINE_PACKAGE =
-  'Full refund on journeys cancelled more than 30 days before departure.'
+  `Full refund on journeys cancelled more than ${PACKAGE_FULL_REFUND_DAYS} days before departure.`
 
 // Home trust bar cell — must stay true to the lines above.
 export const TRUST_BAR_CANCEL = { desktop: '24h on day tours', mobile: '24h day tours' }

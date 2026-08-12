@@ -80,7 +80,12 @@ export const s = {
 
   shell: {
     display: 'grid',
-    gridTemplateColumns: '232px 1fr',
+    // minmax(0, 1fr) — not plain 1fr. A grid column defaults to min-width:auto,
+    // so anything with a wide minimum (a table, a long unbreakable filename)
+    // pushes the column past the viewport and scrolls the whole page sideways,
+    // sidebar and all. The column is allowed to shrink; the content inside
+    // truncates or scrolls locally instead.
+    gridTemplateColumns: '232px minmax(0, 1fr)',
     minHeight: '100vh',
   },
 
@@ -95,6 +100,11 @@ export const s = {
     display: 'flex',
     flexDirection: 'column',
     borderRight: '1px solid rgba(0,0,0,0.2)',
+    // Twelve nav items plus the deploy panel outgrow a short window. Without
+    // this the footer — deploy button included — sits below the fold with no
+    // way to reach it.
+    overflowY: 'auto',
+    overscrollBehavior: 'contain',
   },
   sidebarTitle: {
     fontSize: 15,
@@ -127,6 +137,7 @@ export const s = {
     padding: '32px 44px 56px',
     maxWidth: 1240,
     width: '100%',
+    minWidth: 0,
   },
   pageHeader: {
     display: 'flex',
@@ -198,6 +209,14 @@ export const s = {
   },
 
   // Tables
+  // List tables sit inside this wrapper: on a window too narrow for the
+  // columns, the table scrolls on its own instead of dragging the page
+  // (and the sidebar) sideways with it.
+  tableWrap: {
+    minWidth: 0,
+    overflowX: 'auto',
+    borderRadius: radius.lg,
+  },
   table: {
     width: '100%',
     backgroundColor: colors.panel,
@@ -261,6 +280,27 @@ export const s = {
     border: `1px solid ${colors.border}`,
     boxShadow: 'none',
   },
+  // Square icon button for the action column of a list row. Six of these fit
+  // where four labelled buttons did not; hover/disabled states are in
+  // adminGlobalCSS, keyed off [data-row-action].
+  iconBtn: {
+    appearance: 'none',
+    width: 26,
+    height: 26,
+    padding: 0,
+    flexShrink: 0,
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: radius.md,
+    border: `1px solid ${colors.border}`,
+    backgroundColor: 'transparent',
+    color: colors.textSubtle,
+    cursor: 'pointer',
+    fontFamily: 'inherit',
+    textDecoration: 'none',
+    transition: `background-color ${t.fast}, border-color ${t.fast}, color ${t.fast}`,
+  },
 
   // Forms
   input: {
@@ -305,14 +345,17 @@ export const s = {
   },
   fieldRow: { marginBottom: 16 },
 
+  // minmax(0, …) so a child that can't shrink (image card with a long
+  // filename, a monospace URL) truncates inside its column instead of
+  // widening the whole editor.
   grid2: {
     display: 'grid',
-    gridTemplateColumns: '1fr 1fr',
+    gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
     gap: 16,
   },
   grid3: {
     display: 'grid',
-    gridTemplateColumns: 'repeat(3, 1fr)',
+    gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
     gap: 16,
   },
 
@@ -352,7 +395,7 @@ export const s = {
   // Editor layout: TOC sidebar + content
   editorLayout: {
     display: 'grid',
-    gridTemplateColumns: '188px 1fr',
+    gridTemplateColumns: '188px minmax(0, 1fr)',
     gap: 32,
     alignItems: 'flex-start',
   },
@@ -426,6 +469,32 @@ export const adminGlobalCSS = `
     box-shadow: ${shadow.focus} !important;
   }
 
+  /* Row action icons — hover/disabled/focus. !important because the buttons
+     carry s.iconBtn inline, and an inline style beats any selector; the
+     element selector keeps these above the generic button lift, which looks
+     wrong on a 26px square. */
+  button[data-row-action]:not(:disabled):hover,
+  a[data-row-action]:hover {
+    transform: none;
+    background-color: ${colors.panelHover} !important;
+    border-color: ${colors.borderStrong} !important;
+    color: ${colors.text} !important;
+  }
+  button[data-row-action][data-danger]:not(:disabled):hover {
+    background-color: ${colors.dangerSoft} !important;
+    border-color: ${colors.danger} !important;
+    color: ${colors.danger} !important;
+  }
+  [data-row-action]:disabled {
+    opacity: 0.3;
+    cursor: default;
+  }
+  [data-row-action]:focus-visible {
+    outline: none;
+    box-shadow: ${shadow.focus};
+    border-color: ${colors.primary} !important;
+  }
+
   /* Tables — row hover */
   table tbody tr:hover td {
     background-color: ${colors.panelHover};
@@ -455,6 +524,14 @@ export const adminGlobalCSS = `
   }
   ::-webkit-scrollbar-thumb:hover {
     background-color: ${colors.textMuted};
+  }
+  /* …and a dark one on the sidebar, where the light thumb reads as a smear */
+  aside::-webkit-scrollbar-thumb {
+    background-color: rgba(255,255,255,0.16);
+    border-color: ${colors.sidebarBg};
+  }
+  aside::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(255,255,255,0.28);
   }
 
   /* Dashboard stat-card hover lift */
