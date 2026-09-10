@@ -1,0 +1,296 @@
+// countries.js
+// Dialling codes for the phone field on /checkout (and anywhere else we ask
+// for a number). One flat list, deliberately hand-held rather than pulled
+// from a library — the whole file is ~6KB and it saves shipping a 200KB
+// phone-number package into the checkout bundle.
+//
+// Each entry is [ISO 3166-1 alpha-2, display name, dialling code].
+//
+// The flag is DERIVED from the ISO code (see flagFor) instead of being typed
+// out 200 times, so it can't drift from the country it labels. Note that
+// Windows ships no flag glyphs: on Windows/Chrome the emoji renders as the
+// two letters ("DE"), which still reads correctly next to the dial code.
+//
+// A few codes are shared (+1 US/Canada, +44 UK/Jersey/Guernsey/Isle of Man,
+// +7 Russia/Kazakhstan). When a pasted international number matches more
+// than one country, PRIMARY below breaks the tie — see utils/phone.js.
+
+const RAW = [
+  ['AF', 'Afghanistan', '93'],
+  ['AL', 'Albania', '355'],
+  ['DZ', 'Algeria', '213'],
+  ['AS', 'American Samoa', '1684'],
+  ['AD', 'Andorra', '376'],
+  ['AO', 'Angola', '244'],
+  ['AI', 'Anguilla', '1264'],
+  ['AG', 'Antigua and Barbuda', '1268'],
+  ['AR', 'Argentina', '54'],
+  ['AM', 'Armenia', '374'],
+  ['AW', 'Aruba', '297'],
+  ['AU', 'Australia', '61'],
+  ['AT', 'Austria', '43'],
+  ['AZ', 'Azerbaijan', '994'],
+  ['BS', 'Bahamas', '1242'],
+  ['BH', 'Bahrain', '973'],
+  ['BD', 'Bangladesh', '880'],
+  ['BB', 'Barbados', '1246'],
+  ['BY', 'Belarus', '375'],
+  ['BE', 'Belgium', '32'],
+  ['BZ', 'Belize', '501'],
+  ['BJ', 'Benin', '229'],
+  ['BM', 'Bermuda', '1441'],
+  ['BT', 'Bhutan', '975'],
+  ['BO', 'Bolivia', '591'],
+  ['BA', 'Bosnia and Herzegovina', '387'],
+  ['BW', 'Botswana', '267'],
+  ['BR', 'Brazil', '55'],
+  ['VG', 'British Virgin Islands', '1284'],
+  ['BN', 'Brunei', '673'],
+  ['BG', 'Bulgaria', '359'],
+  ['BF', 'Burkina Faso', '226'],
+  ['BI', 'Burundi', '257'],
+  ['KH', 'Cambodia', '855'],
+  ['CM', 'Cameroon', '237'],
+  ['CA', 'Canada', '1'],
+  ['CV', 'Cape Verde', '238'],
+  ['KY', 'Cayman Islands', '1345'],
+  ['CF', 'Central African Republic', '236'],
+  ['TD', 'Chad', '235'],
+  ['CL', 'Chile', '56'],
+  ['CN', 'China', '86'],
+  ['CO', 'Colombia', '57'],
+  ['KM', 'Comoros', '269'],
+  ['CG', 'Congo — Brazzaville', '242'],
+  ['CD', 'Congo — Kinshasa', '243'],
+  ['CR', 'Costa Rica', '506'],
+  ['CI', 'Côte d’Ivoire', '225'],
+  ['HR', 'Croatia', '385'],
+  ['CU', 'Cuba', '53'],
+  ['CW', 'Curaçao', '599'],
+  ['CY', 'Cyprus', '357'],
+  ['CZ', 'Czechia', '420'],
+  ['DK', 'Denmark', '45'],
+  ['DJ', 'Djibouti', '253'],
+  ['DM', 'Dominica', '1767'],
+  ['DO', 'Dominican Republic', '1809'],
+  ['EC', 'Ecuador', '593'],
+  ['EG', 'Egypt', '20'],
+  ['SV', 'El Salvador', '503'],
+  ['GQ', 'Equatorial Guinea', '240'],
+  ['ER', 'Eritrea', '291'],
+  ['EE', 'Estonia', '372'],
+  ['SZ', 'Eswatini', '268'],
+  ['ET', 'Ethiopia', '251'],
+  ['FJ', 'Fiji', '679'],
+  ['FI', 'Finland', '358'],
+  ['FR', 'France', '33'],
+  ['GF', 'French Guiana', '594'],
+  ['PF', 'French Polynesia', '689'],
+  ['GA', 'Gabon', '241'],
+  ['GM', 'Gambia', '220'],
+  ['GE', 'Georgia', '995'],
+  ['DE', 'Germany', '49'],
+  ['GH', 'Ghana', '233'],
+  ['GI', 'Gibraltar', '350'],
+  ['GR', 'Greece', '30'],
+  ['GL', 'Greenland', '299'],
+  ['GD', 'Grenada', '1473'],
+  ['GP', 'Guadeloupe', '590'],
+  ['GU', 'Guam', '1671'],
+  ['GT', 'Guatemala', '502'],
+  ['GG', 'Guernsey', '44'],
+  ['GN', 'Guinea', '224'],
+  ['GW', 'Guinea-Bissau', '245'],
+  ['GY', 'Guyana', '592'],
+  ['HT', 'Haiti', '509'],
+  ['HN', 'Honduras', '504'],
+  ['HK', 'Hong Kong', '852'],
+  ['HU', 'Hungary', '36'],
+  ['IS', 'Iceland', '354'],
+  ['IN', 'India', '91'],
+  ['ID', 'Indonesia', '62'],
+  ['IR', 'Iran', '98'],
+  ['IQ', 'Iraq', '964'],
+  ['IE', 'Ireland', '353'],
+  ['IM', 'Isle of Man', '44'],
+  ['IL', 'Israel', '972'],
+  ['IT', 'Italy', '39'],
+  ['JM', 'Jamaica', '1876'],
+  ['JP', 'Japan', '81'],
+  ['JE', 'Jersey', '44'],
+  ['JO', 'Jordan', '962'],
+  ['KZ', 'Kazakhstan', '7'],
+  ['KE', 'Kenya', '254'],
+  ['KI', 'Kiribati', '686'],
+  ['XK', 'Kosovo', '383'],
+  ['KW', 'Kuwait', '965'],
+  ['KG', 'Kyrgyzstan', '996'],
+  ['LA', 'Laos', '856'],
+  ['LV', 'Latvia', '371'],
+  ['LB', 'Lebanon', '961'],
+  ['LS', 'Lesotho', '266'],
+  ['LR', 'Liberia', '231'],
+  ['LY', 'Libya', '218'],
+  ['LI', 'Liechtenstein', '423'],
+  ['LT', 'Lithuania', '370'],
+  ['LU', 'Luxembourg', '352'],
+  ['MO', 'Macau', '853'],
+  ['MG', 'Madagascar', '261'],
+  ['MW', 'Malawi', '265'],
+  ['MY', 'Malaysia', '60'],
+  ['MV', 'Maldives', '960'],
+  ['ML', 'Mali', '223'],
+  ['MT', 'Malta', '356'],
+  ['MH', 'Marshall Islands', '692'],
+  ['MQ', 'Martinique', '596'],
+  ['MR', 'Mauritania', '222'],
+  ['MU', 'Mauritius', '230'],
+  ['MX', 'Mexico', '52'],
+  ['FM', 'Micronesia', '691'],
+  ['MD', 'Moldova', '373'],
+  ['MC', 'Monaco', '377'],
+  ['MN', 'Mongolia', '976'],
+  ['ME', 'Montenegro', '382'],
+  ['MS', 'Montserrat', '1664'],
+  ['MA', 'Morocco', '212'],
+  ['MZ', 'Mozambique', '258'],
+  ['MM', 'Myanmar', '95'],
+  ['NA', 'Namibia', '264'],
+  ['NR', 'Nauru', '674'],
+  ['NP', 'Nepal', '977'],
+  ['NL', 'Netherlands', '31'],
+  ['NC', 'New Caledonia', '687'],
+  ['NZ', 'New Zealand', '64'],
+  ['NI', 'Nicaragua', '505'],
+  ['NE', 'Niger', '227'],
+  ['NG', 'Nigeria', '234'],
+  ['MK', 'North Macedonia', '389'],
+  ['NO', 'Norway', '47'],
+  ['OM', 'Oman', '968'],
+  ['PK', 'Pakistan', '92'],
+  ['PW', 'Palau', '680'],
+  ['PS', 'Palestine', '970'],
+  ['PA', 'Panama', '507'],
+  ['PG', 'Papua New Guinea', '675'],
+  ['PY', 'Paraguay', '595'],
+  ['PE', 'Peru', '51'],
+  ['PH', 'Philippines', '63'],
+  ['PL', 'Poland', '48'],
+  ['PT', 'Portugal', '351'],
+  ['PR', 'Puerto Rico', '1787'],
+  ['QA', 'Qatar', '974'],
+  ['RE', 'Réunion', '262'],
+  ['RO', 'Romania', '40'],
+  ['RU', 'Russia', '7'],
+  ['RW', 'Rwanda', '250'],
+  ['KN', 'Saint Kitts and Nevis', '1869'],
+  ['LC', 'Saint Lucia', '1758'],
+  ['VC', 'Saint Vincent and the Grenadines', '1784'],
+  ['WS', 'Samoa', '685'],
+  ['SM', 'San Marino', '378'],
+  ['ST', 'São Tomé and Príncipe', '239'],
+  ['SA', 'Saudi Arabia', '966'],
+  ['SN', 'Senegal', '221'],
+  ['RS', 'Serbia', '381'],
+  ['SC', 'Seychelles', '248'],
+  ['SL', 'Sierra Leone', '232'],
+  ['SG', 'Singapore', '65'],
+  ['SK', 'Slovakia', '421'],
+  ['SI', 'Slovenia', '386'],
+  ['SB', 'Solomon Islands', '677'],
+  ['SO', 'Somalia', '252'],
+  ['ZA', 'South Africa', '27'],
+  ['KR', 'South Korea', '82'],
+  ['SS', 'South Sudan', '211'],
+  ['ES', 'Spain', '34'],
+  ['LK', 'Sri Lanka', '94'],
+  ['SD', 'Sudan', '249'],
+  ['SR', 'Suriname', '597'],
+  ['SE', 'Sweden', '46'],
+  ['CH', 'Switzerland', '41'],
+  ['SY', 'Syria', '963'],
+  ['TW', 'Taiwan', '886'],
+  ['TJ', 'Tajikistan', '992'],
+  ['TZ', 'Tanzania', '255'],
+  ['TH', 'Thailand', '66'],
+  ['TL', 'Timor-Leste', '670'],
+  ['TG', 'Togo', '228'],
+  ['TO', 'Tonga', '676'],
+  ['TT', 'Trinidad and Tobago', '1868'],
+  ['TN', 'Tunisia', '216'],
+  ['TR', 'Türkiye', '90'],
+  ['TM', 'Turkmenistan', '993'],
+  ['TC', 'Turks and Caicos Islands', '1649'],
+  ['TV', 'Tuvalu', '688'],
+  ['UG', 'Uganda', '256'],
+  ['UA', 'Ukraine', '380'],
+  ['AE', 'United Arab Emirates', '971'],
+  ['GB', 'United Kingdom', '44'],
+  ['US', 'United States', '1'],
+  ['UY', 'Uruguay', '598'],
+  ['UZ', 'Uzbekistan', '998'],
+  ['VU', 'Vanuatu', '678'],
+  ['VA', 'Vatican City', '379'],
+  ['VE', 'Venezuela', '58'],
+  ['VN', 'Vietnam', '84'],
+  ['VI', 'U.S. Virgin Islands', '1340'],
+  ['YE', 'Yemen', '967'],
+  ['ZM', 'Zambia', '260'],
+  ['ZW', 'Zimbabwe', '263'],
+]
+
+// Shown in a "Frequently booked" group above the full list — our actual
+// markets (US/CA, UK/IE, DACH, Nordics, Benelux) plus Bosnia and its
+// neighbours, so most guests never scroll or search at all.
+export const SUGGESTED = ['US', 'GB', 'DE', 'AT', 'CH', 'NL', 'IE', 'CA', 'FR', 'IT', 'ES', 'DK', 'SE', 'NO', 'AU', 'BA']
+
+// Tie-breakers for shared dialling codes when parsing a pasted +number.
+// Without these, +1 resolves to Canada and +44 to Guernsey — both sort ahead
+// alphabetically. The composed E.164 is identical either way, but the flag
+// the guest is shown should be the likely one.
+const PRIMARY = new Set(['US', 'GB', 'RU'])
+
+// The trunk prefix a country puts in front of a number dialled domestically
+// but drops when dialled from abroad. Nearly everywhere that's a single 0 —
+// which is why a German writing "0178 696 1924" means "+49 178 696 1924" —
+// so 0 is the default and only the exceptions are listed:
+//   ''   Italy and a few others keep the 0; +39 06 … is Rome, and dropping
+//        that 0 breaks the number outright.
+//   '06' Hungary's trunk prefix is two digits.
+//   '8'  Russia, Kazakhstan and Belarus dial 8 domestically, not 0.
+const TRUNK_PREFIX = {
+  IT: '', CI: '', GA: '', CG: '',
+  HU: '06',
+  RU: '8', KZ: '8', BY: '8',
+}
+
+// Example national numbers, used as the input placeholder so the guest can
+// see the shape expected of them. Only our main markets — everywhere else
+// falls back to a neutral hint.
+const EXAMPLES = {
+  US: '201 555 0123', CA: '506 234 5678', GB: '7400 123456', IE: '85 012 3456',
+  DE: '1512 3456789', AT: '664 123456', CH: '78 123 45 67', NL: '6 12345678',
+  BE: '470 12 34 56', FR: '6 12 34 56 78', IT: '312 345 6789', ES: '612 34 56 78',
+  DK: '32 12 34 56', SE: '70 123 45 67', NO: '406 12 345', FI: '41 2345678',
+  AU: '412 345 678', NZ: '21 123 4567', PL: '512 345 678', CZ: '601 123 456',
+  BA: '61 123 456', HR: '91 234 5678', RS: '60 1234567',
+}
+
+// 'DE' → 🇩🇪 (a pair of regional indicator symbols).
+export const flagFor = (iso) =>
+  String.fromCodePoint(...[...iso.toUpperCase()].map((c) => 0x1f1e6 + c.charCodeAt(0) - 65))
+
+export const COUNTRIES = RAW.map(([iso, name, dial]) => ({
+  iso,
+  name,
+  dial,
+  flag: flagFor(iso),
+  primary: PRIMARY.has(iso),
+  trunkPrefix: iso in TRUNK_PREFIX ? TRUNK_PREFIX[iso] : '0',
+  example: EXAMPLES[iso] || '',
+}))
+
+export const COUNTRY_BY_ISO = Object.fromEntries(COUNTRIES.map((c) => [c.iso, c]))
+
+// Longest dial code in the table — the parser walks prefixes down from here.
+export const MAX_DIAL_LENGTH = COUNTRIES.reduce((n, c) => Math.max(n, c.dial.length), 0)

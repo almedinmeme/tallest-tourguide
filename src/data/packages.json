@@ -769,6 +769,500 @@
     }
   },
   {
+    "id": 8,
+    "slug": "herzegovina-peljesac-wine-tour",
+    "name": "4-Day Herzegovina & Pelješac Wine Tour",
+    "subtitle": "Sarajevo to Dubrovnik, both directions",
+    "duration": "4 Days",
+    "groupSize": 12,
+    "difficulty": "Easy",
+    "priceWithout": 690,
+    "priceWith": 1090,
+    "rating": 5,
+    "reviews": 0,
+    "heroImage": "/uploads/bosnia-and-herzegovina-mostar.webp",
+    "about": "<p>Four days along a single limestone spine, from the Neretva valley to the Adriatic. Herzegovina's wine is grown on rock — in places the vineyards were cut out of bare karst because there was no soil to plough — and that constraint produces a white with a mineral edge that exists nowhere else.</p><p>This journey follows the geology southwest until it meets the sea: Mostar, the Brotnjo plateau, Stolac, Trebinje, and the terraced slopes of Pelješac. Seven cellars, two UNESCO sites, one continuous rock.</p><p><strong>Five grapes, one limestone spine.</strong></p><ul><li><p><strong>Žilavka</strong> — the white, and Herzegovina's calling card. Around 60% of the region's production. Crisp, mineral, citrus and stone fruit, dry.</p></li><li><p><strong>Blatina</strong> — the red, roughly a quarter of production. Full-bodied and dark-fruited, with an austerity its Croatian neighbours don't have. It cannot fruit without another variety planted beside it, which shapes how every grower here plans a vineyard.</p></li><li><p><strong>Trnjak</strong> — nearly extinct a generation ago, now recovering through a handful of producers.</p></li><li><p><strong>Vranac</strong> — \"black horse\". Arrived in southern Herzegovina under Austria-Hungary. Big, tannic, long-lived, and what Trebinje is known for.</p></li><li><p><strong>Plavac Mali</strong> — Pelješac. On the steep south-facing slopes above Potomje it becomes Dingač, Croatia's first protected appellation, designated in 1961.</p></li></ul><p>You unpack twice, not four times: two nights in Mostar, one in Trebinje. The second day runs out of Mostar and back, so there is no packing in the middle of the journey.</p><p>The journey runs in both directions — Sarajevo to Dubrovnik, or Dubrovnik to Sarajevo. The content is identical. Book whichever matches your flights.</p>",
+    "days": [
+      {
+        "id": 1,
+        "title": "Sarajevo to Mostar",
+        "city": "Sarajevo / Mostar",
+        "summary": "South through the Neretva canyon, an orientation tasting over lunch at a vineyard estate, and Mostar old town on foot.",
+        "photo": "/uploads/mostar-2.webp",
+        "accommodation": "Hotel in Mostar — first of two nights",
+        "meals": [],
+        "includedActivities": [
+          "Private transfer, Sarajevo to Mostar",
+          "Orientation tasting at a working vineyard estate",
+          "Guided walk of the Mostar old town — Stari Most and Kujundžiluk"
+        ],
+        "optionalActivities": [
+          "Lunch at the vineyard estate",
+          "Dinner in the Mostar old town"
+        ],
+        "details": "<p>We leave Sarajevo mid-morning — late enough to take guests arriving on a same-day flight, and there is no cellar on this leg to be late for. The road south follows the Neretva down through its canyon, and we stop to stretch and take a coffee where the valley opens out.</p><p>Midday is lunch at a working vineyard estate in the hills southeast of Mostar, and with it the orientation tasting: two whites, two reds, no vineyard walk. Guests arrive with no reference points for Žilavka or Blatina, and one short structured flight at the start means everything over the next two days lands against a baseline instead of a blank page.</p><p>Then into Mostar and into your hotel — where your bags stay, because you are in this room for two nights. There is time to rest before a guided walk through the old town: Stari Most, the Kujundžiluk bazaar and the Ottoman quarter.</p><p>Dinner is in Mostar, at a table chosen for how its cooking sits with the wine of the region. Ask for the japrak — stuffed vine leaves, off the same plant as everything you have been drinking.</p>",
+        "highlights": [
+          "The Neretva canyon road south",
+          "An orientation flight of Žilavka and Blatina",
+          "Stari Most and the Kujundžiluk bazaar on foot"
+        ],
+        "note": ""
+      },
+      {
+        "id": 2,
+        "title": "Blagaj, Žitomislići and the Brotnjo Plateau",
+        "city": "Blagaj / Brotnjo",
+        "summary": "A river arriving out of a cliff face, a monastery destroyed and rebuilt, two Brotnjo cellars — and back to the same room in Mostar.",
+        "photo": "/uploads/bosnia-and-herzegovina-blagaj.webp",
+        "accommodation": "Hotel in Mostar — second night, no luggage move",
+        "meals": [
+          "Breakfast at the hotel",
+          "Lunch at the first Brotnjo cellar"
+        ],
+        "includedActivities": [
+          "Blagaj — the Buna spring and the dervish lodge",
+          "Žitomislići Monastery",
+          "Cellar visit, tasting and lunch — Brotnjo plateau",
+          "Second Brotnjo cellar and tasting"
+        ],
+        "optionalActivities": [
+          "Free time in Mostar before dinner",
+          "Dinner in the Mostar old town"
+        ],
+        "details": "<p>The shortest drive of the journey, and the first stop is Blagaj, where the Buna comes out of a cliff face at one of Europe’s largest karst springs — not a trickle that becomes a river, but a river arriving. An Ottoman dervish lodge was built against the rock beside it around 1520. It is the one stop where nobody asks about wine.</p><p>Then south to Žitomislići, a 16th-century Serbian Orthodox monastery destroyed in 1992 and rebuilt in 2005. Remember it — you meet its counterpart on the final morning, and the pair of them says more about this region than either does alone.</p><p>Midday takes us onto the Brotnjo plateau around Čitluk, the heartland of Herzegovinian wine. Lunch and a tasting at the first cellar, among vineyards planted directly into limestone: the rock here was broken up by machine because there was no soil to plough, and this is where the karst stops being an abstraction.</p><p>A second Brotnjo cellar follows, twenty minutes from the first. Same grapes, same rock, a different scale of operation and a different philosophy — which is the comparison that teaches you more than any single tasting can.</p><p>Back in Mostar with free time before dinner. It is the first genuinely unstructured window of the journey, and it lands on the evening most guests want to buy something to take home — in a city you now know your way around, and a room you never packed up.</p>",
+        "highlights": [
+          "The Buna spring and the dervish lodge at Blagaj",
+          "Žitomislići — destroyed in 1992, rebuilt in 2005",
+          "Two Brotnjo cellars, same rock and different philosophies",
+          "A free evening in Mostar, and no packing"
+        ],
+        "note": "No checkout and no luggage transfer today — the second day runs out of Mostar and back, which is what buys the free evening."
+      },
+      {
+        "id": 3,
+        "title": "Stolac and Trebinje",
+        "city": "Stolac / Trebinje",
+        "summary": "A family cellar on the Stolac road, vines carved into medieval tombstones at Radimlja, and Vranac on the Vukoje rooftop.",
+        "photo": "/uploads/herzegovina-peljesac-wine-tour-3-f7mjm4yx.webp",
+        "accommodation": "Hotel in Trebinje",
+        "meals": [
+          "Breakfast at the hotel",
+          "Lunch in Stolac"
+        ],
+        "includedActivities": [
+          "Cellar visit and tasting — a family estate on the Mostar–Stolac road",
+          "Radimlja necropolis entry and guided reading",
+          "Lunch in Stolac",
+          "Cellar tasting — Vukoje, Trebinje"
+        ],
+        "optionalActivities": [
+          "Trebinje old town at your own pace",
+          "Dinner on the Vukoje rooftop, over the city"
+        ],
+        "details": "<p>Check out and drive south to a family cellar on the Mostar–Stolac road, where Žilavka and Blatina are made from the estate’s own vineyards. Small, working, and the kind of place where someone walks you down into the cellar because they want to rather than because it is on a script.</p><p>Then Radimlja, the UNESCO-listed necropolis outside Stolac, where more than 130 medieval tombstones stand in open grass. This is where the journey’s argument comes together.</p><p>Among the carvings — knights, hunting scenes, crescent moons — are scrolling vines and grapes, a motif characteristic of Herzegovina and found across the region’s necropolises. Your guide will give you the honest version rather than the easy one. A grapevine on a Christian tombstone is first a Eucharistic symbol — wine, eternal life, resurrection — not a documentary record of viticulture. But it was cut by local masons for local families, and whatever it meant theologically, these carvers knew what a vine looked like because vines were what grew around them. Where the scholarship is settled we will say so, and where it is not we will say that too.</p><p>There is a longer thread here as well. Radimlja’s rise coincides with the Miloradović-Stjepanović family, the same Herzegovinian dynasty behind Žitomislići, where you stood the previous morning. And the ground itself has been producing wine since Roman Diluntum stood here — the most prosperous city in this territory outside the Neretva valley, its villas working agricultural estates.</p><p>Lunch in Stolac, then south through the karst to Trebinje. Check in, and the old town at your own pace.</p><p>The day ends at Vukoje, one of the most significant wineries in Bosnia and Herzegovina — a modern operation built within a single generation, with a rooftop over the city. A cellar tasting, then dinner, and the Vranac to end on.</p>",
+        "highlights": [
+          "A working family cellar on the Stolac road",
+          "Radimlja, and the vine carved into medieval stone",
+          "The Miloradović thread from Žitomislići to Radimlja",
+          "Vranac and dinner on the Vukoje rooftop"
+        ],
+        "note": "Time in Trebinje before the evening tasting — the day has two indoor stops and you will want the air."
+      },
+      {
+        "id": 4,
+        "title": "Tvrdoš, Ston and Pelješac",
+        "city": "Ston / Pelješac / Dubrovnik",
+        "summary": "Monastery cellars at first light, the border, Ston's walls, oysters at Mali Ston, and the Dingač road down to the Adriatic.",
+        "photo": "/uploads/herzegovina-tapfx4m6.webp",
+        "meals": [
+          "Breakfast at the hotel",
+          "Lunch at Mali Ston — oysters"
+        ],
+        "includedActivities": [
+          "Tvrdoš Monastery cellars and tasting",
+          "All border formalities handled",
+          "Ston city walls entry",
+          "Cellar tour — Matuško, Potomje",
+          "The Dingač road",
+          "Transfer to your Dubrovnik hotel"
+        ],
+        "optionalActivities": [
+          "A small family cellar near Trebinje, where the schedule allows",
+          "Overnight in Dubrovnik, arranged with us or your own"
+        ],
+        "details": "<p>An early start, and the first stop is Tvrdoš Monastery just outside Trebinje, where Orthodox monks have made wine in cellars traced to the 15th century — never interrupted, unlike the monastery you visited on the second morning. Two foundations of the same era and the same faith, opposite fates, bookending the journey. Modest dress is required, and the wine here is genuinely the second thing.</p><p>Where the schedule allows, a small family cellar in the hills nearby before the border.</p><p>Then across into Croatia and on to Ston, whose defensive walls are the second longest in Europe, built to protect the salt pans that paid for them.</p><p>Midday is oysters at Mali Ston, harvested in the bay in front of you. It is the best meal on the journey.</p><p>Over the ridge to Matuško at Potomje on the Pelješac peninsula: a cellar tour beneath more than a thousand oak barrels, and the peninsula’s two great appellations, Dingač and Postup. Afterwards the Dingač road itself — terraced vineyards on slopes steep enough to be worked by hand, and the tunnel cut through to the coast.</p><p>We reach Dubrovnik in the evening, and the journey ends at your hotel.</p>",
+        "highlights": [
+          "Tvrdoš — monastery cellars since the 15th century",
+          "Ston city walls and the salt pans",
+          "Oysters at Mali Ston, at the source",
+          "Matuško, Dingač and Postup on Pelješac"
+        ],
+        "note": "The longest driving day of the four, and it comes last. The early start and the lunch at Mali Ston rather than on Pelješac proper are both there to absorb it."
+      }
+    ],
+    "inclusions": [
+      "All transport across four days in a private vehicle",
+      "Guide throughout",
+      "Seven cellar visits with tastings",
+      "Three lunches",
+      "Entry to Radimlja and the Ston walls",
+      "All border formalities handled"
+    ],
+    "exclusions": [
+      "Accommodation, unless the package option is selected",
+      "Dinners",
+      "Personal travel insurance",
+      "Gratuities — appreciated but never expected"
+    ],
+    "breakdown": {
+      "accommodation": [
+        "Hotel in Mostar — two nights",
+        "Hotel in Trebinje — one night"
+      ],
+      "meals": [
+        "3 lunches included"
+      ],
+      "transport": [
+        "Private vehicle throughout",
+        "One border crossing, formalities handled"
+      ],
+      "destinations": [
+        "Mostar",
+        "Blagaj",
+        "Žitomislići",
+        "Brotnjo plateau / Čitluk",
+        "Stolac",
+        "Trebinje",
+        "Ston & Mali Ston",
+        "Pelješac",
+        "Dubrovnik"
+      ],
+      "activities": [
+        "Seven cellar visits with tastings",
+        "Radimlja necropolis",
+        "Ston city walls",
+        "Two monasteries and a dervish lodge"
+      ],
+      "optional": [
+        "Accommodation package, all three nights",
+        "A small family cellar on the final morning, where the schedule allows"
+      ]
+    },
+    "activities": [
+      {
+        "icon": "wine",
+        "name": "Seven Cellars",
+        "description": "Žilavka, Blatina, Vranac and Plavac Mali — each one tasted where it is grown."
+      },
+      {
+        "icon": "landmark",
+        "name": "Two Monasteries, Opposite Fates",
+        "description": "Žitomislići, destroyed in 1992 and rebuilt; Tvrdoš, making wine without interruption since the 15th century."
+      },
+      {
+        "icon": "waterfall",
+        "name": "The Buna Spring at Blagaj",
+        "description": "A river arriving out of a cliff face at one of Europe's largest karst springs, with a dervish lodge built beside it around 1520."
+      },
+      {
+        "icon": "history",
+        "name": "Radimlja Necropolis",
+        "description": "UNESCO-listed, and vines carved into medieval stone by masons who knew what a vine looked like."
+      },
+      {
+        "icon": "food",
+        "name": "Oysters at Mali Ston",
+        "description": "Lunch at the source, harvested in the bay in front of you."
+      },
+      {
+        "icon": "sea",
+        "name": "The Dingač Road",
+        "description": "Terraced vineyards on slopes steep enough to be worked by hand, and the tunnel cut through to the coast."
+      }
+    ],
+    "importantInfo": [
+      {
+        "title": "Things to Consider Before Booking",
+        "content": "Cancel more than 30 days before departure for a full refund of everything paid; 15–30 days before, 50%; within 15 days, no refund. One free date change if requested more than 30 days out. If we cancel, you always get a full refund or a free rebooking — full details under Booking Conditions.\nSend a booking request, and you will hear back within 24 hours to confirm availability and arrange all details."
+      },
+      {
+        "title": "Departure Days",
+        "content": "This journey departs Monday to Thursday.\n\nSeveral of the cellars and restaurants on the route close at weekends, and we would rather block those dates than run a compromised day."
+      },
+      {
+        "title": "Where You Sleep",
+        "content": "Three nights, two hotels: two nights in Mostar and one in Trebinje.\n\nThat is deliberate. The second day runs out of Mostar and back, so there is no checkout, no packing and no luggage transfer in the middle of the journey — and the time it saves lands as a free evening in Mostar. You change hotel once."
+      },
+      {
+        "title": "Which Direction",
+        "content": "The journey runs Sarajevo to Dubrovnik, or Dubrovnik to Sarajevo, and the content is identical.\n\nRun in reverse it takes in Pelješac on the first day and Trebinje that evening, then north through Stolac and the Brotnjo plateau to Mostar, finishing in Sarajevo on the fourth afternoon.\n\nDubrovnik has far more international connections than Sarajevo, so for many guests that is the cheaper direction to reach. Book whichever suits your flights."
+      },
+      {
+        "title": "Where You Join",
+        "content": "From Sarajevo — join us in Sarajevo and finish in Dubrovnik. Suits guests flying into Sarajevo, or adding this to a city stay.\n\nFrom Mostar — make your own way to Mostar and join there, with an additional cellar visit in Ljubuški on your first morning. Priced accordingly; tell us when you enquire.\n\nFrom Dubrovnik — the journey in reverse, finishing in Sarajevo."
+      },
+      {
+        "title": "Accommodation",
+        "content": "Your choice, and both work.\n\nBook your own hotels and we collect you each morning, or take our arranged package across all three nights. Many guests want to choose their own hotel in Dubrovnik specifically, and that is easy to accommodate.\n\nThe price shown with accommodation covers all three nights on our arranged package."
+      },
+      {
+        "title": "Border Crossing",
+        "content": "One international border, crossed once: Bosnia and Herzegovina into Croatia on the final day, or the first day if you are travelling in reverse. Croatia is in Schengen and Bosnia is not.\n\nBring a passport, not a national ID card. Vehicle documentation, cross-border permission and the green card are all handled by us. Waits are longest in July and August.\n\nNote that Dubrovnik to Ston does not pass through the Neum corridor — Ston sits south of it, so that leg is entirely within Croatia. One crossing per journey, not three."
+      },
+      {
+        "title": "Monastery Dress Code",
+        "content": "Two working Serbian Orthodox monasteries sit on this route: Žitomislići on the second morning and Tvrdoš on the fourth. Neither is a tasting room that happens to have monks.\n\nModest dress is required at both — shoulders and knees covered, all guests. We say it here rather than on the morning so you can pack for it. Tvrdoš is also the one cellar on the journey where the wine is genuinely the second thing."
+      },
+      {
+        "title": "What to Wear",
+        "content": "Casual and comfortable, with shoes you can walk cobblestones and a vineyard in. The paths at Blagaj are uneven stone.\n\nCover shoulders and knees for the two monasteries. Ston in high summer is hot and largely unshaded."
+      },
+      {
+        "title": "Visas",
+        "content": "Bosnia and Herzegovina is not a member of the European Union; Croatia is, and is in Schengen. Citizens of most EU, US, UK and Australian passports need no visa for either, for stays up to 90 days. Please check with your local embassy if you are unsure."
+      }
+    ],
+    "dates": [
+      {
+        "id": 1,
+        "date": "September 7–10, 2026",
+        "spots": 12,
+        "total": 12
+      },
+      {
+        "id": 2,
+        "date": "September 21–24, 2026",
+        "spots": 12,
+        "total": 12
+      },
+      {
+        "id": 3,
+        "date": "October 5–8, 2026",
+        "spots": 12,
+        "total": 12
+      },
+      {
+        "id": 4,
+        "date": "October 19–22, 2026",
+        "spots": 12,
+        "total": 12
+      }
+    ],
+    "mapWaypoints": [
+      {
+        "lat": 43.8563,
+        "lng": 18.4131,
+        "label": "Sarajevo"
+      },
+      {
+        "lat": 43.3373,
+        "lng": 17.8153,
+        "label": "Mostar — Stari Most"
+      },
+      {
+        "lat": 43.2569,
+        "lng": 17.8969,
+        "label": "Blagaj — the Buna spring"
+      },
+      {
+        "lat": 43.1625,
+        "lng": 17.7639,
+        "label": "Žitomislići Monastery"
+      },
+      {
+        "lat": 43.2244,
+        "lng": 17.7025,
+        "label": "Brotnjo plateau — Čitluk"
+      },
+      {
+        "lat": 43.1236,
+        "lng": 17.8969,
+        "label": "Rotimlja"
+      },
+      {
+        "lat": 43.0872,
+        "lng": 17.9199,
+        "label": "Radimlja necropolis"
+      },
+      {
+        "lat": 43.0847,
+        "lng": 17.9558,
+        "label": "Stolac"
+      },
+      {
+        "lat": 42.7111,
+        "lng": 18.3436,
+        "label": "Trebinje — Vukoje"
+      },
+      {
+        "lat": 42.7167,
+        "lng": 18.295,
+        "label": "Tvrdoš Monastery"
+      },
+      {
+        "lat": 42.8447,
+        "lng": 17.7053,
+        "label": "Mali Ston"
+      },
+      {
+        "lat": 42.9214,
+        "lng": 17.3906,
+        "label": "Potomje — Pelješac"
+      },
+      {
+        "lat": 42.6407,
+        "lng": 18.11,
+        "label": "Dubrovnik"
+      }
+    ],
+    "mapProfile": "driving-car",
+    "fitnessNotes": [
+      {
+        "type": "physical",
+        "level": "The longest driving day comes last",
+        "detail": "The final day runs Trebinje to Dubrovnik by way of Ston and the Pelješac peninsula, and it is the only demanding one of the four — the better part of it is spent in the vehicle, after three days of tasting. The early start and the lunch at Mali Ston rather than on Pelješac proper are both there to absorb it. The middle two days are short hops."
+      },
+      {
+        "type": "physical",
+        "level": "Cobblestones, cellar stairs and one wall climb",
+        "detail": "Blagaj is reached on uneven stone paths, vineyard walks are on rough ground, several cellars are entered by stairs, and the Ston city walls are a steady climb in full sun. None of it is technical, and the walls can be skipped without losing the day."
+      }
+    ],
+    "suitability": {
+      "goodFor": [
+        "Wine travellers who want origin, not a tasting-room crawl",
+        "Anyone flying into Dubrovnik and out of Sarajevo, or the reverse",
+        "Travellers who like geology, history and food in the same afternoon",
+        "Anyone who hates living out of a suitcase — you unpack twice in four days",
+        "Newcomers to Balkan wine: the first day exists to build your baseline"
+      ],
+      "thinkTwice": [
+        "If you want a beach holiday — this is four days of driving between cellars",
+        "If you can only travel at weekends: departures run Monday to Thursday",
+        "If two working monasteries with a dress code are not for you",
+        "If you would rather not spend the last day largely in the vehicle"
+      ]
+    },
+    "badge": "New",
+    "badgeColor": "var(--color-forest-green)",
+    "badgeTextColor": "var(--color-n000)",
+    "locations": 10,
+    "countries": 2,
+    "countryList": [
+      "Bosnia",
+      "Croatia",
+      "Dalmatia"
+    ],
+    "originalPrice": null,
+    "description": "Four days of Žilavka, Blatina, Vranac and Dingač — Mostar, Blagaj, Brotnjo, Stolac, Trebinje and Pelješac. Seven cellars and two UNESCO sites.",
+    "highlights": [
+      "Seven cellars along one limestone spine",
+      "The Buna spring and dervish lodge at Blagaj",
+      "Two nights in Mostar — no packing mid-journey",
+      "Radimlja necropolis and its vine-carved stećci",
+      "Vranac and dinner on the Vukoje rooftop",
+      "Tvrdoš Monastery — cellars since the 15th century",
+      "Oysters at Mali Ston, and the Dingač road"
+    ],
+    "includes": [
+      "All transport in a private vehicle, four days",
+      "Seven cellar visits with tastings",
+      "Three lunches and all border formalities",
+      "Two nights in Mostar — one hotel change all journey",
+      "Full refund if cancelled 30+ days before departure"
+    ],
+    "hero": "/uploads/bosnia-and-herzegovina-mostar.webp",
+    "price": 690,
+    "gallery": [
+      "/uploads/bosnia-and-herzegovina-mostar.webp",
+      "/uploads/mostar-2.webp",
+      "/uploads/bosnia-and-herzegovina-blagaj.webp",
+      "/uploads/mostar-day-trip-from-sarajevo-blagaj-buna.webp",
+      "/uploads/mostar-3.webp",
+      "/uploads/mostar-stolac-day-trip-from-sarajevo-61y55evi.webp",
+      "/uploads/stolac-day-tour-from-mostar-yu8ltu45.webp",
+      "/uploads/herzegovina-peljesac-wine-tour-4hbzpiyk.webp",
+      "/uploads/herzegovina-fj6x53ii.webp",
+      "/uploads/herzegovina-tapfx4m6.webp"
+    ],
+    "faqs": [
+      {
+        "question": "Do I need to know about wine?",
+        "answer": "No. The first day's tasting is built to give you a baseline before anything else happens. By Trebinje you'll have opinions."
+      },
+      {
+        "question": "How much packing and moving around is there?",
+        "answer": "Less than you would expect from a four-day route across two countries. You sleep two nights in Mostar and one in Trebinje, so you unpack twice and change hotel once. The second day runs out of Mostar and back, which is what buys you a free evening there."
+      },
+      {
+        "question": "Which direction should I book?",
+        "answer": "Whichever suits your flights. The content is identical."
+      },
+      {
+        "question": "Why only Monday to Thursday?",
+        "answer": "Because several of the cellars and restaurants on the route close at weekends, and we'd rather not run a compromised day."
+      },
+      {
+        "question": "Do I need to book accommodation myself?",
+        "answer": "Your choice. We can arrange all three nights, or you book your own and we collect you each morning. Many guests want to choose their own hotel in Dubrovnik — that's easy to accommodate."
+      },
+      {
+        "question": "Is there anything for someone who doesn't drink?",
+        "answer": "Yes. Every stop has a second dimension — a UNESCO necropolis, a karst spring, two working monasteries, the Ston walls, the Dingač road. Nobody spends four days waiting in a car park."
+      },
+      {
+        "question": "Is a tasting at a monastery appropriate?",
+        "answer": "Tvrdoš has made wine since the 15th century and its cellars are part of the monastery's working life. Visitors are welcome. Modest dress is required at both monasteries on this route, and we'll remind you before you travel."
+      },
+      {
+        "question": "Can you run this at harvest?",
+        "answer": "September and October are the best months for it. Book early — tasting slots are tighter."
+      }
+    ],
+    "accessibility": {
+      "walkingDistanceKm": null,
+      "drivingDistanceKm": null,
+      "walkingDurationMin": null,
+      "drivingDurationMin": null,
+      "durationMin": null,
+      "elevationGainM": null,
+      "effortLevel": "easy",
+      "suitability": {
+        "wheelchair": "partial",
+        "stroller": "partial",
+        "smallChildren": "no",
+        "children": "partial",
+        "pregnancy": "partial",
+        "seniors": "yes",
+        "pets": "no"
+      },
+      "requirements": [
+        {
+          "key": "stairs",
+          "label": "Climb a flight of stairs",
+          "detail": "Several cellars, the Blagaj tekke, and the Ston city walls."
+        },
+        {
+          "key": "luggage",
+          "label": "Carry own luggage",
+          "detail": "One hotel change across the four days."
+        },
+        {
+          "key": "uneven",
+          "label": "Walk on uneven ground",
+          "detail": "Vineyard walks, the stone paths at Blagaj, and old-town cobblestones."
+        }
+      ],
+      "terrain": "Mostly seated travel between stops, with vineyard walks on uneven stony ground, cobbled old towns in Mostar, Stolac and Trebinje, uneven stone paths at Blagaj, cellar stairs, and a steady climb on the Ston city walls.",
+      "notes": "The cellars and monasteries are rural sites with variable access — tell us your requirements when you enquire and we will confirm what each stop can do. Žitomislići and Tvrdoš both require shoulders and knees covered."
+    },
+    "journalPosts": [
+      "stolac-bosnia-oldest-town-guide",
+      "stecak-tombstones-bosnia-herzegovina",
+      "mostar-old-bridge-story-history"
+    ]
+  },
+  {
     "id": 7,
     "slug": "adriatic-crossings",
     "name": "Adriatic Crossings",
