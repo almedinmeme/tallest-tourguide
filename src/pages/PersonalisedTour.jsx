@@ -15,6 +15,7 @@ import {
   Sparkles, Users, Heart,
 } from 'lucide-react'
 import { sendEmail } from '../utils/email'
+import { trackEvent, ENQUIRY_CONVERSION, ENQUIRY_VALUE } from '../utils/analytics'
 import useWindowWidth from '../hooks/useWindowWidth'
 import Button from '../components/Button'
 import { sortedDestinations } from '../data/destinations'
@@ -210,7 +211,15 @@ function PersonalisedTour() {
       notes: formData.otherInfo || 'None',
       how_heard: formData.howHeard || 'Not specified',
     })
-    .then(() => { setIsSending(false); setIsSuccess(true) })
+    .then(() => {
+      setIsSending(false)
+      setIsSuccess(true)
+      trackEvent('conversion', {
+        send_to: ENQUIRY_CONVERSION,
+        value: ENQUIRY_VALUE,
+        currency: 'EUR',
+      })
+    })
     .catch(() => { setIsSending(false); setIsError(true) })
   }
 

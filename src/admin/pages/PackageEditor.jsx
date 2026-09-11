@@ -10,6 +10,7 @@ import DayEditor from '../components/DayEditor'
 import WaypointEditor from '../components/WaypointEditor'
 import ActivitiesEditor from '../components/ActivitiesEditor'
 import ImportantInfoEditor from '../components/ImportantInfoEditor'
+import FAQEditor from '../components/FAQEditor'
 import BreakdownEditor from '../components/BreakdownEditor'
 import SuitabilityEditor from '../components/SuitabilityEditor'
 import FitnessNotesEditor from '../components/FitnessNotesEditor'
@@ -41,6 +42,7 @@ const SECTIONS = [
   { id: 'fitness',      label: 'Fitness notes' },
   { id: 'accessibility',label: 'Accessibility' },
   { id: 'important',    label: 'Important info' },
+  { id: 'faqs',         label: 'FAQs' },
   { id: 'journal',      label: 'Journal stories' },
   { id: 'advanced',     label: 'Advanced' },
 ]
@@ -78,6 +80,7 @@ const EMPTY = {
   mapProfile: 'driving-car',
   activities: [],
   importantInfo: [],
+  faqs: [],
   dates: [],
   breakdown: {},
   suitability: { goodFor: [], thinkTwice: [] },
@@ -320,6 +323,15 @@ export default function PackageEditor() {
       <section id="important" style={{ ...s.card, scrollMarginTop: 100 }}>
         <h2 style={{ ...s.h2, marginTop: 0 }}>Important info</h2>
         <ImportantInfoEditor value={pkg.importantInfo} onChange={(v) => set({ importantInfo: v })} />
+      </section>
+
+      <section id="faqs" style={{ ...s.card, scrollMarginTop: 100 }}>
+        <h2 style={{ ...s.h2, marginTop: 0 }}>FAQs</h2>
+        <p style={s.subheadingHint}>
+          Rendered as an accordion on the journey page and marked up as FAQ schema,
+          so answers can surface directly in Google results.
+        </p>
+        <FAQEditor value={pkg.faqs} onChange={(v) => set({ faqs: v })} slug={pkg.slug} />
       </section>
 
       <section id="journal" style={{ ...s.card, scrollMarginTop: 100 }}>

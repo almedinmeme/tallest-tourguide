@@ -2,7 +2,7 @@ import SEO from '../components/SEO'
 import { useEffect, useRef, useState } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import { nanoid } from 'nanoid'
-import { trackEvent } from '../utils/analytics'
+import { trackEvent, ENQUIRY_CONVERSION, ENQUIRY_VALUE } from '../utils/analytics'
 import {
   ChevronDown, ChevronUp,
   CheckCircle, XCircle, MapPin, ShieldCheck,
@@ -16,6 +16,7 @@ import {
   Moon, Bike, Tent, TreePine, Sailboat, Flame,
 } from 'lucide-react'
 import { sendEmail } from '../utils/email'
+import { formatDMY } from '../utils/date'
 import useWindowWidth from '../hooks/useWindowWidth'
 import JourneyCard from '../components/JourneyCard'
 import { useAvailability } from '../hooks/useAvailability'
@@ -27,7 +28,7 @@ import RichContent from '../components/RichContent'
 import { useCurrency } from '../context/CurrencyContext'
 import AccessibilitySection from '../components/AccessibilitySection'
 import JourneyRoute from '../components/JourneyRoute'
-import { PackageSchema } from '../schema/SchemaMarkup'
+import { PackageSchema, FAQSchema } from '../schema/SchemaMarkup'
 import Breadcrumbs from '../components/Breadcrumbs'
 import FromTheJournal from '../components/FromTheJournal'
 import Img from '../components/Img'
@@ -293,6 +294,7 @@ function PackageDetail() {
     scrollToDay(id)
   }
   const [openInfo, setOpenInfo] = useState(null)
+  const [openFaq, setOpenFaq] = useState(null)
   const [includedExpanded, setIncludedExpanded] = useState(false)
   const [excludedExpanded, setExcludedExpanded] = useState(false)
   const { bookings, getSpotsLeft } = useAvailability()
@@ -386,7 +388,15 @@ function PackageDetail() {
       from_email: enquiryEmail,
       message: enquiryText,
     })
-    .then(() => { setIsEnquirySending(false); setIsEnquirySuccess(true) })
+    .then(() => {
+      setIsEnquirySending(false)
+      setIsEnquirySuccess(true)
+      trackEvent('conversion', {
+        send_to: ENQUIRY_CONVERSION,
+        value: ENQUIRY_VALUE,
+        currency: 'EUR',
+      })
+    })
     .catch(() => { setIsEnquirySending(false); setIsEnquiryError(true) })
   }
 
@@ -419,7 +429,7 @@ function PackageDetail() {
     const templateParams = {
       type: 'Booking',
       tour_name: `${pkg.name} — ${pkg.subtitle}`,
-      tour_date: selectedDate,
+      tour_date: formatDMY(selectedDate),
       start_time: 'Multi-day journey',
       num_people: numPeople,
       total_price: `€${totalPrice}`,
@@ -848,13 +858,19 @@ function PackageDetail() {
   return (
     <div>
 
+{/* `description` is the hand-written one-liner (every journey has one, all
+    of them under 175 chars); `about` is the long-form page prose, which
+    truncates mid-word at 155 and made a poor meta description. */}
 <SEO
   title={`${pkg.name} — ${pkg.subtitle}`}
-  description={(pkg.about || pkg.description || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 155)}
+  description={(pkg.description || pkg.about || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 155)}
   image={pkg.heroImage || pkg.hero || undefined}
   url={`/multi-day-tours/${pkg.slug}`}
 />
 <PackageSchema pkg={pkg} />
+{/* FAQSchema reads `.faqs` off whatever it's given — journeys carry the
+    same shape as tours, and it renders nothing when there are none. */}
+<FAQSchema tour={pkg} />
 
       <div style={{ ...styles.heroWrapper, height: isMobile ? '56vh' : '70vh' }}>
         <Img src={pkg.heroImage} alt={pkg.name} sizes="100vw" eager style={styles.heroPhoto} />
@@ -877,6 +893,7 @@ function PackageDetail() {
           { id: 'suitability', label: 'Is This For You?' },
           ...(hasAccessibilityContent(pkg.accessibility) ? [{ id: 'accessibility', label: 'Accessibility' }] : []),
           { id: 'info',        label: 'Important Info' },
+          ...(pkg.faqs?.length ? [{ id: 'faq', label: 'FAQ' }] : []),
           { id: 'reviews',     label: 'Reviews' },
         ]}
       />
@@ -1438,6 +1455,45 @@ function PackageDetail() {
               </div>
             </div>
 
+            {/* FAQ — same accordion as TourDetail, and the same data shape,
+                so FAQSchema above marks it up without a special case. */}
+            {pkg.faqs?.length > 0 && (
+              <div id="faq" style={styles.section}>
+                <h2 style={styles.sectionTitle}>Frequently asked questions</h2>
+                <div style={styles.faqList}>
+                  {pkg.faqs.map((faq, index) => {
+                    const isOpen = openFaq === index
+                    return (
+                      <div
+                        key={index}
+                        style={{
+                          ...styles.faqItem,
+                          borderLeft: isOpen
+                            ? '3px solid var(--color-forest-green)'
+                            : '3px solid transparent',
+                        }}
+                      >
+                        <button
+                          style={styles.faqHeader}
+                          onClick={() => setOpenFaq(isOpen ? null : index)}
+                        >
+                          <span style={styles.faqQuestion}>{faq.question}</span>
+                          {isOpen
+                            ? <ChevronUp size={16} color="var(--color-forest-green)" />
+                            : <ChevronDown size={16} color="var(--color-n600)" />}
+                        </button>
+                        {isOpen && (
+                          <div style={styles.faqBody}>
+                            <RichContent value={faq.answer} paragraphStyle={styles.faqAnswer} htmlStyle={styles.faqAnswer} />
+                          </div>
+                        )}
+                      </div>
+                    )
+                  })}
+                </div>
+              </div>
+            )}
+
             {/* Curated highlights for this journey + links to review us on
                 Google/Tripadvisor, where a review actually counts. */}
             <div id="reviews">
@@ -1713,6 +1769,53 @@ const styles = {
     fontSize: 'var(--text-small)',
     color: 'var(--color-n600)',
     marginBottom: '16px',
+  },
+
+  faqList: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '8px',
+    marginTop: '20px',
+  },
+
+  faqItem: {
+    backgroundColor: 'var(--color-n100)',
+    borderRadius: '8px',
+    overflow: 'hidden',
+    transition: 'border-left 0.2s ease',
+  },
+
+  faqHeader: {
+    width: '100%',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: '14px 16px',
+    background: 'none',
+    border: 'none',
+    cursor: 'pointer',
+    textAlign: 'left',
+    gap: '12px',
+  },
+
+  faqQuestion: {
+    fontFamily: 'var(--font-display)',
+    fontWeight: '700',
+    fontSize: 'var(--text-body)',
+    color: 'var(--color-n900)',
+    flex: 1,
+  },
+
+  faqBody: {
+    padding: '0 16px 16px 16px',
+  },
+
+  faqAnswer: {
+    fontFamily: 'var(--font-body)',
+    fontSize: 'var(--text-body)',
+    color: 'var(--color-n600)',
+    lineHeight: 'var(--leading-body)',
+    margin: 0,
   },
 
   bodyText: {

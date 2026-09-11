@@ -75,6 +75,7 @@ const TOUR_DETAIL_ONLY = [
 const JOURNEY_DETAIL_ONLY = [
   'days', 'importantInfo', 'breakdown', 'activities', 'about', 'suitability',
   'inclusions', 'exclusions', 'mapWaypoints', 'fitnessNotes', 'accessibility',
+  'faqs',
 ]
 
 const omit = (obj, keys) => {

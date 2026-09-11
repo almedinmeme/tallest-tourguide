@@ -5,15 +5,17 @@
 // React Router location.state.
 //
 // Here the customer enters their contact details and chooses how to pay:
-//   • Pay by card  → DISABLED while the real gateway is being built (see
-//                    below). The UI, validation and processCardPayment()
-//                    stub are all kept intact — re-enabling it later is just
-//                    removing MethodRow's `disabled` on this option.
-//   • Bank invoice → the current default. No payment is taken here; we email
-//                    the guest a bank invoice separately and they transfer
-//                    the amount before the trip.
-//   • Reserve & pay later → the frictionless flow (tours only), full price
-//                    in cash on the day.
+//   • Reserve & pay later → the current default (tours only). Nothing is
+//                    taken here; the guest pays the full price in cash on the
+//                    day. Default because it's the lowest-friction way to
+//                    hold a seat while there's no gateway to charge with.
+//   • Bank invoice → the alternative. No payment is taken here either; we
+//                    email the guest a bank invoice separately and they
+//                    transfer the amount before the trip.
+//   • Pay by card  → DISABLED while the real gateway is being built. The UI,
+//                    validation and processCardPayment() stub are all kept
+//                    intact — re-enabling it later is just removing
+//                    MethodRow's `disabled` on this option.
 // Journeys (booking.deposit) skip the method picker entirely — no card, no
 // cash reserve, always bank invoice — but can still choose to pay in full or
 // a deposit today via the segmented toggle below.
@@ -37,10 +39,12 @@ import {
 import useWindowWidth from '../hooks/useWindowWidth'
 import useInView from '../hooks/useInView'
 import Button from '../components/Button'
+import PhoneField from '../components/PhoneField'
 import CurrencySwitcher from '../components/CurrencySwitcher'
 import logo from '../assets/logo.svg'
 import { submitBooking, processCardPayment } from '../utils/booking'
 import { findPromoCode, promoSavingFor } from '../utils/promo'
+import { detectCountry, toE164, validatePhone } from '../utils/phone'
 import {
   CANCEL_LINE_TOUR,
   CANCEL_LINE_PACKAGE,
@@ -76,7 +80,13 @@ function Checkout() {
   // Contact details (collected here now, not on the detail page).
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
-  const [phone, setPhone] = useState('')
+  // { iso, national } — the dialling code is chosen from the flag picker, so
+  // the box only ever holds the rest of the number. detectCountry() guesses
+  // from the browser locale, which is right for most guests before they look.
+  const [phone, setPhone] = useState(() => ({ iso: detectCountry(), national: '' }))
+  // What actually gets stored and emailed: E.164, digits only, no spaces —
+  // the one form every dialler and WhatsApp link accepts. '' when unfilled.
+  const phoneE164 = toE164(phone)
   const [discount, setDiscount] = useState('')
   const [showReferral, setShowReferral] = useState(false)
   const [errors, setErrors] = useState({})
@@ -84,9 +94,10 @@ function Checkout() {
   // Optional add-ons chosen here (indices into booking.availableExtras).
   const [selectedExtras, setSelectedExtras] = useState([])
 
-  // Payment method: default to bank invoice — card is disabled while the
-  // real gateway is built (see the file banner above).
-  const [method, setMethod] = useState('invoice')
+  // Payment method for tours. Card is disabled while the real gateway is
+  // built (see the file banner above), so the choice is cash-on-the-day or a
+  // bank invoice — and reserving is the lighter ask of the two.
+  const [method, setMethod] = useState('reserve')
   // Journeys can pay the full amount (default) or a deposit ('full' | 'deposit').
   const [payPlan, setPayPlan] = useState('full')
 
@@ -135,11 +146,16 @@ function Checkout() {
   // reserve. They pay the list total in full, or a deposit now with the
   // balance due before departure.
   const hasDeposit = Boolean(booking?.deposit) && !isQuote
+  // Journeys don't render the method picker, so `method` keeps whatever the
+  // tours default happens to be — and it feeds the booking email and the
+  // success screen. Resolve it once, here, so that default can change without
+  // promising a journey guest they can pay cash on the day.
+  const effectiveMethod = hasDeposit ? 'invoice' : method
   // True whenever the guest owes a specific amount via bank invoice (not
   // cash-on-the-day reserve) — journeys always, tours when 'invoice' is
   // selected. Named for the invoice flow now that card is disabled; a
-  // future re-enable of card would fold `method === 'card'` in here too.
-  const payingByInvoice = (hasDeposit || method === 'invoice') && !isQuote
+  // future re-enable of card would fold `effectiveMethod === 'card'` in too.
+  const payingByInvoice = effectiveMethod === 'invoice' && !isQuote
   const depositAmount = Math.round(total * (DEPOSIT_PERCENT / 100))
   const balanceAmount = total - depositAmount
   const paySplit = hasDeposit && payPlan === 'deposit'
@@ -169,12 +185,11 @@ function Checkout() {
     if (!name.trim()) e.name = 'Please enter your name'
     if (!email.trim()) e.email = 'Please enter your email'
     else if (!EMAIL_RE.test(email.trim())) e.email = 'Please enter a valid email'
-    // Phone stays optional, but when given it must be the full international
-    // form — leading + and country code — so we can actually reach guests
-    // on WhatsApp/Viber wherever they're from.
-    if (phone.trim() && !/^\+\d{6,15}$/.test(phone.replace(/[\s\-().]/g, ''))) {
-      e.phone = 'Include your country code, e.g. +387 62 123 456'
-    }
+    // Phone stays optional. The country code now comes from the picker, so
+    // the only thing that can be wrong is a digit count no phone number has
+    // — see utils/phone.js for why this must not be any stricter than that.
+    const phoneCheck = validatePhone(phone)
+    if (!phoneCheck.ok) e.phone = phoneCheck.message
     // Card fields are only ever reachable if 'card' stops being disabled —
     // checked directly (not via payingByInvoice) so that seam still works.
     if (method === 'card') {
@@ -210,13 +225,13 @@ function Checkout() {
     const guestTemplate = {
       guest_name: name.trim(),
       guest_email: email.trim(),
-      guest_phone: phone.trim() || 'Not provided',
+      guest_phone: phoneE164 || 'Not provided',
       discount_code: codeLine || 'None',
     }
     const guestFields = {
       guestName: name.trim(),
       guestEmail: email.trim(),
-      guestPhone: phone.trim(),
+      guestPhone: phoneE164,
       discountCode: codeLine,
     }
 
@@ -499,15 +514,11 @@ function Checkout() {
                   />
                 </Field>
 
-                <Field label="Phone" hint="optional, with country code" error={errors.phone}>
-                  <input
-                    className="booking-input"
-                    style={inputStyle(errors.phone)}
+                <Field label="Phone" hint="optional, for trip-day updates" error={errors.phone}>
+                  <PhoneField
                     value={phone}
-                    onChange={(e) => { setPhone(e.target.value); clearError('phone') }}
-                    placeholder="+387 62 123 456"
-                    type="tel"
-                    autoComplete="tel"
+                    onChange={(next) => { setPhone(next); clearError('phone') }}
+                    error={errors.phone}
                   />
                 </Field>
 
@@ -677,12 +688,10 @@ function Checkout() {
                   {!hasDeposit && (
                     <div>
                       <MethodRow
-                        active={false}
-                        onSelect={() => {}}
-                        title="Pay by card"
-                        sub="We're still building our secure payment gateway — for now, pay by bank invoice or reserve and pay in cash."
-                        badge="Coming soon"
-                        disabled
+                        active={method === 'reserve'}
+                        onSelect={() => setMethod('reserve')}
+                        title="Reserve & pay later"
+                        sub="Hold your place now — pay in cash on the day of your tour."
                       />
                       <div style={styles.methodDivider} />
                       <MethodRow
@@ -693,10 +702,12 @@ function Checkout() {
                       />
                       <div style={styles.methodDivider} />
                       <MethodRow
-                        active={method === 'reserve'}
-                        onSelect={() => setMethod('reserve')}
-                        title="Reserve & pay later"
-                        sub="Hold your place now — pay in cash on the day of your tour."
+                        active={false}
+                        onSelect={() => {}}
+                        title="Pay by card"
+                        sub="We're still building our secure payment gateway — for now, reserve and pay in cash, or pay by bank invoice."
+                        badge="Coming soon"
+                        disabled
                       />
                     </div>
                   )}
@@ -744,7 +755,7 @@ function Checkout() {
                   size="lg"
                   full
                   style={{ marginTop: 20 }}
-                  onClick={() => complete(isQuote ? 'reserve' : method)}
+                  onClick={() => complete(isQuote ? 'reserve' : effectiveMethod)}
                   disabled={isSending}
                 >
                   {isSending
@@ -832,7 +843,7 @@ function Checkout() {
           <Button
             variant="primary"
             size="sm"
-            onClick={() => complete(isQuote ? 'reserve' : method)}
+            onClick={() => complete(isQuote ? 'reserve' : effectiveMethod)}
             disabled={isSending}
           >
             {isSending

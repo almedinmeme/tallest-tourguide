@@ -13,7 +13,7 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const ORIGIN = 'https://tallesttourguide.com'
 
 const LISTING_ROUTES = ['/tours', '/multi-day-tours', '/destinations', '/journal']
-const EVERGREEN_ROUTES = ['/booking-conditions', '/safe-travels', '/practical-info']
+const EVERGREEN_ROUTES = ['/booking-conditions', '/privacy', '/safe-travels', '/practical-info']
 
 function journalLastmods() {
   try {

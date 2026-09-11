@@ -33,6 +33,7 @@ const STATIC_ROUTES = [
   '/contact',
   '/personalised',
   '/booking-conditions',
+  '/privacy',
   '/safe-travels',
   '/practical-info',
   '/bosnia-guide',

@@ -46,6 +46,20 @@ const heroPreloadSrcSet = variantSrcset(heroPreloadSrc)
 // which doesn't know about that — keeps the preload honest on the dev server.
 const heroPreloadHref = heroPreloadSrcSet ? variantUrl(heroPreloadSrc, 960) : heroPreloadSrc
 
+// The hero used to sit on a flat 72px inset while the sections below it run in
+// a centred column — on a 1440 screen that left the hero text starting ~50px
+// left of everything else. This tracks the column instead, so the page has one
+// left edge, and gives the hero more air on wide screens.
+//
+// 1200, not 1180: the trust bar immediately below the hero — the one edge a
+// visitor can actually compare against — is a 1200 column, and 1180 left the
+// headline 10px adrift of it at 1440.
+//
+// The 150px cap is deliberate. Past ~1500 the column's own gutter keeps
+// growing, and following it would march the headline toward the middle of a
+// full-bleed photo; a hero legitimately holds a tighter edge than body copy.
+const HERO_GUTTER = 'clamp(72px, calc((100vw - 1200px) / 2), 150px)'
+
 const FAVOURITE_SLUGS = homePage?.extra?.favouriteTours || []
 const favouriteTours = FAVOURITE_SLUGS.map((slug) => tours.find((t) => t.slug === slug)).filter(Boolean)
 const FEATURED_TOURS = (favouriteTours.length > 0 ? favouriteTours : tours).slice(0, favouriteTours.length > 0 ? 3 : 2)
@@ -124,12 +138,31 @@ function Home() {
           left-aligned typographic headline,
           and animated scroll indicator.
           ═══════════════════════════════ */}
-      <section style={{
+      <section
+        className="home-hero"
+        style={{
           ...styles.hero,
-          height: isMobile ? '85vh' : '100vh',
-          minHeight: isMobile ? '540px' : '600px',
+          // ── Mobile: size the hero around its content, not the viewport ──
+          // It used to be a fixed 85vh box with 15vh/7vh padding while the
+          // content stack is a near-fixed ~480px tall. That left 420px of room
+          // on a 667px iPhone SE (the stack overflowed and centred itself up
+          // under the navbar) and 600px on a Pro Max (the stack floated with
+          // 150px of dead sky above it). Auto height + a floor means the hero
+          // grows rather than crushing its own content, and the clamped
+          // padding keeps the rhythm the same on every phone. The floor lives
+          // in index.css so it can use svh with a vh fallback — see there for
+          // why that matters on a real phone.
+          height: isMobile ? 'auto' : '100vh',
+          minHeight: isMobile ? undefined : '600px',
+          maxHeight: isMobile ? 'none' : undefined,
           justifyContent: isMobile ? 'center' : 'flex-start',
-          paddingTop: isMobile ? '15vh' : '12vh',
+          // Top padding has to swallow the 68px of navbar the hero is pulled
+          // up under (styles.hero marginTop), so the clamp floor is nav +
+          // breathing room, never less.
+          paddingTop: isMobile ? 'clamp(104px, 13vh, 128px)' : '11vh',
+          // Enough to clear the scroll cue, which is absolutely positioned in
+          // the bottom 56px.
+          paddingBottom: isMobile ? 'clamp(56px, 7vh, 80px)' : '9vh',
           alignItems: isMobile ? 'center' : 'center',
           boxSizing: 'border-box',
         }}>
@@ -160,10 +193,10 @@ function Home() {
         {/* Main content */}
         <div style={{
           ...styles.heroContent,
-          padding: isMobile ? '0 28px' : '0 72px',
+          padding: isMobile ? '0 28px' : `0 ${HERO_GUTTER}`,
           alignItems: isMobile ? 'center' : 'flex-start',
           textAlign: isMobile ? 'center' : 'left',
-          gap: isMobile ? '20px' : '24px',
+          gap: isMobile ? '20px' : '32px',
           width: isMobile ? '100%' : undefined,
           // Wide enough for the headline to sit on a single line on desktop.
           maxWidth: isMobile ? '480px' : '1200px',
@@ -216,7 +249,7 @@ function Home() {
               destinations ("Explore tours") and the multi-day journeys
               ("Plan a full trip") in one tap. Extra top margin gives the
               headline room to breathe before the search bar. */}
-          <div style={{ marginTop: isMobile ? '8px' : '14px', width: '100%', display: 'flex', justifyContent: isMobile ? 'center' : 'flex-start' }}>
+          <div style={{ marginTop: isMobile ? '8px' : '18px', width: '100%', display: 'flex', justifyContent: isMobile ? 'center' : 'flex-start' }}>
             <HeroSearch isMobile={isMobile} />
           </div>
 
@@ -227,12 +260,17 @@ function Home() {
               Numbers build confidence at the moment
               of highest decision anxiety. */}
           <div style={styles.heroproof}>
-            <Star
-              size={14}
-              color="var(--color-amber)"
-              fill="var(--color-amber)"
-            />
-            <span style={styles.heroProofText}>
+            {/* The star sits inside the text flow rather than beside it as a
+                flex sibling: on a 360px phone the line wraps, and as a sibling
+                the star was left stranded halfway down the far left of a
+                two-line block. Inline, it just leads the first line. */}
+            <span style={{ ...styles.heroProofText, fontSize: isMobile ? '13px' : 'var(--text-small)' }}>
+              <Star
+                size={13}
+                color="var(--color-amber)"
+                fill="var(--color-amber)"
+                style={{ display: 'inline-block', verticalAlign: '-2px', marginRight: '6px' }}
+              />
               {overallStats.rating.toFixed(1)} · {overallStats.count.toLocaleString('en-GB')} reviews · 5000+ guests guided
             </span>
           </div>
@@ -811,7 +849,7 @@ hero: {
     position: 'relative',
     height: '100vh',
     minHeight: '600px',
-    maxHeight: '900px',
+    maxHeight: '960px',
     overflow: 'hidden',
     display: 'flex',
     alignItems: 'center',
@@ -827,8 +865,8 @@ hero: {
   // Right-side featured tour cards (desktop only) — glassy, over the photo.
   heroFeatured: {
     position: 'absolute',
-    right: '72px',
-    bottom: '96px',
+    right: HERO_GUTTER,
+    bottom: '112px',
     zIndex: 3,
     display: 'flex',
     flexDirection: 'column',
@@ -1004,9 +1042,8 @@ hero: {
   },
 
   heroproof: {
-    display: 'inline-flex',
-    alignItems: 'center',
-    gap: '6px',
+    display: 'block',
+    maxWidth: '100%',
   },
 
   heroProofText: {
@@ -1014,6 +1051,9 @@ hero: {
     fontSize: 'var(--text-small)',
     color: 'rgba(255,255,255,0.55)',
     fontWeight: '500',
+    // If the narrowest phones still can't fit it on one line, split it into
+    // two even ones rather than orphaning the last word under the star.
+    textWrap: 'balance',
   },
 
   // Scroll indicator — centered at the bottom of the hero.

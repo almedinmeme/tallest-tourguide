@@ -11,6 +11,7 @@
     "build:spa": "vite build",
     "prerender": "node scripts/prerender.mjs",
     "test:gcal": "node scripts/test-gcal.mjs",
+    "test:phone": "node scripts/test-phone.mjs",
     "lint": "eslint .",
     "preview": "vite preview",
     "migrate": "node scripts/migrate-data.mjs"

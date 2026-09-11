@@ -6,6 +6,7 @@ import { CONTACT_EMAIL, PHONE_DISPLAY, WHATSAPP_URL, INSTAGRAM_URL, TRIPADVISOR_
 import { tripadvisorStats } from '../data/reviewStats'
 import { MapPin, Mail, Phone, ArrowUpRight } from 'lucide-react'
 import Button from './Button'
+import { openConsentSettings } from '../utils/consent'
 import logo from '../assets/logo.svg'
 
 function Footer() {
@@ -236,6 +237,7 @@ function Footer() {
           {[
             { to: '/safe-travels', label: 'Safe Travels' },
             { to: '/booking-conditions', label: 'Booking Conditions' },
+            { to: '/privacy', label: 'Privacy & Cookies' },
             { to: '/practical-info', label: 'Practical Info' },
             { to: '/bosnia-guide', label: 'Bosnia Travel Guide' },
           ].map(({ to, label }) => (
@@ -249,6 +251,25 @@ function Footer() {
               {label}
             </Link>
           ))}
+          {/* Withdrawing consent has to be as reachable as giving it was
+              (GDPR Art. 7(3)), which means a permanent way back to the
+              banner from every page — not a line buried in the policy. */}
+          <button
+            type="button"
+            onClick={openConsentSettings}
+            style={{
+              ...styles.legalLink,
+              background: 'none',
+              border: 'none',
+              padding: 0,
+              cursor: 'pointer',
+              color: hoveredLink === 'cookies' ? 'var(--color-amber)' : 'rgba(255,255,255,0.55)',
+            }}
+            onMouseEnter={() => setHoveredLink('cookies')}
+            onMouseLeave={() => setHoveredLink(null)}
+          >
+            Cookie Settings
+          </button>
         </nav>
         <div style={{
           ...styles.bottomRow,

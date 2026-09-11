@@ -29,13 +29,77 @@
          (scripts/prerender.mjs). Kept out of the static shell so prerendered
          pages have exactly one of each tag, with no stale fallbacks. -->
 
-    <!-- Google Analytics 4 — replace G-XXXXXXXXXX with your Measurement ID -->
+    <!-- Google Analytics 4 + Google Ads, behind Consent Mode v2.
+         The async gtag.js above only *loads* the library; the consent
+         defaults below run first (inline scripts execute at parse time,
+         async ones don't), which is the ordering Google requires — a
+         default set after the first config is ignored. -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-MZ2RNCEL8Y"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
+
+      // ── Consent Mode v2 defaults ──────────────────────────────────────
+      // Denied by default across the EEA, the UK and Switzerland: no
+      // identifiers are written until the visitor opts in via the banner
+      // (src/components/CookieBanner.jsx). Google still receives cookieless
+      // pings in the denied state, which is what feeds conversion modelling —
+      // blocking the tag outright would lose that and gain nothing legally.
+      //
+      // Region codes are ISO 3166-1/-2 and are matched by Google, not by us.
+      // CH has no cookie-consent mandate as strict as the GDPR's, but it's in
+      // a target market and grouping it here costs nothing.
+      var RESTRICTED_REGIONS = [
+        'AT','BE','BG','HR','CY','CZ','DK','EE','FI','FR','DE','GR','HU','IE',
+        'IT','LV','LT','LU','MT','NL','PL','PT','RO','SK','SI','ES','SE',
+        'IS','LI','NO','GB','CH'
+      ];
+      gtag('consent', 'default', {
+        ad_storage: 'denied',
+        ad_user_data: 'denied',
+        ad_personalization: 'denied',
+        analytics_storage: 'denied',
+        region: RESTRICTED_REGIONS,
+        wait_for_update: 500
+      });
+      // Everywhere else (the US and Canada are the other target markets)
+      // starts granted. An explicit "decline" in the banner still overrides
+      // this for that visitor — consent updates aren't region-scoped.
+      gtag('consent', 'default', {
+        ad_storage: 'granted',
+        ad_user_data: 'granted',
+        ad_personalization: 'granted',
+        analytics_storage: 'granted'
+      });
+
+      // Replay a stored choice before the first config fires. Without this,
+      // a returning visitor who already accepted would spend the React boot
+      // in the denied state and lose the page_view that starts the session.
+      // Kept in sync with CONSENT_KEY/CONSENT_VERSION in src/utils/consent.js.
+      try {
+        var stored = JSON.parse(localStorage.getItem('tt_consent') || 'null');
+        if (stored && stored.v === 1) {
+          gtag('consent', 'update', {
+            ad_storage: stored.marketing ? 'granted' : 'denied',
+            ad_user_data: stored.marketing ? 'granted' : 'denied',
+            ad_personalization: stored.marketing ? 'granted' : 'denied',
+            analytics_storage: stored.analytics ? 'granted' : 'denied'
+          });
+        }
+      } catch (e) { /* private mode / disabled storage — stay on defaults */ }
+
+      // Strips ad click identifiers from network requests while ad_storage is
+      // denied, and passes gclid through URLs instead of a cookie so paid
+      // clicks still attribute for visitors who never accept.
+      gtag('set', 'ads_data_redaction', true);
+      gtag('set', 'url_passthrough', true);
+
       gtag('js', new Date());
       gtag('config', 'G-MZ2RNCEL8Y', { send_page_view: false });
+      // Google Ads conversion tag. One gtag.js load serves both destinations,
+      // so this needs no second <script src> — adding one would re-download
+      // the same ~100KB library under a different ?id=.
+      gtag('config', 'AW-18332364065');
     </script>
   </head>
   <body>

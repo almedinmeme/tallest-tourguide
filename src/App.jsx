@@ -6,6 +6,7 @@ import AnnouncementBar from './components/AnnouncementBar'
 import Footer from './components/Footer'
 import ScrollToTopButton from './components/ScrollToTopButton'
 import WhatsAppButton from './components/WhatsAppButton'
+import CookieBanner from './components/CookieBanner'
 import { Link } from 'react-router-dom'
 
 const AdminApp = lazy(() => import('./admin/AdminApp'))
@@ -33,6 +34,7 @@ const Signature            = lazy(() => import('./pages/Signature'))
 const Partners             = lazy(() => import('./pages/Partners'))
 const Consult              = lazy(() => import('./pages/Consult'))
 const WhereWeStay          = lazy(() => import('./pages/WhereWeStay'))
+const Privacy              = lazy(() => import('./pages/Privacy'))
 
 // /blog has been rebranded to /journal. Redirect old post URLs to the
 // canonical /journal path so existing inbound links keep working.
@@ -163,6 +165,7 @@ function App() {
           <Route path="/review" element={<LeaveReview />} />
           <Route path="/review/:slug" element={<LeaveReview />} />
           <Route path="/booking-conditions" element={<BookingConditions />} />
+          <Route path="/privacy" element={<Privacy />} />
           <Route path="/safe-travels" element={<SafeTravels />} />
           <Route path="/practical-info" element={<PracticalInfo />} />
           <Route path="/bosnia-guide" element={<BosniaCulturalGuide />} />
@@ -174,6 +177,11 @@ function App() {
 
       {!isCheckout && <ScrollToTopButton />}
       {!isCheckout && <WhatsAppButton />}
+
+      {/* Not gated on isCheckout: consent is an obligation, not a piece of
+          chrome, and someone can land on /checkout from a saved link without
+          having passed a banner anywhere else. */}
+      <CookieBanner />
     </div>
   )
 }

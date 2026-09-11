@@ -6,7 +6,8 @@
 //   2. Send the customer confirmation email (best-effort).
 //   3. Send the admin notification email — this is the promise we surface,
 //      so callers can show a success / error state.
-//   4. On success, fire the GA4 `purchase` event.
+//   4. On success, fire the GA4 `purchase` event and the Google Ads
+//      conversion (the booking action, or the enquiry one for quotes).
 //
 // ── Why step 1 is awaited but still can't fail the booking ─────────────
 // It used to be fire-and-forget, which was survivable when Airtable was
@@ -25,7 +26,7 @@
 // filling in the form. Taking money for a seat that doesn't exist is worse
 // than an apology, so that one throws.
 import { sendEmail } from './email'
-import { trackEvent } from './analytics'
+import { trackEvent, BOOKING_CONVERSION, ENQUIRY_CONVERSION, ENQUIRY_VALUE } from './analytics'
 import { invalidateAvailability } from '../hooks/useAvailability'
 
 export async function submitBooking({ bookingFields, templateParams, analytics }) {
@@ -69,6 +70,21 @@ export async function submitBooking({ bookingFields, templateParams, analytics }
   // Admin notification — the promise the caller awaits.
   const res = await sendEmail('bookingAdmin', params)
   if (analytics) trackEvent('purchase', analytics)
+
+  // Google Ads conversion, reported at the real booking total rather than a
+  // flat figure — a four-person journey and a solo guest are not worth the
+  // same, and Smart Bidding can only see the difference if we send it.
+  //
+  // Checkout sets analytics.value to 0 for quote requests (unpriced private
+  // tours, sold-out and blocked dates): those skip payment entirely and are
+  // leads, not bookings, so they go to the enquiry action instead. A missing
+  // analytics object is treated the same way — with no total to report, an
+  // invented number against the booking action is worse than none.
+  const bookingValue = analytics?.value
+  trackEvent('conversion', bookingValue
+    ? { send_to: BOOKING_CONVERSION, value: bookingValue, currency: 'EUR' }
+    : { send_to: ENQUIRY_CONVERSION, value: ENQUIRY_VALUE, currency: 'EUR' })
+
   return res
 }
 

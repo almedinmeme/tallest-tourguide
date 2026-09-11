@@ -1,416 +1,432 @@
 // GuideSection.jsx
-// The most personal section on the entire site.
-// It introduces the guide — the human being behind the business —
-// using a photo carousel, personal copy, and a pull quote.
+// The most personal section on the entire site — the belief, the people it was
+// earned with, and the promise underneath it.
 //
-// The carousel uses a single piece of state: selectedPhoto,
-// which is the index (0-4) of the currently displayed photo.
-// Clicking a thumbnail or an arrow updates that index,
-// React rerenders the main photo instantly.
-// No libraries needed — pure useState logic you already know.
-import { useState } from 'react'
-import { ChevronLeft, ChevronRight } from 'lucide-react'
-import useWindowWidth from '../hooks/useWindowWidth'
+// Laid out as a contact sheet rather than a carousel: the statement across the
+// top, all five photographs in one horizontal rail below it, and the promise
+// closing the section under a hairline. Every photo is on screen (or one
+// flick away) instead of hidden behind arrows, and because the rail scrolls
+// sideways it costs the same vertical space on a phone as a single photo does.
+//
+// All five source files are 4:3 group shots, so the tiles stay 4:3 — a
+// portrait crop would cut half the group out of every one of them.
+//
+// The scrollbar is hidden in favour of a progress line, and the arrows are
+// hidden on touch, where the rail is swiped instead.
+import { useEffect, useRef } from 'react'
+import { ArrowLeft, ArrowRight } from 'lucide-react'
+import useInView from '../hooks/useInView'
 import Img from './Img'
 
 // Photo data — each photo has an src and a caption.
-// The caption appears below the main photo and gives
-// context about where and what the visitor is seeing.
-// Keep captions short — one location, one detail.
+// The caption sits under its tile, numbered, contact-sheet style, so keep
+// them short — one location, one detail.
 //
 // Paths point at /uploads/ (not a src/assets import) so they go through Img
 // and get the same 480/960/1600w responsive variants as admin-uploaded
 // content — these five files were already sitting in public/uploads/,
 // byte-identical to the old src/assets copies, just unreferenced.
 const photos = [
-  { src: '/uploads/guide-1.webp', caption: 'Things Tallest Tourguide & Friends do... ' },
+  { src: '/uploads/guide-1.webp', caption: 'Things Tallest Tourguide & Friends do...' },
   { src: '/uploads/guide-2.webp', caption: 'Early morning Bosnian coffee ceremony' },
   { src: '/uploads/guide-3.webp', caption: 'Surviving the Neretva Rafting' },
   { src: '/uploads/guide-4.webp', caption: 'Doing a good banter with each other' },
-  { src: '/uploads/guide-5.webp', caption: 'Forgetting the banter after the lunch'  },
+  { src: '/uploads/guide-5.webp', caption: 'Forgetting the banter after the lunch' },
 ]
 
-function GuideSection() {
-  const width = useWindowWidth()
-  const isMobile = width <= 768
+const RAIL_GAP = 20
 
-  // selectedPhoto is the index of the currently visible photo.
-  // Starts at 0 — the Baščaršija group shot.
-  const [selectedPhoto, setSelectedPhoto] = useState(0)
+const css = `
+  .gs {
+    background-color: var(--color-n000);
+    padding: 96px 40px;
+  }
+  .gs__inner { max-width: 1200px; margin: 0 auto; }
 
-  // Navigate to the previous photo.
-  // The modulo operator (%) wraps around — if you're at index 0
-  // and go back, it wraps to the last photo (index 4).
-  // Think of it like a circular array — no dead ends.
-  const handlePrev = () => {
-    setSelectedPhoto((prev) => (prev - 1 + photos.length) % photos.length)
+  /* Header and footer share one column split, so the lede above the rail and
+     the attribution below it sit on the same vertical spine. */
+  .gs__head,
+  .gs__foot {
+    display: grid;
+    grid-template-columns: 1.55fr 1fr;
+    gap: 56px;
+  }
+  .gs__head { align-items: end; margin-bottom: 44px; }
+
+  .gs__eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 0 0 18px;
+    font-family: var(--font-body);
+    font-size: var(--text-tiny);
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-forest-green);
+  }
+  .gs__eyebrow::before {
+    content: '';
+    width: 28px;
+    height: 1px;
+    background: currentColor;
+    opacity: 0.5;
   }
 
-  // Navigate to the next photo — wraps from last back to first.
-  const handleNext = () => {
-    setSelectedPhoto((prev) => (prev + 1) % photos.length)
+  /* Newsreader, set large and loose in weight — the site's editorial voice
+     rather than the display sans, because this section is someone talking. */
+  .gs__h2 {
+    margin: 0;
+    font-family: var(--font-hero);
+    font-weight: 400;
+    font-size: clamp(34px, 4.4vw, 54px);
+    line-height: 1.06;
+    letter-spacing: -0.025em;
+    color: var(--color-n900);
+  }
+
+  .gs__lede {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: var(--text-body-l);
+    line-height: 1.75;
+    color: var(--color-n600);
+  }
+
+  /* ── The contact sheet ─────────────────────────────────────── */
+  .gs__rail {
+    display: flex;
+    align-items: start;
+    gap: ${RAIL_GAP}px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x proximity;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    /* The focus ring on the rail itself needs somewhere to land. */
+    padding: 2px 2px 6px;
+    margin: -2px -2px -6px;
+  }
+  .gs__rail::-webkit-scrollbar { display: none; }
+  .gs__rail:focus-visible {
+    outline: 2px solid var(--color-forest-green);
+    outline-offset: 4px;
+    border-radius: var(--radius);
+  }
+
+  .gs__tile {
+    flex: 0 0 380px;
+    scroll-snap-align: start;
+  }
+  .gs__frame {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    background-color: var(--color-n200);
+  }
+  .gs__shot {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.6s cubic-bezier(0.22,0.61,0.36,1);
+  }
+  .gs__tile:hover .gs__shot { transform: scale(1.045); }
+
+  .gs__caption {
+    display: flex;
+    gap: 10px;
+    margin: 14px 2px 0;
+    font-family: var(--font-body);
+    font-size: 14px;
+    line-height: 1.45;
+    color: var(--color-n500);
+    transition: color 0.2s ease;
+  }
+  .gs__tile:hover .gs__caption { color: var(--color-n800); }
+  .gs__num {
+    flex: none;
+    padding-top: 1px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--color-amber);
+  }
+
+  /* ── Rail controls ─────────────────────────────────────────── */
+  .gs__controls {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    margin-top: 24px;
+  }
+  .gs__track {
+    flex: 1;
+    max-width: 300px;
+    height: 2px;
+    background-color: var(--color-n200);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .gs__thumb {
+    height: 100%;
+    background-color: var(--color-forest-green);
+    border-radius: 2px;
+  }
+  .gs__arrows { display: flex; gap: 8px; margin-left: auto; }
+  .gs__arrow {
+    width: 40px;
+    height: 40px;
+    display: grid;
+    place-items: center;
+    border: 1px solid var(--color-n200);
+    border-radius: 50%;
+    background: none;
+    color: var(--color-n700);
+    cursor: pointer;
+    transition: border-color 0.2s ease, color 0.2s ease, opacity 0.2s ease;
+  }
+  .gs__arrow:hover:not(:disabled) {
+    border-color: var(--color-forest-green);
+    color: var(--color-forest-green);
+  }
+  .gs__arrow:disabled { opacity: 0.3; cursor: default; }
+  .gs__arrow:focus-visible {
+    outline: 2px solid var(--color-forest-green);
+    outline-offset: 2px;
+  }
+
+  /* ── The promise ───────────────────────────────────────────── */
+  /* Bylines belong at the foot of the quote, not floating at the top of an
+     empty column — align-items:end tucks it against the last line. */
+  .gs__foot {
+    align-items: end;
+    margin-top: 48px;
+    padding-top: 32px;
+    border-top: 1px solid var(--color-n200);
+  }
+  .gs__quote { margin: 0; max-width: 620px; }
+  .gs__quoteText {
+    margin: 0;
+    font-family: var(--font-hero);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(18px, 1.6vw, 22px);
+    line-height: 1.55;
+    color: var(--color-n800);
+  }
+  .gs__by {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+    padding-top: 6px;
+    font-family: var(--font-body);
+    font-size: var(--text-tiny);
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-n500);
+  }
+  .gs__by::before {
+    content: '';
+    width: 24px;
+    height: 1px;
+    background-color: var(--color-n300);
+  }
+
+  /* Reveal on entry. Deliberately no hidden resting state — the animation
+     only exists once the section is marked in-view, so a browser without
+     IntersectionObserver shows the content rather than nothing. */
+  @keyframes gsIn {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: none; }
+  }
+  .gs--in .gs__head { animation: gsIn 0.55s cubic-bezier(0.22,0.61,0.36,1) backwards; }
+  .gs--in .gs__tile { animation: gsIn 0.55s cubic-bezier(0.22,0.61,0.36,1) backwards; }
+  .gs--in .gs__foot { animation: gsIn 0.55s cubic-bezier(0.22,0.61,0.36,1) 240ms backwards; }
+
+  /* Laptops and small windows: the spine holds, the gutter narrows — a 56px
+     gutter eats the right-hand column long before the layout needs to stack. */
+  @media (max-width: 1100px) {
+    .gs { padding: 80px 32px; }
+    .gs__head,
+    .gs__foot { grid-template-columns: 1.35fr 1fr; gap: 36px; }
+    .gs__head { margin-bottom: 36px; }
+    .gs__tile { flex-basis: 320px; }
+  }
+
+  @media (max-width: 900px) {
+    .gs { padding: 64px 20px; }
+    .gs__head,
+    .gs__foot { grid-template-columns: 1fr; gap: 20px; }
+    .gs__head { align-items: start; margin-bottom: 28px; }
+    /* Tiles stop short of the edge so the next one always peeks — the only
+       affordance a phone needs, and the arrows are hidden here anyway. */
+    .gs__tile { flex-basis: 72vw; }
+    .gs__track { max-width: none; }
+    .gs__controls { margin-top: 18px; }
+    .gs__foot { margin-top: 32px; padding-top: 24px; }
+  }
+
+  @media (hover: none) {
+    .gs__arrows { display: none; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .gs--in .gs__head,
+    .gs--in .gs__tile,
+    .gs--in .gs__foot { animation: none; }
+    .gs__shot, .gs__caption { transition: none; }
+    .gs__rail { scroll-behavior: auto; }
+  }
+`
+
+function GuideSection() {
+  // Latched, like the reviews reveal: the entrance plays once and stays put.
+  const [sectionRef, inView] = useInView()
+  useEffect(() => {
+    if (inView) sectionRef.current?.classList.add('gs--in')
+  }, [inView, sectionRef])
+
+  const railRef = useRef(null)
+  const thumbRef = useRef(null)
+  const prevRef = useRef(null)
+  const nextRef = useRef(null)
+
+  // Progress line and arrow states are written straight to the nodes: they
+  // change on every scroll frame and nothing else in the tree depends on them.
+  const measure = () => {
+    const rail = railRef.current
+    const thumb = thumbRef.current
+    if (!rail || !thumb) return
+    const track = rail.scrollWidth - rail.clientWidth
+    const width = track > 0 ? rail.clientWidth / rail.scrollWidth : 1
+    const offset = track > 0 ? (rail.scrollLeft / track) * (1 - width) : 0
+    thumb.style.width = `${width * 100}%`
+    thumb.style.transform = `translateX(${(offset / width) * 100}%)`
+    if (prevRef.current) prevRef.current.disabled = rail.scrollLeft <= 1
+    if (nextRef.current) nextRef.current.disabled = rail.scrollLeft >= track - 1
+  }
+
+  useEffect(() => {
+    measure()
+    window.addEventListener('resize', measure)
+    return () => window.removeEventListener('resize', measure)
+  }, [])
+
+  // One tile per press, whatever a tile currently measures.
+  const nudge = (direction) => {
+    const rail = railRef.current
+    if (!rail) return
+    const tile = rail.querySelector('.gs__tile')
+    const stride = tile ? tile.getBoundingClientRect().width + RAIL_GAP : rail.clientWidth
+    rail.scrollBy({ left: direction * stride, behavior: 'smooth' })
   }
 
   return (
-    <section style={styles.section}>
-      <div style={{
-        ...styles.inner,
-        gridTemplateColumns: isMobile ? '1fr' : '55% 1fr',
-        gap: isMobile ? '40px' : '64px',
-      }}>
+    <section ref={sectionRef} className="gs" aria-labelledby="belief-heading">
+      <style>{css}</style>
 
-        {/* ── LEFT COLUMN — Photo Carousel ──────────────
-            Photo leads on both desktop and mobile —
-            the visual sets the emotional tone before the words. */}
-        <div style={styles.photoColumn}>
+      <div className="gs__inner">
 
-          {/* Main photo display */}
-          <div style={styles.mainPhotoWrapper}>
-
-            {/* The photo itself — objectFit cover keeps it
-                perfectly cropped regardless of the source dimensions */}
-            <Img
-              src={photos[selectedPhoto].src}
-              alt={photos[selectedPhoto].caption}
-              sizes="(min-width: 900px) 570px, 90vw"
-              style={styles.mainPhoto}
-            />
-
-            {/* Left arrow — navigates to previous photo.
-                Positioned absolutely over the photo's left edge.
-                Large enough to tap comfortably on mobile. */}
-            <button
-              style={{ ...styles.arrowBtn, left: '12px' }}
-              onClick={handlePrev}
-              aria-label="Previous photo"
-              className="btn-overlay"
-            >
-              <ChevronLeft size={20} color="var(--color-n000)" />
-            </button>
-
-            {/* Right arrow — navigates to next photo */}
-            <button
-              style={{ ...styles.arrowBtn, right: '12px' }}
-              onClick={handleNext}
-              aria-label="Next photo"
-              className="btn-overlay"
-            >
-              <ChevronRight size={20} color="var(--color-n000)" />
-            </button>
-
-            {/* Photo counter — "1 / 5" style indicator.
-                Sits in the bottom right corner of the photo.
-                Tells visitors how many photos exist without
-                requiring them to click through all of them
-                to find out. Small detail, reduces anxiety. */}
-            <div style={styles.photoCounter}>
-              {selectedPhoto + 1} / {photos.length}
-            </div>
-
+        {/* ── HEADER — statement left, context right ───────────── */}
+        <div className="gs__head">
+          <div>
+            <span className="gs__eyebrow">Our belief</span>
+            <h2 className="gs__h2" id="belief-heading">
+              Deeply local.<br />
+              Deeply committed.
+            </h2>
           </div>
 
-          {/* Caption below the main photo */}
-          <p style={styles.caption}>
-            {photos[selectedPhoto].caption}
-          </p>
-
-          {/* Thumbnail strip — hidden on mobile to keep the
-              layout clean. Arrow buttons provide sufficient
-              navigation on small screens without the visual
-              clutter of five small thumbnails in a row. */}
-          {!isMobile && (
-            <div style={styles.thumbnails}>
-              {photos.map((photo, index) => (
-                <button
-                  key={index}
-                  onClick={() => setSelectedPhoto(index)}
-                  style={{
-                    ...styles.thumbnail,
-                    // Active thumbnail gets a Forest Green ring so visitors
-                    // can see which photo is displayed; the offset ring
-                    // (border + box-shadow) reads cleaner than a border that
-                    // eats into the image itself.
-                    boxShadow: selectedPhoto === index
-                      ? '0 0 0 2px var(--color-n000), 0 0 0 4px var(--color-forest-green)'
-                      : 'none',
-                    opacity: selectedPhoto === index ? 1 : 0.55,
-                  }}
-                  aria-label={`View photo ${index + 1}`}
-                >
-                  <Img
-                    src={photo.src}
-                    alt={photo.caption}
-                    sizes="110px"
-                    style={styles.thumbnailImg}
-                  />
-                </button>
-              ))}
-            </div>
-          )}
-
-          {/* Mobile dot indicators — shown instead of thumbnails.
-              Five dots, one per photo, filled dot = current photo.
-              A universally understood mobile carousel pattern. */}
-          {isMobile && (
-            <div style={styles.dots}>
-              {photos.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => setSelectedPhoto(index)}
-                  style={{
-                    ...styles.dot,
-                    // Morphing pill indicator — the active dot stretches to a
-                    // pill rather than just scaling up, matching the carousel
-                    // dots on the packages preview below.
-                    width: selectedPhoto === index ? '22px' : '8px',
-                    backgroundColor: selectedPhoto === index
-                      ? 'var(--color-forest-green)'
-                      : 'var(--color-n300)',
-                  }}
-                  aria-label={`Go to photo ${index + 1}`}
-                />
-              ))}
-            </div>
-          )}
-
-        </div>
-
-        {/* ── RIGHT COLUMN — Text ─────────────────────── */}
-        <div style={styles.textColumn}>
-
-          <span style={styles.eyebrow}>Our belief</span>
-
-          <h2 style={styles.headline}>
-            Deeply local.<br />
-            Deeply committed.
-          </h2>
-
-          <p style={styles.subheading}>
+          <p className="gs__lede">
             Sarajevo isn't just where I work — it's everything I have.
-            Tallest Tourguide & Friends was born from one belief: Bosnia deserves
+            Tallest Tourguide &amp; Friends was born from one belief: Bosnia deserves
             to be seen through the eyes of someone who lives this story every day,
             not through a tour operator's lens.
           </p>
+        </div>
 
-          {/* Open quote, not a box — matches the testimonial treatment used
-              on Consult: a serif quote mark and italic Newsreader voice read
-              as personal, where a filled callout box would read as a warning
-              or a marketing pull-out. */}
-          <blockquote style={styles.pullQuote}>
-            <span aria-hidden style={styles.quoteMark}>“</span>
-            <p style={styles.pullQuoteText}>
-              Every person you meet through us — your guide, your driver,
+        {/* ── THE FIVE ─────────────────────────────────────────
+            A focusable scroll container: keyboard users can pan it
+            with the arrow keys, everyone else swipes or uses the
+            buttons below. */}
+        <div
+          className="gs__rail"
+          ref={railRef}
+          onScroll={measure}
+          tabIndex={0}
+          role="group"
+          aria-label="Photographs from our tours"
+        >
+          {photos.map((photo, index) => (
+            <figure
+              key={photo.src}
+              className="gs__tile"
+              style={{ animationDelay: `${60 + index * 70}ms` }}
+            >
+              <div className="gs__frame">
+                <Img
+                  src={photo.src}
+                  alt={photo.caption}
+                  sizes="(min-width: 901px) 380px, 72vw"
+                  className="gs__shot"
+                />
+              </div>
+              <figcaption className="gs__caption">
+                <span className="gs__num">{String(index + 1).padStart(2, '0')}</span>
+                {photo.caption}
+              </figcaption>
+            </figure>
+          ))}
+        </div>
+
+        <div className="gs__controls">
+          <div className="gs__track" aria-hidden>
+            <div className="gs__thumb" ref={thumbRef} />
+          </div>
+          <div className="gs__arrows">
+            <button
+              type="button"
+              className="gs__arrow"
+              ref={prevRef}
+              onClick={() => nudge(-1)}
+              aria-label="Previous photos"
+            >
+              <ArrowLeft size={17} />
+            </button>
+            <button
+              type="button"
+              className="gs__arrow"
+              ref={nextRef}
+              onClick={() => nudge(1)}
+              aria-label="Next photos"
+            >
+              <ArrowRight size={17} />
+            </button>
+          </div>
+        </div>
+
+        {/* ── THE PROMISE ──────────────────────────────────────
+            Open quote, no box — the voice of the person who wrote
+            it, closed with a hairline and a name rather than a
+            filled callout panel. */}
+        <div className="gs__foot">
+          <blockquote className="gs__quote">
+            <p className="gs__quoteText">
+              “Every person you meet through us — your guide, your driver,
               the person cooking your meal — is someone I deeply trust.
-              Bosnia deserves to be known by people who actually love it.
+              Bosnia deserves to be known by people who actually love it.”
             </p>
           </blockquote>
-
+          <p className="gs__by">Almedin, Tallest Tourguide</p>
         </div>
 
       </div>
     </section>
   )
-}
-
-const styles = {
-  section: {
-    backgroundColor: 'var(--color-n000)',
-    padding: '88px 40px',
-  },
-
-  // Two-column grid on desktop — collapses to single
-  // column on mobile via the inline style override above.
-  inner: {
-    display: 'grid',
-    maxWidth: '1100px',
-    margin: '0 auto',
-    alignItems: 'center',
-  },
-
-  textColumn: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '0',
-    justifyContent: 'center',
-  },
-
-  eyebrow: {
-    display: 'block',
-    fontFamily: 'var(--font-body)',
-    fontWeight: '700',
-    fontSize: '13px',
-    color: 'var(--color-forest-green)',
-    letterSpacing: '2px',
-    textTransform: 'uppercase',
-    marginBottom: '14px',
-  },
-
-  // Newsreader serif — the editorial voice used across the redesigned
-  // pages (Consult, Signature, Where We Stay) rather than the sans display
-  // face, so the site's most personal section reads like it's spoken, not
-  // typeset by a marketing template.
-  headline: {
-    fontFamily: 'var(--font-hero)',
-    fontWeight: 400,
-    fontSize: 'clamp(30px, 3.8vw, 44px)',
-    letterSpacing: '-0.015em',
-    color: 'var(--color-n900)',
-    lineHeight: '1.15',
-    marginBottom: '22px',
-  },
-
-  subheading: {
-    fontFamily: 'var(--font-body)',
-    fontSize: 'var(--text-body-l)',
-    color: 'var(--color-n700)',
-    lineHeight: '1.7',
-    marginBottom: '28px',
-  },
-
-  // Open quote, not a box — a large amber serif quote mark and an italic
-  // Newsreader voice, set off by a hairline rather than a filled amber
-  // panel. Reads as someone speaking, not a highlighted marketing callout.
-  pullQuote: {
-    position: 'relative',
-    margin: 0,
-    paddingTop: '20px',
-    borderTop: '2px solid var(--color-n200)',
-  },
-
-  quoteMark: {
-    position: 'absolute',
-    top: '4px',
-    left: 0,
-    fontFamily: 'var(--font-hero)',
-    fontSize: '52px',
-    lineHeight: 1,
-    color: 'var(--color-amber)',
-    opacity: 0.7,
-  },
-
-  pullQuoteText: {
-    fontFamily: 'var(--font-hero)',
-    fontStyle: 'italic',
-    fontWeight: 400,
-    fontSize: 'clamp(18px, 1.9vw, 21px)',
-    lineHeight: '1.55',
-    color: 'var(--color-n800)',
-    margin: '10px 0 0',
-    paddingLeft: '4px',
-  },
-
-  photoColumn: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '12px',
-  },
-
-  // position: relative allows the arrow buttons and counter
-  // to be positioned absolutely inside the photo frame.
-  mainPhotoWrapper: {
-    position: 'relative',
-    borderRadius: 'var(--radius-lg)',
-    overflow: 'hidden',
-    aspectRatio: '4/3',
-    backgroundColor: 'var(--color-n300)',
-    boxShadow: 'var(--shadow-sm)',
-  },
-
-  mainPhoto: {
-    width: '100%',
-    height: '100%',
-    objectFit: 'cover',
-    display: 'block',
-    // Smooth crossfade when photo changes —
-    // achieved with a CSS transition on opacity.
-    transition: 'opacity 0.2s ease',
-  },
-
-  // Arrow buttons sit over the photo on left and right edges. The glass
-  // pill treatment (dark scrim + blur + thin light border) matches the
-  // overlay chrome used on cinematic hero photos elsewhere on the site,
-  // rather than a flat black circle.
-  arrowBtn: {
-    position: 'absolute',
-    top: '50%',
-    transform: 'translateY(-50%)',
-    backgroundColor: 'rgba(10,16,20,0.42)',
-    backdropFilter: 'blur(6px)',
-    WebkitBackdropFilter: 'blur(6px)',
-    border: '1px solid rgba(255,255,255,0.25)',
-    borderRadius: '50%',
-    width: '40px',
-    height: '40px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    cursor: 'pointer',
-    transition: 'background-color 0.15s ease',
-  },
-
-  photoCounter: {
-    position: 'absolute',
-    bottom: '12px',
-    right: '12px',
-    backgroundColor: 'rgba(10,16,20,0.42)',
-    backdropFilter: 'blur(6px)',
-    WebkitBackdropFilter: 'blur(6px)',
-    border: '1px solid rgba(255,255,255,0.25)',
-    color: 'var(--color-n000)',
-    fontFamily: 'var(--font-body)',
-    fontWeight: '600',
-    fontSize: 'var(--text-tiny)',
-    padding: '4px 10px',
-    borderRadius: 'var(--radius-pill)',
-  },
-
-  caption: {
-    fontFamily: 'var(--font-body)',
-    fontSize: 'var(--text-small)',
-    color: 'var(--color-n600)',
-    fontStyle: 'italic',
-    textAlign: 'center',
-  },
-
-  thumbnails: {
-    display: 'flex',
-    gap: '8px',
-  },
-
-  thumbnail: {
-    flex: 1,
-    aspectRatio: '4/3',
-    borderRadius: 'var(--radius)',
-    overflow: 'hidden',
-    cursor: 'pointer',
-    padding: 0,
-    border: 'none',
-    background: 'none',
-    transition: 'opacity 0.15s ease, box-shadow 0.15s ease',
-  },
-
-  thumbnailImg: {
-    width: '100%',
-    height: '100%',
-    objectFit: 'cover',
-    display: 'block',
-  },
-
-  dots: {
-    display: 'flex',
-    justifyContent: 'center',
-    gap: '8px',
-    paddingTop: '4px',
-  },
-
-  dot: {
-    height: '8px',
-    borderRadius: 'var(--radius-pill)',
-    border: 'none',
-    cursor: 'pointer',
-    padding: 0,
-    transition: 'width 0.25s ease, background-color 0.2s ease',
-  },
 }
 
 export default GuideSection

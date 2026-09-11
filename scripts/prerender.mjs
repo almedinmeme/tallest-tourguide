@@ -54,6 +54,13 @@ function outPathFor(route) {
 
 async function newMobilePage(browser) {
   const page = await browser.newPage()
+  // Marks this as a build-time render. Puppeteer is a real browser, so effects
+  // run and anything gated on "after mount" still renders — the cookie banner
+  // would otherwise be baked into every static page and flash on load for
+  // visitors who answered it months ago. Read by src/utils/consent.js.
+  await page.evaluateOnNewDocument(() => {
+    window.__PRERENDER__ = true
+  })
   // Prerender at a phone-width viewport so the static HTML is mobile-first.
   // The site's layout is driven by window.innerWidth (useWindowWidth). A desktop
   // prerender bakes a wide layout that overflows phones, which inflates

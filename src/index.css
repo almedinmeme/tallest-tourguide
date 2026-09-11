@@ -274,6 +274,23 @@ h3 { font-size: var(--text-h3); line-height: 1.35; }
   }
 }
 
+/* Cookie banner entrance (src/components/CookieBanner.jsx).
+   Opacity only, deliberately: the desktop card is centred with
+   translateX(-50%), and fadeInUp's transform would overwrite that
+   and slam the card to the right half of the viewport mid-animation. */
+@keyframes consentFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* The consent card must still appear for anyone who asked the OS to stop
+   animations — it just appears instantly. Never resolve reduced-motion by
+   not showing it. */
+@media (prefers-reduced-motion: reduce) {
+  .consent-card { animation: none !important; }
+  .consent-card * { transition: none !important; }
+}
+
 /* Navbar dropdown trigger — animated underline on hover/open.
    The underline grows from left to right on hover,
    creating a modern, subtle interaction signal. */
@@ -421,6 +438,22 @@ h3 { font-size: var(--text-h3); line-height: 1.35; }
   color: #fff;
   border-color: #fff;
   box-shadow: none;
+}
+
+/* The cookie banner is translucent cream glass, so its worst-case backdrop is
+   a dark hero photo showing through. Measured there, the standard forest green
+   reaches only 3.35:1 — below the 4.5:1 floor for body text. This deeper green
+   clears 5.7:1 and still reads as the brand colour. Lives here rather than as
+   an inline style so the hover fill isn't overridden by inline specificity. */
+.btn--on-glass.btn--secondary {
+  color: #17492F;
+  border-color: #17492F;
+}
+.btn--on-glass.btn--secondary:hover {
+  background-color: #17492F;
+  color: #fff;
+  border-color: #17492F;
+  box-shadow: 0 6px 20px rgba(23,73,47,0.3);
 }
 
 .btn--tertiary {
@@ -750,6 +783,56 @@ h3 { font-size: var(--text-h3); line-height: 1.35; }
   border-color: var(--color-forest-green) !important;
   box-shadow: 0 0 0 3px rgba(46,125,94,0.15);
   transition: border-color var(--t-fast), box-shadow var(--t-fast);
+}
+
+/* Mobile home hero (src/pages/Home.jsx).
+   Scoped to the same breakpoint as the global `section` rule further down,
+   because it exists to counter it — a class the JS toggles would drift out of
+   step with a rule the media query controls, and would not apply until React
+   had hydrated.
+
+   min-height: on iOS `100vh` is the TOOLBAR-HIDDEN viewport, so a vh-sized
+   hero is taller than the screen the visitor is actually looking at and the
+   peek of the section below vanishes. `svh` is the visible-with-toolbar
+   height, so the hero keeps its proportions whether the address bar is
+   showing or not — and, unlike dvh, it doesn't resize mid-scroll. Browsers
+   without svh take the vh line above it. The 660px cap stops a tall phone
+   turning the hero into dead sky above the headline.
+
+   padding: the `section` rule forces 20px of side padding on every section,
+   !important, and the hero was paying it on top of its own 28px — 96px of
+   gutter on a 360px phone, leaving the headline 264px to wrap inside. The
+   hero sets its own gutter (Home.jsx heroContent), so opt it out. The
+   background photo and gradients are inset:0 absolute, which resolves against
+   the padding box, so they stay full-bleed either way. */
+@media (max-width: 768px) {
+  .home-hero {
+    min-height: min(84vh, 660px);
+    min-height: min(84svh, 660px);
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+}
+
+/* Phone field: the country picker and the number share one box, so the focus
+   ring belongs to the wrapper rather than to either control inside it. */
+.phone-field {
+  transition: border-color var(--t-fast), box-shadow var(--t-fast);
+}
+.phone-field:focus-within {
+  border-color: var(--color-forest-green) !important;
+  box-shadow: 0 0 0 3px rgba(46,125,94,0.15);
+}
+.phone-field__input:focus,
+.phone-field button:focus {
+  outline: none;
+}
+.phone-field button:focus-visible {
+  outline: 2px solid var(--color-forest-green);
+  outline-offset: -2px;
+}
+.phone-country-option:hover {
+  background-color: var(--color-n100) !important;
 }
 
 /* ── Blog post editorial typography ─────────────────────── */

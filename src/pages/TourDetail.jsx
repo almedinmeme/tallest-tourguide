@@ -19,6 +19,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom'
 import { nanoid } from 'nanoid'
 import { trackEvent } from '../utils/analytics'
 import { parseDuration } from '../utils/duration'
+import { formatDMY } from '../utils/date'
 import {
   Star, Clock, Users, MapPin, CheckCircle,
   XCircle, ShieldCheck, ChevronDown, ChevronUp,
@@ -378,7 +379,7 @@ function TourDetail() {
     const templateParams = {
       type: 'Booking',
       tour_name: tour.title,
-      tour_date: selectedDate,
+      tour_date: formatDMY(selectedDate),
       start_time: startTime || 'Not specified',
       num_people: numPeople,
       total_price: isPrivateQuote
